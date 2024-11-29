@@ -1,0 +1,4 @@
+PyQt6
+yt-dlp
+requests
+Pillow
