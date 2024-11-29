@@ -343,7 +343,7 @@ class YouTubeDownloaderGUI(QMainWindow):
             # Include all video formats (both with and without audio)
             filtered_formats.extend([f for f in self.all_formats 
                                   if f.get('vcodec') != 'none' 
-                                  and f.get('filesize', 0) > 0])
+                                  and f.get('filesize') is not None])
         
         if self.audio_btn.isChecked():
             # Add audio-only formats
@@ -351,7 +351,7 @@ class YouTubeDownloaderGUI(QMainWindow):
                                   if (f.get('vcodec') == 'none' 
                                       or 'audio only' in f.get('format_note', '').lower())
                                   and f.get('acodec') != 'none'
-                                  and f.get('filesize', 0) > 0])
+                                  and f.get('filesize') is not None])
         
         # Sort formats by quality
         def get_quality(f):
