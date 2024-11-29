@@ -9,7 +9,7 @@ A modern YouTube downloader with a clean PyQt6 interface. Download videos in any
 
 *Main interface with video metadata and thumbnail preview*
 
-### Video Format Selection
+### Audio Format Selection
 
 ![Format Selection](https://github.com/user-attachments/assets/d2f8a638-0b6b-49f1-990d-c9c4791902a6)
 
