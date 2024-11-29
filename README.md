@@ -33,7 +33,7 @@ A modern YouTube downloader with a clean PyQt6 interface. Download videos in any
 
 ## Download
 
-You can download the latest executable from the [Releases](https://github.com/yourusername/YTSage/releases) page.
+You can download the latest executable from the [Releases](https://github.com/oop7/YTSage/releases) page.
 
 ### Pre-built Executables
 - Windows: `YTSage.exe`
