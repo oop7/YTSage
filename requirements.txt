@@ -1,4 +1,5 @@
 PyQt6
 yt-dlp
 requests
-Pillow
+pillow
+packaging
