@@ -2,12 +2,12 @@ import sys
 import os
 import threading
 import time
-from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
+from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                             QHBoxLayout, QLineEdit, QPushButton, QTableWidget, 
                             QTableWidgetItem, QProgressBar, QLabel, QFileDialog,
                             QHeaderView, QStyle, QStyleFactory, QComboBox, QTextEdit, QDialog, QPlainTextEdit)
-from PyQt6.QtCore import Qt, pyqtSignal, QObject
-from PyQt6.QtGui import QIcon, QPalette, QColor, QPixmap
+from PySide6.QtCore import Qt, Signal, QObject, QThread
+from PySide6.QtGui import QIcon, QPalette, QColor, QPixmap
 import yt_dlp
 import requests
 from io import BytesIO
@@ -21,9 +21,9 @@ import subprocess
 import webbrowser
 
 class SignalManager(QObject):
-    update_formats = pyqtSignal(list)
-    update_status = pyqtSignal(str)
-    update_progress = pyqtSignal(float)
+    update_formats = Signal(list)
+    update_status = Signal(str)
+    update_progress = Signal(float)
 
 class LogWindow(QDialog):
     def __init__(self, parent=None):
@@ -248,6 +248,106 @@ class FFmpegCheckDialog(QDialog):
             }
         """)
 
+class DownloadThread(QThread):
+    progress_signal = Signal(float)
+    status_signal = Signal(str)
+    finished_signal = Signal()
+    error_signal = Signal(str)
+
+    def __init__(self, url, path, format_id, subtitle_lang=None, is_playlist=False):
+        super().__init__()
+        self.url = url
+        self.path = path
+        self.format_id = format_id
+        self.subtitle_lang = subtitle_lang
+        self.is_playlist = is_playlist
+        self.paused = False
+        self.cancelled = False
+
+    def run(self):
+        try:
+            class DebugLogger:
+                def debug(self, msg):
+                    if any(x in msg.lower() for x in ['downloading webpage', 'downloading api', 'extracting', 'downloading m3u8']):
+                        self.thread.status_signal.emit("Preparing for download...")
+                        self.thread.progress_signal.emit(0)
+                
+                def warning(self, msg):
+                    self.thread.status_signal.emit(f"Warning: {msg}")
+                
+                def error(self, msg):
+                    self.thread.status_signal.emit(f"Error: {msg}")
+                
+                def __init__(self, thread):
+                    self.thread = thread
+
+            def progress_hook(d):
+                if self.cancelled:
+                    raise Exception("Download cancelled by user")
+                    
+                if d['status'] == 'downloading':
+                    while self.paused and not self.cancelled:
+                        time.sleep(0.1)
+                        continue
+                        
+                    try:
+                        downloaded_bytes = int(d.get('downloaded_bytes', 0))
+                        total_bytes = int(d.get('total_bytes', 1))
+                        progress = int((downloaded_bytes * 100) // total_bytes)
+                        progress = max(0, min(100, progress))
+                        
+                        speed = d.get('speed', 0)
+                        eta = d.get('eta', 0)
+                        filename = os.path.basename(d.get('filename', ''))
+                        
+                        if speed:
+                            if speed > 1024 * 1024:
+                                speed_str = f"{speed/(1024*1024):.1f} MiB/s"
+                            else:
+                                speed_str = f"{speed/1024:.1f} KiB/s"
+                        else:
+                            speed_str = "N/A"
+                        
+                        eta_str = f"{eta//60}:{eta%60:02d}" if eta else "N/A"
+                        details_text = f"Speed: {speed_str} | ETA: {eta_str} | File: {filename}"
+                        
+                        self.status_signal.emit(details_text)
+                        self.progress_signal.emit(progress)
+                        
+                    except Exception as e:
+                        self.status_signal.emit("Downloading...")
+                        
+                elif d['status'] == 'finished':
+                    self.progress_signal.emit(100)
+                    self.status_signal.emit("Download completed!")
+
+            ydl_opts = {
+                'format': self.format_id,
+                'outtmpl': os.path.join(self.path, '%(playlist_title)s/%(title)s.%(ext)s' if self.is_playlist else '%(title)s.%(ext)s'),
+                'progress_hooks': [progress_hook],
+                'merge_output_format': 'mp4',
+                'logger': DebugLogger(self),
+            }
+            
+            if self.subtitle_lang:
+                lang_code = self.subtitle_lang.split(' - ')[0]
+                is_auto = 'Auto-generated' in self.subtitle_lang
+                ydl_opts.update({
+                    'writesubtitles': True,
+                    'subtitleslangs': [lang_code],
+                    'writeautomaticsub': True,
+                    'skip_manual_subs': is_auto,
+                    'skip_auto_subs': not is_auto,
+                })
+            
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([self.url])
+            
+            self.finished_signal.emit()
+            
+        except Exception as e:
+            self.error_signal.emit(str(e))
+
 class YTSage(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -255,7 +355,7 @@ class YTSage(QMainWindow):
         if not self.check_ffmpeg():
             self.show_ffmpeg_dialog()
             
-        self.version = "2.0.0"
+        self.version = "3.0.0"
         self.check_for_updates()  # Check for updates on startup
         self.config_file = Path.home() / '.ytsage_config.json'
         self.load_saved_path()
@@ -444,19 +544,21 @@ class YTSage(QMainWindow):
             else:
                 self.last_path = str(Path.home() / 'Downloads')
         except Exception as e:
-            print(f"Error loading saved path: {e}")
+            print(f"Error loading saved settings: {e}")
             self.last_path = str(Path.home() / 'Downloads')
 
     def save_path(self, path):
         try:
-            config = {'download_path': path}
+            config = {
+                'download_path': path
+            }
             with open(self.config_file, 'w') as f:
                 json.dump(config, f)
         except Exception as e:
-            print(f"Error saving path: {e}")
+            print(f"Error saving settings: {e}")
 
     def init_ui(self):
-        self.setWindowTitle('YTSage  v2.0.0')
+        self.setWindowTitle('YTSage  v3.0.0')
         self.setMinimumSize(900, 600)
 
         # Main widget and layout
@@ -470,9 +572,16 @@ class YTSage(QMainWindow):
         url_layout = QHBoxLayout()
         self.url_input = QLineEdit()
         self.url_input.setPlaceholderText('Enter YouTube URL...')
+        
+        # Add Paste URL button
+        self.paste_btn = QPushButton('Paste URL')
+        self.paste_btn.clicked.connect(self.paste_url)
+        
         self.analyze_btn = QPushButton('Analyze')
         self.analyze_btn.clicked.connect(self.analyze_url)
+        
         url_layout.addWidget(self.url_input)
+        url_layout.addWidget(self.paste_btn)
         url_layout.addWidget(self.analyze_btn)
         layout.addLayout(url_layout)
 
@@ -497,15 +606,59 @@ class YTSage(QMainWindow):
         self.date_label = QLabel()
         self.duration_label = QLabel()
         
-        # Subtitle section
+        # Style the info labels
+        for label in [self.channel_label, self.views_label, self.date_label, self.duration_label]:
+            label.setStyleSheet("""
+                QLabel {
+                    color: #cccccc;
+                    font-size: 12px;
+                    padding: 2px 0;
+                }
+            """)
+        
+        # Subtitle section with improved styling
         subtitle_layout = QHBoxLayout()
         self.subtitle_check = QPushButton("Download Subtitles")
         self.subtitle_check.setCheckable(True)
         self.subtitle_check.clicked.connect(self.toggle_subtitle_list)
+        self.subtitle_check.setStyleSheet("""
+            QPushButton {
+                background-color: #363636;
+                border: 2px solid #3d3d3d;
+                border-radius: 4px;
+                padding: 5px 10px;
+            }
+            QPushButton:checked {
+                background-color: #ff0000;
+                border-color: #cc0000;
+            }
+        """)
         subtitle_layout.addWidget(self.subtitle_check)
         
         self.subtitle_combo = QComboBox()
         self.subtitle_combo.setVisible(False)
+        self.subtitle_combo.setStyleSheet("""
+            QComboBox {
+                background-color: #363636;
+                border: 2px solid #3d3d3d;
+                border-radius: 4px;
+                padding: 5px;
+                min-width: 200px;
+            }
+            QComboBox::drop-down {
+                border: none;
+            }
+            QComboBox::down-arrow {
+                image: url(down_arrow.png);
+                width: 12px;
+                height: 12px;
+            }
+            QComboBox QAbstractItemView {
+                background-color: #363636;
+                selection-background-color: #ff0000;
+                selection-color: white;
+            }
+        """)
         subtitle_layout.addWidget(self.subtitle_combo)
         subtitle_layout.addStretch()
         
@@ -521,75 +674,150 @@ class YTSage(QMainWindow):
         media_info_layout.addLayout(video_info_layout)
         layout.addLayout(media_info_layout)
 
-        # Add playlist information section
+        # Add playlist information section with improved styling
         self.playlist_info_label = QLabel()
         self.playlist_info_label.setVisible(False)
-        self.playlist_info_label.setStyleSheet("font-size: 12px; color: #ff9900;")
+        self.playlist_info_label.setStyleSheet("""
+            QLabel {
+                font-size: 12px;
+                color: #ff9900;
+                padding: 5px;
+                background-color: #363636;
+                border-radius: 4px;
+            }
+        """)
         layout.addWidget(self.playlist_info_label)
         
-        # Simplified format filter buttons
+        # Format filter buttons with improved styling
         filter_layout = QHBoxLayout()
         self.filter_label = QLabel("Show formats:")
+        self.filter_label.setStyleSheet("color: #cccccc; font-size: 12px;")
         filter_layout.addWidget(self.filter_label)
+        
+        # Style for filter buttons
+        filter_btn_style = """
+            QPushButton {
+                background-color: #363636;
+                border: 2px solid #3d3d3d;
+                border-radius: 4px;
+                padding: 5px 15px;
+                color: #cccccc;
+            }
+            QPushButton:checked {
+                background-color: #ff0000;
+                border-color: #cc0000;
+                color: white;
+            }
+            QPushButton:hover {
+                background-color: #444444;
+            }
+        """
         
         self.video_btn = QPushButton("Video")
         self.video_btn.setCheckable(True)
         self.video_btn.setChecked(True)
         self.video_btn.clicked.connect(self.filter_formats)
-        self.video_btn.setProperty("class", "filter-btn")
+        self.video_btn.setStyleSheet(filter_btn_style)
         
         self.audio_btn = QPushButton("Audio Only")
         self.audio_btn.setCheckable(True)
         self.audio_btn.clicked.connect(self.filter_formats)
-        self.audio_btn.setProperty("class", "filter-btn")
+        self.audio_btn.setStyleSheet(filter_btn_style)
         
         filter_layout.addWidget(self.video_btn)
         filter_layout.addWidget(self.audio_btn)
         filter_layout.addStretch()
         layout.addLayout(filter_layout)
 
-        # Format table
+        # Format table with improved styling
         self.format_table = QTableWidget()
         self.format_table.setColumnCount(6)
         self.format_table.setHorizontalHeaderLabels(['Format ID', 'Extension', 'Resolution', 'File Size', 'Codec', 'Audio'])
         self.format_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.format_table.setStyleSheet("""
+            QTableWidget {
+                background-color: #363636;
+                border: 2px solid #3d3d3d;
+                border-radius: 4px;
+                gridline-color: #3d3d3d;
+            }
+            QTableWidget::item {
+                padding: 5px;
+            }
+            QTableWidget::item:selected {
+                background-color: #ff0000;
+            }
+            QHeaderView::section {
+                background-color: #2b2b2b;
+                padding: 5px;
+                border: 1px solid #3d3d3d;
+                font-weight: bold;
+            }
+        """)
         layout.addWidget(self.format_table)
 
-        # Store formats for filtering
-        self.all_formats = []
-
-        # Download section
+        # Download section with improved styling
         download_layout = QHBoxLayout()
         self.path_input = QLineEdit()
         self.path_input.setPlaceholderText('Download path...')
         self.path_input.setText(self.last_path)
+        
+        # Style all buttons consistently
+        button_style = """
+            QPushButton {
+                background-color: #ff0000;
+                border: none;
+                border-radius: 4px;
+                padding: 8px 15px;
+                color: white;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #cc0000;
+            }
+            QPushButton:pressed {
+                background-color: #990000;
+            }
+            QPushButton:disabled {
+                background-color: #666666;
+            }
+        """
+        
         self.browse_btn = QPushButton('Browse')
         self.browse_btn.clicked.connect(self.browse_path)
+        self.browse_btn.setStyleSheet(button_style)
         
-        # Create download control buttons
         self.download_btn = QPushButton('Download')
         self.download_btn.clicked.connect(self.start_download)
+        self.download_btn.setStyleSheet(button_style)
         
         self.pause_btn = QPushButton('Pause')
         self.pause_btn.clicked.connect(self.toggle_pause)
         self.pause_btn.setVisible(False)
+        self.pause_btn.setStyleSheet(button_style)
         
-        # Add cancel button
         self.cancel_btn = QPushButton('Cancel')
         self.cancel_btn.clicked.connect(self.cancel_download)
         self.cancel_btn.setVisible(False)
+        self.cancel_btn.setStyleSheet(button_style)
         
-        # Add log button
         self.log_btn = QPushButton('yt-dlp Log')
         self.log_btn.setCheckable(True)
         self.log_btn.clicked.connect(self.toggle_log_window)
-        download_layout.addWidget(self.log_btn)
+        self.log_btn.setStyleSheet(button_style)
         
-        # Add custom command button to download_layout
         self.custom_cmd_btn = QPushButton('Custom Command')
         self.custom_cmd_btn.clicked.connect(self.show_custom_command)
-        download_layout.addWidget(self.custom_cmd_btn)
+        self.custom_cmd_btn.setStyleSheet(button_style)
         
+        self.update_ytdlp_btn = QPushButton('Update yt-dlp')
+        self.update_ytdlp_btn.clicked.connect(self.update_ytdlp)
+        self.update_ytdlp_btn.setStyleSheet(button_style)
+        
+        # Add all buttons to layout
+        download_layout.addWidget(self.log_btn)
+        download_layout.addWidget(self.custom_cmd_btn)
+        download_layout.addWidget(self.update_ytdlp_btn)
         download_layout.addWidget(self.path_input)
         download_layout.addWidget(self.browse_btn)
         download_layout.addWidget(self.download_btn)
@@ -597,18 +825,46 @@ class YTSage(QMainWindow):
         download_layout.addWidget(self.cancel_btn)
         layout.addLayout(download_layout)
 
-        # Progress section
+        # Progress section with improved styling
         progress_layout = QVBoxLayout()
         self.progress_bar = QProgressBar()
+        self.progress_bar.setStyleSheet("""
+            QProgressBar {
+                border: 2px solid #3d3d3d;
+                border-radius: 4px;
+                text-align: center;
+                color: white;
+                background-color: #363636;
+                height: 25px;
+            }
+            QProgressBar::chunk {
+                background-color: #ff0000;
+                border-radius: 2px;
+            }
+        """)
         progress_layout.addWidget(self.progress_bar)
         
-        # Add download details label
+        # Add download details label with improved styling
         self.download_details_label = QLabel()
         self.download_details_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.download_details_label.setStyleSheet("""
+            QLabel {
+                color: #cccccc;
+                font-size: 12px;
+                padding: 5px;
+            }
+        """)
         progress_layout.addWidget(self.download_details_label)
         
         self.status_label = QLabel('Ready')
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.status_label.setStyleSheet("""
+            QLabel {
+                color: #cccccc;
+                font-size: 12px;
+                padding: 5px;
+            }
+        """)
         progress_layout.addWidget(self.status_label)
         
         layout.addLayout(progress_layout)
@@ -624,47 +880,55 @@ class YTSage(QMainWindow):
             self.signals.update_status.emit("Invalid URL or please enter a URL.")
             return
         
-        self.signals.update_status.emit("Analyzing...")
+        self.signals.update_status.emit("Analyzing (0%)... Preparing request")
         threading.Thread(target=self._analyze_url_thread, args=(url,), daemon=True).start()
 
     def _analyze_url_thread(self, url):
         try:
+            self.signals.update_status.emit("Analyzing (20%)... Extracting basic info")
+            
             # Clean up the URL to handle both playlist and video URLs
             if 'list=' in url and 'watch?v=' in url:
-                # Extract playlist ID
                 playlist_id = url.split('list=')[1].split('&')[0]
                 url = f'https://www.youtube.com/playlist?list={playlist_id}'
 
             # Initial extraction with basic options
             ydl_opts = {
-                'quiet': True,
-                'no_warnings': True,
+                'quiet': False,
+                'no_warnings': False,
                 'extract_flat': True,
                 'force_generic_extractor': False,
                 'ignoreerrors': True,
-                'no_color': True
+                'no_color': True,
+                'verbose': True
             }
             
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 try:
                     basic_info = ydl.extract_info(url, download=False)
+                    if not basic_info:
+                        raise Exception("Could not extract basic video information")
                 except Exception as e:
                     print(f"First extraction failed: {str(e)}")
                     raise Exception("Could not extract video information")
 
+            self.signals.update_status.emit("Analyzing (40%)... Extracting detailed info")
             # Configure options for detailed extraction
             ydl_opts.update({
                 'extract_flat': False,
-                'format': 'best',  # Start with best format to ensure we get some formats
+                'format': None,
                 'writesubtitles': True,
                 'allsubtitles': True,
                 'writeautomaticsub': True,
                 'playliststart': 1,
-                'playlistend': 1  # Only get first video initially
+                'playlistend': 1,
+                'youtube_include_dash_manifest': True,
+                'youtube_include_hls_manifest': True
             })
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 try:
+                    self.signals.update_status.emit("Analyzing (60%)... Processing video data")
                     if basic_info.get('_type') == 'playlist':
                         self.is_playlist = True
                         self.playlist_info = basic_info
@@ -701,28 +965,31 @@ class YTSage(QMainWindow):
                         print(f"Debug - video_info keys: {self.video_info.keys() if self.video_info else 'None'}")
                         raise Exception("No format information available")
 
+                    self.signals.update_status.emit("Analyzing (80%)... Processing formats")
                     self.all_formats = self.video_info['formats']
                     
                     # Update UI
-                    self.signals.update_status.emit("Updating video information...")
                     self.update_video_info(self.video_info)
                     
                     # Update thumbnail
+                    self.signals.update_status.emit("Analyzing (90%)... Loading thumbnail")
                     thumbnail_url = self.video_info.get('thumbnail')
                     if thumbnail_url:
                         self.download_thumbnail(thumbnail_url)
 
                     # Update subtitles
+                    self.signals.update_status.emit("Analyzing (95%)... Processing subtitles")
                     self.available_subtitles = self.video_info.get('subtitles', {})
                     self.available_automatic_subtitles = self.video_info.get('automatic_captions', {})
                     self.update_subtitle_list()
 
                     # Update format table
+                    self.signals.update_status.emit("Analyzing (98%)... Updating format table")
                     self.video_btn.setChecked(True)
                     self.audio_btn.setChecked(False)
                     self.filter_formats()
                     
-                    self.signals.update_status.emit("Analysis complete")
+                    self.signals.update_status.emit("Analysis complete!")
                     
                 except Exception as e:
                     print(f"Detailed extraction failed: {str(e)}")
@@ -769,15 +1036,44 @@ class YTSage(QMainWindow):
             self.subtitle_combo.addItem("No subtitles available")
             return
 
+        # Create a new horizontal layout for subtitle controls if it doesn't exist
+        if not hasattr(self, 'subtitle_filter_input'):
+            # Find the parent layout containing the subtitle controls
+            for i in range(self.centralWidget().layout().count()):
+                item = self.centralWidget().layout().itemAt(i)
+                if isinstance(item, QHBoxLayout) and self.subtitle_check in item.parent().findChildren(QPushButton):
+                    # Create and add filter components
+                    self.subtitle_filter_input = QLineEdit()
+                    self.subtitle_filter_input.setPlaceholderText("Filter languages (e.g., en, es)")
+                    self.subtitle_filter_input.setText(self.subtitle_filter)
+                    self.subtitle_filter_input.setMaximumWidth(200)  # Limit width
+                    self.subtitle_filter_input.textChanged.connect(self.filter_subtitles)
+                    
+                    # Add the filter input before the combo box
+                    layout_index = item.indexOf(self.subtitle_combo)
+                    item.insertWidget(layout_index, QLabel("Filter:"))
+                    item.insertWidget(layout_index + 1, self.subtitle_filter_input)
+                    break
+
+        # Add subtitle options
         self.subtitle_combo.addItem("Select subtitle language")
+        
+        # Filter and add subtitles
+        filter_text = self.subtitle_filter_input.text().lower() if hasattr(self, 'subtitle_filter_input') else ""
         
         # Add manual subtitles
         for lang_code, subtitle_info in self.available_subtitles.items():
-            self.subtitle_combo.addItem(f"{lang_code} - Manual")
+            if not filter_text or filter_text in lang_code.lower():
+                self.subtitle_combo.addItem(f"{lang_code} - Manual")
         
         # Add auto-generated subtitles
         for lang_code, subtitle_info in self.available_automatic_subtitles.items():
-            self.subtitle_combo.addItem(f"{lang_code} - Auto-generated")
+            if not filter_text or filter_text in lang_code.lower():
+                self.subtitle_combo.addItem(f"{lang_code} - Auto-generated")
+
+    def filter_subtitles(self):
+        # Just filter without saving
+        self.update_subtitle_list()
 
     def download_thumbnail(self, url):
         try:
@@ -910,125 +1206,24 @@ class YTSage(QMainWindow):
         self.pause_btn.setVisible(True)
         self.cancel_btn.setVisible(True)
         
-        threading.Thread(target=self._download_thread, 
-                        args=(url, path, format_id, selected_sub, self.is_playlist), 
-                        daemon=True).start()
+        self.download_thread = DownloadThread(url, path, format_id, selected_sub, self.is_playlist)
+        self.download_thread.progress_signal.connect(self.update_progress_bar)
+        self.download_thread.status_signal.connect(self.signals.update_status.emit)
+        self.download_thread.finished_signal.connect(self.download_finished)
+        self.download_thread.error_signal.connect(self.download_error)
+        
+        self.download_thread.start()
 
-    def _download_thread(self, url, path, format_id, subtitle_lang=None, is_playlist=False):
-        try:
-            class DebugLogger:
-                def debug(self, msg):
-                    # Update both status and log window
-                    if any(x in msg.lower() for x in ['downloading webpage', 'downloading api', 'extracting', 'downloading m3u8']):
-                        self.signals.update_status.emit("Preparing for download...")
-                        self.signals.update_progress.emit(0)
-                    if self.parent.show_log and self.parent.log_window:
-                        self.parent.log_window.append_log(msg)
-                
-                def warning(self, msg):
-                    if self.parent.show_log and self.parent.log_window:
-                        self.parent.log_window.append_log(f"Warning: {msg}")
-                
-                def error(self, msg):
-                    if self.parent.show_log and self.parent.log_window:
-                        self.parent.log_window.append_log(f"Error: {msg}")
-                
-                def __init__(self, signals, parent):
-                    self.signals = signals
-                    self.parent = parent
+    def download_finished(self):
+        self.download_btn.setEnabled(True)
+        self.pause_btn.setVisible(False)
+        self.cancel_btn.setVisible(False)
 
-            class CancelHandler:
-                def __init__(self, parent):
-                    self.parent = parent
-                
-                def __call__(self, signum, frame):
-                    return self.parent.download_cancelled
-
-            ydl_opts = {
-                'format': format_id,
-                'outtmpl': os.path.join(path, '%(playlist_title)s/%(title)s.%(ext)s' if is_playlist else '%(title)s.%(ext)s'),
-                'progress_hooks': [self._progress_hook],
-                'merge_output_format': 'mp4',
-                'debug_printout': True,
-                'logger': DebugLogger(self.signals, self),
-                'signal_handler': CancelHandler(self),
-            }
-            
-            # Add subtitle options if requested
-            if subtitle_lang:
-                lang_code = subtitle_lang.split(' - ')[0]
-                is_auto = 'Auto-generated' in subtitle_lang
-                ydl_opts.update({
-                    'writesubtitles': True,
-                    'subtitleslangs': [lang_code],
-                    'writeautomaticsub': True,
-                    'skip_manual_subs': is_auto,
-                    'skip_auto_subs': not is_auto,
-                })
-            
-            self.signals.update_status.emit("Preparing for download...")
-            self.signals.update_progress.emit(0)
-            
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                self.current_download = ydl
-                ydl.download([url])
-                
-        except Exception as e:
-            if self.download_cancelled:
-                self.signals.update_status.emit("Download cancelled")
-            else:
-                error_message = str(e)
-                self.signals.update_status.emit(f"Error: {error_message}")
-        finally:
-            self.current_download = None
-            self.download_btn.setEnabled(True)
-            self.pause_btn.setVisible(False)
-            self.cancel_btn.setVisible(False)
-
-    def _progress_hook(self, d):
-        if self.download_cancelled:
-            raise Exception("Download cancelled by user")
-            
-        if d['status'] == 'downloading':
-            while self.download_paused and not self.download_cancelled:
-                time.sleep(0.1)
-                continue
-                
-            try:
-                downloaded_bytes = int(d.get('downloaded_bytes', 0))
-                total_bytes = int(d.get('total_bytes', 1))
-                progress = int((downloaded_bytes * 100) // total_bytes)
-                progress = max(0, min(100, progress))
-                
-                # Extract additional download information
-                speed = d.get('speed', 0)
-                eta = d.get('eta', 0)
-                filename = os.path.basename(d.get('filename', ''))
-                
-                # Format the speed dynamically
-                if speed:
-                    if speed > 1024 * 1024:  # If speed is greater than 1 MiB/s
-                        speed_str = f"{speed/(1024*1024):.1f} MiB/s"
-                    else:
-                        speed_str = f"{speed/1024:.1f} KiB/s"
-                else:
-                    speed_str = "N/A"
-                
-                eta_str = f"{eta//60}:{eta%60:02d}" if eta else "N/A"
-                
-                # Update the UI
-                details_text = f"Speed: {speed_str} | ETA: {eta_str} | File: {filename}"
-                self.signals.update_status.emit(details_text)
-                self.signals.update_progress.emit(progress)
-                
-            except Exception as e:
-                print(f"Progress calculation error: {str(e)}")
-                self.signals.update_status.emit("Downloading...")
-                
-        elif d['status'] == 'finished':
-            self.signals.update_progress.emit(100)
-            self.signals.update_status.emit("Download completed!")
-            self.download_details_label.setText("")  # Clear the details when finished
+    def download_error(self, error_message):
+        self.signals.update_status.emit(f"Error: {error_message}")
+        self.download_btn.setEnabled(True)
+        self.pause_btn.setVisible(False)
+        self.cancel_btn.setVisible(False)
 
     def update_progress_bar(self, value):
         try:
@@ -1039,9 +1234,9 @@ class YTSage(QMainWindow):
             print(f"Progress bar update error: {str(e)}")
 
     def toggle_pause(self):
-        if self.current_download:
-            self.download_paused = not self.download_paused
-            if self.download_paused:
+        if self.download_thread:
+            self.download_thread.paused = not self.download_thread.paused
+            if self.download_thread.paused:
                 self.pause_btn.setText('Resume')
                 self.signals.update_status.emit("Download paused")
             else:
@@ -1140,8 +1335,8 @@ class YTSage(QMainWindow):
         dialog.exec()
 
     def cancel_download(self):
-        self.download_cancelled = True
-        if self.current_download:
+        if self.download_thread:
+            self.download_thread.cancelled = True
             self.signals.update_status.emit("Cancelling download...")
 
     def check_ffmpeg(self):
@@ -1157,6 +1352,61 @@ class YTSage(QMainWindow):
     def show_ffmpeg_dialog(self):
         dialog = FFmpegCheckDialog(self)
         dialog.exec()
+
+    def paste_url(self):
+        clipboard = QApplication.clipboard()
+        self.url_input.setText(clipboard.text())
+
+    def update_ytdlp(self):
+        self.signals.update_status.emit("Updating yt-dlp...")
+        threading.Thread(target=self._update_ytdlp_thread, daemon=True).start()
+
+    def _update_ytdlp_thread(self):
+        try:
+            # Show initial status
+            self.signals.update_status.emit("Updating yt-dlp (0%)...")
+            
+            # Run pip install with output capture
+            process = subprocess.Popen(
+                [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            
+            # Track progress through output lines
+            progress = 0
+            progress_steps = ['Collecting', 'Downloading', 'Installing', 'Successfully']
+            current_step = 0
+            
+            while True:
+                line = process.stdout.readline() or process.stderr.readline()
+                if not line and process.poll() is not None:
+                    break
+                    
+                line = line.strip()
+                if line:
+                    # Update progress based on steps
+                    if any(step in line for step in progress_steps[current_step:]):
+                        current_step = next(i for i, step in enumerate(progress_steps) if step in line)
+                        progress = (current_step + 1) * 25
+                        self.signals.update_status.emit(f"Updating yt-dlp ({progress}%)...")
+            
+            # Get the installed version
+            version_process = subprocess.run(
+                [sys.executable, "-m", "yt_dlp", "--version"],
+                capture_output=True,
+                text=True
+            )
+            version = version_process.stdout.strip()
+            
+            self.signals.update_status.emit(f"yt-dlp updated successfully! (Version: {version})")
+            
+        except subprocess.CalledProcessError as e:
+            error_msg = e.stderr.decode() if e.stderr else str(e)
+            self.signals.update_status.emit(f"Error updating yt-dlp: {error_msg}")
+        except Exception as e:
+            self.signals.update_status.emit(f"Error updating yt-dlp: {str(e)}")
 
 def main():
     app = QApplication(sys.argv)
