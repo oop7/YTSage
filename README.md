@@ -139,7 +139,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) for the powerful downloading engine
-- [PySide6]([text](https://en.wikipedia.org/wiki/PySide)) for the GUI framework
+- [PySide6](https://en.wikipedia.org/wiki/PySide) for the GUI framework
 - [FFmpeg](https://ffmpeg.org/) for the audio and video processing
 - [Pillow](https://pypi.org/project/Pillow/) for the image processing
 - [requests](https://pypi.org/project/requests/) for the HTTP requests
