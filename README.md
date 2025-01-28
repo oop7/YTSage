@@ -6,24 +6,24 @@ A modern YouTube downloader with a clean PySide6 interface. Download videos in a
 
 ### Main Interface
 
-![Screenshot1](https://github.com/user-attachments/assets/414ceb6b-957f-4dd6-bfa7-6a5d72818522)
+![Main Interface](https://github.com/user-attachments/assets/08bdb68b-2fbc-47d2-a956-fc23723476e6)
 
 *Main interface with video metadata and thumbnail preview*
 
 ### Playlist download support with auto-detection
 
-![Screenshot2](https://github.com/user-attachments/assets/d889b659-6196-4e53-a4ea-ff81b698e7f3)
+![Playlist download](https://github.com/user-attachments/assets/537b8553-9657-42b2-a452-051c4cb2e32a)
 
 *Playlist download with auto-detection*
 ### Audio Format Selection
 
-![Screenshot](https://github.com/user-attachments/assets/b40641a2-659e-4a9f-9002-57badc37916d)
+![Audio Format](https://github.com/user-attachments/assets/51a6a613-6c97-4581-b728-38c91c0b2d24)
 
 *Smart format selection with quality options*
 
 ### Subtitle Options
 
-![Screenshot3](https://github.com/user-attachments/assets/0f356c89-9c8b-4050-ad74-fd006ebed22e)
+![Subtitle Options](https://github.com/user-attachments/assets/4e8c686f-98e2-435a-add8-758e317b56fe)
 
 *Support for both manual and auto-generated subtitles*
 
