@@ -1,4 +1,4 @@
-PyQt6
+PySide6
 yt-dlp
 requests
 pillow
