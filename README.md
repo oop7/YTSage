@@ -1,6 +1,6 @@
 # YTSage
 
-A modern YouTube downloader with a clean PyQt6 interface. Download videos in any quality, extract audio, fetch subtitles (including auto-generated), and view video metadata. Built with yt-dlp for reliable performance.
+A modern YouTube downloader with a clean PySide6 interface. Download videos in any quality, extract audio, fetch subtitles (including auto-generated), and view video metadata. Built with yt-dlp for reliable performance.
 
 ## Screenshots
 
@@ -31,20 +31,22 @@ A modern YouTube downloader with a clean PyQt6 interface. Download videos in any
 
 - 🎥 Smart video quality selection with automatic audio merging
 - 🎵 Audio-only extraction
-- 📝 Manual and auto-generated subtitle support
+- 📝 Manual and auto-generated subtitle support with language filtering
 - ℹ️ Video metadata display (views, upload date, duration)
 - 🖼️ Thumbnail preview
-- 🎨 Clean, user-friendly interface
+- 🎨 Clean, modern PySide6 interface
 - 🚀 Built on yt-dlp for robust downloading
 - ⏯️ Download control (pause, resume, and cancel)
 - 📊 Real-time progress tracking (speed, ETA, percentage)
 - 📝 Built-in yt-dlp log viewer
-- ⚙️ Custom yt-dlp command support
+- ⚙️ Custom yt-dlp command support with real-time output
 - 📋 Playlist download support with auto-detection
 - 💾 Save download path memory
-- 🔄 Automatic updates checker
+- 🔄 One-click yt-dlp updater
 - ⚠️ User-friendly error messages
 - 🛠️ FFmpeg installation checker and guide
+- 📎 Quick URL paste button
+- 🎯 Smart format filtering (Video/Audio)
 
 ## Download
 
@@ -113,7 +115,7 @@ By following these steps, you can efficiently download entire playlists in the b
 ## Requirements
 
 - Python 3.7+
-- PyQt6
+- PySide6
 - yt-dlp
 - Pillow
 - requests
@@ -137,7 +139,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) for the powerful downloading engine
-- [PyQt6](https://www.riverbankcomputing.com/software/pyqt/) for the GUI framework
+- [PySide6]([text](https://en.wikipedia.org/wiki/PySide)) for the GUI framework
 - [FFmpeg](https://ffmpeg.org/) for the audio and video processing
 - [Pillow](https://pypi.org/project/Pillow/) for the image processing
 - [requests](https://pypi.org/project/requests/) for the HTTP requests
