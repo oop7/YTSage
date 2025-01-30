@@ -6,7 +6,7 @@ A modern YouTube downloader with a clean PySide6 interface. Download videos in a
 
 ### Main Interface
 
-![Main Interface](https://github.com/user-attachments/assets/a111aa5f-7314-4d54-bf94-563bf40e22f6)
+![Main Interface](https://github.com/user-attachments/assets/04959c77-695b-4a69-b8fc-7103fe530236)
 
 *Main interface with video metadata and thumbnail preview*
 
