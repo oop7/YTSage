@@ -38,7 +38,7 @@ A modern YouTube downloader with a clean PySide6 interface. Download videos in a
 - 🚀 Built on yt-dlp for robust downloading
 - ⏯️ Download control (pause, resume, and cancel)
 - 📊 Real-time progress tracking (speed, ETA, percentage)
-- 📝 Built-in yt-dlp log viewer
+- 🖼️ Save Thumbnail
 - ⚙️ Custom yt-dlp command support with real-time output
 - 📋 Playlist download support with auto-detection
 - 💾 Save download path memory
@@ -119,7 +119,7 @@ By following these steps, you can efficiently download entire playlists in the b
 - yt-dlp
 - Pillow
 - requests
-- ffmpeg
+- FFmpeg
 - packaging
 
 ## Contributing
