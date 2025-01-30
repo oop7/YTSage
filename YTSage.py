@@ -348,6 +348,282 @@ class DownloadThread(QThread):
         except Exception as e:
             self.error_signal.emit(str(e))
 
+class YTDLPUpdateDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle('Update yt-dlp')
+        self.setMinimumWidth(400)
+        
+        layout = QVBoxLayout(self)
+        
+        # Version info and message
+        self.version_label = QLabel()
+        self.version_label.setWordWrap(True)
+        layout.addWidget(self.version_label)
+        
+        self.message_label = QLabel(
+            "Would you like to update yt-dlp to the latest version?\n"
+            "This will download and install the latest yt-dlp executable."
+        )
+        self.message_label.setWordWrap(True)
+        layout.addWidget(self.message_label)
+        
+        # Progress bar (hidden initially)
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setVisible(False)
+        layout.addWidget(self.progress_bar)
+        
+        # Status label
+        self.status_label = QLabel()
+        self.status_label.setWordWrap(True)
+        layout.addWidget(self.status_label)
+        
+        # Buttons
+        button_layout = QHBoxLayout()
+        
+        self.update_btn = QPushButton("Update yt-dlp")
+        self.update_btn.clicked.connect(self.start_update)
+        self.update_btn.setEnabled(False)  # Disabled until version check
+        
+        self.close_btn = QPushButton("Close")
+        self.close_btn.clicked.connect(self.close)
+        
+        button_layout.addWidget(self.update_btn)
+        button_layout.addWidget(self.close_btn)
+        layout.addLayout(button_layout)
+        
+        # Style the dialog
+        self.setStyleSheet("""
+            QDialog {
+                background-color: #2b2b2b;
+            }
+            QLabel {
+                color: #ffffff;
+                font-size: 12px;
+                padding: 10px;
+            }
+            QPushButton {
+                padding: 8px 15px;
+                background-color: #ff0000;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #cc0000;
+            }
+            QPushButton:disabled {
+                background-color: #666666;
+            }
+            QProgressBar {
+                border: 2px solid #3d3d3d;
+                border-radius: 4px;
+                text-align: center;
+                color: white;
+            }
+            QProgressBar::chunk {
+                background-color: #ff0000;
+            }
+        """)
+        
+        # Check versions when dialog opens
+        self.check_versions()
+
+    def check_versions(self):
+        threading.Thread(target=self._check_versions_thread, daemon=True).start()
+
+    def _check_versions_thread(self):
+        try:
+            # Get current version with proper path
+            yt_dlp_path = self.get_yt_dlp_path()
+            if os.path.exists(yt_dlp_path):
+                try:
+                    # Use the full path to yt-dlp executable
+                    result = subprocess.run([yt_dlp_path, '--version'], 
+                                         capture_output=True, 
+                                         text=True,
+                                         timeout=5,
+                                         creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0)
+                    if result.returncode == 0:
+                        current_version = result.stdout.strip()
+                    else:
+                        # Try using pip to get version as fallback
+                        try:
+                            import yt_dlp
+                            current_version = yt_dlp.version.__version__
+                        except:
+                            current_version = "Not installed"
+                except (subprocess.SubprocessError, subprocess.TimeoutExpired):
+                    # Try using pip to get version as fallback
+                    try:
+                        import yt_dlp
+                        current_version = yt_dlp.version.__version__
+                    except:
+                        current_version = "Not installed"
+            else:
+                # Try using pip to get version as fallback
+                try:
+                    import yt_dlp
+                    current_version = yt_dlp.version.__version__
+                except:
+                    current_version = "Not installed"
+
+            # Get latest version from GitHub API with timeout
+            try:
+                response = requests.get(
+                    "https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest",
+                    timeout=10
+                )
+                response.raise_for_status()
+                latest_version = response.json()["tag_name"]
+            except Exception as e:
+                raise Exception(f"Could not fetch latest version: {str(e)}")
+
+            self.version_label.setText(
+                f"Current version: {current_version}\n"
+                f"Latest version: {latest_version}"
+            )
+
+            if current_version == "Not installed" or current_version != latest_version:
+                self.update_btn.setEnabled(True)
+                self.message_label.setText("An update is available!")
+            else:
+                self.message_label.setText("You have the latest version installed.")
+                self.update_btn.setEnabled(False)
+
+        except Exception as e:
+            self.version_label.setText("Could not check versions")
+            self.message_label.setText(f"Error: {str(e)}")
+            self.update_btn.setEnabled(True)
+
+    def get_yt_dlp_path(self):
+        """Get the appropriate yt-dlp path based on platform and deployment method"""
+        try:
+            if getattr(sys, 'frozen', False):
+                if sys.platform == 'darwin':
+                    # For macOS .app bundle
+                    if 'Contents/MacOS' in sys.executable:
+                        # Inside .app bundle
+                        return os.path.join(os.path.dirname(sys.executable), 'yt-dlp')
+                    else:
+                        # Fallback to user's home directory for macOS
+                        base_path = os.path.expanduser('~/Library/Application Support/YTSage')
+                        os.makedirs(base_path, exist_ok=True)
+                        return os.path.join(base_path, 'yt-dlp')
+                elif sys.platform == 'win32':
+                    # For Windows executable
+                    app_data = os.getenv('APPDATA')
+                    if app_data:
+                        base_path = os.path.join(app_data, 'YTSage')
+                    else:
+                        base_path = os.path.dirname(sys.executable)
+                    os.makedirs(base_path, exist_ok=True)
+                    return os.path.join(base_path, 'yt-dlp.exe')
+                else:
+                    # For Linux AppImage or binary
+                    if 'APPIMAGE' in os.environ:
+                        # Inside AppImage
+                        xdg_data = os.getenv('XDG_DATA_HOME', os.path.expanduser('~/.local/share'))
+                        base_path = os.path.join(xdg_data, 'YTSage')
+                    else:
+                        base_path = os.path.dirname(sys.executable)
+                    os.makedirs(base_path, exist_ok=True)
+                    return os.path.join(base_path, 'yt-dlp')
+            else:
+                # For development/script mode
+                return os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'yt-dlp.exe' if sys.platform == 'win32' else 'yt-dlp')
+        except Exception as e:
+            print(f"Error determining yt-dlp path: {e}")
+            # Fallback to current directory
+            return os.path.join(os.getcwd(), 'yt-dlp.exe' if sys.platform == 'win32' else 'yt-dlp')
+
+    def start_update(self):
+        self.update_btn.setEnabled(False)
+        self.progress_bar.setVisible(True)
+        self.status_label.setText("Starting update...")
+        
+        # Start update in a separate thread
+        threading.Thread(target=self._update_thread, daemon=True).start()
+
+    def _update_thread(self):
+        temp_path = None
+        try:
+            # Create necessary directories
+            target_path = self.get_yt_dlp_path()
+            os.makedirs(os.path.dirname(target_path), exist_ok=True)
+
+            # Determine platform and get URLs
+            if sys.platform == 'win32':
+                url = 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe'
+            else:
+                url = 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp'
+
+            temp_path = target_path + '.download'
+
+            # Download with proper error handling
+            try:
+                response = requests.get(url, stream=True, timeout=30)
+                response.raise_for_status()
+                total_size = int(response.headers.get('content-length', 0))
+                block_size = 8192  # Increased for better performance
+                
+                with open(temp_path, 'wb') as f:
+                    for data in response.iter_content(block_size):
+                        if data:  # Filter out keep-alive chunks
+                            f.write(data)
+                            progress = int((f.tell() * 100) / total_size) if total_size > 0 else 0
+                            self.progress_bar.setValue(progress)
+                            self.status_label.setText(f"Downloading: {progress}%")
+            except requests.exceptions.RequestException as e:
+                raise Exception(f"Download failed: {str(e)}")
+
+            # Set proper permissions
+            if sys.platform != 'win32':
+                try:
+                    os.chmod(temp_path, 0o755)
+                except Exception as e:
+                    print(f"Warning: Could not set executable permissions: {e}")
+
+            # Handle file replacement
+            try:
+                if os.path.exists(target_path):
+                    if sys.platform == 'win32':
+                        # Windows-specific file replacement
+                        import ctypes
+                        if not ctypes.windll.kernel32.MoveFileExW(target_path, None, 4):  # MOVEFILE_DELAY_UNTIL_REBOOT
+                            os.remove(target_path)
+                    else:
+                        os.remove(target_path)
+            except PermissionError:
+                raise Exception("Cannot update while yt-dlp is in use. Please close any active downloads and try again.")
+            except Exception as e:
+                raise Exception(f"Error removing existing file: {str(e)}")
+
+            # Move temporary file to final location
+            try:
+                os.rename(temp_path, target_path)
+            except Exception as e:
+                raise Exception(f"Error moving new file into place: {str(e)}")
+
+            self.status_label.setText("yt-dlp updated successfully!")
+            self.close_btn.setText("Done")
+            
+            # Refresh version info
+            self.check_versions()
+            
+        except Exception as e:
+            self.status_label.setText(f"Error updating yt-dlp: {str(e)}")
+        finally:
+            # Clean up temp file if it exists
+            if temp_path and os.path.exists(temp_path):
+                try:
+                    os.remove(temp_path)
+                except:
+                    pass
+            self.update_btn.setEnabled(True)
+
 class YTSage(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -355,7 +631,7 @@ class YTSage(QMainWindow):
         if not self.check_ffmpeg():
             self.show_ffmpeg_dialog()
             
-        self.version = "3.0.0"
+        self.version = "3.5.0"
         self.check_for_updates()  # Check for updates on startup
         self.config_file = Path.home() / '.ytsage_config.json'
         self.load_saved_path()
@@ -363,9 +639,8 @@ class YTSage(QMainWindow):
         self.signals = SignalManager()
         self.download_paused = False
         self.current_download = None
-        self.log_window = None
-        self.show_log = False
         self.download_cancelled = False
+        self.save_thumbnail = False
         self.init_ui()
         self.setStyleSheet("""
             QMainWindow {
@@ -558,7 +833,7 @@ class YTSage(QMainWindow):
             print(f"Error saving settings: {e}")
 
     def init_ui(self):
-        self.setWindowTitle('YTSage  v3.0.0')
+        self.setWindowTitle('YTSage  v3.5.0')
         self.setMinimumSize(900, 600)
 
         # Main widget and layout
@@ -660,6 +935,33 @@ class YTSage(QMainWindow):
             }
         """)
         subtitle_layout.addWidget(self.subtitle_combo)
+        
+        # Add thumbnail save toggle button
+        self.save_thumbnail_btn = QPushButton('Save Thumbnail')
+        self.save_thumbnail_btn.setCheckable(True)
+        self.save_thumbnail_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #363636;
+                border: 2px solid #3d3d3d;
+                border-radius: 4px;
+                padding: 5px 10px;
+            }
+            QPushButton:checked {
+                background-color: #ff0000;
+                border-color: #cc0000;
+            }
+            QPushButton:hover {
+                background-color: #444444;
+            }
+            QPushButton:checked:hover {
+                background-color: #cc0000;
+            }
+        """)
+        self.save_thumbnail_btn.clicked.connect(self.toggle_save_thumbnail)
+        
+        # Add the button to the subtitle layout
+        subtitle_layout.addWidget(self.save_thumbnail_btn)
+        
         subtitle_layout.addStretch()
         
         # Add all info widgets to the video info layout
@@ -801,11 +1103,6 @@ class YTSage(QMainWindow):
         self.cancel_btn.setVisible(False)
         self.cancel_btn.setStyleSheet(button_style)
         
-        self.log_btn = QPushButton('yt-dlp Log')
-        self.log_btn.setCheckable(True)
-        self.log_btn.clicked.connect(self.toggle_log_window)
-        self.log_btn.setStyleSheet(button_style)
-        
         self.custom_cmd_btn = QPushButton('Custom Command')
         self.custom_cmd_btn.clicked.connect(self.show_custom_command)
         self.custom_cmd_btn.setStyleSheet(button_style)
@@ -815,7 +1112,6 @@ class YTSage(QMainWindow):
         self.update_ytdlp_btn.setStyleSheet(button_style)
         
         # Add all buttons to layout
-        download_layout.addWidget(self.log_btn)
         download_layout.addWidget(self.custom_cmd_btn)
         download_layout.addWidget(self.update_ytdlp_btn)
         download_layout.addWidget(self.path_input)
@@ -910,7 +1206,7 @@ class YTSage(QMainWindow):
                         raise Exception("Could not extract basic video information")
                 except Exception as e:
                     print(f"First extraction failed: {str(e)}")
-                    raise Exception("Could not extract video information")
+                    raise Exception("Could not extract video information, please check your link")
 
             self.signals.update_status.emit("Analyzing (40%)... Extracting detailed info")
             # Configure options for detailed extraction
@@ -1077,9 +1373,10 @@ class YTSage(QMainWindow):
 
     def download_thumbnail(self, url):
         try:
+            self.thumbnail_url = url  # Store the URL for later use
             response = requests.get(url)
-            image = Image.open(BytesIO(response.content))
-            image = image.resize((320, 180), Image.Resampling.LANCZOS)
+            self.thumbnail_image = Image.open(BytesIO(response.content))  # Store the image
+            image = self.thumbnail_image.resize((320, 180), Image.Resampling.LANCZOS)
             img_byte_arr = BytesIO()
             image.save(img_byte_arr, format='PNG')
             img_byte_arr = img_byte_arr.getvalue()
@@ -1214,6 +1511,10 @@ class YTSage(QMainWindow):
         
         self.download_thread.start()
 
+        # Add thumbnail download if enabled
+        if self.save_thumbnail and hasattr(self, 'thumbnail_url'):
+            self.download_thumbnail_file(self.thumbnail_url, path)
+
     def download_finished(self):
         self.download_btn.setEnabled(True)
         self.pause_btn.setVisible(False)
@@ -1242,17 +1543,6 @@ class YTSage(QMainWindow):
             else:
                 self.pause_btn.setText('Pause')
                 self.signals.update_status.emit("Download resumed")
-
-    def toggle_log_window(self):
-        if self.log_btn.isChecked():
-            if not self.log_window:
-                self.log_window = LogWindow(self)
-            self.log_window.show()
-            self.show_log = True
-        else:
-            if self.log_window:
-                self.log_window.hide()
-            self.show_log = False
 
     def check_for_updates(self):
         try:
@@ -1358,55 +1648,30 @@ class YTSage(QMainWindow):
         self.url_input.setText(clipboard.text())
 
     def update_ytdlp(self):
-        self.signals.update_status.emit("Updating yt-dlp...")
-        threading.Thread(target=self._update_ytdlp_thread, daemon=True).start()
+        dialog = YTDLPUpdateDialog(self)
+        dialog.exec()
 
-    def _update_ytdlp_thread(self):
+    def toggle_save_thumbnail(self):
+        self.save_thumbnail = self.save_thumbnail_btn.isChecked()
+
+    def download_thumbnail_file(self, url, path):
         try:
-            # Show initial status
-            self.signals.update_status.emit("Updating yt-dlp (0%)...")
+            if not hasattr(self, 'thumbnail_image'):
+                response = requests.get(url)
+                self.thumbnail_image = Image.open(BytesIO(response.content))
             
-            # Run pip install with output capture
-            process = subprocess.Popen(
-                [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True
-            )
+            # Create thumbnails directory if it doesn't exist
+            thumbnails_path = os.path.join(path, 'thumbnails')
+            os.makedirs(thumbnails_path, exist_ok=True)
             
-            # Track progress through output lines
-            progress = 0
-            progress_steps = ['Collecting', 'Downloading', 'Installing', 'Successfully']
-            current_step = 0
+            # Save the thumbnail
+            video_title = self.video_info.get('title', 'thumbnail').replace('/', '_')
+            thumbnail_path = os.path.join(thumbnails_path, f"{video_title}.jpg")
+            self.thumbnail_image.save(thumbnail_path)
             
-            while True:
-                line = process.stdout.readline() or process.stderr.readline()
-                if not line and process.poll() is not None:
-                    break
-                    
-                line = line.strip()
-                if line:
-                    # Update progress based on steps
-                    if any(step in line for step in progress_steps[current_step:]):
-                        current_step = next(i for i, step in enumerate(progress_steps) if step in line)
-                        progress = (current_step + 1) * 25
-                        self.signals.update_status.emit(f"Updating yt-dlp ({progress}%)...")
-            
-            # Get the installed version
-            version_process = subprocess.run(
-                [sys.executable, "-m", "yt_dlp", "--version"],
-                capture_output=True,
-                text=True
-            )
-            version = version_process.stdout.strip()
-            
-            self.signals.update_status.emit(f"yt-dlp updated successfully! (Version: {version})")
-            
-        except subprocess.CalledProcessError as e:
-            error_msg = e.stderr.decode() if e.stderr else str(e)
-            self.signals.update_status.emit(f"Error updating yt-dlp: {error_msg}")
+            self.signals.update_status.emit(f"Thumbnail saved to {thumbnail_path}")
         except Exception as e:
-            self.signals.update_status.emit(f"Error updating yt-dlp: {str(e)}")
+            self.signals.update_status.emit(f"Error saving thumbnail: {str(e)}")
 
 def main():
     app = QApplication(sys.argv)
