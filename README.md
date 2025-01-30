@@ -54,7 +54,7 @@ You can download the latest executable from the [Releases](https://github.com/oo
 
 ### Pre-built Executables
 - Windows: `YTSage.exe`
-- macOS: `YTSage.app`
+- macOS: `YTSage.dmg`
 - Linux: `YTSage.AppImage`
 - No installation required - just download and run!
 
