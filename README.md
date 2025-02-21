@@ -129,7 +129,7 @@ python main.py
 <details>
 <summary>⚙️ Advanced Options</summary>
 
-- **Quality Selection:** Choose highest resolution for best quality
+- **Quality Selection:** Choose the highest resolution for best quality
 - **Subtitle Options:** Filter languages and embed into video
 - **SponsorBlock:** Automatically skip promotional content
 - **Custom Commands:** Access advanced yt-dlp features
