@@ -2,7 +2,7 @@
 
 # 🎥 YTSage
 
-<img src="https://github.com/user-attachments/assets/04959c77-695b-4a69-b8fc-7103fe530236" width="800" alt="YTSage Interface"/>
+<img src="https://github.com/user-attachments/assets/9566f446-458a-4932-8c5a-7aec0e253a3d" width="800" alt="YTSage Interface"/>
 
 [![PyPI version](https://badge.fury.io/py/YTSage.svg)](https://badge.fury.io/py/YTSage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -75,16 +75,16 @@ python main.py
 <div align="center">
 <table>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/04959c77-695b-4a69-b8fc-7103fe530236" alt="Main Interface" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/537b8553-9657-42b2-a452-051c4cb2e32a" alt="Playlist Download" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/9566f446-458a-4932-8c5a-7aec0e253a3d" alt="Main Interface" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/99330ae2-f027-4a13-a08e-16c715d7f481" alt="Playlist Download" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Main Interface</em></td>
     <td align="center"><em>Playlist Download</em></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/51a6a613-6c97-4581-b728-38c91c0b2d24" alt="Audio Format" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/4e8c686f-98e2-435a-add8-758e317b56fe" alt="Subtitle Options" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/2023c9d6-1b3a-4d75-85a3-f88cc17e8194" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/17bc85bf-20b4-4260-88f7-ee6cb21ab7f3" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Audio Format Selection with Save Thumbnail</em></td>
