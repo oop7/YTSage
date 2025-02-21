@@ -4,7 +4,7 @@
 
 <img src="https://github.com/user-attachments/assets/9566f446-458a-4932-8c5a-7aec0e253a3d" width="800" alt="YTSage Interface"/>
 
-[![PyPI version](https://badge.fury.io/py/YTSage.svg)](https://badge.fury.io/py/YTSage)
+[![PyPI version](https://badge.fury.io/py/ytsage.svg)](https://badge.fury.io/py/ytsage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Downloads](https://pepy.tech/badge/ytsage)](https://pepy.tech/project/ytsage)
