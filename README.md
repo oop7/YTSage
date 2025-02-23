@@ -2,7 +2,7 @@
 
 # 🎥 YTSage
 
-<img src="https://github.com/user-attachments/assets/9566f446-458a-4932-8c5a-7aec0e253a3d" width="800" alt="YTSage Interface"/>
+<img src="https://github.com/user-attachments/assets/499fbef9-d1c2-41c3-bf24-103bd5892994" width="800" alt="YTSage Interface"/>
 
 [![PyPI version](https://badge.fury.io/py/ytsage.svg)](https://badge.fury.io/py/ytsage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -75,7 +75,7 @@ python main.py
 <div align="center">
 <table>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/9566f446-458a-4932-8c5a-7aec0e253a3d" alt="Main Interface" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/499fbef9-d1c2-41c3-bf24-103bd5892994" alt="Main Interface" width="400"/></td>
     <td><img src="https://github.com/user-attachments/assets/99330ae2-f027-4a13-a08e-16c715d7f481" alt="Playlist Download" width="400"/></td>
   </tr>
   <tr>
@@ -83,8 +83,8 @@ python main.py
     <td align="center"><em>Playlist Download</em></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/2023c9d6-1b3a-4d75-85a3-f88cc17e8194" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/17bc85bf-20b4-4260-88f7-ee6cb21ab7f3" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/c12113fa-c880-4386-833f-e12d37a13e20" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/6c38d250-ecbf-4334-ae24-d3834bcdc250" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Audio Format Selection with Save Thumbnail</em></td>
