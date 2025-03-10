@@ -7,7 +7,8 @@
 [![PyPI version](https://badge.fury.io/py/ytsage.svg)](https://badge.fury.io/py/ytsage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
-[![Downloads](https://pepy.tech/badge/ytsage)](https://pepy.tech/project/ytsage)
+[![Downloads](https://static.pepy.tech/badge/ytsage)](https://pepy.tech/project/ytsage)
+[![Total Downloads](https://static.pepy.tech/badge/ytsage/month)](https://pepy.tech/project/ytsage)
 
 **A modern YouTube downloader with a clean PySide6 interface.**  
 Download videos in any quality, extract audio, fetch subtitles, and more.
@@ -31,7 +32,7 @@ Download videos in any quality, extract audio, fetch subtitles, and more.
 | 🎥 Smart Video Quality | 🚫 SponsorBlock Integration | 💾 Save Download Path |
 | 🎵 Audio Extraction | 📝 Subtitle Support & Filtering | 🔄 Auto-Updates |
 | 📊 Real-time Progress | ⚙️ Custom Commands | 🛠️ FFmpeg Tools |
-| 📋 Playlist Support | 🖼️ Thumbnail Management | ⚠️ Error Handling |
+| 📋 Playlist Support | 🖼️ Save thumbnail | ⚠️ Error Handling |
 
 </div>
 
@@ -167,6 +168,14 @@ We welcome contributions! Here's how you can help:
    git push origin feature/AmazingFeature
    ```
 5. 🔄 Open a Pull Request
+
+## 📊 Star History
+
+<div align="center">
+  
+[![Star History Chart](https://api.star-history.com/svg?repos=oop7/YTSage&type=Date)](https://star-history.com/#oop7/YTSage&Date)
+
+</div>
 
 ## 📜 License
 
