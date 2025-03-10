@@ -2,7 +2,7 @@
 
 # 🎥 YTSage
 
-<img src="https://github.com/user-attachments/assets/499fbef9-d1c2-41c3-bf24-103bd5892994" width="800" alt="YTSage Interface"/>
+<img src="https://github.com/user-attachments/assets/3388f214-8ff6-4478-9395-b00677e09d58" width="800" alt="YTSage Interface"/>
 
 [![PyPI version](https://badge.fury.io/py/ytsage.svg)](https://badge.fury.io/py/ytsage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -76,7 +76,7 @@ python main.py
 <div align="center">
 <table>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/499fbef9-d1c2-41c3-bf24-103bd5892994" alt="Main Interface" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/3388f214-8ff6-4478-9395-b00677e09d58" alt="Main Interface" width="400"/></td>
     <td><img src="https://github.com/user-attachments/assets/99330ae2-f027-4a13-a08e-16c715d7f481" alt="Playlist Download" width="400"/></td>
   </tr>
   <tr>
