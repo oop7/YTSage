@@ -31,7 +31,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         if not check_ffmpeg():
             self.show_ffmpeg_dialog()
 
-        self.version = "4.2.0"
+        self.version = "4.2.1"
         self.check_for_updates()
         self.config_file = Path.home() / '.ytsage_config.json'
         load_saved_path(self)
@@ -224,7 +224,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         save_path(self, path) # Call the utility function
 
     def init_ui(self):
-        self.setWindowTitle('YTSage  v4.2.0')
+        self.setWindowTitle('YTSage  v4.2.1')
         self.setMinimumSize(900, 650)
 
         # Main widget and layout
