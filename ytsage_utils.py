@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import subprocess
 import tempfile
+import shutil
 from ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
 
 def check_ffmpeg():
@@ -49,45 +50,24 @@ def check_ffmpeg():
         return False
 
 def get_yt_dlp_path():
-    """Get the appropriate yt-dlp path with enhanced error handling."""
+    """Get the yt-dlp command or path, prioritizing the system PATH."""
     try:
-        if getattr(sys, 'frozen', False):
-            if sys.platform == 'darwin':
-                # For macOS .app bundle
-                if 'Contents/MacOS' in sys.executable:
-                    base_path = os.path.dirname(sys.executable)
-                else:
-                    # Fallback to user's home directory for macOS
-                    base_path = os.path.expanduser('~/Library/Application Support/YTSage')
-            elif sys.platform == 'win32':
-                # For Windows executable
-                app_data = os.getenv('APPDATA')
-                base_path = os.path.join(app_data, 'YTSage') if app_data else os.path.dirname(sys.executable)
-            else:
-                # For Linux AppImage or binary
-                if 'APPIMAGE' in os.environ:
-                    xdg_data = os.getenv('XDG_DATA_HOME', os.path.expanduser('~/.local/share'))
-                    base_path = os.path.join(xdg_data, 'YTSage')
-                else:
-                    base_path = os.path.dirname(sys.executable)
-                    
-            # Create directory if it doesn't exist
-            try:
-                os.makedirs(base_path, exist_ok=True)
-            except Exception as e:
-                print(f"Error creating directory: {e}")
-                base_path = os.path.dirname(sys.executable)
-                
-            return os.path.join(base_path, 'yt-dlp.exe' if sys.platform == 'win32' else 'yt-dlp')
+        # Use shutil.which to find yt-dlp in the system's PATH
+        yt_dlp_executable = shutil.which('yt-dlp')
+        
+        if yt_dlp_executable:
+            print(f"Found yt-dlp executable in PATH: {yt_dlp_executable}")
+            return yt_dlp_executable
         else:
-            # For development/script mode
-            return os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                              'yt-dlp.exe' if sys.platform == 'win32' else 'yt-dlp')
-                              
+            # If not found in PATH, assume 'yt-dlp' is the command name
+            print("yt-dlp not found in PATH. Will attempt to use 'yt-dlp' as the command.")
+            return 'yt-dlp'
+            
     except Exception as e:
-        print(f"Error determining yt-dlp path: {e}")
-        # Fallback to current directory
-        return os.path.join(os.getcwd(), 'yt-dlp.exe' if sys.platform == 'win32' else 'yt-dlp')
+        print(f"Error finding yt-dlp path: {e}")
+        # Fallback to the command name on any error
+        print("An error occurred during yt-dlp path detection. Falling back to command 'yt-dlp'.")
+        return 'yt-dlp'
 
 def load_saved_path(main_window_instance):
     """Load saved download path with enhanced error handling."""
