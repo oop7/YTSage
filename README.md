@@ -2,7 +2,7 @@
 
 # 🎥 YTSage
 
-<img src="https://github.com/user-attachments/assets/3388f214-8ff6-4478-9395-b00677e09d58" width="800" alt="YTSage Interface"/>
+<img src="https://github.com/user-attachments/assets/0beb84d7-fd26-465e-9c6c-427e28184d70" width="800" alt="YTSage Interface"/>
 
 [![PyPI version](https://badge.fury.io/py/ytsage.svg)](https://badge.fury.io/py/ytsage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -79,17 +79,19 @@ python main.py
 <div align="center">
 <table>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/3388f214-8ff6-4478-9395-b00677e09d58" alt="Main Interface" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/99330ae2-f027-4a13-a08e-16c715d7f481" alt="Playlist Download" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/0beb84d7-fd26-465e-9c6c-427e28184d70" alt="Main Interface" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/2029feec-8376-48d2-bde9-1d268ac25190" alt="Playlist Download" width="400"/></td>
+
   </tr>
   <tr>
     <td align="center"><em>Main Interface</em></td>
     <td align="center"><em>Playlist Download</em></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/c12113fa-c880-4386-833f-e12d37a13e20" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/6c38d250-ecbf-4334-ae24-d3834bcdc250" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/b48cf52e-c7af-494e-bdc4-5539a6617665" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/8e95be55-fa9d-4d0b-840d-2f130d400630" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
   </tr>
+
   <tr>
     <td align="center"><em>Audio Format</em></td>
     <td align="center"><em>Subtitle Options</em></td>
