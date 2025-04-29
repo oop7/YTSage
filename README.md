@@ -2,7 +2,7 @@
 
 # 🎥 YTSage
 
-<img src="https://github.com/user-attachments/assets/0beb84d7-fd26-465e-9c6c-427e28184d70" width="800" alt="YTSage Interface"/>
+<img src="https://github.com/user-attachments/assets/3388f214-8ff6-4478-9395-b00677e09d58" width="800" alt="YTSage Interface"/>
 
 [![PyPI version](https://badge.fury.io/py/ytsage.svg)](https://badge.fury.io/py/ytsage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -27,12 +27,13 @@ Download videos in any quality, extract audio, fetch subtitles, and more.
 
 <div align="center">
 
-| Core Features | Advanced Features | Extra Features |
-|--------------|-------------------|----------------|
-| 🎥 Smart Video Quality | 🚫 SponsorBlock Integration | 💾 Save Download Path |
-| 🎵 Audio Extraction | 📝 Subtitle Support & Filtering | 🔄 Auto-Updates |
-| 📊 Real-time Progress | ⚙️ Custom Commands | 🛠️ FFmpeg Tools |
-| 📋 Playlist Support | 🖼️ Save thumbnail | ⚠️ Error Handling |
+| Core Features                     | Advanced Features                       | Extra Features                     |
+|-----------------------------------|-----------------------------------------|------------------------------------|
+| 🎥 Format Table                   | 🚫 SponsorBlock Integration             | 💾 Save Download Path             |
+| 🎵 Audio Extraction               | 📝 Multi-Subtitle Select & Merge        | 🔄 Auto-Updates                   |
+| ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp Detection         |
+| 📋 Playlist Support              |  🖼️ Save thumbnail                       | ⚙️ Custom Commands                 |
+| 🖼️ Playlist Selector             | 🚀 Speed Limiter                        | 🍪 Login with Cookies              |
 
 </div>
 
@@ -40,7 +41,7 @@ Download videos in any quality, extract audio, fetch subtitles, and more.
 
 ### Quick Install (Recommended)
 ```bash
-pip install YTSage
+pip install ytsage
 ```
 ```bash
 # Run the application
@@ -52,10 +53,12 @@ ytsage
 
 ### Pre-built Executables
 - 🪟 Windows: `YTSage.exe`
+- 🪟 Windows: `YTSage-ffmpeg.exe` (Includes FFmpeg)
+- 🐧 Linux: `YTSage-x86_64.AppImage`
+- 🍎 macOS: `YTSage-macOS-app.zip`
 - 🍎 macOS: `YTSage.dmg`
-- 🐧 Linux: `YTSage.AppImage`
 
-### Manual Installation
+### Manual Installation from Source
 ```bash
 # Clone repository
 git clone https://github.com/oop7/YTSage.git
@@ -76,22 +79,20 @@ python main.py
 <div align="center">
 <table>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/0beb84d7-fd26-465e-9c6c-427e28184d70" alt="Main Interface" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/2029feec-8376-48d2-bde9-1d268ac25190" alt="Playlist Download" width="400"/></td>
-
+    <td><img src="https://github.com/user-attachments/assets/3388f214-8ff6-4478-9395-b00677e09d58" alt="Main Interface" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/99330ae2-f027-4a13-a08e-16c715d7f481" alt="Playlist Download" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Main Interface</em></td>
     <td align="center"><em>Playlist Download</em></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/b48cf52e-c7af-494e-bdc4-5539a6617665" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/8e95be55-fa9d-4d0b-840d-2f130d400630" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/c12113fa-c880-4386-833f-e12d37a13e20" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
+    <td><img src="https://github.com/user-attachments/assets/6c38d250-ecbf-4334-ae24-d3834bcdc250" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
   </tr>
-
   <tr>
-    <td align="center"><em>Audio Format Selection with Save Thumbnail</em></td>
-    <td align="center"><em>Subtitle Options merged with Remove Sponsor Segments</em></td>
+    <td align="center"><em>Audio Format</em></td>
+    <td align="center"><em>Subtitle Options</em></td>
   </tr>
 </table>
 </div>
@@ -109,9 +110,10 @@ python main.py
    - `Audio Only` for audio extraction
 5. **Choose Options:**
    - Enable subtitles & select language
-   - Enable subtitle embedding
+   - Enable subtitle merge
    - Save thumbnail
    - Remove sponsor segments
+   - Save description
 6. **Select Output Directory**
 7. **Click "Download"**
 
@@ -122,8 +124,9 @@ python main.py
 
 1. **Paste Playlist URL**
 2. **Click "Analyze"**
-3. **Select Best Quality**
-4. **Click "Download"**
+3. **Select videos from the playlist selector (optional, defaults to all)**
+4. **Choose desired format/quality**
+5. **Click "Download"**
 
 > 💡 The application automatically handles the download queue
 
@@ -134,9 +137,18 @@ python main.py
 
 - **Quality Selection:** Choose the highest resolution for best quality
 - **Subtitle Options:** Filter languages and embed into video
-- **SponsorBlock:** Automatically skip promotional content
 - **Custom Commands:** Access advanced yt-dlp features
-- **Output Directory:** Ensure sufficient storage space
+- **Save Description:** Save the description of the video
+- **Save Thumbnail:** Save the thumbnail of the video
+- **Remove Sponsor Segments:** Remove sponsor segments from the video
+- **Speed Limiter:** Limit the download speed
+- **Login with Cookies:** Login with cookies
+- **Save Download Path:** Save the download path
+- **Update yt-dlp:** Update yt-dlp
+- **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp
+- **Custom Commands:** Access advanced yt-dlp features
+
+
 
 </details>
 
@@ -150,6 +162,7 @@ Pillow
 requests
 FFmpeg
 packaging
+markdown
 ```
 
 ## 👥 Contributing
@@ -193,6 +206,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | [PySide6](https://wiki.qt.io/Qt_for_Python) | GUI Framework |
 | [FFmpeg](https://ffmpeg.org/) | Media Processing |
 | [Pillow](https://python-pillow.org/) | Image Processing |
+| [requests](https://requests.readthedocs.io/) | HTTP Requests |
+| [packaging](https://packaging.python.org/) | Packaging |
+| [markdown](https://python-markdown.github.io/) | Markdown Processing |
 
 </div>
 
