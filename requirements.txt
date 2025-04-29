@@ -3,4 +3,3 @@ yt-dlp
 requests
 pillow
 packaging
-markdown
