@@ -144,7 +144,7 @@ python main.py
 - **Speed Limiter:** Limit the download speed
 - **Login with Cookies:** Login with cookies
 - **Save Download Path:** Save the download path
-- **Update yt-dlp:** Update yt-dlp
+- **Update yt-dlp:** Updates yt-dlp (works if installed via **PyPI** or when running from **source** using `main.py`)
 - **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp
 - **Custom Commands:** Access advanced yt-dlp features
 
