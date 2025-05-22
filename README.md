@@ -196,6 +196,10 @@ We welcome contributions! Here's how you can help:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🛠️ Troubleshooting
+
+- When the app doesn't display the format table, update yt-dlp
+
 ## 🙏 Acknowledgments
 
 <div align="center">
