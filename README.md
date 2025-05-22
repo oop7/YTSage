@@ -152,6 +152,10 @@ python main.py
 
 </details>
 
+## 🛠️ Troubleshooting
+
+- When the app doesn't display the format table, update yt-dlp
+
 ## 🛠️ Requirements
 
 ```plaintext
@@ -195,10 +199,6 @@ We welcome contributions! Here's how you can help:
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🛠️ Troubleshooting
-
-- When the app doesn't display the format table, update yt-dlp
 
 ## 🙏 Acknowledgments
 
