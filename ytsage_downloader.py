@@ -5,6 +5,7 @@ import os
 import re
 import subprocess # For direct CLI command execution
 import shlex # For safely parsing command arguments
+import sys  # Added to get executable path information
 from pathlib import Path
 
 class SignalManager(QObject):
@@ -207,7 +208,33 @@ class DownloadThread(QThread):
 
     def _build_yt_dlp_command(self):
         """Build the yt-dlp command line with all options for direct execution."""
-        cmd = ["yt-dlp"]
+        # Use bundled yt-dlp executable instead of system PATH
+        # Determine if we're running from a PyInstaller bundle
+        if getattr(sys, 'frozen', False):
+            # We're running from a PyInstaller bundle
+            base_path = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))
+            yt_dlp_path = os.path.join(base_path, "yt-dlp.exe" if os.name == 'nt' else "yt-dlp")
+            if os.path.exists(yt_dlp_path):
+                cmd = [yt_dlp_path]
+                print(f"DEBUG: Using bundled yt-dlp from: {yt_dlp_path}")
+                
+                # Check if the bundled executable is actually executable
+                if not os.access(yt_dlp_path, os.X_OK) and os.name != 'nt':  # Skip check on Windows
+                    print(f"WARNING: Bundled yt-dlp exists but is not executable: {yt_dlp_path}")
+                    try:
+                        # Try to make it executable
+                        os.chmod(yt_dlp_path, 0o755)
+                        print(f"Fixed permissions on bundled yt-dlp")
+                    except Exception as e:
+                        print(f"Failed to fix permissions: {e}")
+            else:
+                # Fall back to regular command if bundled version not found
+                cmd = ["yt-dlp"]
+                print(f"DEBUG: Bundled yt-dlp not found at {yt_dlp_path}, using system PATH")
+        else:
+            # We're running from source, use system PATH
+            cmd = ["yt-dlp"]
+            print("DEBUG: Using system PATH for yt-dlp")
         
         # Format selection strategy - use format ID if provided or fallback to resolution
         if self.format_id:
@@ -424,6 +451,12 @@ class DownloadThread(QThread):
             # Wait for process to complete
             return_code = self.process.wait()
             
+            # Special handling for specific errors
+            # return code 127 typically means command not found
+            if return_code == 127:
+                self.error_signal.emit("Error: yt-dlp executable not found. This could be due to improper installation or a PATH issue.")
+                return
+                
             if return_code == 0:
                 self.progress_signal.emit(100)
                 self.status_signal.emit("✅ Download completed!")
@@ -443,7 +476,11 @@ class DownloadThread(QThread):
                 if self.cancelled:
                     self.status_signal.emit("Download cancelled")
                 else:
-                    self.error_signal.emit(f"Download failed with return code {return_code}")
+                    # Provide more descriptive error message for possible yt-dlp conflicts
+                    if return_code == 1:
+                        self.error_signal.emit(f"Download failed with return code {return_code}. This may be due to a conflict with multiple yt-dlp installations. Try uninstalling any system-installed yt-dlp (e.g. through snap or apt) and restart the application.")
+                    else:
+                        self.error_signal.emit(f"Download failed with return code {return_code}")
                     self.cleanup_partial_files()
                     
         except Exception as e:
