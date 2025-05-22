@@ -36,7 +36,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         if not check_ffmpeg():
             self.show_ffmpeg_dialog()
 
-        self.version = "4.5.0"
+        self.version = "4.5.2"
         self.check_for_updates()
         self.config_file = Path.home() / '.ytsage_config.json'
         load_saved_path(self)
@@ -253,7 +253,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         save_path(self, path) # Call the utility function
 
     def init_ui(self):
-        self.setWindowTitle('YTSage  v4.5.0')
+        self.setWindowTitle('YTSage  v4.5.2')
         self.setMinimumSize(900, 750)
 
         # Main widget and layout
@@ -779,8 +779,20 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         self.url_input.setText(clipboard.text())
 
     def update_ytdlp(self):
-        dialog = YTDLPUpdateDialog(self)
-        dialog.exec()
+        # Check if we're running in a PyInstaller package
+        if getattr(sys, 'frozen', False):
+            # Running from PyInstaller package, show info message
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Icon.Information)
+            msg_box.setWindowTitle("Feature Unavailable")
+            msg_box.setText("This feature is available only on the Python (PyPI) version.")
+            msg_box.setInformativeText("To update yt-dlp in a packaged version, please download a new version of the application.")
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg_box.exec()
+        else:
+            # Running from source code, show the normal update dialog
+            dialog = YTDLPUpdateDialog(self)
+            dialog.exec()
 
     def show_download_settings_dialog(self): # Renamed method
         dialog = DownloadSettingsDialog(
