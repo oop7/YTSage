@@ -5,6 +5,9 @@ from pathlib import Path
 import subprocess
 import tempfile
 import shutil
+import pkg_resources
+from packaging import version
+import requests
 from ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
 
 def check_ffmpeg():
@@ -131,3 +134,48 @@ def save_path(main_window_instance, path):
     except Exception as e:
         print(f"Error saving settings: {e}")
         return False
+
+def update_yt_dlp():
+    """Check for yt-dlp updates and update if a newer version is available."""
+    try:
+        # Get current version
+        try:
+            current_version = pkg_resources.get_distribution("yt-dlp").version
+            print(f"Current yt-dlp version: {current_version}")
+        except pkg_resources.DistributionNotFound:
+            print("yt-dlp not installed via pip, attempting update anyway")
+            current_version = "0.0.0"  # Assume very old version to force update
+            
+        # Get the latest version from PyPI JSON API
+        try:
+            response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                latest_version = data["info"]["version"]
+                print(f"Latest available yt-dlp version: {latest_version}")
+                
+                # Compare versions and update if needed
+                if version.parse(latest_version) > version.parse(current_version):
+                    print(f"Updating yt-dlp from {current_version} to {latest_version}...")
+                    update_result = subprocess.run(
+                        [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
+                        capture_output=True,
+                        text=True,
+                        check=False
+                    )
+                    if update_result.returncode == 0:
+                        print("yt-dlp successfully updated")
+                        return True
+                    else:
+                        print(f"Error updating yt-dlp: {update_result.stderr}")
+                else:
+                    print("yt-dlp is already up to date")
+                    return True
+            else:
+                print(f"Failed to get latest version info: HTTP {response.status_code}")
+        except Exception as e:
+            print(f"Error checking for yt-dlp updates: {e}")
+    except Exception as e:
+        print(f"Unexpected error during yt-dlp update: {e}")
+    
+    return False
