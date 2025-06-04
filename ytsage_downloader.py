@@ -21,7 +21,7 @@ class DownloadThread(QThread):
     file_exists_signal = Signal(str)  # New signal for file existence
     update_details = Signal(str) # New signal for filename, speed, ETA
 
-    def __init__(self, url, path, format_id, subtitle_langs=None, is_playlist=False, merge_subs=False, enable_sponsorblock=False, resolution='', playlist_items=None, save_description=False, cookie_file=None, rate_limit=None):
+    def __init__(self, url, path, format_id, subtitle_langs=None, is_playlist=False, merge_subs=False, enable_sponsorblock=False, resolution='', playlist_items=None, save_description=False, cookie_file=None, rate_limit=None, download_section=None, force_keyframes=False):
         super().__init__()
         self.url = url
         self.path = path
@@ -35,6 +35,8 @@ class DownloadThread(QThread):
         self.save_description = save_description
         self.cookie_file = cookie_file
         self.rate_limit = rate_limit
+        self.download_section = download_section
+        self.force_keyframes = force_keyframes
         self.paused = False
         self.cancelled = False
         self.process = None
@@ -362,6 +364,16 @@ class DownloadThread(QThread):
         # Add rate limit if specified
         if self.rate_limit:
             cmd.extend(["-r", self.rate_limit])
+        
+        # Add download section if specified
+        if self.download_section:
+            cmd.extend(["--download-sections", self.download_section])
+            
+            # Add force keyframes option if enabled
+            if self.force_keyframes:
+                cmd.append("--force-keyframes-at-cuts")
+                
+            print(f"DEBUG: Added download section: {self.download_section}, Force keyframes: {self.force_keyframes}")
         
         # Add the URL as the final argument
         cmd.append(self.url)
