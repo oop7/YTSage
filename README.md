@@ -34,6 +34,7 @@ Download videos in any quality, extract audio, fetch subtitles, and more.
 | ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp Detection         |
 | 📋 Playlist Support              |  🖼️ Save thumbnail                       | ⚙️ Custom Commands                 |
 | 🖼️ Playlist Selector             | 🚀 Speed Limiter                        | 🍪 Login with Cookies              |
+|                                   | ✂️ Trim Video Sections                   |                                    |
 
 </div>
 
@@ -147,7 +148,7 @@ python main.py
 - **Update yt-dlp:** Updates yt-dlp (works if installed via **PyPI** or when running from **source** using `main.py`)
 - **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp
 - **Custom Commands:** Access advanced yt-dlp features
-
+- **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
 
 
 </details>
