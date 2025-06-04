@@ -249,7 +249,7 @@ class FormatTableMixin:
             # Column 3: Notes for playlist mode, Extension for normal mode
             if is_playlist_mode:
                 # Get notes for playlist mode
-                notes = self.get_format_notes(f, 0)  # We don't need best_video_size for simple notes
+                notes = self._get_format_notes(f)
                 notes_item = QTableWidgetItem(notes)
                 if "✨ Recommended" in notes:
                     notes_item.setForeground(QColor('#00ff00'))  # Green for recommended
@@ -296,7 +296,7 @@ class FormatTableMixin:
                 self.format_table.setItem(row, 5, QTableWidgetItem(codec))
     
                 # Column 7: Notes
-                notes = self.get_format_notes(f, best_video_size)
+                notes = self._get_format_notes(f)
                 notes_item = QTableWidgetItem(notes)
                 if "✨ Recommended" in notes:
                     notes_item.setForeground(QColor('#00ff00'))  # Green for recommended
@@ -357,54 +357,43 @@ class FormatTableMixin:
             else:
                 return "Low Quality"
 
-    def get_format_notes(self, format_info, best_video_size):
-        """Generate helpful notes about the format"""
-        if format_info.get('vcodec') == 'none':
-            # Audio format
-            abr = format_info.get('abr', 0)
-            if abr >= 256:
-                return "✨ Recommended for music"
-            elif abr >= 128:
-                return "📱 Mobile friendly"
-            return "💾 Storage friendly"
-        else:
-            # Video format
-            height = 0
-            resolution = format_info.get('resolution', '')
-            if resolution:
-                try:
-                    height = int(resolution.split('x')[1])
-                except:
-                    pass
+    def _get_format_notes(self, format_info):
+        """Generate helpful format notes based on format info."""
+        notes = []
+        
+        # Add storage indicator with more granular categories
+        file_size = format_info.get('filesize') or format_info.get('filesize_approx', 0)
+        resolution = format_info.get('resolution', '')
+        height = 0
+        if resolution:
+            try:
+                height = int(resolution.split('x')[1])
+            except:
+                pass
+                
+        # Better file size categories
+        if file_size > 50 * 1024 * 1024:  # Over 50MB
+            notes.append("Large size")
+        elif file_size > 15 * 1024 * 1024:  # 15-50MB
+            notes.append("Medium size")
+        elif file_size > 5 * 1024 * 1024:  # 5-15MB
+            notes.append("Standard size")
+        else:  # Under 5MB
+            notes.append("Small size")
             
-            filesize = format_info.get('filesize', 0)
+        # Add codec quality indicator
+        vcodec = format_info.get('vcodec', '')
+        if vcodec != 'none':
+            if 'avc1' in vcodec:  # H.264
+                notes.append("Compatible")
+            elif 'av01' in vcodec:  # AV1
+                notes.append("Efficient")
+            elif 'vp9' in vcodec:  # VP9
+                notes.append("High quality")
+                
+        # Add quick mobile compatibility check
+        if 'avc1' in vcodec and file_size < 8 * 1024 * 1024:
+            notes.append("Mobile")
             
-            notes = []
-            
-            # Resolution-based recommendations
-            if height >= 1440:  # 2K or 4K
-                if filesize == best_video_size:
-                    notes.append("✨ Recommended for high-end displays")
-                else:
-                    notes.append("🖥️ Best for large screens")
-            elif height == 1080:
-                if 'avc1' in format_info.get('vcodec', '').lower():
-                    notes.append("✨ Recommended for most devices")
-                else:
-                    notes.append("👍 Good balance")
-            elif height == 720:
-                notes.append("📱 Mobile friendly")
-            else:
-                notes.append("💾 Storage friendly")
-            
-            # Codec-based notes
-            if 'av1' in format_info.get('vcodec', '').lower():
-                notes.append("Better compression")
-            elif 'vp9' in format_info.get('vcodec', '').lower():
-                notes.append("Good for Chrome")
-            
-            # File size note for large files
-            if filesize > 100 * 1024 * 1024:  # More than 100MB
-                notes.append("Large file")
-            
-            return " • ".join(notes)
+        # Return simple string
+        return " • ".join(notes)
