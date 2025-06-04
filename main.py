@@ -1,6 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMessageBox
 from ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
+from ytsage_utils import update_yt_dlp  # Import the update function
 
 def show_error_dialog(message):
     error_dialog = QMessageBox()
@@ -12,6 +13,13 @@ def show_error_dialog(message):
 
 def main():
     try:
+        # Try to update yt-dlp before starting the app
+        try:
+            update_yt_dlp()
+        except Exception as e:
+            print(f"Warning: Could not update yt-dlp: {e}")
+            # Continue with application startup even if the update fails
+        
         app = QApplication(sys.argv)
         window = YTSageApp() # Instantiate the main application class
         window.show()
