@@ -25,7 +25,7 @@ from ytsage_utils import check_ffmpeg, get_yt_dlp_path, load_saved_path, save_pa
 from ytsage_gui_dialogs import (LogWindow, CustomCommandDialog, FFmpegCheckDialog, 
                                 YTDLPUpdateDialog, AboutDialog, SubtitleSelectionDialog, 
                                 PlaylistSelectionDialog, CookieLoginDialog,
-                                DownloadSettingsDialog) # <-- Use renamed dialog
+                                DownloadSettingsDialog, CustomOptionsDialog, TimeRangeDialog) # Added TimeRangeDialog
 from ytsage_gui_format_table import FormatTableMixin # Import FormatTableMixin
 from ytsage_gui_video_info import VideoInfoMixin # Import VideoInfoMixin
 
@@ -36,7 +36,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         if not check_ffmpeg():
             self.show_ffmpeg_dialog()
 
-        self.version = "4.5.2"
+        self.version = "4.5.6"
         self.check_for_updates()
         self.config_file = Path.home() / '.ytsage_config.json'
         load_saved_path(self)
@@ -69,6 +69,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         self.cookie_file_path = None # Initialize cookie file path
         self.speed_limit_value = None # Store speed limit value
         self.speed_limit_unit_index = 0 # Store speed limit unit index (0: KB/s, 1: MB/s)
+        self.download_section = None
+        self.force_keyframes = False
 
         self.init_ui()
         self.setStyleSheet("""
@@ -253,7 +255,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         save_path(self, path) # Call the utility function
 
     def init_ui(self):
-        self.setWindowTitle('YTSage  v4.5.2')
+        self.setWindowTitle('YTSage  v4.5.6')
         self.setMinimumSize(900, 750)
 
         # Main widget and layout
@@ -492,19 +494,19 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         # Download section
         download_layout = QHBoxLayout()
 
-        # Add existing buttons
-        self.custom_cmd_btn = QPushButton('Custom Command')
-        self.custom_cmd_btn.clicked.connect(self.show_custom_command)
-
-        # New button for cookie login
-        self.cookie_login_button = QPushButton("Login with Cookies")
-        self.cookie_login_button.clicked.connect(self.show_cookie_login_dialog) # Connect to a new method
-
-        self.update_ytdlp_btn = QPushButton('Update yt-dlp')
-        self.update_ytdlp_btn.clicked.connect(self.update_ytdlp)
+        # Replace the two separate buttons with a single Custom Options button
+        self.custom_options_btn = QPushButton('Custom Options')
+        self.custom_options_btn.clicked.connect(self.show_custom_options)
 
         self.about_btn = QPushButton('About')
         self.about_btn.clicked.connect(self.show_about_dialog)
+
+        # Add new Time Range button
+        self.time_range_btn = QPushButton('Trim Video')
+        self.time_range_btn.clicked.connect(self.show_time_range_dialog)
+        
+        self.update_ytdlp_btn = QPushButton('Update yt-dlp')
+        self.update_ytdlp_btn.clicked.connect(self.update_ytdlp)
 
         # --- Rename Path Button to Settings Button ---
         self.settings_button = QPushButton("Download Settings") # Renamed button
@@ -525,10 +527,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         self.cancel_btn.setVisible(False)  # Hidden initially
 
         # Add all buttons to layout in the correct order
-        download_layout.addWidget(self.custom_cmd_btn)
-        download_layout.addWidget(self.cookie_login_button)
-        download_layout.addWidget(self.update_ytdlp_btn)
+        download_layout.addWidget(self.custom_options_btn)
         download_layout.addWidget(self.about_btn)
+        download_layout.addWidget(self.time_range_btn)  # New button position
+        download_layout.addWidget(self.update_ytdlp_btn)
         download_layout.addWidget(self.settings_button)
         download_layout.addWidget(self.download_btn)
         download_layout.addWidget(self.pause_btn)
@@ -910,7 +912,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
             playlist_items=playlist_items_to_download, # Pass the selection string
             save_description=self.save_description, # Pass the new flag here
             cookie_file=self.cookie_file_path, # Pass the cookie file path
-            rate_limit=rate_limit # Pass the calculated rate limit
+            rate_limit=rate_limit, # Pass the calculated rate limit
+            download_section=self.download_section, # Pass the download section
+            force_keyframes=self.force_keyframes # Pass the force keyframes setting
         )
 
         # Connect signals
@@ -1099,71 +1103,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
     def open_release_page(self, url):
         webbrowser.open(url)
 
-    def show_custom_command(self):
-        dialog = CustomCommandDialog(self)
-        dialog.exec()
-
-    def cancel_download(self):
-        if self.current_download:
-            self.current_download.cancelled = True
-            self.status_label.setText("Cancelling download...") # Set status directly
-            self.download_details_label.setText("") # Clear details label on cancellation
-
-    def show_ffmpeg_dialog(self):
-        dialog = FFmpegCheckDialog(self)
-        dialog.exec()
-
-    def toggle_download_controls(self, enabled=True):
-        """Enable or disable download-related controls"""
-        self.url_input.setEnabled(enabled)
-        self.analyze_button.setEnabled(enabled)
-        self.format_table.setEnabled(enabled)  # Changed from format_scroll_area to format_table
-        self.download_btn.setEnabled(enabled)
-        if hasattr(self, 'subtitle_combo'):
-            self.subtitle_combo.setEnabled(enabled)
-        self.video_button.setEnabled(enabled)
-        self.audio_button.setEnabled(enabled)
-        self.sponsorblock_checkbox.setEnabled(enabled)
-        self.merge_subs_checkbox.setEnabled(enabled) # Enable/disable merge subs checkbox
-        self.custom_cmd_btn.setEnabled(enabled) # Enable/disable custom command button
-        self.cookie_login_button.setEnabled(enabled) # Enable/disable login button
-        self.update_ytdlp_btn.setEnabled(enabled) # Enable/disable update button
-        self.settings_button.setEnabled(enabled) # Enable/disable settings button
-
-        # Clear progress/status when controls are re-enabled
-        if enabled:
-            self.progress_bar.setValue(0)
-            self.status_label.setText("Ready")
-            self.download_details_label.setText("") # Clear details label
-
-    def handle_format_selection(self, button):
-        # Update formats
-        self.filter_formats()
-
-    def handle_mode_change(self):
-        """Enable or disable features based on video/audio mode"""
-        if self.audio_button.isChecked():
-            # In Audio Only mode, disable video-specific features
-            self.sponsorblock_checkbox.setEnabled(False)
-            self.sponsorblock_checkbox.setChecked(False)  # Uncheck when disabled
-            self.merge_subs_checkbox.setEnabled(False)
-            self.merge_subs_checkbox.setChecked(False)  # Uncheck when disabled
-            
-            # Allow subtitle selection in Audio Only mode too
-            if hasattr(self, 'subtitle_select_btn'):
-                self.subtitle_select_btn.setEnabled(True)
-        else:
-            # In Video mode, enable video-specific features
-            self.sponsorblock_checkbox.setEnabled(True)
-            # Don't auto-check - leave it to user preference
-            
-            # Enable merge_subs only if subtitles are selected
-            has_subs_selected = len(getattr(self, 'selected_subtitles', [])) > 0
-            self.merge_subs_checkbox.setEnabled(has_subs_selected)
-            
-            # Re-enable subtitle selection button in Video mode
-            if hasattr(self, 'subtitle_select_btn'):
-                self.subtitle_select_btn.setEnabled(True)
+    def show_custom_options(self):
+        dialog = CustomOptionsDialog(self)
+        if dialog.exec():
+            # Handle cookies if set
+            cookie_path = dialog.get_cookie_file_path()
+            if cookie_path:
+                self.cookie_file_path = cookie_path
+                print(f"Selected cookie file: {self.cookie_file_path}")
+                QMessageBox.information(self, "Cookie File Selected", f"Cookie file selected: {self.cookie_file_path}")
+            else:
+                # Don't clear the cookie path if nothing was selected
+                pass
 
     def show_about_dialog(self): # ADDED METHOD HERE
         dialog = AboutDialog(self)
@@ -1268,12 +1219,112 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
              self.playlist_select_btn.setText(text)
     # --- End New Slot ---
 
+    def toggle_download_controls(self, enabled=True):
+        """Enable or disable download-related controls"""
+        self.url_input.setEnabled(enabled)
+        self.analyze_button.setEnabled(enabled)
+        self.format_table.setEnabled(enabled)  # Changed from format_scroll_area to format_table
+        self.download_btn.setEnabled(enabled)
+        if hasattr(self, 'subtitle_combo'):
+            self.subtitle_combo.setEnabled(enabled)
+        self.video_button.setEnabled(enabled)
+        self.audio_button.setEnabled(enabled)
+        self.sponsorblock_checkbox.setEnabled(enabled)
+        self.merge_subs_checkbox.setEnabled(enabled) # Enable/disable merge subs checkbox
+        self.custom_options_btn.setEnabled(enabled) # Enable/disable custom options button
+        self.update_ytdlp_btn.setEnabled(enabled) # Enable/disable update button
+        self.time_range_btn.setEnabled(enabled) # Enable/disable time range button
+        self.settings_button.setEnabled(enabled) # Enable/disable settings button
+
+        # Clear progress/status when controls are re-enabled
+        if enabled:
+            self.progress_bar.setValue(0)
+            self.status_label.setText("Ready")
+            self.download_details_label.setText("") # Clear details label
+
+    def handle_format_selection(self, button):
+        # Update formats
+        self.filter_formats()
+
+    def handle_mode_change(self):
+        """Enable or disable features based on video/audio mode"""
+        if self.audio_button.isChecked():
+            # In Audio Only mode, disable video-specific features
+            self.sponsorblock_checkbox.setEnabled(False)
+            self.sponsorblock_checkbox.setChecked(False)  # Uncheck when disabled
+            self.merge_subs_checkbox.setEnabled(False)
+            self.merge_subs_checkbox.setChecked(False)  # Uncheck when disabled
+            
+            # Allow subtitle selection in Audio Only mode too
+            if hasattr(self, 'subtitle_select_btn'):
+                self.subtitle_select_btn.setEnabled(True)
+        else:
+            # In Video mode, enable video-specific features
+            self.sponsorblock_checkbox.setEnabled(True)
+            # Don't auto-check - leave it to user preference
+            
+            # Enable merge_subs only if subtitles are selected
+            has_subs_selected = len(getattr(self, 'selected_subtitles', [])) > 0
+            self.merge_subs_checkbox.setEnabled(has_subs_selected)
+            
+            # Re-enable subtitle selection button in Video mode
+            if hasattr(self, 'subtitle_select_btn'):
+                self.subtitle_select_btn.setEnabled(True)
+
+    # Keep these methods for backwards compatibility - they just call the new dialog now
+    def show_custom_command(self):
+        dialog = CustomOptionsDialog(self)
+        dialog.tab_widget.setCurrentIndex(1)  # Select the Custom Command tab
+        dialog.exec()
+        
     def show_cookie_login_dialog(self):
-        dialog = CookieLoginDialog(self)
+        dialog = CustomOptionsDialog(self)
+        dialog.tab_widget.setCurrentIndex(0)  # Select the Cookie Login tab
         if dialog.exec():
             self.cookie_file_path = dialog.get_cookie_file_path()
             if self.cookie_file_path:
-                print(f"Selected cookie file: {self.cookie_file_path}") # For debugging
+                print(f"Selected cookie file: {self.cookie_file_path}")
                 QMessageBox.information(self, "Cookie File Selected", f"Cookie file selected: {self.cookie_file_path}")
             else:
                 self.cookie_file_path = None # Clear path if dialog accepted but no file selected
+
+    def cancel_download(self):
+        if self.current_download:
+            self.current_download.cancelled = True
+            self.status_label.setText("Cancelling download...") # Set status directly
+            self.download_details_label.setText("") # Clear details label on cancellation
+
+    def show_ffmpeg_dialog(self):
+        dialog = FFmpegCheckDialog(self)
+        dialog.exec()
+
+    # Add method for showing time range dialog
+    def show_time_range_dialog(self):
+        dialog = TimeRangeDialog(self)
+        if dialog.exec():
+            # Store the time range settings
+            self.download_section = dialog.get_download_sections()
+            self.force_keyframes = dialog.get_force_keyframes()
+            
+            if self.download_section:
+                self.time_range_btn.setStyleSheet("""
+                    QPushButton {
+                        padding: 8px 15px;
+                        background-color: #c90000;
+                        border: none;
+                        border-radius: 4px;
+                        color: white;
+                        font-weight: bold;
+                        border: 2px solid white;
+                    }
+                    QPushButton:hover {
+                        background-color: #a50000;
+                    }
+                """)
+                self.time_range_btn.setToolTip(f"Section set: {self.download_section}")
+            else:
+                # Reset to default style if no section is selected
+                self.download_section = None
+                self.force_keyframes = False
+                self.time_range_btn.setStyleSheet("")
+                self.time_range_btn.setToolTip("")
