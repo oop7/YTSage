@@ -134,7 +134,7 @@ python main.py
 </details>
 
 <details>
-<summary>⚙️ Advanced Options</summary>
+<summary>🧰 Advanced Options</summary>
 
 - **Quality Selection:** Choose the highest resolution for best quality
 - **Subtitle Options:** Filter languages and embed into video
@@ -153,11 +153,14 @@ python main.py
 
 </details>
 
-## 🛠️ Troubleshooting
+<details>
+<summary>🛠️ Troubleshooting</summary>
 
-- When the app doesn't display the format table, update yt-dlp
+- **When the app doesn't display the format table:** Update yt-dlp
 
-## 🛠️ Requirements
+</details>
+
+## 🧩 Requirements
 
 ```plaintext
 Python 3.7+
