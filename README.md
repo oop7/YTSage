@@ -55,6 +55,7 @@ ytsage
 ### Pre-built Executables
 - 🪟 Windows: `YTSage.exe`
 - 🪟 Windows: `YTSage-ffmpeg.exe` (Includes FFmpeg)
+- 🐧 Linux: `YTSage_{version}_amd64.deb`
 - 🐧 Linux: `YTSage-x86_64.AppImage`
 - 🍎 macOS: `YTSage-macOS-app.zip`
 - 🍎 macOS: `YTSage.dmg`
