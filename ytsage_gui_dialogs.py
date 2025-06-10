@@ -1258,6 +1258,33 @@ class DownloadSettingsDialog(QDialog): # Renamed class
         self.speed_limit_unit = QComboBox()
         self.speed_limit_unit.addItems(["KB/s", "MB/s"])
         self.speed_limit_unit.setCurrentIndex(self.current_unit_index) # Set initial unit
+        # Apply custom styling to match the theme
+        self.speed_limit_unit.setStyleSheet("""
+            QComboBox {
+                padding: 5px;
+                border: 2px solid #1b2021;
+                border-radius: 4px;
+                background-color: #1b2021;
+                color: #ffffff;
+                min-height: 20px;
+            }
+            QComboBox::drop-down {
+                border: none;
+                width: 20px;
+            }
+            QComboBox::down-arrow {
+                width: 12px;
+                height: 12px;
+            }
+            QComboBox QAbstractItemView {
+                border: 2px solid #1b2021;
+                border-radius: 4px;
+                background-color: #15181b;
+                color: #ffffff;
+                selection-background-color: #c90000;
+                selection-color: #ffffff;
+            }
+        """)
         speed_layout.addWidget(self.speed_limit_unit)
 
         speed_group_box.setLayout(speed_layout)
