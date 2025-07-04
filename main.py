@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMessageBox
 from ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
-from ytsage_utils import update_yt_dlp  # Import the update function
+from ytsage_yt_dlp import check_ytdlp_binary, setup_ytdlp, get_ytdlp_executable_path  # Import the new yt-dlp setup functions
 
 def show_error_dialog(message):
     error_dialog = QMessageBox()
@@ -13,14 +13,16 @@ def show_error_dialog(message):
 
 def main():
     try:
-        # Try to update yt-dlp before starting the app
-        try:
-            update_yt_dlp()
-        except Exception as e:
-            print(f"Warning: Could not update yt-dlp: {e}")
-            # Continue with application startup even if the update fails
-        
         app = QApplication(sys.argv)
+        
+        # Get the expected binary path and check if it exists
+        expected_path = get_ytdlp_executable_path()
+        if not check_ytdlp_binary():
+            # No app-specific binary found, show setup dialog regardless of Python package
+            yt_dlp_path = setup_ytdlp()
+            if yt_dlp_path == "yt-dlp":  # If user canceled or something went wrong
+                print(f"Warning: yt-dlp not configured properly")
+        
         window = YTSageApp() # Instantiate the main application class
         window.show()
         sys.exit(app.exec())
