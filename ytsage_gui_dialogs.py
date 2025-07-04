@@ -5,8 +5,8 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                             QHBoxLayout, QLineEdit, QPushButton, QTableWidget,
                             QTableWidgetItem, QProgressBar, QLabel, QFileDialog,
                             QHeaderView, QStyle, QStyleFactory, QComboBox, QTextEdit, QDialog, QPlainTextEdit, QCheckBox, QButtonGroup, QListWidget,
-                            QListWidgetItem, QDialogButtonBox, QScrollArea, QGroupBox, QTabWidget)
-from PySide6.QtCore import Qt, Signal, QObject, QThread, QProcess
+                            QListWidgetItem, QDialogButtonBox, QScrollArea, QGroupBox, QTabWidget, QRadioButton, QMessageBox)
+from PySide6.QtCore import Qt, Signal, QObject, QThread, QProcess, QTimer
 from PySide6.QtGui import QIcon, QPalette, QColor, QPixmap
 import requests
 from io import BytesIO
@@ -17,10 +17,17 @@ from pathlib import Path
 from packaging import version
 import subprocess
 import re
-import yt_dlp
+try:
+    import yt_dlp
+    YT_DLP_AVAILABLE = True
+except ImportError:
+    YT_DLP_AVAILABLE = False
+    print("Warning: yt-dlp not available at startup, will be downloaded at runtime")
+import time  # Add time import for cache timestamps
 from ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
+from ytsage_yt_dlp import get_yt_dlp_path
 
-from ytsage_utils import check_ffmpeg, get_yt_dlp_path, load_saved_path, save_path # Import utility functions
+from ytsage_utils import check_ffmpeg, load_saved_path, save_path, get_ytdlp_version, get_ffmpeg_version, refresh_version_cache, _version_cache # Import utility functions
 
 
 class LogWindow(QDialog):
@@ -408,33 +415,39 @@ class VersionCheckThread(QThread):
         error_message = ""
         
         try:
-            # Get the yt-dlp executable path
-            if getattr(sys, 'frozen', False):
-                if sys.platform == 'win32':
-                    yt_dlp_path = os.path.join(os.path.dirname(sys.executable), 'yt-dlp.exe')
-                else:
-                    yt_dlp_path = os.path.join(os.path.dirname(sys.executable), 'yt-dlp')
-            else:
-                yt_dlp_path = 'yt-dlp'
+            # Get the yt-dlp executable path using the new module
+            yt_dlp_path = get_yt_dlp_path()
             
-            # Get current version
+            # Get current version with timeout
             try:
                 result = subprocess.run([yt_dlp_path, '--version'], 
                                      capture_output=True, 
                                      text=True,
+                                     timeout=30,  # 30 second timeout
                                      startupinfo=None if sys.platform != 'win32' else subprocess.STARTUPINFO(dwFlags=subprocess.STARTF_USESHOWWINDOW, wShowWindow=subprocess.SW_HIDE), # Hide console window on Windows
                                      creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0) # Hide console window on Windows
                 if result.returncode == 0:
                     current_version = result.stdout.strip()
                 else: # Try fallback if command failed
-                    import yt_dlp
+                    if YT_DLP_AVAILABLE:
+                        current_version = yt_dlp.version.__version__
+                    else:
+                        error_message = "yt-dlp not available."
+                        self.finished.emit(current_version, latest_version, error_message)
+                        return
+            except subprocess.TimeoutExpired:
+                # Try fallback if timeout
+                if YT_DLP_AVAILABLE:
                     current_version = yt_dlp.version.__version__
+                else:
+                    error_message = "yt-dlp version check timed out and package not found."
+                    self.finished.emit(current_version, latest_version, error_message)
+                    return
             except Exception:
                  # Fallback to importing yt_dlp package directly if subprocess fails
-                try:
-                    import yt_dlp
+                if YT_DLP_AVAILABLE:
                     current_version = yt_dlp.version.__version__
-                except ImportError:
+                else:
                      error_message = "yt-dlp not found or accessible."
                      self.finished.emit(current_version, latest_version, error_message)
                      return
@@ -459,81 +472,241 @@ class VersionCheckThread(QThread):
 
 class UpdateThread(QThread):
     update_status = Signal(str) # For status messages
+    update_progress = Signal(int) # For progress percentage (0-100)
     update_finished = Signal(bool, str) # success (bool), message/error (str)
     
     def run(self):
         error_message = ""
         success = False
         try:
-            self.update_status.emit("Starting update process...")
+            import requests
+            import subprocess
+            import pkg_resources
+            from packaging import version
+            import os
+            import sys
+            import shutil
+            from ytsage_yt_dlp import get_yt_dlp_path
             
-            # Determine paths (similar logic as before)
-            python_path = sys.executable # Default to current interpreter
-            yt_dlp_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.getcwd()
-
-            if getattr(sys, 'frozen', False) and sys.platform == 'win32':
-                 alt_python_path = os.path.join(os.path.dirname(sys.executable), 'python.exe')
-                 if os.path.exists(alt_python_path):
-                     python_path = alt_python_path
+            self.update_status.emit("🔍 Checking current installation...")
+            self.update_progress.emit(10)
             
-            # Create and configure QProcess
-            process = QProcess()
-            process.setWorkingDirectory(yt_dlp_dir)
-            process.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels) # Combine stdout/stderr
+            # Get the yt-dlp path
+            try:
+                yt_dlp_path = get_yt_dlp_path()
+                self.update_status.emit(f"📍 Found yt-dlp at: {os.path.basename(yt_dlp_path)}")
+            except Exception as e:
+                self.update_status.emit(f"❌ Error getting yt-dlp path: {e}")
+                self.update_finished.emit(False, f"❌ Error getting yt-dlp path: {e}")
+                return
             
-            # Prepare command arguments
-            pip_args = ['install', '--upgrade', '--no-cache-dir', 'yt-dlp']
-            if sys.platform == 'win32':
-                command = python_path
-                args = ['-m', 'pip'] + pip_args
+            # Create startupinfo to hide console on Windows
+            startupinfo = None
+            if sys.platform == 'win32' and hasattr(subprocess, 'STARTUPINFO'):
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                startupinfo.wShowWindow = 0  # SW_HIDE
+            
+            self.update_progress.emit(20)
+            
+            # Check if we're using an app-managed binary or system installation
+            app_managed_dirs = [
+                os.path.join(os.environ.get('LOCALAPPDATA', ''), 'YTSage', 'bin'),
+                os.path.expanduser(os.path.join('~', 'Library', 'Application Support', 'YTSage', 'bin')),
+                os.path.expanduser(os.path.join('~', '.local', 'share', 'YTSage', 'bin'))
+            ]
+            
+            is_app_managed = any(os.path.dirname(yt_dlp_path) == dir_path for dir_path in app_managed_dirs)
+            
+            if is_app_managed:
+                self.update_status.emit("📦 Updating app-managed yt-dlp binary...")
+                success = self._update_binary(yt_dlp_path)
             else:
-                # Assume pip is in PATH or use python -m pip for robustness
-                command = python_path 
-                args = ['-m', 'pip'] + pip_args 
-                # Alternative if pip is guaranteed in PATH: command = 'pip', args = pip_args
-
-            # Start the process
-            self.update_status.emit(f"Running: {command} {' '.join(args)}")
-            process.start(command, args)
+                self.update_status.emit("🐍 Updating system yt-dlp via pip...")
+                success = self._update_via_pip(startupinfo)
             
-            # Wait for finish (use QProcess event loop, not blocking waitForFinished)
-            if not process.waitForStarted(5000): # Wait 5s for process to start
-                 raise RuntimeError("Update process failed to start.")
-
-            if not process.waitForFinished(-1): # Wait indefinitely for finish
-                 raise RuntimeError("Update process failed to finish.")
-
-            exit_code = process.exitCode()
-            output = process.readAll().data().decode(errors='ignore') # Read combined output
-            
-            if exit_code == 0:
-                self.update_status.emit("Update completed successfully!")
-                success = True
-                error_message = "Update successful. Please restart the application."
+            if success:
+                self.update_progress.emit(100)
+                error_message = "✅ yt-dlp has been successfully updated!"
             else:
-                self.update_status.emit(f"Update failed (Exit Code: {exit_code})")
-                error_message = f"Update failed.\nExit Code: {exit_code}\nOutput:\n{output}"
-                success = False
+                error_message = "❌ Failed to update yt-dlp. Please try again or check your internet connection."
                 
+        except requests.RequestException as e:
+            error_message = f"❌ Network error during update: {str(e)}"
+            self.update_status.emit(error_message)
+            success = False
         except Exception as e:
-            error_message = f"Update failed with exception: {e}"
+            error_message = f"❌ Update failed: {str(e)}"
             self.update_status.emit(error_message)
             success = False
             
         self.update_finished.emit(success, error_message)
+    
+    def _update_binary(self, yt_dlp_path):
+        """Update yt-dlp binary directly from GitHub releases."""
+        try:
+            self.update_status.emit("🌐 Determining download URL...")
+            self.update_progress.emit(30)
+            
+            # Determine the URL based on OS
+            if sys.platform == 'win32':
+                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
+            elif sys.platform == 'darwin':
+                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
+            else:
+                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
+            
+            self.update_status.emit("⬇️ Downloading latest yt-dlp binary...")
+            self.update_progress.emit(40)
+            
+            # Download with progress tracking and timeout
+            response = requests.get(url, stream=True, timeout=30)
+            if response.status_code != 200:
+                self.update_status.emit(f"❌ Download failed: HTTP {response.status_code}")
+                return False
+            
+            total_size = int(response.headers.get('content-length', 0))
+            temp_file = f"{yt_dlp_path}.new"
+            downloaded = 0
+            
+            self.update_status.emit("💾 Downloading and saving binary...")
+            
+            with open(temp_file, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+                        downloaded += len(chunk)
+                        
+                        # Update progress (40-80% for download)
+                        if total_size > 0:
+                            progress = 40 + int((downloaded / total_size) * 40)
+                            self.update_progress.emit(progress)
+            
+            self.update_status.emit("🔧 Installing updated binary...")
+            self.update_progress.emit(85)
+            
+            # Make executable on Unix systems
+            if sys.platform != 'win32':
+                os.chmod(temp_file, 0o755)
+            
+            # Replace the old file with the new one
+            try:
+                # On Windows, we need to remove the old file first
+                if sys.platform == 'win32' and os.path.exists(yt_dlp_path):
+                    os.remove(yt_dlp_path)
+                
+                os.rename(temp_file, yt_dlp_path)
+                self.update_status.emit("✅ Binary successfully updated!")
+                self.update_progress.emit(95)
+                return True
+                
+            except Exception as e:
+                self.update_status.emit(f"❌ Error installing binary: {e}")
+                # Clean up temp file if it exists
+                if os.path.exists(temp_file):
+                    try:
+                        os.remove(temp_file)
+                    except:
+                        pass
+                return False
+                
+        except requests.RequestException as e:
+            self.update_status.emit(f"❌ Network error: {e}")
+            return False
+        except Exception as e:
+            self.update_status.emit(f"❌ Binary update failed: {e}")
+            return False
+    
+    def _update_via_pip(self, startupinfo):
+        """Update yt-dlp via pip."""
+        try:
+            import pkg_resources
+            
+            self.update_status.emit("🔍 Checking current pip installation...")
+            self.update_progress.emit(30)
+            
+            # Get current version
+            try:
+                current_version = pkg_resources.get_distribution("yt-dlp").version
+                self.update_status.emit(f"📋 Current version: {current_version}")
+            except pkg_resources.DistributionNotFound:
+                self.update_status.emit("⚠️ yt-dlp not found via pip, attempting installation...")
+                current_version = "0.0.0"
+                
+            self.update_progress.emit(40)
+            
+            # Get the latest version from PyPI
+            self.update_status.emit("🌐 Checking for latest version...")
+            response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
+            
+            if response.status_code != 200:
+                self.update_status.emit("❌ Failed to check for updates")
+                return False
+                
+            data = response.json()
+            latest_version = data["info"]["version"]
+            self.update_status.emit(f"🆕 Latest version: {latest_version}")
+            self.update_progress.emit(50)
+            
+            # Compare versions
+            from packaging import version
+            if version.parse(latest_version) > version.parse(current_version):
+                self.update_status.emit(f"⬆️ Updating from {current_version} to {latest_version}...")
+                self.update_progress.emit(60)
+                
+                try:
+                    # Run pip update with timeout
+                    self.update_status.emit("📦 Running pip install --upgrade...")
+                    update_result = subprocess.run(
+                        [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                        timeout=300,  # 5 minute timeout for pip install
+                        startupinfo=startupinfo
+                    )
+                    
+                    self.update_progress.emit(85)
+                    
+                    if update_result.returncode == 0:
+                        self.update_status.emit("✅ Pip update completed successfully!")
+                        self.update_progress.emit(95)
+                        return True
+                    else:
+                        self.update_status.emit(f"❌ Pip update failed: {update_result.stderr}")
+                        return False
+                        
+                except subprocess.TimeoutExpired:
+                    self.update_status.emit("❌ Pip update timed out after 5 minutes")
+                    return False
+                except Exception as e:
+                    self.update_status.emit(f"❌ Error during pip update: {e}")
+                    return False
+            else:
+                self.update_status.emit("✅ yt-dlp is already up to date!")
+                self.update_progress.emit(95)
+                return True
+                
+        except Exception as e:
+            self.update_status.emit(f"❌ Pip update failed: {e}")
+            return False
 
 
 class YTDLPUpdateDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Update yt-dlp")
-        self.setMinimumWidth(400)
+        self.setMinimumWidth(450)
+        self.setMinimumHeight(200)
+        self._closing = False  # Flag to track if dialog is closing
         
         layout = QVBoxLayout(self)
         
         # Status label
         self.status_label = QLabel("Checking for updates...")
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.status_label.setWordWrap(True)
+        self.status_label.setMinimumHeight(60)
         layout.addWidget(self.status_label)
         
         # Progress bar
@@ -581,15 +754,19 @@ class YTDLPUpdateDialog(QDialog):
             }
             QProgressBar {
                 border: 2px solid #1d1e22;
-                border-radius: 4px;
+                border-radius: 6px;
                 text-align: center;
                 color: white;
                 background-color: #1d1e22;
-                height: 25px;
+                height: 30px;
+                font-weight: bold;
+                font-size: 12px;
             }
             QProgressBar::chunk {
-                background-color: #c90000;
-                border-radius: 2px;
+                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                    stop: 0 #e60000, stop: 0.5 #ff3333, stop: 1 #c90000);
+                border-radius: 4px;
+                margin: 1px;
             }
         """)
         
@@ -604,6 +781,10 @@ class YTDLPUpdateDialog(QDialog):
         self.version_check_thread.start()
 
     def on_version_check_finished(self, current_version, latest_version, error_message):
+        # Check if dialog is closing to avoid unnecessary updates
+        if hasattr(self, '_closing') and self._closing:
+            return
+            
         if error_message:
             self.status_label.setText(error_message)
             self.update_btn.setEnabled(False)
@@ -638,46 +819,73 @@ class YTDLPUpdateDialog(QDialog):
              self.update_btn.setEnabled(False)
 
     def perform_update(self):
+        # Immediate visual feedback
         self.update_btn.setEnabled(False)
         self.close_btn.setEnabled(False)
-        self.status_label.setText("Initializing update...")
-        self.progress_bar.setRange(0, 0) # Indeterminate progress
+        self.update_btn.setText("Updating...")
+        self.status_label.setText("🚀 Initializing update process...")
+        
+        # Show progress bar immediately
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setValue(0)
         self.progress_bar.show()
         
+        # Start the update thread immediately without processEvents()
+        # The QTimer delay was unnecessary and could cause issues
+        self._start_update_thread()
+    
+    def _start_update_thread(self):
+        """Start the actual update thread after giving immediate feedback."""
         # Create and start the update thread
         self.update_thread = UpdateThread()
-        self.update_thread.update_status.connect(self.on_update_status) # Connect status signal
-        self.update_thread.update_finished.connect(self.on_update_finished) # Connect finished signal
+        self.update_thread.update_status.connect(self.on_update_status)
+        self.update_thread.update_progress.connect(self.on_update_progress)
+        self.update_thread.update_finished.connect(self.on_update_finished)
         self.update_thread.start()
 
     def on_update_status(self, message):
         """Slot to receive status messages from UpdateThread."""
-        self.status_label.setText(message)
+        if not (hasattr(self, '_closing') and self._closing):
+            self.status_label.setText(message)
+
+    def on_update_progress(self, progress):
+        """Slot to receive progress updates from UpdateThread."""
+        if not (hasattr(self, '_closing') and self._closing):
+            self.progress_bar.setValue(progress)
 
     def on_update_finished(self, success, message):
         """Slot called when the UpdateThread finishes."""
-        self.progress_bar.setRange(0, 100) # Set determinate range
-        self.progress_bar.setValue(100) # Mark as complete
-        self.progress_bar.hide() # Optionally hide progress bar again
+        # Check if dialog is closing to avoid unnecessary updates
+        if hasattr(self, '_closing') and self._closing:
+            return
+            
+        self.progress_bar.setValue(100)
         self.status_label.setText(message)
         self.close_btn.setEnabled(True)
+        self.update_btn.setText("Update")  # Reset button text
         
         if success:
-            # Optionally re-check version automatically after successful update
-            self.check_version() 
+            # Show success briefly then auto-check version
+            QTimer.singleShot(2000, self.check_version)  # Wait 2 seconds then refresh
         else:
-            # Re-enable update button only if failed?
-            # self.update_btn.setEnabled(True) # Decide if appropriate
-            pass # Keep update button disabled on failure for now
+            # Re-enable update button on failure after a short delay
+            QTimer.singleShot(3000, lambda: self.update_btn.setEnabled(True) if not (hasattr(self, '_closing') and self._closing) else None)
 
     def closeEvent(self, event):
         """Ensure threads are terminated if the dialog is closed prematurely."""
+        # Set a flag to indicate dialog is closing
+        self._closing = True
+        
         if hasattr(self, 'version_check_thread') and self.version_check_thread.isRunning():
-            self.version_check_thread.quit() # Ask thread to stop
-            self.version_check_thread.wait() # Wait for it to finish
+            self.version_check_thread.quit()
+            if not self.version_check_thread.wait(3000):  # Wait up to 3 seconds
+                self.version_check_thread.terminate()
+                
         if hasattr(self, 'update_thread') and self.update_thread.isRunning():
             self.update_thread.quit()
-            self.update_thread.wait()
+            if not self.update_thread.wait(5000):  # Wait up to 5 seconds for update to finish
+                self.update_thread.terminate()
+                
         super().closeEvent(event)
 
 class AboutDialog(QDialog):
@@ -728,19 +936,47 @@ class AboutDialog(QDialog):
         repo_label.setOpenExternalLinks(True)
         info_layout.addWidget(repo_label)
 
-        # yt-dlp path
-        yt_dlp_path = get_yt_dlp_path()
-        yt_dlp_path_text = yt_dlp_path if yt_dlp_path else 'yt-dlp not found in PATH'
-        yt_dlp_label = QLabel(f"<b>yt-dlp Path:</b> {yt_dlp_path_text}")
-        yt_dlp_label.setWordWrap(True)
-        info_layout.addWidget(yt_dlp_label)
+        # Create version info container with refresh button
+        version_container = QVBoxLayout()
+        
+        # Header with refresh button
+        header_layout = QHBoxLayout()
+        header_label = QLabel("<b>System Information</b>")
+        header_label.setStyleSheet("color: #ffffff; font-size: 14px;")
+        header_layout.addWidget(header_label)
+        
+        header_layout.addStretch()
+        
+        self.refresh_btn = QPushButton("Refresh")
+        self.refresh_btn.setStyleSheet("""
+            QPushButton {
+                padding: 4px 12px;
+                background-color: #3d3d3d;
+                border: 1px solid #555555;
+                border-radius: 4px;
+                color: white;
+                font-size: 11px;
+            }
+            QPushButton:hover {
+                background-color: #4d4d4d;
+            }
+            QPushButton:pressed {
+                background-color: #2d2d2d;
+            }
+        """)
+        self.refresh_btn.clicked.connect(self.refresh_version_info)
+        header_layout.addWidget(self.refresh_btn)
+        
+        version_container.addLayout(header_layout)
 
-        # FFmpeg Status
-        ffmpeg_found = check_ffmpeg()
-        ffmpeg_status_text = "<span style='color: #00ff00;'>Detected</span>" if ffmpeg_found else "<span style='color: #ff5555;'>Not Detected</span>"
-        ffmpeg_label = QLabel(f"<b>FFmpeg Status:</b> {ffmpeg_status_text}")
-        info_layout.addWidget(ffmpeg_label)
-
+        # Version information labels (stored as instance variables for updating)
+        self.version_info_layout = QVBoxLayout()
+        version_container.addLayout(self.version_info_layout)
+        
+        # Populate version information
+        self.update_version_info()
+        
+        info_layout.addLayout(version_container)
         layout.addLayout(info_layout)
 
         # Close Button
@@ -767,6 +1003,115 @@ class AboutDialog(QDialog):
             }
             QPushButton:hover { background-color: #a50000; }
         """)
+
+    def update_version_info(self):
+        """Update the version information display."""
+        # Clear existing labels
+        for i in reversed(range(self.version_info_layout.count())):
+            child = self.version_info_layout.itemAt(i).widget()
+            if child:
+                child.deleteLater()
+
+        # yt-dlp path and version
+        yt_dlp_path = get_yt_dlp_path()
+        yt_dlp_path_text = yt_dlp_path if yt_dlp_path else 'yt-dlp not found in PATH'
+        yt_dlp_version = get_ytdlp_version()
+        
+        yt_dlp_label = QLabel(f"<b>yt-dlp Path:</b> {yt_dlp_path_text}")
+        yt_dlp_label.setWordWrap(True)
+        self.version_info_layout.addWidget(yt_dlp_label)
+        
+        # Add cache status for yt-dlp
+        ytdlp_cache = _version_cache.get('ytdlp', {})
+        last_check = ytdlp_cache.get('last_check', 0)
+        cache_status = ""
+        if last_check > 0:
+            import time
+            from datetime import datetime
+            cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M:%S")
+            cache_status = f" <span style='color: #999999; font-size: 10px;'>(checked at {cache_time})</span>"
+        
+        yt_dlp_version_label = QLabel(f"<b>yt-dlp Version:</b> {yt_dlp_version}{cache_status}")
+        yt_dlp_version_label.setWordWrap(True)
+        self.version_info_layout.addWidget(yt_dlp_version_label)
+
+        # FFmpeg Status and Version
+        ffmpeg_found = check_ffmpeg()
+        ffmpeg_status_text = "<span style='color: #00ff00;'>Detected</span>" if ffmpeg_found else "<span style='color: #ff5555;'>Not Detected</span>"
+        ffmpeg_version = get_ffmpeg_version() if ffmpeg_found else "Not Available"
+        
+        ffmpeg_label = QLabel(f"<b>FFmpeg Status:</b> {ffmpeg_status_text}")
+        self.version_info_layout.addWidget(ffmpeg_label)
+        
+        # Add cache status for FFmpeg
+        ffmpeg_cache = _version_cache.get('ffmpeg', {})
+        last_check = ffmpeg_cache.get('last_check', 0)
+        cache_status = ""
+        if last_check > 0 and ffmpeg_found:
+            import time
+            from datetime import datetime
+            cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M:%S")
+            cache_status = f" <span style='color: #999999; font-size: 10px;'>(checked at {cache_time})</span>"
+        
+        ffmpeg_version_label = QLabel(f"<b>FFmpeg Version:</b> {ffmpeg_version}{cache_status}")
+        ffmpeg_version_label.setWordWrap(True)
+        self.version_info_layout.addWidget(ffmpeg_version_label)
+
+    def refresh_version_info(self):
+        """Refresh version information manually."""
+        self.refresh_btn.setText("Refreshing...")
+        self.refresh_btn.setEnabled(False)
+        
+        # Perform refresh in a separate thread to avoid blocking UI
+        from PySide6.QtCore import QThread, Signal
+        
+        class RefreshThread(QThread):
+            finished = Signal(bool)
+            
+            def run(self):
+                success = refresh_version_cache(force=True)
+                self.finished.emit(success)
+        
+        self.refresh_thread = RefreshThread()
+        self.refresh_thread.finished.connect(self.on_refresh_finished)
+        self.refresh_thread.start()
+    
+    def on_refresh_finished(self, success):
+        """Handle refresh completion."""
+        self.refresh_btn.setText("Refresh")
+        self.refresh_btn.setEnabled(True)
+        
+        if success:
+            self.update_version_info()
+        else:
+            # Show error message with proper styling
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setWindowTitle("Refresh Failed")
+            msg_box.setText("Failed to refresh version information.")
+            msg_box.setWindowIcon(self.windowIcon())
+            msg_box.setStyleSheet("""
+                QMessageBox {
+                    background-color: #15181b;
+                    color: #ffffff;
+                }
+                QMessageBox QLabel {
+                    color: #ffffff;
+                }
+                QMessageBox QPushButton {
+                    padding: 8px 15px;
+                    background-color: #c90000;
+                    border: none;
+                    border-radius: 4px;
+                    color: white;
+                    font-weight: bold;
+                    min-width: 80px;
+                }
+                QMessageBox QPushButton:hover {
+                    background-color: #a50000;
+                }
+            """)
+            msg_box.exec()
 
 # --- New Subtitle Selection Dialog ---
 class SubtitleSelectionDialog(QDialog):
@@ -1224,9 +1569,122 @@ class DownloadSettingsDialog(QDialog): # Renamed class
         super().__init__(parent)
         self.setWindowTitle("Download Settings") # Renamed window
         self.setMinimumWidth(450)
+        self.setMinimumHeight(400)
         self.current_path = current_path
         self.current_limit = current_limit if current_limit is not None else "" # Handle None
         self.current_unit_index = current_unit_index
+
+        # Apply main app styling
+        self.setStyleSheet("""
+            QDialog {
+                background-color: #15181b;
+                color: #ffffff;
+            }
+            QWidget {
+                background-color: #15181b;
+                color: #ffffff;
+            }
+            QLabel {
+                color: #ffffff;
+            }
+            QGroupBox {
+                color: #ffffff;
+                border: 2px solid #1b2021;
+                border-radius: 4px;
+                margin-top: 10px;
+                padding-top: 10px;
+                font-weight: bold;
+                background-color: #15181b;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #ffffff;
+            }
+            QLineEdit {
+                padding: 8px;
+                border: 2px solid #1b2021;
+                border-radius: 4px;
+                background-color: #1b2021;
+                color: #ffffff;
+                selection-background-color: #c90000;
+                selection-color: #ffffff;
+            }
+            QPushButton {
+                padding: 8px 15px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+                min-height: 20px;
+            }
+            QPushButton:hover {
+                background-color: #a50000;
+            }
+            QPushButton:pressed {
+                background-color: #800000;
+            }
+            QPushButton:disabled {
+                background-color: #666666;
+                color: #999999;
+            }
+            QCheckBox {
+                spacing: 5px;
+                color: #ffffff;
+            }
+            QCheckBox::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #15181b;
+            }
+            QCheckBox::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+            }
+            QRadioButton {
+                spacing: 5px;
+                color: #ffffff;
+            }
+            QRadioButton::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QRadioButton::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #15181b;
+            }
+            QRadioButton::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+            }
+            QComboBox {
+                padding: 5px;
+                border: 2px solid #1b2021;
+                border-radius: 4px;
+                background-color: #1b2021;
+                color: #ffffff;
+                min-height: 20px;
+            }
+            QComboBox::drop-down {
+                border: none;
+                width: 20px;
+            }
+            QComboBox QAbstractItemView {
+                border: 2px solid #1b2021;
+                border-radius: 4px;
+                background-color: #15181b;
+                color: #ffffff;
+                selection-background-color: #c90000;
+                selection-color: #ffffff;
+            }
+        """)
 
         layout = QVBoxLayout(self)
 
@@ -1236,7 +1694,7 @@ class DownloadSettingsDialog(QDialog): # Renamed class
 
         self.path_display = QLabel(self.current_path)
         self.path_display.setWordWrap(True)
-        self.path_display.setStyleSheet("QLabel { color: #cccccc; padding: 5px; border: 1px solid #3d3d3d; border-radius: 4px; background-color: #363636; }")
+        self.path_display.setStyleSheet("QLabel { color: #ffffff; padding: 5px; border: 1px solid #1b2021; border-radius: 4px; background-color: #1b2021; }")
         path_layout.addWidget(self.path_display)
 
         browse_button = QPushButton("Browse...")
@@ -1258,38 +1716,58 @@ class DownloadSettingsDialog(QDialog): # Renamed class
         self.speed_limit_unit = QComboBox()
         self.speed_limit_unit.addItems(["KB/s", "MB/s"])
         self.speed_limit_unit.setCurrentIndex(self.current_unit_index) # Set initial unit
-        # Apply custom styling to match the theme
-        self.speed_limit_unit.setStyleSheet("""
-            QComboBox {
-                padding: 5px;
-                border: 2px solid #1b2021;
-                border-radius: 4px;
-                background-color: #1b2021;
-                color: #ffffff;
-                min-height: 20px;
-            }
-            QComboBox::drop-down {
-                border: none;
-                width: 20px;
-            }
-            QComboBox::down-arrow {
-                width: 12px;
-                height: 12px;
-            }
-            QComboBox QAbstractItemView {
-                border: 2px solid #1b2021;
-                border-radius: 4px;
-                background-color: #15181b;
-                color: #ffffff;
-                selection-background-color: #c90000;
-                selection-color: #ffffff;
-            }
-        """)
         speed_layout.addWidget(self.speed_limit_unit)
 
         speed_group_box.setLayout(speed_layout)
         layout.addWidget(speed_group_box)
         # --- End Speed Limit Section ---
+
+        # --- Auto-Update yt-dlp Section ---
+        auto_update_group_box = QGroupBox("Auto-Update yt-dlp")
+        auto_update_layout = QVBoxLayout()
+
+        # Load current auto-update settings
+        from ytsage_utils import get_auto_update_settings
+        auto_settings = get_auto_update_settings()
+
+        # Enable/Disable auto-update checkbox
+        self.auto_update_enabled = QCheckBox("Enable automatic yt-dlp updates")
+        self.auto_update_enabled.setChecked(auto_settings['enabled'])
+        auto_update_layout.addWidget(self.auto_update_enabled)
+
+        # Frequency options
+        frequency_label = QLabel("Update frequency:")
+        frequency_label.setStyleSheet("color: #ffffff; margin-top: 10px;")
+        auto_update_layout.addWidget(frequency_label)
+
+        self.startup_radio = QRadioButton("Check on every startup (minimum 1 hour between checks)")
+        self.daily_radio = QRadioButton("Check daily")
+        self.weekly_radio = QRadioButton("Check weekly")
+
+        # Set current selection based on saved settings
+        current_frequency = auto_settings['frequency']
+        if current_frequency == 'startup':
+            self.startup_radio.setChecked(True)
+        elif current_frequency == 'daily':
+            self.daily_radio.setChecked(True)
+        else:  # weekly
+            self.weekly_radio.setChecked(True)
+
+        auto_update_layout.addWidget(self.startup_radio)
+        auto_update_layout.addWidget(self.daily_radio)
+        auto_update_layout.addWidget(self.weekly_radio)
+
+        # Test update button
+        test_update_layout = QHBoxLayout()
+        test_update_button = QPushButton("Check for Updates Now")
+        test_update_button.clicked.connect(self.test_update_check)
+        test_update_layout.addWidget(test_update_button)
+        test_update_layout.addStretch()
+        auto_update_layout.addLayout(test_update_layout)
+
+        auto_update_group_box.setLayout(auto_update_layout)
+        layout.addWidget(auto_update_group_box)
+        # --- End Auto-Update Section ---
 
         # Dialog buttons (OK/Cancel)
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
@@ -1324,6 +1802,121 @@ class DownloadSettingsDialog(QDialog): # Renamed class
     def get_selected_unit_index(self):
         """Returns the index of the selected speed limit unit."""
         return self.speed_limit_unit.currentIndex()
+
+    def _create_styled_message_box(self, icon, title, text):
+        """Create a styled QMessageBox that matches the app theme."""
+        msg_box = QMessageBox(self)
+        msg_box.setIcon(icon)
+        msg_box.setWindowTitle(title)
+        msg_box.setText(text)
+        msg_box.setWindowIcon(self.windowIcon())
+        msg_box.setStyleSheet("""
+            QMessageBox {
+                background-color: #15181b;
+                color: #ffffff;
+            }
+            QMessageBox QLabel {
+                color: #ffffff;
+            }
+            QMessageBox QPushButton {
+                padding: 8px 15px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+                min-width: 80px;
+            }
+            QMessageBox QPushButton:hover {
+                background-color: #a50000;
+            }
+            QMessageBox QPushButton:pressed {
+                background-color: #800000;
+            }
+        """)
+        return msg_box
+
+    def test_update_check(self):
+        """Test the update check functionality."""
+        try:
+            from ytsage_utils import get_ytdlp_version
+            import requests
+            
+            # Get current version
+            current_version = get_ytdlp_version()
+            if "Error" in current_version:
+                msg_box = self._create_styled_message_box(
+                    QMessageBox.Warning,
+                    "Update Check",
+                    "Could not determine current yt-dlp version."
+                )
+                msg_box.exec()
+                return
+            
+            # Get latest version from PyPI
+            response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
+            response.raise_for_status()
+            latest_version = response.json()["info"]["version"]
+            
+            # Clean up version strings
+            current_version = current_version.replace('_', '.')
+            latest_version = latest_version.replace('_', '.')
+            
+            from packaging import version as version_parser
+            if version_parser.parse(latest_version) > version_parser.parse(current_version):
+                msg_box = self._create_styled_message_box(
+                    QMessageBox.Information,
+                    "Update Check",
+                    f"Update available!\n\nCurrent: {current_version}\nLatest: {latest_version}\n\nUse the 'Update yt-dlp' button in the main window to update."
+                )
+                msg_box.exec()
+            else:
+                msg_box = self._create_styled_message_box(
+                    QMessageBox.Information,
+                    "Update Check",
+                    f"yt-dlp is up to date!\n\nCurrent version: {current_version}"
+                )
+                msg_box.exec()
+        except Exception as e:
+            msg_box = self._create_styled_message_box(
+                QMessageBox.Warning,
+                "Update Check",
+                f"Error checking for updates: {str(e)}"
+            )
+            msg_box.exec()
+
+    def get_auto_update_settings(self):
+        """Returns the auto-update settings from the dialog."""
+        enabled = self.auto_update_enabled.isChecked()
+        
+        if self.startup_radio.isChecked():
+            frequency = 'startup'
+        elif self.daily_radio.isChecked():
+            frequency = 'daily'
+        else:  # weekly_radio is checked
+            frequency = 'weekly'
+            
+        return enabled, frequency
+
+    def accept(self):
+        """Override accept to save auto-update settings."""
+        try:
+            # Save auto-update settings
+            enabled, frequency = self.get_auto_update_settings()
+            from ytsage_utils import update_auto_update_settings
+            
+            if update_auto_update_settings(enabled, frequency):
+                QMessageBox.information(self, "Settings Saved",
+                                      "Auto-update settings have been saved successfully!")
+            else:
+                QMessageBox.warning(self, "Error",
+                                  "Failed to save auto-update settings.")
+        except Exception as e:
+            QMessageBox.critical(self, "Error",
+                               f"Error saving auto-update settings: {str(e)}")
+        
+        # Call the parent accept method to close the dialog
+        super().accept()
 
 # === New CustomOptions Dialog combining Cookies and Custom Commands ===
 class CustomOptionsDialog(QDialog):
@@ -1638,7 +2231,6 @@ class CustomOptionsDialog(QDialog):
                 self.run_btn, "setEnabled", Qt.ConnectionType.QueuedConnection,
                 Q_ARG(bool, True)
             )
-# === End of CustomOptionsDialog ===
 
 # === Time Range Selection Dialog ===
 class TimeRangeDialog(QDialog):
@@ -1821,3 +2413,599 @@ class TimeRangeDialog(QDialog):
     def get_force_keyframes(self):
         """Returns whether to force keyframes at cuts"""
         return self.force_keyframes.isChecked()
+
+# === Auto-Update Settings Dialog ===
+
+class AutoUpdateSettingsDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Auto-Update Settings")
+        self.setMinimumWidth(400)
+        self.setMinimumHeight(300)
+        
+        # Set the window icon to match the main app
+        if parent:
+            self.setWindowIcon(parent.windowIcon())
+        
+        self.init_ui()
+        self.load_current_settings()
+        self.apply_styling()
+        
+    def init_ui(self):
+        layout = QVBoxLayout(self)
+        
+        # Title
+        title_label = QLabel("<h2>🔄 Auto-Update Settings</h2>")
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title_label)
+        
+        # Description
+        desc_label = QLabel("Configure automatic updates for yt-dlp to ensure you always have the latest features and bug fixes.")
+        desc_label.setWordWrap(True)
+        desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        desc_label.setStyleSheet("color: #cccccc; margin: 10px; font-size: 11px;")
+        layout.addWidget(desc_label)
+        
+        # Enable/Disable auto-update
+        self.enable_checkbox = QCheckBox("Enable automatic yt-dlp updates")
+        self.enable_checkbox.setChecked(True)  # Default enabled
+        self.enable_checkbox.toggled.connect(self.on_enable_toggled)
+        layout.addWidget(self.enable_checkbox)
+        
+        # Frequency options
+        frequency_group = QGroupBox("Update Frequency")
+        frequency_layout = QVBoxLayout()
+        
+        self.frequency_group = QButtonGroup(self)
+        
+        self.startup_radio = QRadioButton("Check on every startup (minimum 1 hour between checks)")
+        self.daily_radio = QRadioButton("Check daily")
+        self.weekly_radio = QRadioButton("Check weekly")
+        
+        self.daily_radio.setChecked(True)  # Default to daily
+        
+        self.frequency_group.addButton(self.startup_radio, 0)
+        self.frequency_group.addButton(self.daily_radio, 1)
+        self.frequency_group.addButton(self.weekly_radio, 2)
+        
+        frequency_layout.addWidget(self.startup_radio)
+        frequency_layout.addWidget(self.daily_radio)
+        frequency_layout.addWidget(self.weekly_radio)
+        frequency_group.setLayout(frequency_layout)
+        
+        layout.addWidget(frequency_group)
+        
+        # Current status
+        status_group = QGroupBox("Current Status")
+        status_layout = QVBoxLayout()
+        
+        self.current_version_label = QLabel("Current yt-dlp version: Checking...")
+        self.last_check_label = QLabel("Last update check: Never")
+        self.next_check_label = QLabel("Next check: Based on settings")
+        
+        status_layout.addWidget(self.current_version_label)
+        status_layout.addWidget(self.last_check_label)
+        status_layout.addWidget(self.next_check_label)
+        status_group.setLayout(status_layout)
+        
+        layout.addWidget(status_group)
+        
+        # Manual check button
+        self.manual_check_btn = QPushButton("🔍 Check for Updates Now")
+        self.manual_check_btn.clicked.connect(self.manual_check)
+        layout.addWidget(self.manual_check_btn)
+        
+        # Buttons
+        button_layout = QHBoxLayout()
+        
+        self.save_btn = QPushButton("Save Settings")
+        self.save_btn.clicked.connect(self.save_settings)
+        
+        self.cancel_btn = QPushButton("Cancel")
+        self.cancel_btn.clicked.connect(self.reject)
+        
+        button_layout.addWidget(self.save_btn)
+        button_layout.addWidget(self.cancel_btn)
+        
+        layout.addLayout(button_layout)
+        
+    def apply_styling(self):
+        self.setStyleSheet("""
+            QDialog {
+                background-color: #15181b;
+                color: #ffffff;
+            }
+            QLabel {
+                color: #ffffff;
+            }
+            QGroupBox {
+                color: #ffffff;
+                border: 2px solid #1b2021;
+                border-radius: 4px;
+                margin-top: 10px;
+                padding-top: 10px;
+                font-weight: bold;
+                background-color: #15181b;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #ffffff;
+            }
+            QCheckBox, QRadioButton {
+                color: #ffffff;
+                spacing: 5px;
+                margin: 5px;
+            }
+            QCheckBox::indicator, QRadioButton::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:unchecked, QRadioButton::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #15181b;
+            }
+            QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+            }
+            QPushButton {
+                padding: 8px 15px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+                margin: 5px;
+                min-width: 100px;
+                min-height: 20px;
+            }
+            QPushButton:hover {
+                background-color: #a50000;
+            }
+            QPushButton:pressed {
+                background-color: #800000;
+            }
+            QPushButton:disabled {
+                background-color: #666666;
+                color: #999999;
+            }
+        """)
+        
+    def load_current_settings(self):
+        """Load current auto-update settings from config."""
+        try:
+            from ytsage_utils import get_auto_update_settings, get_ytdlp_version
+            import time
+            from datetime import datetime
+            
+            settings = get_auto_update_settings()
+            
+            # Set checkbox
+            self.enable_checkbox.setChecked(settings['enabled'])
+            
+            # Set frequency
+            frequency = settings['frequency']
+            if frequency == 'startup':
+                self.startup_radio.setChecked(True)
+            elif frequency == 'weekly':
+                self.weekly_radio.setChecked(True)
+            else:  # daily
+                self.daily_radio.setChecked(True)
+
+            # Update status labels
+            current_version = get_ytdlp_version()
+            self.current_version_label.setText(f"Current yt-dlp version: {current_version}")
+            
+            last_check = settings['last_check']
+            if last_check > 0:
+                last_check_time = datetime.fromtimestamp(last_check).strftime("%Y-%m-%d %H:%M:%S")
+                self.last_check_label.setText(f"Last update check: {last_check_time}")
+            else:
+                self.last_check_label.setText("Last update check: Never")
+            
+            # Calculate next check time
+            self.update_next_check_label()
+            
+            # Update UI state
+            self.on_enable_toggled(settings['enabled'])
+            
+        except Exception as e:
+            print(f"Error loading auto-update settings: {e}")
+            
+    def update_next_check_label(self):
+        """Update the next check label based on current settings."""
+        try:
+            if not self.enable_checkbox.isChecked():
+                self.next_check_label.setText("Next check: Disabled")
+                return
+                
+            from ytsage_utils import get_auto_update_settings
+            import time
+            from datetime import datetime, timedelta
+            
+            settings = get_auto_update_settings()
+            last_check = settings['last_check']
+            frequency = self.get_selected_frequency()
+            
+            if last_check == 0:
+                self.next_check_label.setText("Next check: On next startup")
+                return
+            
+            next_check_time = last_check
+            if frequency == 'startup':
+                next_check_time += 3600  # 1 hour
+            elif frequency == 'daily':
+                next_check_time += 86400  # 24 hours  
+            elif frequency == 'weekly':
+                next_check_time += 604800  # 7 days
+                
+            current_time = time.time()
+            if next_check_time <= current_time:
+                self.next_check_label.setText("Next check: Now (overdue)")
+            else:
+                next_check_datetime = datetime.fromtimestamp(next_check_time)
+                self.next_check_label.setText(f"Next check: {next_check_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
+                
+        except Exception as e:
+            self.next_check_label.setText("Next check: Error calculating")
+            print(f"Error calculating next check time: {e}")
+    
+    def on_enable_toggled(self, enabled):
+        """Handle enable/disable checkbox toggle."""
+        # Enable/disable frequency options
+        for i in range(self.frequency_group.buttons().__len__()):
+            self.frequency_group.button(i).setEnabled(enabled)
+            
+        self.update_next_check_label()
+        
+    def get_selected_frequency(self):
+        """Get the selected frequency setting."""
+        if self.startup_radio.isChecked():
+            return 'startup'
+        elif self.weekly_radio.isChecked():
+            return 'weekly'
+        else:
+            return 'daily'
+    
+    def manual_check(self):
+        """Perform a manual update check."""
+        self.manual_check_btn.setEnabled(False)
+        self.manual_check_btn.setText("🔄 Checking...")
+        
+        # Force an immediate update check
+        def check_in_thread():
+            try:
+                from ytsage_utils import check_and_update_ytdlp_auto
+                result = check_and_update_ytdlp_auto()
+                
+                # Update UI in main thread
+                QTimer.singleShot(0, lambda: self.manual_check_finished(result))
+            except Exception as e:
+                print(f"Error during manual check: {e}")
+                QTimer.singleShot(0, lambda: self.manual_check_finished(False))
+        
+        # Run in separate thread to avoid blocking UI
+        import threading
+        threading.Thread(target=check_in_thread, daemon=True).start()
+        
+    def _create_styled_message_box(self, icon, title, text):
+        """Create a styled QMessageBox that matches the app theme."""
+        msg_box = QMessageBox(self)
+        msg_box.setIcon(icon)
+        msg_box.setWindowTitle(title)
+        msg_box.setText(text)
+        msg_box.setWindowIcon(self.windowIcon())
+        msg_box.setStyleSheet("""
+            QMessageBox {
+                background-color: #15181b;
+                color: #ffffff;
+            }
+            QMessageBox QLabel {
+                color: #ffffff;
+            }
+            QMessageBox QPushButton {
+                padding: 8px 15px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+                min-width: 80px;
+            }
+            QMessageBox QPushButton:hover {
+                background-color: #a50000;
+            }
+            QMessageBox QPushButton:pressed {
+                background-color: #800000;
+            }
+        """)
+        return msg_box
+        
+    def manual_check_finished(self, success):
+        """Handle completion of manual update check."""
+        self.manual_check_btn.setEnabled(True)
+        self.manual_check_btn.setText("🔍 Check for Updates Now")
+        
+        if success:
+            msg_box = self._create_styled_message_box(
+                QMessageBox.Information, 
+                "Update Check",
+                "✅ Update check completed successfully!\nCheck the console for details."
+            )
+            msg_box.exec()
+        else:
+            msg_box = self._create_styled_message_box(
+                QMessageBox.Warning,
+                "Update Check", 
+                "❌ Update check failed.\nCheck the console for error details."
+            )
+            msg_box.exec()
+        
+        # Refresh the current settings display
+        self.load_current_settings()
+        
+    def save_settings(self):
+        """Save the auto-update settings."""
+        try:
+            from ytsage_utils import update_auto_update_settings
+            
+            enabled = self.enable_checkbox.isChecked()
+            frequency = self.get_selected_frequency()
+            
+            if update_auto_update_settings(enabled, frequency):
+                msg_box = self._create_styled_message_box(
+                    QMessageBox.Information,
+                    "Settings Saved",
+                    "✅ Auto-update settings have been saved successfully!"
+                )
+                msg_box.exec()
+                self.accept()
+            else:
+                msg_box = self._create_styled_message_box(
+                    QMessageBox.Warning,
+                    "Error",
+                    "❌ Failed to save auto-update settings.\nPlease try again."
+                )
+                msg_box.exec()
+        except Exception as e:
+            print(f"Error saving auto-update settings: {e}")
+            msg_box = self._create_styled_message_box(
+                QMessageBox.Critical,
+                "Error",
+                f"❌ Error saving settings: {str(e)}"
+            )
+            msg_box.exec()
+
+# --- New AutoUpdateThread class ---
+class AutoUpdateThread(QThread):
+    """Thread for performing automatic background updates without UI feedback."""
+    update_finished = Signal(bool, str)  # success (bool), message (str)
+    
+    def run(self):
+        """Perform automatic yt-dlp update check and update if needed."""
+        try:
+            print("AutoUpdateThread: Performing automatic yt-dlp update check...")
+            
+            # Import required modules
+            import requests
+            import time
+            from packaging import version as version_parser
+            from ytsage_utils import get_ytdlp_version, load_config, save_config
+            from ytsage_yt_dlp import get_yt_dlp_path
+            
+            # Get current version
+            current_version = get_ytdlp_version()
+            if "Error" in current_version:
+                print("AutoUpdateThread: Could not determine current yt-dlp version, skipping auto-update")
+                self.update_finished.emit(False, "Could not determine current yt-dlp version")
+                return
+            
+            # Get latest version from PyPI
+            try:
+                response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
+                response.raise_for_status()
+                latest_version = response.json()["info"]["version"]
+                
+                # Clean up version strings
+                current_version = current_version.replace('_', '.')
+                latest_version = latest_version.replace('_', '.')
+                
+                print(f"AutoUpdateThread: Current yt-dlp version: {current_version}")
+                print(f"AutoUpdateThread: Latest yt-dlp version: {latest_version}")
+                
+                # Compare versions
+                if version_parser.parse(latest_version) > version_parser.parse(current_version):
+                    print(f"AutoUpdateThread: Auto-updating yt-dlp from {current_version} to {latest_version}...")
+                    
+                    # Perform the update using the same logic as the manual update
+                    success = self._perform_update()
+                    
+                    if success:
+                        print("AutoUpdateThread: Auto-update completed successfully!")
+                        # Update the last check timestamp
+                        config = load_config()
+                        config['last_update_check'] = time.time()
+                        save_config(config)
+                        self.update_finished.emit(True, f"Successfully updated yt-dlp from {current_version} to {latest_version}")
+                    else:
+                        print("AutoUpdateThread: Auto-update failed")
+                        self.update_finished.emit(False, "Auto-update failed")
+                else:
+                    print("AutoUpdateThread: yt-dlp is already up to date")
+                    # Still update the timestamp even if no update was needed
+                    config = load_config()
+                    config['last_update_check'] = time.time()
+                    save_config(config)
+                    self.update_finished.emit(True, f"yt-dlp is already up to date (version {current_version})")
+                    
+            except requests.RequestException as e:
+                print(f"AutoUpdateThread: Network error during auto-update check: {e}")
+                self.update_finished.emit(False, f"Network error: {e}")
+            except Exception as e:
+                print(f"AutoUpdateThread: Error during auto-update check: {e}")
+                self.update_finished.emit(False, f"Update check error: {e}")
+                
+        except Exception as e:
+            print(f"AutoUpdateThread: Critical error in auto-update: {e}")
+            self.update_finished.emit(False, f"Critical error: {e}")
+    
+    def _perform_update(self):
+        """Perform the actual update using similar logic to UpdateThread but without UI feedback."""
+        try:
+            import os
+            import sys
+            import requests
+            import subprocess
+            from ytsage_yt_dlp import get_yt_dlp_path
+            
+            # Get the yt-dlp path
+            yt_dlp_path = get_yt_dlp_path()
+            
+            # Check if we're using an app-managed binary or system installation
+            app_managed_dirs = [
+                os.path.join(os.environ.get('LOCALAPPDATA', ''), 'YTSage', 'bin'),
+                os.path.expanduser(os.path.join('~', 'Library', 'Application Support', 'YTSage', 'bin')),
+                os.path.expanduser(os.path.join('~', '.local', 'share', 'YTSage', 'bin'))
+            ]
+            
+            is_app_managed = any(os.path.dirname(yt_dlp_path) == dir_path for dir_path in app_managed_dirs)
+            
+            if is_app_managed:
+                print("AutoUpdateThread: Updating app-managed yt-dlp binary...")
+                return self._update_binary(yt_dlp_path)
+            else:
+                print("AutoUpdateThread: Updating system yt-dlp via pip...")
+                return self._update_via_pip()
+                
+        except Exception as e:
+            print(f"AutoUpdateThread: Error in _perform_update: {e}")
+            return False
+    
+    def _update_binary(self, yt_dlp_path):
+        """Update yt-dlp binary directly from GitHub releases (silent version)."""
+        try:
+            import os
+            import sys
+            import requests
+            
+            # Determine the URL based on OS
+            if sys.platform == 'win32':
+                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
+            elif sys.platform == 'darwin':
+                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
+            else:
+                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
+            
+            print("AutoUpdateThread: Downloading latest yt-dlp binary...")
+            
+            # Download without progress tracking (silent)
+            response = requests.get(url, stream=True)
+            if response.status_code != 200:
+                print(f"AutoUpdateThread: Download failed: HTTP {response.status_code}")
+                return False
+            
+            temp_file = f"{yt_dlp_path}.new"
+            
+            with open(temp_file, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+            
+            print("AutoUpdateThread: Installing updated binary...")
+            
+            # Make executable on Unix systems
+            if sys.platform != 'win32':
+                os.chmod(temp_file, 0o755)
+            
+            # Replace the old file with the new one
+            try:
+                # On Windows, we need to remove the old file first
+                if sys.platform == 'win32' and os.path.exists(yt_dlp_path):
+                    os.remove(yt_dlp_path)
+                
+                os.rename(temp_file, yt_dlp_path)
+                print("AutoUpdateThread: Binary successfully updated!")
+                return True
+                
+            except Exception as e:
+                print(f"AutoUpdateThread: Error installing binary: {e}")
+                # Clean up temp file if it exists
+                if os.path.exists(temp_file):
+                    try:
+                        os.remove(temp_file)
+                    except:
+                        pass
+                return False
+                
+        except Exception as e:
+            print(f"AutoUpdateThread: Binary update failed: {e}")
+            return False
+    
+    def _update_via_pip(self):
+        """Update yt-dlp via pip (silent version)."""
+        try:
+            import subprocess
+            import sys
+            import pkg_resources
+            import requests
+            from packaging import version
+            
+            print("AutoUpdateThread: Checking current pip installation...")
+            
+            # Get current version
+            try:
+                current_version = pkg_resources.get_distribution("yt-dlp").version
+                print(f"AutoUpdateThread: Current version: {current_version}")
+            except pkg_resources.DistributionNotFound:
+                print("AutoUpdateThread: yt-dlp not found via pip, attempting installation...")
+                current_version = "0.0.0"
+            
+            # Get the latest version from PyPI
+            print("AutoUpdateThread: Checking for latest version...")
+            response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
+            
+            if response.status_code != 200:
+                print("AutoUpdateThread: Failed to check for updates")
+                return False
+                
+            data = response.json()
+            latest_version = data["info"]["version"]
+            print(f"AutoUpdateThread: Latest version: {latest_version}")
+            
+            # Compare versions
+            if version.parse(latest_version) > version.parse(current_version):
+                print(f"AutoUpdateThread: Updating from {current_version} to {latest_version}...")
+                
+                # Create startupinfo to hide console on Windows
+                startupinfo = None
+                if sys.platform == 'win32' and hasattr(subprocess, 'STARTUPINFO'):
+                    startupinfo = subprocess.STARTUPINFO()
+                    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                    startupinfo.wShowWindow = 0  # SW_HIDE
+                
+                # Run pip update
+                print("AutoUpdateThread: Running pip install --upgrade...")
+                update_result = subprocess.run(
+                    [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    startupinfo=startupinfo
+                )
+                
+                if update_result.returncode == 0:
+                    print("AutoUpdateThread: Pip update completed successfully!")
+                    return True
+                else:
+                    print(f"AutoUpdateThread: Pip update failed: {update_result.stderr}")
+                    return False
+            else:
+                print("AutoUpdateThread: yt-dlp is already up to date!")
+                return True
+                
+        except Exception as e:
+            print(f"AutoUpdateThread: Pip update failed: {e}")
+            return False
