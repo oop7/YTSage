@@ -17,11 +17,24 @@ from pathlib import Path
 from packaging import version
 import subprocess
 import re
-import yt_dlp
+try:
+    import yt_dlp
+    YT_DLP_AVAILABLE = True
+except ImportError:
+    YT_DLP_AVAILABLE = False
+    print("Warning: yt-dlp not available at startup, will be downloaded at runtime")
 import markdown
+try:
+    import pygame
+    PYGAME_AVAILABLE = True
+except ImportError:
+    PYGAME_AVAILABLE = False
+    print("Warning: pygame not available, audio notifications disabled")
+import threading
 
 from ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
-from ytsage_utils import check_ffmpeg, get_yt_dlp_path, load_saved_path, save_path # Import utility functions
+from ytsage_utils import check_ffmpeg, load_saved_path, save_path, get_config_file_path, get_ytdlp_version, get_ffmpeg_version, should_check_for_auto_update, check_and_update_ytdlp_auto # Import utility functions
+from ytsage_yt_dlp import check_ytdlp_binary, setup_ytdlp, get_ytdlp_executable_path, get_yt_dlp_path # Import the new yt-dlp functions
 from ytsage_gui_dialogs import (LogWindow, CustomCommandDialog, FFmpegCheckDialog, 
                                 YTDLPUpdateDialog, AboutDialog, SubtitleSelectionDialog, 
                                 PlaylistSelectionDialog, CookieLoginDialog,
@@ -32,13 +45,25 @@ from ytsage_gui_video_info import VideoInfoMixin # Import VideoInfoMixin
 class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from mixins
     def __init__(self):
         super().__init__()
+        
         # Check for FFmpeg before proceeding
         if not check_ffmpeg():
             self.show_ffmpeg_dialog()
+            
+        # Check for yt-dlp in our app's bin directory or system PATH
+        ytdlp_path = get_yt_dlp_path()
+        if ytdlp_path == "yt-dlp":  # Not found in app dir or PATH
+            self.show_ytdlp_setup_dialog()
+        else:
+            print(f"Using yt-dlp from: {ytdlp_path}")
 
-        self.version = "4.5.7"
+        self.version = "4.6.0"
         self.check_for_updates()
-        self.config_file = Path.home() / '.ytsage_config.json'
+        
+        # Check for auto-updates if enabled
+        self.check_auto_update_ytdlp()
+        
+        self.config_file = get_config_file_path()
         load_saved_path(self)
         # Load custom icon
         icon_path = os.path.join(os.path.dirname(__file__), 'Icon', 'icon.png')
@@ -247,6 +272,57 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         
         # Initialize UI state based on current mode
         self.handle_mode_change()
+        
+        # Initialize pygame for sound notifications
+        self.init_sound()
+
+    def init_sound(self):
+        """Initialize pygame mixer for sound notifications"""
+        try:
+            if PYGAME_AVAILABLE:
+                pygame.mixer.init()
+                self.sound_enabled = True
+                
+                # Get the notification sound path
+                self.notification_sound_path = os.path.join(os.path.dirname(__file__), 'sound', 'notification.mp3')
+                
+                # Check if the notification sound file exists
+                if not os.path.exists(self.notification_sound_path):
+                    print(f"Warning: Notification sound file not found at: {self.notification_sound_path}")
+                    self.sound_enabled = False
+                else:
+                    print(f"Notification sound loaded from: {self.notification_sound_path}")
+            else:
+                self.sound_enabled = False
+                print("Sound notifications disabled - pygame not available")
+                
+        except Exception as e:
+            print(f"Error initializing sound: {e}")
+            self.sound_enabled = False
+
+    def play_notification_sound(self):
+        """Play notification sound in a separate thread to avoid blocking the UI"""
+        if not self.sound_enabled:
+            return
+            
+        def play_sound():
+            try:
+                if PYGAME_AVAILABLE:
+                    # Load and play the sound
+                    pygame.mixer.music.load(self.notification_sound_path)
+                    pygame.mixer.music.play()
+                    
+                    # Wait for the sound to finish playing
+                    while pygame.mixer.music.get_busy():
+                        pygame.time.wait(100)
+                    
+            except Exception as e:
+                print(f"Error playing notification sound: {e}")
+        
+        # Play sound in a separate thread to avoid blocking the UI
+        sound_thread = threading.Thread(target=play_sound)
+        sound_thread.daemon = True
+        sound_thread.start()
 
     def load_saved_path(self): # Using function from ytsage_utils now - no longer needed in class
         pass # Handled in class init now via ytsage_utils.load_saved_path(self)
@@ -255,7 +331,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         save_path(self, path) # Call the utility function
 
     def init_ui(self):
-        self.setWindowTitle('YTSage  v4.5.7')
+        self.setWindowTitle('YTSage  v4.6.0')
         self.setMinimumSize(900, 750)
 
         # Main widget and layout
@@ -606,6 +682,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
                 playlist_id = url.split('list=')[1].split('&')[0]
                 url = f'https://www.youtube.com/playlist?list={playlist_id}'
 
+            # Check if yt-dlp Python module is available
+            if not YT_DLP_AVAILABLE:
+                # Use subprocess to call yt-dlp executable
+                self._analyze_url_with_subprocess(url)
+                return
+
             # Initial extraction with basic options - suppress warnings here too
             ydl_opts = {
                 'quiet': False,
@@ -781,20 +863,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
         self.url_input.setText(clipboard.text())
 
     def update_ytdlp(self):
-        # Check if we're running in a PyInstaller package
-        if getattr(sys, 'frozen', False):
-            # Running from PyInstaller package, show info message
-            msg_box = QMessageBox(self)
-            msg_box.setIcon(QMessageBox.Icon.Information)
-            msg_box.setWindowTitle("Feature Unavailable")
-            msg_box.setText("This feature is available only on the Python (PyPI) version.")
-            msg_box.setInformativeText("To update yt-dlp in a packaged version, please download a new version of the application.")
-            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
-            msg_box.exec()
-        else:
-            # Running from source code, show the normal update dialog
-            dialog = YTDLPUpdateDialog(self)
-            dialog.exec()
+        """Show the yt-dlp update dialog with proper progress tracking"""
+        # Make the dialog non-modal to prevent blocking the main UI
+        dialog = YTDLPUpdateDialog(self)
+        dialog.setModal(False)  # Make it non-modal
+        dialog.show()  # Use show() instead of exec() to avoid blocking
 
     def show_download_settings_dialog(self): # Renamed method
         dialog = DownloadSettingsDialog(
@@ -962,6 +1035,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
             # Default case
             else:
                 self.status_label.setText("✅ Download completed!")
+        
+        # Play notification sound when download completes
+        self.play_notification_sound()
 
     def download_error(self, error_message):
         self.toggle_download_controls(True)
@@ -1010,8 +1086,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
     def show_update_dialog(self, latest_version, release_url, changelog): # Added changelog parameter
         msg = QDialog(self)
         msg.setWindowTitle("Update Available")
-        msg.setMinimumWidth(500) # Increased width for changelog
-        msg.setMinimumHeight(400) # Added min height
+        msg.setMinimumWidth(600) # Increased width for better layout
+        msg.setMinimumHeight(450) # Increased height for better spacing
         
         # Set custom icon directly
         icon_path = os.path.join(os.path.dirname(__file__), 'Icon', 'icon.png')
@@ -1022,19 +1098,47 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
             msg.setWindowIcon(self.windowIcon())
 
         layout = QVBoxLayout(msg)
-        layout.setSpacing(10) # Added spacing
+        layout.setSpacing(15) # Increased spacing for better layout
+        layout.setContentsMargins(20, 20, 20, 20) # Added margins
 
-        # Update message
+        # Header with icon and title
+        header_layout = QHBoxLayout()
+        
+        # Add update icon
+        icon_label = QLabel()
+        icon_label.setPixmap(self.style().standardIcon(QStyle.StandardPixmap.SP_BrowserReload).pixmap(32, 32))
+        header_layout.addWidget(icon_label)
+        
+        # Title
+        title_label = QLabel("<h2 style='color: #c90000; margin: 0;'>Update Available</h2>")
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+        
+        layout.addLayout(header_layout)
+
+        # Update message with better formatting
         message_label = QLabel(
-            f"<b>A new version of YTSage is available!</b>\n\n"
-            f"Current version: {self.version}\n"
-            f"Latest version: {latest_version}"
+            f"<div style='font-size: 13px; line-height: 1.4;'>"
+            f"<b style='color: #ffffff;'>A new version of YTSage is available!</b><br><br>"
+            f"<span style='color: #cccccc;'>Current version: <b style='color: #ffffff;'>{self.version}</b></span><br>"
+            f"<span style='color: #cccccc;'>Latest version: <b style='color: #00ff88;'>{latest_version}</b></span>"
+            f"</div>"
         )
         message_label.setWordWrap(True)
+        message_label.setStyleSheet("""
+            QLabel {
+                background-color: #1d1e22;
+                border: 1px solid #3d3d3d;
+                border-radius: 6px;
+                padding: 15px;
+                margin: 5px 0;
+            }
+        """)
         layout.addWidget(message_label)
 
         # Changelog Section
-        changelog_label = QLabel("<b>Changelog:</b>")
+        changelog_label = QLabel("<b style='color: #ffffff; font-size: 14px;'>Changelog:</b>")
+        changelog_label.setStyleSheet("padding: 5px 0; margin-top: 10px;")
         layout.addWidget(changelog_label)
 
         changelog_text = QTextEdit()
@@ -1049,52 +1153,95 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
 
         changelog_text.setStyleSheet("""
             QTextEdit {
-                background-color: #1e1e1e;
-                border: 1px solid #3d3d3d;
-                border-radius: 4px;
-                color: #cccccc;
-                padding: 5px;
-                font-family: Consolas, monospace;
-                font-size: 11px; /* Slightly smaller font */
+                background-color: #1d1e22;
+                border: 2px solid #3d3d3d;
+                border-radius: 6px;
+                color: #ffffff;
+                padding: 10px;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                font-size: 12px;
+                line-height: 1.4;
+            }
+            QScrollBar:vertical {
+                border: none;
+                background: #1d1e22;
+                width: 12px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:vertical {
+                background: #404040;
+                min-height: 20px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:vertical:hover {
+                background: #505050;
             }
         """)
-        changelog_text.setMaximumHeight(200) # Limit height
+        changelog_text.setMaximumHeight(180) # Limit height
         layout.addWidget(changelog_text)
 
-        # Buttons
+        # Buttons with better styling
         button_layout = QHBoxLayout()
+        button_layout.setSpacing(10)
 
         download_btn = QPushButton("Download Update")
         download_btn.clicked.connect(lambda: self.open_release_page(release_url))
+        download_btn.setStyleSheet("""
+            QPushButton {
+                padding: 10px 20px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 6px;
+                color: white;
+                font-weight: bold;
+                font-size: 13px;
+                min-width: 140px;
+            }
+            QPushButton:hover {
+                background-color: #a50000;
+            }
+            QPushButton:pressed {
+                background-color: #800000;
+            }
+        """)
 
         remind_btn = QPushButton("Remind Me Later")
         remind_btn.clicked.connect(msg.close)
+        remind_btn.setStyleSheet("""
+            QPushButton {
+                padding: 10px 20px;
+                background-color: #3d3d3d;
+                border: 1px solid #555555;
+                border-radius: 6px;
+                color: white;
+                font-weight: bold;
+                font-size: 13px;
+                min-width: 140px;
+            }
+            QPushButton:hover {
+                background-color: #4d4d4d;
+                border-color: #666666;
+            }
+            QPushButton:pressed {
+                background-color: #2d2d2d;
+            }
+        """)
 
+        button_layout.addStretch()
         button_layout.addWidget(download_btn)
         button_layout.addWidget(remind_btn)
         layout.addLayout(button_layout)
 
-        # Style the dialog
+        # Style the dialog with improved theme matching
         msg.setStyleSheet("""
             QDialog {
-                background-color: #2b2b2b;
+                background-color: #15181b;
+                border: 1px solid #3d3d3d;
+                border-radius: 8px;
             }
             QLabel {
                 color: #ffffff;
                 font-size: 12px;
-                padding: 5px 0; /* Adjusted padding */
-            }
-            QPushButton {
-                padding: 8px 15px;
-                background-color: #ff0000;
-                border: none;
-                border-radius: 4px;
-                color: white;
-                font-weight: bold;
-                min-width: 120px; /* Adjusted min-width */
-            }
-            QPushButton:hover {
-                background-color: #cc0000;
             }
         """)
 
@@ -1102,6 +1249,75 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
 
     def open_release_page(self, url):
         webbrowser.open(url)
+
+    def check_auto_update_ytdlp(self):
+        """Check and perform auto-update for yt-dlp if enabled and due."""
+        try:
+            # Check if auto-update should be performed
+            if should_check_for_auto_update():
+                print("Performing auto-update check for yt-dlp...")
+                # Perform the auto-update in a non-blocking way
+                # We don't want to block the UI startup for this
+                from PySide6.QtCore import QTimer
+                QTimer.singleShot(2000, self._perform_auto_update)  # Delay 2 seconds after startup
+        except Exception as e:
+            print(f"Error in auto-update check: {e}")
+
+    def _perform_auto_update(self):
+        """Actually perform the auto-update check and update if needed in a background thread."""
+        try:
+            # Create and start the auto-update thread to avoid blocking the UI
+            from ytsage_gui_dialogs import AutoUpdateThread
+            self.auto_update_thread = AutoUpdateThread()
+            self.auto_update_thread.update_finished.connect(self._on_auto_update_finished)
+            self.auto_update_thread.start()
+        except Exception as e:
+            print(f"Error starting auto-update thread: {e}")
+
+    def _on_auto_update_finished(self, success, message):
+        """Handle auto-update completion."""
+        if success:
+            print(f"Auto-update completed successfully: {message}")
+        else:
+            print(f"Auto-update completed with issues: {message}")
+        
+        # Clean up the thread reference and ensure it's properly finished
+        if hasattr(self, 'auto_update_thread'):
+            # Disconnect all signals to prevent further callbacks
+            self.auto_update_thread.update_finished.disconnect()
+            # Make sure thread is finished
+            if self.auto_update_thread.isRunning():
+                self.auto_update_thread.quit()
+                self.auto_update_thread.wait(1000)  # Wait up to 1 second
+            # Remove the reference
+            delattr(self, 'auto_update_thread')
+
+    def closeEvent(self, event):
+        """Handle application close event to ensure proper cleanup of background threads."""
+        try:
+            # Stop the auto-update thread if it's running
+            if hasattr(self, 'auto_update_thread') and self.auto_update_thread.isRunning():
+                print("Stopping auto-update thread...")
+                self.auto_update_thread.quit()
+                if not self.auto_update_thread.wait(3000):  # Wait up to 3 seconds for graceful shutdown
+                    print("Force terminating auto-update thread...")
+                    self.auto_update_thread.terminate()
+                    self.auto_update_thread.wait(1000)  # Wait for termination
+            
+            # Cancel any running downloads
+            if self.current_download and self.current_download.isRunning():
+                print("Canceling running download...")
+                self.current_download.cancel()
+                if not self.current_download.wait(3000):  # Wait up to 3 seconds for graceful shutdown
+                    print("Force terminating download thread...")
+                    self.current_download.terminate()
+                    self.current_download.wait(1000)  # Wait for termination
+            
+            print("Application closing...")
+            event.accept()
+        except Exception as e:
+            print(f"Error during application close: {e}")
+            event.accept()  # Accept the close event anyway
 
     def show_custom_options(self):
         dialog = CustomOptionsDialog(self)
@@ -1328,3 +1544,194 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from m
                 self.force_keyframes = False
                 self.time_range_btn.setStyleSheet("")
                 self.time_range_btn.setToolTip("")
+
+    def show_ytdlp_setup_dialog(self):
+        """Show the yt-dlp setup dialog to configure yt-dlp"""
+        yt_dlp_path = setup_ytdlp(self)
+        if yt_dlp_path != "yt-dlp":
+            success_dialog = QMessageBox(self)
+            success_dialog.setIcon(QMessageBox.Information)
+            success_dialog.setWindowTitle("yt-dlp Setup")
+            success_dialog.setText(f"yt-dlp has been successfully configured at:\n{yt_dlp_path}")
+            success_dialog.setWindowIcon(self.windowIcon())
+            success_dialog.setStyleSheet("""
+                QMessageBox {
+                    background-color: #15181b;
+                    color: #ffffff;
+                }
+                QLabel {
+                    color: #ffffff;
+                }
+                QPushButton {
+                    padding: 8px 15px;
+                    background-color: #c90000;
+                    border: none;
+                    border-radius: 4px;
+                    color: white;
+                    font-weight: bold;
+                }
+                QPushButton:hover {
+                    background-color: #a50000;
+                }
+            """)
+            success_dialog.exec()
+
+    def _analyze_url_with_subprocess(self, url):
+        """Analyze URL using yt-dlp executable when Python module is not available"""
+        import subprocess
+        import json
+        import tempfile
+        
+        try:
+            yt_dlp_path = get_yt_dlp_path()
+            if not yt_dlp_path:
+                raise Exception("yt-dlp executable not found. Please install yt-dlp first.")
+            
+            self.signals.update_status.emit("Analyzing (30%)... Extracting info with yt-dlp executable")
+            
+            # Clean up the URL to handle both playlist and video URLs
+            if 'list=' in url and 'watch?v=' in url:
+                playlist_id = url.split('list=')[1].split('&')[0]
+                url = f'https://www.youtube.com/playlist?list={playlist_id}'
+
+            # Build command for basic info extraction
+            cmd = [yt_dlp_path, '--dump-json', '--no-warnings', url]
+            
+            # Add cookies if available
+            if self.cookie_file_path:
+                cmd.extend(['--cookies', self.cookie_file_path])
+            
+            # Execute command with hidden console window on Windows
+            import sys
+            if sys.platform == 'win32':
+                # Hide the console window on Windows
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                startupinfo.wShowWindow = subprocess.SW_HIDE
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=60, startupinfo=startupinfo)
+            else:
+                # For other platforms, use normal subprocess call
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            
+            if result.returncode != 0:
+                raise Exception(f"yt-dlp failed: {result.stderr}")
+            
+            # Parse JSON output - yt-dlp outputs one JSON object per line for playlists
+            json_lines = [line.strip() for line in result.stdout.strip().split('\n') if line.strip()]
+            
+            if not json_lines:
+                raise Exception("No data returned from yt-dlp")
+            
+            # Parse first JSON object to determine if it's a playlist
+            first_info = json.loads(json_lines[0])
+            
+            self.signals.update_status.emit("Analyzing (60%)... Processing data")
+            
+            if first_info.get('_type') == 'playlist' or len(json_lines) > 1:
+                # Handle playlist
+                self.is_playlist = True
+                self.playlist_info = first_info
+                self.selected_playlist_items = None
+                self.playlist_entries = []
+                
+                # Parse all entries
+                for line in json_lines:
+                    try:
+                        entry = json.loads(line)
+                        if entry.get('_type') != 'playlist':  # Skip playlist metadata
+                            self.playlist_entries.append(entry)
+                    except json.JSONDecodeError:
+                        continue
+                
+                if not self.playlist_entries:
+                    raise Exception("Playlist contains no valid videos.")
+                
+                # Use first video for format information
+                self.video_info = self.playlist_entries[0]
+                
+                # Update playlist info label
+                playlist_text = (f"Playlist: {first_info.get('title', 'Unknown Playlist')} | "
+                               f"{len(self.playlist_entries)} videos")
+                QMetaObject.invokeMethod(
+                    self.playlist_info_label, "setText", Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(str, playlist_text)
+                )
+                QMetaObject.invokeMethod(
+                    self.playlist_info_label, "setVisible", Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(bool, True)
+                )
+                
+                # Show playlist selection button
+                QMetaObject.invokeMethod(
+                    self, 'update_playlist_button_text', Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(str, "Select Videos... (All selected)")
+                )
+                QMetaObject.invokeMethod(
+                    self.playlist_select_btn, "setVisible", Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(bool, True)
+                )
+            else:
+                # Handle single video
+                self.is_playlist = False
+                self.video_info = first_info
+                self.playlist_entries = []
+                self.selected_playlist_items = None
+                
+                # Hide playlist UI
+                QMetaObject.invokeMethod(
+                    self.playlist_info_label, "setVisible", Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(bool, False)
+                )
+                QMetaObject.invokeMethod(
+                    self.playlist_select_btn, "setVisible", Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(bool, False)
+                )
+            
+            # Verify we have format information
+            if not self.video_info or 'formats' not in self.video_info:
+                raise Exception("No format information available")
+            
+            self.signals.update_status.emit("Analyzing (75%)... Processing formats")
+            self.all_formats = self.video_info['formats']
+            
+            # Update UI
+            self.update_video_info(self.video_info)
+            
+            # Update thumbnail
+            self.signals.update_status.emit("Analyzing (85%)... Loading thumbnail")
+            thumbnail_url = None
+            if self.is_playlist:
+                thumbnail_url = self.playlist_info.get('thumbnail')
+            
+            if not thumbnail_url:
+                thumbnail_url = self.video_info.get('thumbnail')
+                
+            self.download_thumbnail(thumbnail_url)
+            
+            # Save thumbnail if enabled
+            if self.save_thumbnail:
+                self.download_thumbnail_file(self.video_url, self.path_input.text())
+            
+            # Handle subtitles
+            self.signals.update_status.emit("Analyzing (90%)... Processing subtitles")
+            self.selected_subtitles = []
+            self.available_subtitles = self.video_info.get('subtitles', {})
+            self.available_automatic_subtitles = self.video_info.get('automatic_captions', {})
+            
+            # Update subtitle UI
+            QMetaObject.invokeMethod(self.selected_subs_label, "setText", Qt.ConnectionType.QueuedConnection, Q_ARG(str, "0 selected"))
+            
+            # Update format table
+            self.signals.update_status.emit("Analyzing (95%)... Updating format table")
+            self.video_button.setChecked(True)
+            self.audio_button.setChecked(False)
+            self.filter_formats()
+            
+            self.signals.update_status.emit("Analysis complete!")
+            
+        except subprocess.TimeoutExpired:
+            raise Exception("Analysis timed out. Please try again.")
+        except json.JSONDecodeError as e:
+            raise Exception(f"Failed to parse yt-dlp output: {str(e)}")
+        except Exception as e:
+            raise Exception(f"Analysis failed: {str(e)}")
