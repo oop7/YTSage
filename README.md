@@ -30,7 +30,7 @@ Download videos in any quality, extract audio, fetch subtitles, and more.
 | Core Features                     | Advanced Features                       | Extra Features                     |
 |-----------------------------------|-----------------------------------------|------------------------------------|
 | 🎥 Format Table                   | 🚫 SponsorBlock Integration             | 💾 Save Download Path             |
-| 🎵 Audio Extraction               | 📝 Multi-Subtitle Select & Merge        | 🔄 Auto-Updates                   |
+| 🎵 Audio Extraction               | 📝 Multi-Subtitle Select & Merge        | 🔄 Auto-Update yt-dlp                  |
 | ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp Detection         |
 | 📋 Playlist Support              |  🖼️ Save thumbnail                       | ⚙️ Custom Commands                 |
 | 🖼️ Playlist Selector             | 🚀 Speed Limiter                        | 🍪 Login with Cookies              |
@@ -49,8 +49,7 @@ pip install ytsage
 ytsage
 ```
 
-<details>
-<summary>📦 Other Installation Methods</summary>
+### 📦 Other Installation Methods
 
 ### Pre-built Executables
 - 🪟 Windows: `YTSage.exe`
@@ -58,9 +57,11 @@ ytsage
 - 🐧 Linux: `YTSage_{version}_amd64.deb`
 - 🐧 Linux: `YTSage-x86_64.AppImage`
 - 🍎 macOS: `YTSage-macOS-app.zip`
-- 🍎 macOS: `YTSage.dmg`
+- 🍎 macOS: `YTSage-{version}.dmg`
 
-### Manual Installation from Source
+<details>
+<summary>🛠️ Manual Installation from Source</summary>
+
 ```bash
 # Clone repository
 git clone https://github.com/oop7/YTSage.git
@@ -74,6 +75,8 @@ pip install -r requirements.txt
 # Run application
 python main.py
 ```
+
+</details>
 </details>
 
 ## 📸 Screenshots
@@ -144,9 +147,14 @@ python main.py
 - **Save Thumbnail:** Save the thumbnail of the video
 - **Remove Sponsor Segments:** Remove sponsor segments from the video
 - **Speed Limiter:** Limit the download speed
-- **Login with Cookies:** Login with cookies
+- **Login with Cookies:** Login to YouTube using cookies to access private content  
+  How to use it:
+  1. Extract cookies from your browser using an extension like [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file)
+  2. Copy the cookies in Netscape format
+  3. Create a file named `cookies.txt` and paste the cookies into it
+  4. Select the `cookies.txt` file in the app
 - **Save Download Path:** Save the download path
-- **Update yt-dlp:** Updates yt-dlp (works if installed via **PyPI** or when running from **source** using `main.py`)
+- **Update yt-dlp:** Update yt-dlp
 - **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp
 - **Custom Commands:** Access advanced yt-dlp features
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
@@ -157,22 +165,19 @@ python main.py
 <details>
 <summary>🛠️ Troubleshooting</summary>
 
-- **When the app doesn't display the format table:** Update yt-dlp
+- **Format table not displaying:** Update yt-dlp to the latest version
+- **Download fails:** Check your internet connection and ensure the video is available
+- **Audio extraction issues:** Verify FFmpeg is properly installed
 
 </details>
 
 ## 🧩 Requirements
 
-```plaintext
-Python 3.7+
-PySide6
-yt-dlp
-Pillow
-requests
-FFmpeg
-packaging
-markdown
-```
+- **Python:** 3.7 or higher
+- **GUI Framework:** PySide6
+- **Download Engine:** yt-dlp  
+- **Media Processing:** FFmpeg
+- **Additional Libraries:** Pillow, requests, packaging, markdown, pygame
 
 ## 👥 Contributing
 
@@ -218,6 +223,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | [requests](https://requests.readthedocs.io/) | HTTP Requests |
 | [packaging](https://packaging.python.org/) | Packaging |
 | [markdown](https://python-markdown.github.io/) | Markdown Processing |
+| [pygame](https://www.pygame.org/) | Audio Playback |
+| [New Notification 09 by Universfield](https://pixabay.com/sound-effects/new-notification-09-352705/) | Notification Sound |
+
 
 </div>
 
