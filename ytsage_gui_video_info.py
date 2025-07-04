@@ -16,7 +16,12 @@ from pathlib import Path
 from packaging import version
 import subprocess
 import re
-import yt_dlp
+try:
+    import yt_dlp
+    YT_DLP_AVAILABLE = True
+except ImportError:
+    YT_DLP_AVAILABLE = False
+    print("Warning: yt-dlp not available at startup, will be downloaded at runtime")
 from ytsage_gui_dialogs import SubtitleSelectionDialog
 
 class VideoInfoMixin:
