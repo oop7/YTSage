@@ -1,5 +1,10 @@
 from PySide6.QtCore import QThread, Signal, QObject, QProcess, QTimer
-import yt_dlp # Keep yt_dlp import here - only downloader uses it.
+try:
+    import yt_dlp # Keep yt_dlp import here - only downloader uses it.
+    YT_DLP_AVAILABLE = True
+except ImportError:
+    YT_DLP_AVAILABLE = False
+    print("Warning: yt-dlp not available at startup, will be downloaded at runtime")
 import time
 import os
 import re
@@ -7,6 +12,7 @@ import subprocess # For direct CLI command execution
 import shlex # For safely parsing command arguments
 import sys  # Added to get executable path information
 from pathlib import Path
+from ytsage_yt_dlp import get_yt_dlp_path  # Import the new yt-dlp path function
 
 class SignalManager(QObject):
     update_formats = Signal(list)
@@ -148,13 +154,14 @@ class DownloadThread(QThread):
             if self.cookie_file:
                 ydl_opts_check['cookiefile'] = self.cookie_file
 
-            with yt_dlp.YoutubeDL(ydl_opts_check) as ydl:
-                info = ydl.extract_info(self.url, download=False)
-                
-                # Handle cases where info extraction fails silently
-                if not info:
-                    print("DEBUG: Failed to extract info during file existence check. Skipping check.")
-                    return False # Proceed with download attempt
+            if YT_DLP_AVAILABLE:
+                with yt_dlp.YoutubeDL(ydl_opts_check) as ydl:
+                    info = ydl.extract_info(self.url, download=False)
+                    
+                    # Handle cases where info extraction fails silently
+                    if not info:
+                        print("DEBUG: Failed to extract info during file existence check. Skipping check.")
+                        return False # Proceed with download attempt
 
                 # Get the title and sanitize it for filename
                 title = info.get('title', 'video')
@@ -169,6 +176,9 @@ class DownloadThread(QThread):
                         break
                 
                 print(f"DEBUG: Resolution: {resolution}")
+            else:
+                print("DEBUG: yt-dlp not available, skipping file existence check")
+                return False  # Proceed with download attempt
                 
                 # Create the expected filename (more specific)
                 if self.is_playlist and info.get('playlist_title'):
@@ -210,33 +220,10 @@ class DownloadThread(QThread):
 
     def _build_yt_dlp_command(self):
         """Build the yt-dlp command line with all options for direct execution."""
-        # Use bundled yt-dlp executable instead of system PATH
-        # Determine if we're running from a PyInstaller bundle
-        if getattr(sys, 'frozen', False):
-            # We're running from a PyInstaller bundle
-            base_path = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))
-            yt_dlp_path = os.path.join(base_path, "yt-dlp.exe" if os.name == 'nt' else "yt-dlp")
-            if os.path.exists(yt_dlp_path):
-                cmd = [yt_dlp_path]
-                print(f"DEBUG: Using bundled yt-dlp from: {yt_dlp_path}")
-                
-                # Check if the bundled executable is actually executable
-                if not os.access(yt_dlp_path, os.X_OK) and os.name != 'nt':  # Skip check on Windows
-                    print(f"WARNING: Bundled yt-dlp exists but is not executable: {yt_dlp_path}")
-                    try:
-                        # Try to make it executable
-                        os.chmod(yt_dlp_path, 0o755)
-                        print(f"Fixed permissions on bundled yt-dlp")
-                    except Exception as e:
-                        print(f"Failed to fix permissions: {e}")
-            else:
-                # Fall back to regular command if bundled version not found
-                cmd = ["yt-dlp"]
-                print(f"DEBUG: Bundled yt-dlp not found at {yt_dlp_path}, using system PATH")
-        else:
-            # We're running from source, use system PATH
-            cmd = ["yt-dlp"]
-            print("DEBUG: Using system PATH for yt-dlp")
+        # Use the new yt-dlp path function from ytsage_yt_dlp module
+        yt_dlp_path = get_yt_dlp_path()
+        cmd = [yt_dlp_path]
+        print(f"DEBUG: Using yt-dlp from: {yt_dlp_path}")
         
         # Format selection strategy - use format ID if provided or fallback to resolution
         if self.format_id:
@@ -246,19 +233,20 @@ class DownloadThread(QThread):
             # Check if this is an audio-only format
             is_audio_format = False
             try:
-                ydl_opts = {
-                    'quiet': True,
-                    'no_warnings': True,
-                    'skip_download': True,
-                }
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(self.url, download=False)
-                    for fmt in info.get('formats', []):
-                        if fmt.get('format_id') == clean_format_id:
-                            if fmt.get('vcodec') == 'none' or 'audio only' in fmt.get('format_note', '').lower():
-                                is_audio_format = True
-                                print(f"DEBUG: Detected audio-only format for ID: {clean_format_id}")
-                            break
+                if YT_DLP_AVAILABLE:
+                    ydl_opts = {
+                        'quiet': True,
+                        'no_warnings': True,
+                        'skip_download': True,
+                    }
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        info = ydl.extract_info(self.url, download=False)
+                        for fmt in info.get('formats', []):
+                            if fmt.get('format_id') == clean_format_id:
+                                if fmt.get('vcodec') == 'none' or 'audio only' in fmt.get('format_note', '').lower():
+                                    is_audio_format = True
+                                    print(f"DEBUG: Detected audio-only format for ID: {clean_format_id}")
+                                break
             except Exception as e:
                 print(f"DEBUG: Error checking if format is audio-only: {e}")
             
@@ -275,24 +263,25 @@ class DownloadThread(QThread):
                 try:
                     format_ext = None
                     print(f"DEBUG: Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
-                    ydl_opts = {
-                        'quiet': True,
-                        'no_warnings': True,
-                        'skip_download': True,
-                    }
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(self.url, download=False)
-                        # Look for the clean format ID first
-                        for fmt in info.get('formats', []):
-                            if fmt.get('format_id') == clean_format_id:
-                                format_ext = fmt.get('ext')
-                                break
-                        # If not found, try the original ID as fallback
-                        if not format_ext:
+                    if YT_DLP_AVAILABLE:
+                        ydl_opts = {
+                            'quiet': True,
+                            'no_warnings': True,
+                            'skip_download': True,
+                        }
+                        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                            info = ydl.extract_info(self.url, download=False)
+                            # Look for the clean format ID first
                             for fmt in info.get('formats', []):
-                                if fmt.get('format_id') == self.format_id:
+                                if fmt.get('format_id') == clean_format_id:
                                     format_ext = fmt.get('ext')
                                     break
+                            # If not found, try the original ID as fallback
+                            if not format_ext:
+                                for fmt in info.get('formats', []):
+                                    if fmt.get('format_id') == self.format_id:
+                                        format_ext = fmt.get('ext')
+                                        break
                     
                     if format_ext:
                         print(f"DEBUG: Detected format extension: {format_ext}")
@@ -324,7 +313,7 @@ class DownloadThread(QThread):
         if self.is_playlist and self.playlist_items:
             cmd.extend(["--playlist-items", self.playlist_items])
         
-        # Add subtitle options if selected
+        # Add subtitle options if subtitles are selected
         if self.subtitle_langs:
             # Subtitles work with both audio-only and video formats
             # For audio-only formats, subtitles will be downloaded as separate files
@@ -344,7 +333,7 @@ class DownloadThread(QThread):
                 cmd.extend(["--sub-langs", ",".join(lang_codes)])
                 cmd.append("--write-auto-subs")  # Include auto-generated subtitles
                 
-                # Add embedding if requested - only applies to video formats
+                # Only embed subtitles if merge is enabled
                 if self.merge_subs:
                     cmd.append("--embed-subs")
         
