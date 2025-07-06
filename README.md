@@ -4,11 +4,11 @@
 
 <img src="https://github.com/user-attachments/assets/f95f7bfb-8591-4d32-b795-68e61efd670c" width="800" alt="YTSage Interface"/>
 
-[![PyPI version](https://badge.fury.io/py/ytsage.svg)](https://badge.fury.io/py/ytsage)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
-[![Downloads](https://static.pepy.tech/badge/ytsage)](https://pepy.tech/project/ytsage)
-[![Total Downloads](https://static.pepy.tech/badge/ytsage/month)](https://pepy.tech/project/ytsage)
+[![PyPI version](https://img.shields.io/pypi/v/ytsage?color=dc2626&style=for-the-badge&logo=pypi&logoColor=white)](https://badge.fury.io/py/ytsage)
+[![License: MIT](https://img.shields.io/badge/License-MIT-374151?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Downloads](https://img.shields.io/pypi/dm/ytsage?color=4b5563&style=for-the-badge&logo=download&logoColor=white)](https://pepy.tech/project/ytsage)
+[![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=dc2626&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
 
 **A modern YouTube downloader with a clean PySide6 interface.**  
 Download videos in any quality, extract audio, fetch subtitles, and more.
@@ -23,6 +23,7 @@ Download videos in any quality, extract audio, fetch subtitles, and more.
 
 ---
 
+<a id="features"></a>
 ## ✨ Features
 
 <div align="center">
@@ -38,6 +39,7 @@ Download videos in any quality, extract audio, fetch subtitles, and more.
 
 </div>
 
+<a id="installation"></a>
 ## 🚀 Installation
 
 ### Quick Install (Recommended)
@@ -77,8 +79,8 @@ python main.py
 ```
 
 </details>
-</details>
 
+<a id="screenshots"></a>
 ## 📸 Screenshots
 
 <div align="center">
@@ -102,6 +104,7 @@ python main.py
 </table>
 </div>
 
+<a id="usage"></a>
 ## 📖 Usage
 
 <details>
@@ -179,6 +182,7 @@ python main.py
 - **Media Processing:** FFmpeg
 - **Additional Libraries:** Pillow, requests, packaging, markdown, pygame
 
+<a id="contributing"></a>
 ## 👥 Contributing
 
 We welcome contributions! Here's how you can help:
