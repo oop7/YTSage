@@ -1,0 +1,26 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Local configuration
+*.ini
+*.key
+*.env
+
+# Packaging artifacts
+*.egg-info/
+build/
+dist/
+*.deb
+
+# Logs and misc
+*.log
+
+# OS and editor-specific
+.DS_Store
+.vscode/
+.idea/
+
+# yt-dlp temporary/partial files
+*.part
+*.ytdl
