@@ -1,0 +1,16 @@
+[project]
+name = "ytsage"
+version = "0.1.0"
+description = "Modern YouTube downloader with a clean PySide6 interface. Download videos in any quality, extract audio, fetch subtitles, sponserBlock, and view video metadata. Built with yt-dlp for reliable performance."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "markdown>=3.8.2",
+    "packaging>=25.0",
+    "pillow>=11.3.0",
+    "pygame>=2.6.1",
+    "pyside6>=6.9.1",
+    "requests>=2.32.4",
+    "setuptools>=80.9.0",
+    "yt-dlp>=2025.6.30",
+]
