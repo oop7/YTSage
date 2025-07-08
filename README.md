@@ -165,7 +165,7 @@ ytsage
       <img src="https://github.com/user-attachments/assets/5236e3cc-8a8d-4d85-a660-782a740ef9af" alt="Subtitle Options merged with Remove Sponsor Segments"><br>
       <div align="center"><strong>Subtitle & SponsorBlock Options</strong></div><br>
     </tr>
-  </tr>
+  </td>
 </table>
 
 </div>
