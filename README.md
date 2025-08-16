@@ -14,12 +14,12 @@
 Download videos in any quality, extract audio, fetch subtitles, and more.
 
 <p align="center">
-  <a href="#installation" style="color: #D94343; text-decoration: none;">Installation</a> •
-  <a href="#features" style="color: #D94343; text-decoration: none;">Features</a> •
-  <a href="#usage" style="color: #D94343; text-decoration: none;">Usage</a> •
-  <a href="#screenshots" style="color: #D94343; text-decoration: none;">Screenshots</a> •
-  <a href="#troubleshooting" style="color: #D94343; text-decoration: none;">Troubleshooting</a> •
-  <a href="#contributing" style="color: #D94343; text-decoration: none;">Contributing</a>
+  <a href="#installation">Installation</a> •
+  <a href="#features">Features</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#screenshots">Screenshots</a> •
+  <a href="#troubleshooting">Troubleshooting</a> •
+  <a href="#contributing">Contributing</a>
 </p>
 
 </div>
@@ -75,9 +75,7 @@ ytsage
 - 🐧 **Linux:** <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-amd64.deb</code> / <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-x86_64.AppImage</code>
 - 🍎 **macOS:** <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-macOS.zip</code> / <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;.dmg</code>
 
-> <a href="https://github.com/oop7/YTSage/releases/latest" style="color: #D94343; text-decoration: none;">
-  <span>👉</span> <span style="text-decoration: underline;">Download Latest Release</span>
-</a>
+> [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
 
 <details>
 <summary>🛠️ Manual Installation from Source</summary>
