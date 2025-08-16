@@ -1,10 +1,11 @@
 from PySide6.QtCore import QThread, Signal, QObject, QProcess, QTimer
+from .ytsage_logging import logger
 try:
     import yt_dlp # Keep yt_dlp import here - only downloader uses it.
     YT_DLP_AVAILABLE = True
 except ImportError:
     YT_DLP_AVAILABLE = False
-    print("Warning: yt-dlp not available at startup, will be downloaded at runtime")
+    logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
 import time
 import os
 import re
@@ -12,7 +13,7 @@ import subprocess # For direct CLI command execution
 import shlex # For safely parsing command arguments
 import sys  # Added to get executable path information
 from pathlib import Path
-from ytsage_yt_dlp import get_yt_dlp_path  # Import the new yt-dlp path function
+from .ytsage_yt_dlp import get_yt_dlp_path  # Import the new yt-dlp path function
 
 class SignalManager(QObject):
     update_formats = Signal(list)
@@ -27,7 +28,7 @@ class DownloadThread(QThread):
     file_exists_signal = Signal(str)  # New signal for file existence
     update_details = Signal(str) # New signal for filename, speed, ETA
 
-    def __init__(self, url, path, format_id, subtitle_langs=None, is_playlist=False, merge_subs=False, enable_sponsorblock=False, resolution='', playlist_items=None, save_description=False, cookie_file=None, rate_limit=None, download_section=None, force_keyframes=False):
+    def __init__(self, url, path, format_id, subtitle_langs=None, is_playlist=False, merge_subs=False, enable_sponsorblock=False, sponsorblock_categories=None, resolution='', playlist_items=None, save_description=False, embed_chapters=False, cookie_file=None, rate_limit=None, download_section=None, force_keyframes=False):
         super().__init__()
         self.url = url
         self.path = path
@@ -36,9 +37,11 @@ class DownloadThread(QThread):
         self.is_playlist = is_playlist
         self.merge_subs = merge_subs
         self.enable_sponsorblock = enable_sponsorblock
+        self.sponsorblock_categories = sponsorblock_categories if sponsorblock_categories else ['sponsor']
         self.resolution = resolution
         self.playlist_items = playlist_items
         self.save_description = save_description
+        self.embed_chapters = embed_chapters
         self.cookie_file = cookie_file
         self.rate_limit = rate_limit
         self.download_section = download_section
@@ -65,7 +68,7 @@ class DownloadThread(QThread):
                         if os.path.isfile(file_path):
                             os.remove(file_path)
                     except Exception as e:
-                        print(f"Error deleting {filename}: {str(e)}")
+                        logger.error(f"Error deleting {filename}: {str(e)}")
         except Exception as e:
             self.error_signal.emit(f"Error cleaning partial files: {str(e)}")
 
@@ -84,11 +87,11 @@ class DownloadThread(QThread):
                         if os.path.isfile(subtitle_file):
                             os.remove(subtitle_file)
                             deleted_count += 1
-                            print(f"DEBUG: Deleted tracked subtitle file: {os.path.basename(subtitle_file)}")
+                            logger.debug(f"Deleted tracked subtitle file: {os.path.basename(subtitle_file)}")
                     except Exception as e:
-                        print(f"Error deleting subtitle file {subtitle_file}: {str(e)}")
+                        logger.error(f"Error deleting subtitle file {subtitle_file}: {str(e)}")
                 
-                print(f"DEBUG: Deleted {deleted_count} of {len(self.subtitle_files)} tracked subtitle files")
+                logger.debug(f"Deleted {deleted_count} of {len(self.subtitle_files)} tracked subtitle files")
             
             # Method 2: Find newly created subtitle files by comparing with initial set
             try:
@@ -101,19 +104,17 @@ class DownloadThread(QThread):
                                 new_subtitle_files.add(full_path)
                 
                 if new_subtitle_files:
-                    print(f"DEBUG: Found {len(new_subtitle_files)} new subtitle files to delete")
+                    logger.debug(f"Found {len(new_subtitle_files)} new subtitle files to delete")
                     for subtitle_file in new_subtitle_files:
                         try:
                             if os.path.isfile(subtitle_file):
                                 os.remove(subtitle_file)
                                 deleted_count += 1
-                                print(f"DEBUG: Deleted new subtitle file: {os.path.basename(subtitle_file)}")
+                                logger.debug(f"Deleted new subtitle file: {os.path.basename(subtitle_file)}")
                         except Exception as e:
-                            print(f"Error deleting new subtitle file {subtitle_file}: {str(e)}")
+                            logger.error(f"Error deleting new subtitle file {subtitle_file}: {str(e)}")
             except Exception as e:
-                print(f"Error in finding new subtitle files: {str(e)}")
-                
-            # Method 3: As a last resort, use timestamp-based approach for recently created files
+                logger.error(f"Error in finding new subtitle files: {str(e)}")            # Method 3: As a last resort, use timestamp-based approach for recently created files
             if self.last_file_path and deleted_count == 0:
                 target_dir = os.path.dirname(self.last_file_path)
                 
@@ -129,19 +130,19 @@ class DownloadThread(QThread):
                             try:
                                 os.remove(file_path)
                                 deleted_count += 1
-                                print(f"DEBUG: Deleted subtitle file by timestamp: {filename}")
+                                logger.debug(f"Deleted subtitle file by timestamp: {filename}")
                             except Exception as e:
-                                print(f"Error deleting subtitle file {filename}: {str(e)}")
+                                logger.error(f"Error deleting subtitle file {filename}: {str(e)}")
             
-            print(f"DEBUG: Total subtitle files deleted: {deleted_count}")
+            logger.debug(f"Total subtitle files deleted: {deleted_count}")
                                 
         except Exception as e:
-            print(f"Error cleaning subtitle files: {str(e)}")
+            logger.error(f"Error cleaning subtitle files: {str(e)}")
 
     def check_file_exists(self):
         """Check if the file already exists before downloading"""
         try:
-            print("DEBUG: Starting file existence check")
+            logger.debug("Starting file existence check")
             # Use yt-dlp to get the filename without downloading, suppressing warnings
             ydl_opts_check = {
                 'quiet': True, 
@@ -160,13 +161,13 @@ class DownloadThread(QThread):
                     
                     # Handle cases where info extraction fails silently
                     if not info:
-                        print("DEBUG: Failed to extract info during file existence check. Skipping check.")
+                        logger.debug("Failed to extract info during file existence check. Skipping check.")
                         return False # Proceed with download attempt
 
                 # Get the title and sanitize it for filename
                 title = info.get('title', 'video')
                 # Don't remove colons and other special characters yet
-                print(f"DEBUG: Original video title: {title}")
+                logger.debug(f"Original video title: {title}")
                 
                 # Get resolution for better matching
                 resolution = ""
@@ -175,9 +176,9 @@ class DownloadThread(QThread):
                         resolution = format_info.get('resolution', '')
                         break
                 
-                print(f"DEBUG: Resolution: {resolution}")
+                logger.debug(f"Resolution: {resolution}")
             else:
-                print("DEBUG: yt-dlp not available, skipping file existence check")
+                logger.debug("yt-dlp not available, skipping file existence check")
                 return False  # Proceed with download attempt
                 
                 # Create the expected filename (more specific)
@@ -189,7 +190,7 @@ class DownloadThread(QThread):
                 
                 # Normalize the path to use consistent separators
                 base_path = os.path.normpath(base_path)
-                print(f"DEBUG: Base path: {base_path}")
+                logger.debug(f"Base path: {base_path}")
                 
                 # Instead of trying to predict the exact filename, scan the directory
                 # and look for files that contain both the title and resolution
@@ -204,16 +205,16 @@ class DownloadThread(QThread):
                             title_match = all(word in filename_lower for word in title_words[:3])
                             resolution_match = resolution.lower() in filename_lower
                             
-                            print(f"DEBUG: Checking file: {filename}, Title match: {title_match}, Resolution match: {resolution_match}")
+                            logger.debug(f"Checking file: {filename}, Title match: {title_match}, Resolution match: {resolution_match}")
                             
                             if title_match and resolution_match:
-                                print(f"DEBUG: Found matching file: {filename}")
+                                logger.debug(f"Found matching file: {filename}")
                                 return filename
                 
-                print("DEBUG: No matching file found")
+                logger.debug("No matching file found")
                 return None
         except Exception as e:
-            print(f"DEBUG: Error checking file existence: {str(e)}")
+            logger.debug(f"Error checking file existence: {str(e)}")
             import traceback
             traceback.print_exc()
             return None
@@ -223,7 +224,7 @@ class DownloadThread(QThread):
         # Use the new yt-dlp path function from ytsage_yt_dlp module
         yt_dlp_path = get_yt_dlp_path()
         cmd = [yt_dlp_path]
-        print(f"DEBUG: Using yt-dlp from: {yt_dlp_path}")
+        logger.debug(f"Using yt-dlp from: {yt_dlp_path}")
         
         # Format selection strategy - use format ID if provided or fallback to resolution
         if self.format_id:
@@ -245,24 +246,24 @@ class DownloadThread(QThread):
                             if fmt.get('format_id') == clean_format_id:
                                 if fmt.get('vcodec') == 'none' or 'audio only' in fmt.get('format_note', '').lower():
                                     is_audio_format = True
-                                    print(f"DEBUG: Detected audio-only format for ID: {clean_format_id}")
+                                    logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
                                 break
             except Exception as e:
-                print(f"DEBUG: Error checking if format is audio-only: {e}")
+                logger.debug(f"Error checking if format is audio-only: {e}")
             
             # For audio-only formats, don't try to merge with video
             if is_audio_format:
                 cmd.extend(["-f", clean_format_id])
-                print(f"DEBUG: Using audio-only format selection: {clean_format_id}")
+                logger.debug(f"Using audio-only format selection: {clean_format_id}")
             else:
                 cmd.extend(["-f", f"{clean_format_id}+bestaudio/best"])
-                print(f"DEBUG: Using video format selection with audio: {clean_format_id}+bestaudio/best")
+                logger.debug(f"Using video format selection with audio: {clean_format_id}+bestaudio/best")
             
             # Determine output format based on the selected format ID - only for video formats
             if not is_audio_format:
                 try:
                     format_ext = None
-                    print(f"DEBUG: Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
+                    logger.debug(f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
                     if YT_DLP_AVAILABLE:
                         ydl_opts = {
                             'quiet': True,
@@ -284,11 +285,11 @@ class DownloadThread(QThread):
                                         break
                     
                     if format_ext:
-                        print(f"DEBUG: Detected format extension: {format_ext}")
+                        logger.debug(f"Detected format extension: {format_ext}")
                         # Ensure output matches the selected format - only for video formats
                         cmd.extend(["--merge-output-format", format_ext])
                 except Exception as e:
-                    print(f"DEBUG: Error detecting format extension: {e}")
+                    logger.debug(f"Error detecting format extension: {e}")
                     # If we can't determine the format, don't specify merge-output-format
                     pass
         else:
@@ -327,7 +328,7 @@ class DownloadThread(QThread):
                     lang_code = sub_selection.split(' - ')[0]
                     lang_codes.append(lang_code)
                 except Exception as e:
-                    print(f"Warning: Could not parse subtitle selection '{sub_selection}': {e}")
+                    logger.warning(f"Could not parse subtitle selection '{sub_selection}': {e}")
             
             if lang_codes:
                 cmd.extend(["--sub-langs", ",".join(lang_codes)])
@@ -338,13 +339,17 @@ class DownloadThread(QThread):
                     cmd.append("--embed-subs")
         
         # Add SponsorBlock if enabled
-        if self.enable_sponsorblock:
+        if self.enable_sponsorblock and self.sponsorblock_categories:
             cmd.append("--sponsorblock-remove")
-            cmd.append("sponsor")
+            cmd.append(",".join(self.sponsorblock_categories))
         
         # Add description saving if enabled
         if self.save_description:
             cmd.append("--write-description")
+        
+        # Add chapters embedding if enabled
+        if self.embed_chapters:
+            cmd.append("--embed-chapters")
         
         # Add cookies if specified
         if self.cookie_file:
@@ -362,7 +367,7 @@ class DownloadThread(QThread):
             if self.force_keyframes:
                 cmd.append("--force-keyframes-at-cuts")
                 
-            print(f"DEBUG: Added download section: {self.download_section}, Force keyframes: {self.force_keyframes}")
+            logger.debug(f"Added download section: {self.download_section}, Force keyframes: {self.force_keyframes}")
         
         # Add the URL as the final argument
         cmd.append(self.url)
@@ -371,16 +376,16 @@ class DownloadThread(QThread):
     
     def run(self):
         try:
-            print("DEBUG: Starting download thread")
+            logger.debug("Starting download thread")
             
             # First check if file already exists using original method
             existing_file = self.check_file_exists()
             if existing_file:
-                print(f"DEBUG: File exists, emitting signal: {existing_file}")
+                logger.debug(f"File exists, emitting signal: {existing_file}")
                 self.file_exists_signal.emit(existing_file)
                 return
             
-            print("DEBUG: No existing file found, proceeding with download")
+            logger.debug("No existing file found, proceeding with download")
             
             # Get initial list of subtitle files to compare later
             self.initial_subtitle_files = set()
@@ -391,9 +396,9 @@ class DownloadThread(QThread):
                         for file in files:
                             if file.endswith('.vtt') or file.endswith('.srt'):
                                 self.initial_subtitle_files.add(os.path.join(root, file))
-                    print(f"DEBUG: Found {len(self.initial_subtitle_files)} existing subtitle files before download")
+                    logger.debug(f"Found {len(self.initial_subtitle_files)} existing subtitle files before download")
                 except Exception as e:
-                    print(f"Warning: Error scanning for initial subtitle files: {e}")
+                    logger.warning(f"Error scanning for initial subtitle files: {e}")
             
             if self.use_direct_command:
                 # Use direct CLI command instead of Python API
@@ -413,7 +418,7 @@ class DownloadThread(QThread):
         try:
             cmd = self._build_yt_dlp_command()
             cmd_str = " ".join(shlex.quote(str(arg)) for arg in cmd)
-            print(f"DEBUG: Executing command: {cmd_str}")
+            logger.debug(f"Executing command: {cmd_str}")
             
             self.status_signal.emit("🚀 Starting download...")
             self.progress_signal.emit(0)
@@ -491,7 +496,7 @@ class DownloadThread(QThread):
     def _parse_output_line(self, line):
         """Parse yt-dlp command output to update progress and status."""
         line = line.strip()
-        # print(f"yt-dlp: {line}")  # Log all output - OPTIONALLY UNCOMMENT FOR VERBOSE DEBUG
+        # logger.info(f"yt-dlp: {line}")  # Log all output - OPTIONALLY UNCOMMENT FOR VERBOSE DEBUG
         
         # Extract filename when the destination line appears
         # Use a slightly more robust regex looking for the start of the line
@@ -501,7 +506,7 @@ class DownloadThread(QThread):
                 filepath = dest_match.group(1).strip()
                 self.current_filename = os.path.basename(filepath)
                 self.last_file_path = filepath  # Store the full path for later cleanup
-                print(f"DEBUG: Extracted filename: {self.current_filename}") # DEBUG
+                logger.debug(f"Extracted filename: {self.current_filename}") # DEBUG
                 
                 # Check if this is an audio-only download by looking in the previous lines
                 is_audio_download = False
@@ -514,7 +519,7 @@ class DownloadThread(QThread):
                 format_match = re.search(r'Downloading format (\d+)', line)
                 if format_match:
                     format_id = format_match.group(1)
-                    print(f"DEBUG: Detected format ID: {format_id}")
+                    logger.debug(f"Detected format ID: {format_id}")
                     # Format IDs for audio typically have different patterns 
                     # (like 140, 251 for audio vs 137, 248 for video)
                     # This is just a heuristic since format IDs can vary
@@ -538,7 +543,7 @@ class DownloadThread(QThread):
                 else:
                     self.status_signal.emit(f"⏬ Downloading...")
             except Exception as e:
-                print(f"Error extracting filename from line '{line}': {e}")
+                logger.error(f"Error extracting filename from line '{line}': {e}")
                 self.status_signal.emit("⚡ Downloading...") # Fallback status
             return # Don't process this line further for speed/ETA
         
@@ -564,7 +569,7 @@ class DownloadThread(QThread):
                     # If it's a relative path, make it absolute based on current path
                     subtitle_file = os.path.join(self.path, subtitle_file)
                 self.subtitle_files.append(subtitle_file)
-                print(f"DEBUG: Tracking subtitle file for later cleanup: {subtitle_file}")
+                logger.debug(f"Tracking subtitle file for later cleanup: {subtitle_file}")
             return
         
         # Send status updates based on output line content
@@ -617,7 +622,7 @@ class DownloadThread(QThread):
                 self.update_details.emit(status)
             except Exception as e:
                 # If parsing fails, just show basic status (maybe log the error)
-                print(f"Error parsing download details line: {line} -> {e}")
+                logger.error(f"Error parsing download details line: {line} -> {e}")
                 pass # Keep basic status emission below if needed, or emit generic details
                 
         # Check for post-processing
@@ -648,7 +653,7 @@ class DownloadThread(QThread):
                 
                 self.file_exists_signal.emit(filename)
             else:
-                print(f"Could not extract filename from 'already downloaded' line: {line}")
+                logger.info(f"Could not extract filename from 'already downloaded' line: {line}")
                 self.status_signal.emit("⚠️ File already exists") # Fallback status
         elif 'Finished downloading' in line:
             self.progress_signal.emit(100)
