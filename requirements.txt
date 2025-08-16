@@ -5,4 +5,5 @@ pillow
 packaging
 markdown
 pygame
+loguru
 setuptools
