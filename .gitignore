@@ -24,3 +24,11 @@ dist/
 # yt-dlp temporary/partial files
 *.part
 *.ytdl
+
+# Virtual environments
+venv/
+.venv/
+
+# Test artifacts
+*.test
+*.tmp
