@@ -325,20 +325,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-<style>
-    body { font-family: sans-serif; color: #ddd; }
-    table { border-collapse: collapse; width: 100%; }
-    td { text-align: left; padding: 8px; vertical-align: top; border-bottom: 1px solid #444; }
-    a { color: #3e8acc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .section th { 
-        font-size: 1.1em; 
-        text-align: left; 
-        padding: 12px 8px 5px 0px; 
-        border-bottom: 1px solid #555;
-    }
-</style>
-
 <p>A heartfelt thank you to everyone who has contributed to this project by opening an issue to suggest an improvement or report a bug.</p>
 
 <table>
