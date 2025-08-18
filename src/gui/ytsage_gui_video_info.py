@@ -373,7 +373,7 @@ class VideoInfoMixin:
         try:
             # Import yt_dlp locally to avoid import errors when yt-dlp is not installed
             from yt_dlp import YoutubeDL
-            
+
             logger.debug(f"Attempting to save thumbnail for URL: {video_url}")
 
             ydl_opts = {

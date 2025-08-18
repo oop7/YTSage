@@ -18,7 +18,13 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_ffmpeg import get_ffmpeg_path
-from src.core.ytsage_utils import _version_cache, check_ffmpeg, get_ffmpeg_version, get_ytdlp_version, refresh_version_cache
+from src.core.ytsage_utils import (
+    _version_cache,
+    check_ffmpeg,
+    get_ffmpeg_version,
+    get_ytdlp_version,
+    refresh_version_cache,
+)
 from src.core.ytsage_yt_dlp import check_ytdlp_installed, get_yt_dlp_path
 
 

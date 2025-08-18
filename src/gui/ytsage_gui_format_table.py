@@ -1,6 +1,14 @@
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QColor
-from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QHeaderView, QSizePolicy, QTableWidget, QTableWidgetItem, QWidget
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QHBoxLayout,
+    QHeaderView,
+    QSizePolicy,
+    QTableWidget,
+    QTableWidgetItem,
+    QWidget,
+)
 
 
 class FormatSignals(QObject):
