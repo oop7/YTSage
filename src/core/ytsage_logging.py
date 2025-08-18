@@ -15,6 +15,7 @@ try:
     LOGURU_AVAILABLE = True
 except ImportError:
     LOGURU_AVAILABLE = False
+
     # Create a dummy logger class that does nothing
     class DummyLogger:
         def info(self, *args, **kwargs): pass

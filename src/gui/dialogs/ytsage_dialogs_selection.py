@@ -3,10 +3,19 @@ Selection dialogs for YTSage application.
 Contains dialogs for selecting subtitles, playlist videos, and SponsorBlock categories.
 """
 
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QLineEdit, QPushButton, QScrollArea, QWidget,
-                             QCheckBox, QDialogButtonBox, QGroupBox)
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QDialog,
+    QDialogButtonBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class SubtitleSelectionDialog(QDialog):

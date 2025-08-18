@@ -3,19 +3,26 @@ Update-related dialogs and threads for YTSage application.
 Contains dialogs and background threads for checking and performing yt-dlp updates.
 """
 
-import sys
 import os
-import requests
 import subprocess
+import sys
 import time
-from packaging import version
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QPushButton, QProgressBar, QMessageBox)
-from PySide6.QtCore import Qt, QThread, QTimer, Signal
 
-from ...core.ytsage_yt_dlp import get_yt_dlp_path
-from ...core.ytsage_utils import get_ytdlp_version, load_config, save_config
-from ...core.ytsage_logging import logger
+import requests
+from packaging import version
+from PySide6.QtCore import Qt, QThread, QTimer, Signal
+from PySide6.QtWidgets import (
+    QDialog,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QVBoxLayout,
+)
+
+from src.core.ytsage_logging import logger
+from src.core.ytsage_utils import get_ytdlp_version, load_config, save_config
+from src.core.ytsage_yt_dlp import get_yt_dlp_path
 
 try:
     import yt_dlp

@@ -1,26 +1,30 @@
-import sys
-import os
 import json
+import os
+import subprocess
+import sys
+import tempfile
 import time
 from pathlib import Path
-import subprocess
-import tempfile
-import shutil
+
 import pkg_resources
-from packaging import version
 import requests
-from .ytsage_logging import logger
-from .ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path, get_ffmpeg_path
-from .ytsage_yt_dlp import get_yt_dlp_path  # Import the new function to avoid import errors
+from packaging import version
+
+from src.core.ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
+from src.core.ytsage_logging import logger
+from src.core.ytsage_yt_dlp import (
+    get_yt_dlp_path,
+)  # Import the new function to avoid import errors
 
 # Cache for version information to avoid delays
 _version_cache = {
-    'ytdlp': {'version': None, 'path': None, 'last_check': 0, 'path_mtime': 0},
-    'ffmpeg': {'version': None, 'path': None, 'last_check': 0, 'path_mtime': 0}
+    "ytdlp": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
+    "ffmpeg": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
 }
 
 # Cache expiry time in seconds (5 minutes)
 CACHE_EXPIRY = 300
+
 
 def get_file_mtime(filepath):
     """Get file modification time safely."""

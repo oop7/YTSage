@@ -1,13 +1,15 @@
-import os
-import sys
-import subprocess
-import requests
-import shutil
-import tempfile
 import hashlib
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
 from pathlib import Path
-from PySide6.QtGui import QIcon
-from .ytsage_logging import logger
+
+import requests
+
+from core.ytsage_logging import logger
+
 
 def check_7zip_installed():
     """Check if 7-Zip is installed on Windows."""

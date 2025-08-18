@@ -1,29 +1,35 @@
-import sys
 import os
-import webbrowser
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
-                            QHBoxLayout, QLineEdit, QPushButton, QTableWidget,
-                            QTableWidgetItem, QProgressBar, QLabel, QFileDialog,
-                            QHeaderView, QStyle, QStyleFactory, QComboBox, QTextEdit, QDialog, QPlainTextEdit, QCheckBox, QButtonGroup)
-from PySide6.QtCore import Qt, Signal, QObject, QThread
-from PySide6.QtGui import QIcon, QPalette, QColor, QPixmap
-import requests
-from io import BytesIO
-from PIL import Image
-from datetime import datetime
-import json
-from pathlib import Path
-from packaging import version
-import subprocess
 import re
-from ..core.ytsage_logging import logger
+from datetime import datetime
+from io import BytesIO
+from pathlib import Path
+
+import requests
+from PIL import Image
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
+
+from src.core.ytsage_logging import logger
+from src.gui.ytsage_gui_dialogs import (
+    SponsorBlockCategoryDialog,
+    SubtitleSelectionDialog,
+)
+
 try:
     import yt_dlp
     YT_DLP_AVAILABLE = True
 except ImportError:
     YT_DLP_AVAILABLE = False
     logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
-from .ytsage_gui_dialogs import SubtitleSelectionDialog, SponsorBlockCategoryDialog
+
 
 class VideoInfoMixin:
     def setup_video_info_section(self):

@@ -1,8 +1,17 @@
 import sys
+
 from PySide6.QtWidgets import QApplication, QMessageBox
-from src.gui.ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
-from src.core.ytsage_yt_dlp import check_ytdlp_binary, setup_ytdlp, get_ytdlp_executable_path  # Import the new yt-dlp setup functions
+
 from src.core.ytsage_logging import logger
+from src.core.ytsage_yt_dlp import (  # Import the new yt-dlp setup functions
+    check_ytdlp_binary,
+    get_ytdlp_executable_path,
+    setup_ytdlp,
+)
+from src.gui.ytsage_gui_main import (
+    YTSageApp,
+)  # Import the main application class from ytsage_gui_main
+
 
 def show_error_dialog(message):
     error_dialog = QMessageBox()

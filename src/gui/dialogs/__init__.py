@@ -11,31 +11,57 @@ This package contains all dialog classes organized by functionality:
 """
 
 # Re-export all dialog classes for backward compatibility
-from .ytsage_dialogs_base import LogWindow, AboutDialog
-from .ytsage_dialogs_settings import DownloadSettingsDialog, AutoUpdateSettingsDialog
-from .ytsage_dialogs_update import (VersionCheckThread, UpdateThread, YTDLPUpdateDialog, 
-                                   AutoUpdateThread)
-from .ytsage_dialogs_ffmpeg import FFmpegInstallThread, FFmpegCheckDialog
-from .ytsage_dialogs_selection import SubtitleSelectionDialog, PlaylistSelectionDialog, SponsorBlockCategoryDialog
-from .ytsage_dialogs_custom import (CustomCommandDialog, CookieLoginDialog, 
-                                   CustomOptionsDialog, TimeRangeDialog)
+from src.gui.dialogs.ytsage_dialogs_base import AboutDialog, LogWindow
+from src.gui.dialogs.ytsage_dialogs_custom import (
+    CookieLoginDialog,
+    CustomCommandDialog,
+    CustomOptionsDialog,
+    TimeRangeDialog,
+)
+from src.gui.dialogs.ytsage_dialogs_ffmpeg import FFmpegCheckDialog, FFmpegInstallThread
+from src.gui.dialogs.ytsage_dialogs_selection import (
+    PlaylistSelectionDialog,
+    SponsorBlockCategoryDialog,
+    SubtitleSelectionDialog,
+)
+from src.gui.dialogs.ytsage_dialogs_settings import (
+    AutoUpdateSettingsDialog,
+    DownloadSettingsDialog,
+)
+from src.gui.dialogs.ytsage_dialogs_update import (
+    AutoUpdateThread,
+    UpdateThread,
+    VersionCheckThread,
+    YTDLPUpdateDialog,
+)
 
 __all__ = [
     # Base dialogs
-    'LogWindow', 'AboutDialog',
-    
+    "LogWindow",
+    "AboutDialog",
+
     # Settings dialogs
-    'DownloadSettingsDialog', 'AutoUpdateSettingsDialog',
-    
+    "DownloadSettingsDialog",
+    "AutoUpdateSettingsDialog",
+
     # Update dialogs and threads
-    'VersionCheckThread', 'UpdateThread', 'YTDLPUpdateDialog', 'AutoUpdateThread',
-    
+    "VersionCheckThread",
+    "UpdateThread",
+    "YTDLPUpdateDialog",
+    "AutoUpdateThread",
+
     # FFmpeg dialogs
-    'FFmpegInstallThread', 'FFmpegCheckDialog',
-    
+    "FFmpegInstallThread",
+    "FFmpegCheckDialog",
+
     # Selection dialogs
-    'SubtitleSelectionDialog', 'PlaylistSelectionDialog', 'SponsorBlockCategoryDialog',
+    "SubtitleSelectionDialog",
+    "PlaylistSelectionDialog",
+    "SponsorBlockCategoryDialog",
     
     # Custom functionality dialogs
-    'CustomCommandDialog', 'CookieLoginDialog', 'CustomOptionsDialog', 'TimeRangeDialog'
+    "CustomCommandDialog",
+    "CookieLoginDialog",
+    "CustomOptionsDialog",
+    "TimeRangeDialog",
 ]

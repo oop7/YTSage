@@ -1,11 +1,15 @@
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
-                            QHBoxLayout, QLineEdit, QPushButton, QTableWidget,
-                            QTableWidgetItem, QProgressBar, QLabel, QFileDialog,
-                            QHeaderView, QStyle, QStyleFactory, QComboBox, QTextEdit, 
-                            QDialog, QPlainTextEdit, QCheckBox, QButtonGroup, QScrollArea,
-                            QSizePolicy)
-from PySide6.QtCore import Qt, Signal, QObject, QThread
-from PySide6.QtGui import QIcon, QPalette, QColor, QPixmap
+from PySide6.QtCore import QObject, Qt, Signal
+from PySide6.QtGui import QColor
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QHBoxLayout,
+    QHeaderView,
+    QSizePolicy,
+    QTableWidget,
+    QTableWidgetItem,
+    QWidget,
+)
+
 
 class FormatSignals(QObject):
     format_update = Signal(list)

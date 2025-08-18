@@ -3,19 +3,29 @@ Base dialogs for YTSage application.
 Contains basic utility dialogs like LogWindow and AboutDialog.
 """
 
-import sys
-import os
-import webbrowser
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QTextEdit, QWidget, QDialogButtonBox, QSizePolicy,
-                             QPushButton, QMessageBox, QScrollArea)
-from PySide6.QtCore import Qt, QThread, Signal, QTimer
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt, QThread, QTimer, Signal
+from PySide6.QtWidgets import (
+    QDialog,
+    QDialogButtonBox,
+    QHBoxLayout,
+    QLabel,
+    QMessageBox,
+    QPushButton,
+    QSizePolicy,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
-from ...core.ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_path
-from ...core.ytsage_yt_dlp import get_yt_dlp_path, check_ytdlp_installed
-from ...core.ytsage_utils import (check_ffmpeg, get_ytdlp_version, get_ffmpeg_version, 
-                         refresh_version_cache, _version_cache)
+from src.core.ytsage_ffmpeg import get_ffmpeg_path
+from src.core.ytsage_utils import (
+    _version_cache,
+    check_ffmpeg,
+    get_ffmpeg_version,
+    get_ytdlp_version,
+    refresh_version_cache,
+)
+from src.core.ytsage_yt_dlp import check_ytdlp_installed, get_yt_dlp_path
 
 
 class LogWindow(QDialog):

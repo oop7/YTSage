@@ -3,17 +3,16 @@ FFmpeg installation dialogs for YTSage application.
 Contains dialogs and threads for checking and installing FFmpeg.
 """
 
-import sys
+import contextlib
 import os
 import webbrowser
-import contextlib
 from io import StringIO
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QPushButton, QStyle, QSizePolicy, QDialogButtonBox)
-from PySide6.QtCore import QThread, Signal, Qt
-from PySide6.QtGui import QIcon
 
-from ...core.ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
+from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+
+from src.core.ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
 
 
 class FFmpegInstallThread(QThread):

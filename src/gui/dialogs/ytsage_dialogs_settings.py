@@ -3,18 +3,32 @@ Settings-related dialogs for YTSage application.
 Contains dialogs for configuring download settings and auto-update preferences.
 """
 
-import os
 import requests
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QLineEdit, QPushButton, QGroupBox, QCheckBox,
-                             QRadioButton, QComboBox, QDialogButtonBox,
-                             QButtonGroup, QMessageBox, QFileDialog)
-from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtGui import QIcon
-from ...core.ytsage_logging import logger
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (
+    QButtonGroup,
+    QCheckBox,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QFileDialog,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
+    QPushButton,
+    QRadioButton,
+    QVBoxLayout,
+)
 
-from ...core.ytsage_utils import (get_auto_update_settings, update_auto_update_settings,
-                         check_and_update_ytdlp_auto, get_ytdlp_version)
+from src.core.ytsage_logging import logger
+from src.core.ytsage_utils import (
+    check_and_update_ytdlp_auto,
+    get_auto_update_settings,
+    get_ytdlp_version,
+    update_auto_update_settings,
+)
 
 
 class DownloadSettingsDialog(QDialog):

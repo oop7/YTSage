@@ -4,16 +4,28 @@ Contains dialogs for custom commands, cookies, time ranges, and other special fe
 """
 
 import os
-import sys
-import threading
 import subprocess
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QLineEdit, QPushButton, QTextEdit, QPlainTextEdit,
-                             QCheckBox, QTabWidget, QWidget, QDialogButtonBox,
-                             QFileDialog, QGroupBox)
-from PySide6.QtCore import Qt, QMetaObject, Q_ARG
+import threading
 
-from ...core.ytsage_yt_dlp import get_yt_dlp_path
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QDialog,
+    QDialogButtonBox,
+    QFileDialog,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPlainTextEdit,
+    QPushButton,
+    QTabWidget,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
+from src.core.ytsage_yt_dlp import get_yt_dlp_path
 
 try:
     import yt_dlp

@@ -13,25 +13,36 @@ The dialogs have been split into logical modules for better maintainability:
 """
 
 # Import all dialog classes from the dialogs package
-from .dialogs import *
+from src.gui.dialogs import *
 
 # For backward compatibility, re-export all dialog classes
 __all__ = [
     # Base dialogs
-    'LogWindow', 'AboutDialog',
-    
+    "LogWindow",
+    "AboutDialog",
+
     # Settings dialogs
-    'DownloadSettingsDialog', 'AutoUpdateSettingsDialog',
-    
+    "DownloadSettingsDialog",
+    "AutoUpdateSettingsDialog",
+
     # Update dialogs and threads
-    'VersionCheckThread', 'UpdateThread', 'YTDLPUpdateDialog', 'AutoUpdateThread',
-    
+    "VersionCheckThread",
+    "UpdateThread",
+    "YTDLPUpdateDialog",
+    "AutoUpdateThread",
+
     # FFmpeg dialogs
-    'FFmpegInstallThread', 'FFmpegCheckDialog',
-    
+    "FFmpegInstallThread",
+    "FFmpegCheckDialog",
+
     # Selection dialogs
-    'SubtitleSelectionDialog', 'PlaylistSelectionDialog', 'SponsorBlockCategoryDialog',
-    
+    "SubtitleSelectionDialog",
+    "PlaylistSelectionDialog",
+    "SponsorBlockCategoryDialog",
+
     # Custom functionality dialogs
-    'CustomCommandDialog', 'CookieLoginDialog', 'CustomOptionsDialog', 'TimeRangeDialog'
+    "CustomCommandDialog",
+    "CookieLoginDialog",
+    "CustomOptionsDialog",
+    "TimeRangeDialog",
 ]

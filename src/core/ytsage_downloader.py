@@ -1,19 +1,22 @@
-from PySide6.QtCore import QThread, Signal, QObject, QProcess, QTimer
-from .ytsage_logging import logger
+import os
+import re
+import shlex  # For safely parsing command arguments
+import subprocess  # For direct CLI command execution
+import time
+from pathlib import Path
+
+from PySide6.QtCore import QObject, QThread, Signal
+
+from src.core.ytsage_logging import logger
+from src.core.ytsage_yt_dlp import get_yt_dlp_path
+
 try:
-    import yt_dlp # Keep yt_dlp import here - only downloader uses it.
+    import yt_dlp  # Keep yt_dlp import here - only downloader uses it.
     YT_DLP_AVAILABLE = True
 except ImportError:
     YT_DLP_AVAILABLE = False
     logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
-import time
-import os
-import re
-import subprocess # For direct CLI command execution
-import shlex # For safely parsing command arguments
-import sys  # Added to get executable path information
-from pathlib import Path
-from .ytsage_yt_dlp import get_yt_dlp_path  # Import the new yt-dlp path function
+
 
 class SignalManager(QObject):
     update_formats = Signal(list)

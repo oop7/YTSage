@@ -1,49 +1,76 @@
-import sys
-import os
-import webbrowser
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
-                            QHBoxLayout, QLineEdit, QPushButton, QTableWidget,
-                            QTableWidgetItem, QProgressBar, QLabel, QFileDialog,
-                            QHeaderView, QStyle, QStyleFactory, QComboBox, QTextEdit, QDialog, QPlainTextEdit, QCheckBox, QButtonGroup, QMessageBox, QListWidget,
-                            QListWidgetItem, QDialogButtonBox, QScrollArea)
-from PySide6.QtCore import Qt, Signal, QObject, QThread, QMetaObject, Q_ARG, QProcess, Slot
-from PySide6.QtGui import QIcon, QPalette, QColor, QPixmap
-import requests
-from io import BytesIO
-from PIL import Image
-from datetime import datetime
 import json
-from pathlib import Path
-from packaging import version
+import os
 import subprocess
-import re
+import sys
+import threading
+import webbrowser
+from pathlib import Path
+
+import markdown
+import requests
+from packaging import version
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt, Slot
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import (
+    QApplication,
+    QButtonGroup,
+    QCheckBox,
+    QDialog,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QMainWindow,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QStyle,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
+from src.core.ytsage_downloader import (  # Import downloader related classes
+    DownloadThread,
+    SignalManager,
+)
+from src.core.ytsage_logging import logger
+from src.core.ytsage_utils import check_ffmpeg  # Import utility functions
+from src.core.ytsage_utils import (
+    get_config_file_path,
+    load_saved_path,
+    save_path,
+    should_check_for_auto_update,
+)
+from src.core.ytsage_yt_dlp import (  # Import the new yt-dlp functions
+    get_yt_dlp_path,
+    setup_ytdlp,
+)
+from src.gui.ytsage_gui_dialogs import (
+    AboutDialog,
+    CustomOptionsDialog,
+    DownloadSettingsDialog,
+    FFmpegCheckDialog,
+    PlaylistSelectionDialog,
+    TimeRangeDialog,
+    YTDLPUpdateDialog,
+)
+from src.gui.ytsage_gui_format_table import FormatTableMixin  # Import FormatTableMixin
+from src.gui.ytsage_gui_video_info import VideoInfoMixin  # Import VideoInfoMixin
+
 try:
     import yt_dlp
     YT_DLP_AVAILABLE = True
 except ImportError:
     YT_DLP_AVAILABLE = False
-import markdown
+
 try:
     import pygame
     PYGAME_AVAILABLE = True
 except ImportError:
     PYGAME_AVAILABLE = False
-import threading
 
-from ..core.ytsage_logging import logger
 
-from ..core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
-from ..core.ytsage_utils import check_ffmpeg, load_saved_path, save_path, get_config_file_path, get_ytdlp_version, get_ffmpeg_version, should_check_for_auto_update, check_and_update_ytdlp_auto # Import utility functions
-from ..core.ytsage_yt_dlp import check_ytdlp_binary, setup_ytdlp, get_ytdlp_executable_path, get_yt_dlp_path # Import the new yt-dlp functions
-from .ytsage_gui_dialogs import (LogWindow, CustomCommandDialog, FFmpegCheckDialog, 
-                                YTDLPUpdateDialog, AboutDialog, SubtitleSelectionDialog, 
-                                PlaylistSelectionDialog, CookieLoginDialog,
-                                DownloadSettingsDialog, CustomOptionsDialog, TimeRangeDialog,
-                                SponsorBlockCategoryDialog) # Added SponsorBlockCategoryDialog
-from .ytsage_gui_format_table import FormatTableMixin # Import FormatTableMixin
-from .ytsage_gui_video_info import VideoInfoMixin # Import VideoInfoMixin
-
-class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin): # Inherit from mixins
+class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from mixins
     def __init__(self):
         super().__init__()
         

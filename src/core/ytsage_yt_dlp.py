@@ -1,23 +1,34 @@
 import os
-import sys
-import platform
 import shutil
 import subprocess
-import requests
+import sys
 from pathlib import Path
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QPushButton, 
-                             QProgressBar, QRadioButton, QHBoxLayout, 
-                             QMessageBox, QFileDialog, QWidget)
-from PySide6.QtCore import QThread, Signal, Qt
+
+import requests
+from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QIcon
-from .ytsage_logging import logger
+from PySide6.QtWidgets import (
+    QDialog,
+    QFileDialog,
+    QHBoxLayout,
+    QLabel,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QRadioButton,
+    QVBoxLayout,
+    QWidget,
+)
+
+from src.core.ytsage_logging import logger
 
 # Define binary URLs
 YTDLP_URLS = {
     "windows": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe",
     "macos": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos",
-    "linux": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
+    "linux": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp",
 }
+
 
 # Define installation paths
 def get_ytdlp_install_dir():
