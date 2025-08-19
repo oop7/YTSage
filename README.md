@@ -207,6 +207,24 @@ python main.py
 
 ---
 
+#### 🛡️ Windows Defender / Antivirus Warning
+
+Some antivirus software may flag the `.exe` files as false positives. This is a **known limitation** of PyInstaller-packaged applications.
+
+**Why this happens:**
+- PyInstaller bundles Python runtime and libraries together
+- Antivirus heuristics can misidentify packed executables as suspicious
+- This affects many legitimate Python applications built with PyInstaller
+
+**Safe alternatives:**
+- ✅ **Use pip installation:** `pip install ytsage` (recommended)
+- ✅ **Build from source**
+- ✅ **Whitelist the application** in your antivirus software
+
+> 📋 **Related Issues:** [#33](https://github.com/oop7/YTSage/issues/33) - This is a known PyInstaller limitation, not a security issue with YTSage itself.
+
+---
+
 #### 🍎 macOS: "App is damaged and can’t be opened"
 If you see this error on macOS Sonoma or newer, you need to remove the quarantine attribute.
 
