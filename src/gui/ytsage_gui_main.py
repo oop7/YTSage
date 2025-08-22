@@ -322,7 +322,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     self.logger.warning(f"Notification sound file not found at: {self.notification_sound_path}")
                     self.sound_enabled = False
                 else:
-                    self.logger.info(f"Notification sound loaded from: {self.notification_sound_path}")
+                    self.logger.info(
+                        f"Notification sound loaded from: {self.notification_sound_path}"
+                    )
             else:
                 self.sound_enabled = False
                 self.logger.info("Sound notifications disabled - pyglet not available")
@@ -765,7 +767,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     user_friendly_error = parse_yt_dlp_error(str(e))
                     raise Exception(user_friendly_error)
 
-            self.signals.update_status.emit("Analyzing (30%)... Extracting detailed info")
+            self.signals.update_status.emit(
+                "Analyzing (30%)... Extracting detailed info"
+            )
             # Configure options for detailed extraction (keep other options)
             # Add no_warnings here as well, as this is where detailed info is fetched
             ydl_opts_detail = {
@@ -806,7 +810,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         # This provides formats/subs for the UI, assuming consistency
                         first_video_url = self.playlist_entries[0].get("url")
                         if not first_video_url:
-                            raise Exception("Could not get URL for the first playlist video.")
+                            raise Exception(
+                                "Could not get URL for the first playlist video."
+                            )
                         try:
                             # Use the ydl_detail instance with no_warnings
                             self.video_info = ydl_detail.extract_info(first_video_url, download=False)
@@ -871,7 +877,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         )
 
                     # --- Subtitle Handling ---
-                    self.signals.update_status.emit("Analyzing (85%)... Processing subtitles")
+                    self.signals.update_status.emit(
+                        "Analyzing (85%)... Processing subtitles"
+                    )
                     # Clear previous selections when analyzing a new video
                     self.selected_subtitles = []
                     self.available_subtitles = self.video_info.get("subtitles", {})
@@ -897,7 +905,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     # )
 
                     # Update format table
-                    self.signals.update_status.emit("Analyzing (95%)... Updating format table")
+                    self.signals.update_status.emit(
+                        "Analyzing (95%)... Updating format table"
+                    )
                     self.video_button.setChecked(True)
                     self.audio_button.setChecked(False)
                     self.filter_formats()
@@ -950,7 +960,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             new_limit_value = dialog.get_selected_speed_limit()
             new_unit_index = dialog.get_selected_unit_index()
             limit_changed = False
-            if new_limit_value != self.speed_limit_value or new_unit_index != self.speed_limit_unit_index:
+            if (
+                new_limit_value != self.speed_limit_value
+                or new_unit_index != self.speed_limit_unit_index
+            ):
                 self.speed_limit_value = new_limit_value
                 self.speed_limit_unit_index = new_unit_index
                 limit_changed = True
@@ -1174,11 +1187,17 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         # Add update icon
         icon_label = QLabel()
-        icon_label.setPixmap(self.style().standardIcon(QStyle.StandardPixmap.SP_BrowserReload).pixmap(32, 32))
+        icon_label.setPixmap(
+            self.style()
+            .standardIcon(QStyle.StandardPixmap.SP_BrowserReload)
+            .pixmap(32, 32)
+        )
         header_layout.addWidget(icon_label)
 
         # Title
-        title_label = QLabel("<h2 style='color: #c90000; margin: 0;'>Update Available</h2>")
+        title_label = QLabel(
+            "<h2 style='color: #c90000; margin: 0;'>Update Available</h2>"
+        )
         header_layout.addWidget(title_label)
         header_layout.addStretch()
 
@@ -1207,7 +1226,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         layout.addWidget(message_label)
 
         # Changelog Section
-        changelog_label = QLabel("<b style='color: #ffffff; font-size: 14px;'>Changelog:</b>")
+        changelog_label = QLabel(
+            "<b style='color: #ffffff; font-size: 14px;'>Changelog:</b>"
+        )
         changelog_label.setStyleSheet("padding: 5px 0; margin-top: 10px;")
         layout.addWidget(changelog_label)
 
@@ -1354,7 +1375,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # Create and start the auto-update thread to avoid blocking the UI
 
             self.auto_update_thread = AutoUpdateThread()
-            self.auto_update_thread.update_finished.connect(self._on_auto_update_finished)
+            self.auto_update_thread.update_finished.connect(
+                self._on_auto_update_finished
+            )
             self.auto_update_thread.start()
         except Exception as e:
             self.logger.error(f"Error starting auto-update thread: {e}", exc_info=True)
@@ -1384,7 +1407,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             if hasattr(self, "auto_update_thread") and self.auto_update_thread.isRunning():
                 self.logger.info("Stopping auto-update thread...")
                 self.auto_update_thread.quit()
-                if not self.auto_update_thread.wait(3000):  # Wait up to 3 seconds for graceful shutdown
+                if not self.auto_update_thread.wait(
+                    3000
+                ):  # Wait up to 3 seconds for graceful shutdown
                     self.logger.warning("Force terminating auto-update thread...")
                     self.auto_update_thread.terminate()
                     self.auto_update_thread.wait(1000)  # Wait for termination
@@ -1393,7 +1418,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             if self.current_download and self.current_download.isRunning():
                 self.logger.info("Canceling running download...")
                 self.current_download.cancel()
-                if not self.current_download.wait(3000):  # Wait up to 3 seconds for graceful shutdown
+                if not self.current_download.wait(
+                    3000
+                ):  # Wait up to 3 seconds for graceful shutdown
                     self.logger.warning("Force terminating download thread...")
                     self.current_download.terminate()
                     self.current_download.wait(1000)  # Wait for termination
@@ -1530,7 +1557,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             if self.selected_playlist_items is None:
                 button_text = "Select Videos... (All selected)"
             else:
-                selected_indices = dialog._parse_selection_string(self.selected_playlist_items)
+                selected_indices = dialog._parse_selection_string(
+                    self.selected_playlist_items
+                )
                 count = len(selected_indices)
                 display_text = (
                     self.selected_playlist_items if len(self.selected_playlist_items) < 30 else f"{count} videos selected"
@@ -1545,7 +1574,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         """Enable or disable download-related controls"""
         self.url_input.setEnabled(enabled)
         self.analyze_button.setEnabled(enabled)
-        self.format_table.setEnabled(enabled)  # Changed from format_scroll_area to format_table
+        self.format_table.setEnabled(
+            enabled
+        )  # Changed from format_scroll_area to format_table
         self.download_btn.setEnabled(enabled)
         if hasattr(self, "subtitle_combo"):
             self.subtitle_combo.setEnabled(enabled)  # type: ignore[reportAttributeAccessIssue]
@@ -1685,7 +1716,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             success_dialog = QMessageBox(self)
             success_dialog.setIcon(QMessageBox.Icon.Information)
             success_dialog.setWindowTitle("yt-dlp Setup")
-            success_dialog.setText(f"yt-dlp has been successfully configured at:\n{yt_dlp_path}")
+            success_dialog.setText(
+                f"yt-dlp has been successfully configured at:\n{yt_dlp_path}"
+            )
             success_dialog.setWindowIcon(self.windowIcon())
             success_dialog.setStyleSheet(
                 """

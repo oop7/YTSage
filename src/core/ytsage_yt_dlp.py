@@ -1,4 +1,5 @@
 import os
+import platform
 import shutil
 import subprocess
 from pathlib import Path
@@ -36,6 +37,7 @@ from src.utils.ytsage_constants import (
 # get_ytdlp_executable_path() moved to src\utils\ytsage_constants.py
 # get_os_type() moved to src\utils\ytsage_constants.py
 # ensure_install_dir_exists() moved to src\utils\ytsage_constants.py
+
 
 
 class DownloadYtdlpThread(QThread):
@@ -189,7 +191,9 @@ class YtdlpSetupDialog(QDialog):
         )
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label.setWordWrap(True)
-        info_label.setStyleSheet("font-size: 13px; color: #cccccc; padding: 5px; line-height: 1.4;")
+        info_label.setStyleSheet(
+            "font-size: 13px; color: #cccccc; padding: 5px; line-height: 1.4;"
+        )
         layout.addWidget(info_label)
 
         # Radio buttons with minimal spacing
@@ -385,8 +389,12 @@ class YtdlpSetupDialog(QDialog):
                             logger.debug(f"Permissions set on Unix system")
 
                         # Return the path of the copied file
-                        self.status_label.setText(f"yt-dlp successfully copied to {target_path}")
-                        logger.debug(f"Emitting setup_complete signal with path: {target_path}")
+                        self.status_label.setText(
+                            f"yt-dlp successfully copied to {target_path}"
+                        )
+                        logger.debug(
+                            f"Emitting setup_complete signal with path: {target_path}"
+                        )
                         self.setup_complete.emit(target_path)
                         self.accept()
                     except Exception as copy_error:
@@ -419,7 +427,9 @@ class YtdlpSetupDialog(QDialog):
                         )
                         error_dialog.exec()
                 else:
-                    logger.debug(f"File verification failed with return code: {result.returncode}")
+                    logger.debug(
+                        f"File verification failed with return code: {result.returncode}"
+                    )
                     error_dialog = QMessageBox(self)
                     error_dialog.setIcon(QMessageBox.Icon.Warning)
                     error_dialog.setWindowTitle("Invalid Executable")
@@ -616,7 +626,9 @@ def setup_ytdlp(parent_widget=None):
                 error_dialog = QMessageBox(parent_widget)
                 error_dialog.setIcon(QMessageBox.Icon.Warning)
                 error_dialog.setWindowTitle("Setup Failed")
-                error_dialog.setText("Failed to set up yt-dlp. Some features may not work correctly.")
+                error_dialog.setText(
+                    "Failed to set up yt-dlp. Some features may not work correctly."
+                )
                 # Set the window icon to match the parent
                 error_dialog.setWindowIcon(parent_widget.windowIcon())
                 error_dialog.setStyleSheet(

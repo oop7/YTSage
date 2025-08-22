@@ -457,7 +457,9 @@ def update_yt_dlp() -> bool:
                         logger.error(f"Error replacing yt-dlp binary: {e}")
                         return False
                 else:
-                    logger.info(f"Failed to download latest yt-dlp: HTTP {response.status_code}")
+                    logger.info(
+                        f"Failed to download latest yt-dlp: HTTP {response.status_code}"
+                    )
                     return False
             except Exception as e:
                 logger.error(f"Error downloading yt-dlp update: {e}")
@@ -484,7 +486,9 @@ def update_yt_dlp() -> bool:
 
                     # Compare versions and update if needed
                     if version.parse(latest_version) > version.parse(current_version):
-                        logger.info(f"Updating yt-dlp from {current_version} to {latest_version}...")
+                        logger.info(
+                            f"Updating yt-dlp from {current_version} to {latest_version}..."
+                        )
                         update_result = subprocess.run(
                             [
                                 sys.executable,
@@ -503,12 +507,16 @@ def update_yt_dlp() -> bool:
                             logger.info("yt-dlp successfully updated")
                             return True
                         else:
-                            logger.error(f"Error updating yt-dlp: {update_result.stderr}")
+                            logger.error(
+                                f"Error updating yt-dlp: {update_result.stderr}"
+                            )
                     else:
                         logger.info("yt-dlp is already up to date")
                         return True
                 else:
-                    logger.info(f"Failed to get latest version info: HTTP {response.status_code}")
+                    logger.info(
+                        f"Failed to get latest version info: HTTP {response.status_code}"
+                    )
             except Exception as e:
                 logger.error(f"Error checking for yt-dlp updates: {e}")
     except Exception as e:
@@ -555,7 +563,9 @@ def check_and_update_ytdlp_auto() -> bool:
         # Get current version
         current_version = get_ytdlp_version()
         if "Error" in current_version:
-            logger.info("Could not determine current yt-dlp version, skipping auto-update")
+            logger.info(
+                "Could not determine current yt-dlp version, skipping auto-update"
+            )
             return False
 
         # Get latest version from PyPI

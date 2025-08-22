@@ -27,8 +27,12 @@ class SubtitleSelectionDialog(QDialog):
 
         self.available_manual = available_manual
         self.available_auto = available_auto
-        self.previously_selected = set(previously_selected)  # Use a set for quick lookups
-        self.selected_subtitles = list(previously_selected)  # Initialize with previous selection
+        self.previously_selected = set(
+            previously_selected
+        )  # Use a set for quick lookups
+        self.selected_subtitles = list(
+            previously_selected
+        )  # Initialize with previous selection
 
         layout = QVBoxLayout(self)
         layout.setSpacing(10)
@@ -57,7 +61,9 @@ class SubtitleSelectionDialog(QDialog):
         # Scroll Area for the list
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
-        scroll_area.setStyleSheet("QScrollArea { border: none; }")  # Remove border around scroll area
+        scroll_area.setStyleSheet(
+            "QScrollArea { border: none; }"
+        )  # Remove border around scroll area
         layout.addWidget(scroll_area)
 
         # Container widget for list items (needed for scroll area)
@@ -72,7 +78,9 @@ class SubtitleSelectionDialog(QDialog):
         self.populate_list()
 
         # OK and Cancel buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 
@@ -128,7 +136,10 @@ class SubtitleSelectionDialog(QDialog):
                     combined_subs[lang_code] = f"{lang_code} - Auto-generated"
 
         if not combined_subs:
-            no_subs_label = QLabel("No subtitles available" + (f" matching '{filter_text}'" if filter_text else ""))
+            no_subs_label = QLabel(
+                "No subtitles available"
+                + (f" matching '{filter_text}'" if filter_text else "")
+            )
             no_subs_label.setStyleSheet("color: #aaaaaa; padding: 10px;")
             self.list_layout.addWidget(no_subs_label)
             return
@@ -140,7 +151,9 @@ class SubtitleSelectionDialog(QDialog):
             item_text = combined_subs[lang_code]
             checkbox = QCheckBox(item_text)
             checkbox.setProperty("subtitle_id", item_text)  # Store the identifier
-            checkbox.setChecked(item_text in self.previously_selected)  # Check if previously selected
+            checkbox.setChecked(
+                item_text in self.previously_selected
+            )  # Check if previously selected
             checkbox.stateChanged.connect(self.update_selection)
             checkbox.setStyleSheet(
                 """
@@ -237,7 +250,9 @@ class PlaylistSelectionDialog(QDialog):
         # Scrollable area for checkboxes
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
-        scroll_area.setStyleSheet("QScrollArea { border: none; }")  # Remove border around scroll area
+        scroll_area.setStyleSheet(
+            "QScrollArea { border: none; }"
+        )  # Remove border around scroll area
         scroll_widget = QWidget()
         self.list_layout = QVBoxLayout(scroll_widget)  # Layout for checkboxes
         self.list_layout.setContentsMargins(0, 0, 0, 0)
@@ -250,7 +265,9 @@ class PlaylistSelectionDialog(QDialog):
         self._populate_list(previously_selected_string)
 
         # Dialog buttons (OK/Cancel)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 
@@ -491,7 +508,9 @@ class SponsorBlockCategoryDialog(QDialog):
         # Title and description
         title_label = QLabel("SponsorBlock Categories")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff; margin: 10px;")
+        title_label.setStyleSheet(
+            "font-size: 16px; font-weight: bold; color: #ffffff; margin: 10px;"
+        )
         layout.addWidget(title_label)
 
         desc_label = QLabel(
@@ -597,7 +616,9 @@ class SponsorBlockCategoryDialog(QDialog):
         layout.addLayout(button_layout)
 
         # Dialog buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 

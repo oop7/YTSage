@@ -167,10 +167,14 @@ class AboutDialog(QDialog):
         layout.addWidget(version_label)
 
         # Description - more compact
-        description_label = QLabel("A simple GUI frontend for the powerful yt-dlp video downloader.")
+        description_label = QLabel(
+            "A simple GUI frontend for the powerful yt-dlp video downloader."
+        )
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        description_label.setStyleSheet("color: #ffffff; font-size: 11px; margin: 6px 0;")
+        description_label.setStyleSheet(
+            "color: #ffffff; font-size: 11px; margin: 6px 0;"
+        )
         layout.addWidget(description_label)
 
         # Author and Links - compact single line
@@ -337,7 +341,9 @@ class AboutDialog(QDialog):
             version_info += cache_status
 
         version_label = QLabel(version_info)
-        version_label.setStyleSheet("font-size: 11px; color: #cccccc;")  # Increased from 10px
+        version_label.setStyleSheet(
+            "font-size: 11px; color: #cccccc;"
+        )  # Increased from 10px
         version_label.setWordWrap(False)
         first_row.addWidget(version_label)
 
@@ -349,7 +355,9 @@ class AboutDialog(QDialog):
         # Second row: Path (if provided)
         if path_text:
             path_label = QLabel(f"📁 {path_text}")
-            path_label.setStyleSheet("font-size: 10px; color: #aaaaaa; margin-left: 12px;")  # Increased from 9px, better color
+            path_label.setStyleSheet(
+                "font-size: 10px; color: #aaaaaa; margin-left: 12px;"
+            )  # Increased from 9px, better color
             path_label.setWordWrap(False)
             # Truncate very long paths
             if len(str(path_text)) > 60:

@@ -31,7 +31,9 @@ class VideoInfoMixin:
         # Thumbnail on the left
         self.thumbnail_label = QLabel()
         self.thumbnail_label.setFixedSize(320, 180)
-        self.thumbnail_label.setStyleSheet("border: 2px solid #3d3d3d; border-radius: 4px;")
+        self.thumbnail_label.setStyleSheet(
+            "border: 2px solid #3d3d3d; border-radius: 4px;"
+        )
         self.thumbnail_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         thumbnail_layout.addWidget(self.thumbnail_label)
         thumbnail_layout.addStretch()
@@ -162,7 +164,9 @@ class VideoInfoMixin:
 
         # Label to show selection count
         self.selected_sponsorblock_label = QLabel("0 selected")
-        self.selected_sponsorblock_label.setStyleSheet("color: #cccccc; padding-left: 5px;")
+        self.selected_sponsorblock_label.setStyleSheet(
+            "color: #cccccc; padding-left: 5px;"
+        )
         sponsorblock_layout.addWidget(self.selected_sponsorblock_label)
 
         sponsorblock_layout.addStretch()
@@ -321,7 +325,9 @@ class VideoInfoMixin:
 
         if dialog.exec():
             self.selected_sponsorblock_categories = dialog.get_selected_categories()
-            logger.info(f"SponsorBlock categories selected: {self.selected_sponsorblock_categories}")
+            logger.info(
+                f"SponsorBlock categories selected: {self.selected_sponsorblock_categories}"
+            )
             self._update_sponsorblock_display()
 
     def _update_sponsorblock_display(self) -> None:

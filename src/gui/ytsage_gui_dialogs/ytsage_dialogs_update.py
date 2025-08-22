@@ -55,14 +55,18 @@ class VersionCheckThread(QThread):
                         current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
                     else:
                         error_message = "yt-dlp not available."
-                        self.finished.emit(current_version, latest_version, error_message)
+                        self.finished.emit(
+                            current_version, latest_version, error_message
+                        )
                         return
             except subprocess.TimeoutExpired:
                 # Try fallback if timeout
                 if YT_DLP_AVAILABLE:
                     current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
                 else:
-                    error_message = "yt-dlp version check timed out and package not found."
+                    error_message = (
+                        "yt-dlp version check timed out and package not found."
+                    )
                     self.finished.emit(current_version, latest_version, error_message)
                     return
             except Exception:
@@ -195,7 +199,9 @@ class UpdateThread(QThread):
                 current_version = pkg_resources.get_distribution("yt-dlp").version
                 self.update_status.emit(f"📋 Current version: {current_version}")
             except pkg_resources.DistributionNotFound:
-                self.update_status.emit("⚠️ yt-dlp not found via pip, attempting installation...")
+                self.update_status.emit(
+                    "⚠️ yt-dlp not found via pip, attempting installation..."
+                )
                 current_version = "0.0.0"
 
             self.update_progress.emit(40)
@@ -215,7 +221,9 @@ class UpdateThread(QThread):
 
             # Compare versions
             if version.parse(latest_version) > version.parse(current_version):
-                self.update_status.emit(f"⬆️ Updating from {current_version} to {latest_version}...")
+                self.update_status.emit(
+                    f"⬆️ Updating from {current_version} to {latest_version}..."
+                )
                 self.update_progress.emit(60)
 
                 try:
@@ -237,7 +245,9 @@ class UpdateThread(QThread):
                         self.update_progress.emit(95)
                         return True
                     else:
-                        self.update_status.emit(f"❌ Pip update failed: {update_result.stderr}")
+                        self.update_status.emit(
+                            f"❌ Pip update failed: {update_result.stderr}"
+                        )
                         return False
 
                 except subprocess.TimeoutExpired:
@@ -372,7 +382,9 @@ class YTDLPUpdateDialog(QDialog):
                 )
                 self.update_btn.setEnabled(True)
             else:
-                self.status_label.setText(f"yt-dlp is up to date (version {current_version})")
+                self.status_label.setText(
+                    f"yt-dlp is up to date (version {current_version})"
+                )
                 self.update_btn.setEnabled(False)
         except version.InvalidVersion:
             # If version parsing fails, do a simple string comparison
@@ -382,7 +394,9 @@ class YTDLPUpdateDialog(QDialog):
                 )
                 self.update_btn.setEnabled(True)
             else:
-                self.status_label.setText(f"yt-dlp is up to date (version {current_version})")
+                self.status_label.setText(
+                    f"yt-dlp is up to date (version {current_version})"
+                )
                 self.update_btn.setEnabled(False)
         except Exception as e:
             self.status_label.setText(f"Error comparing versions: {e}")
@@ -455,7 +469,9 @@ class YTDLPUpdateDialog(QDialog):
 
         if hasattr(self, "update_thread") and self.update_thread.isRunning():
             self.update_thread.quit()
-            if not self.update_thread.wait(5000):  # Wait up to 5 seconds for update to finish
+            if not self.update_thread.wait(
+                5000
+            ):  # Wait up to 5 seconds for update to finish
                 self.update_thread.terminate()
 
         super().closeEvent(event)
@@ -474,8 +490,12 @@ class AutoUpdateThread(QThread):
             # Get current version
             current_version = get_ytdlp_version()
             if "Error" in current_version:
-                logger.warning("AutoUpdateThread: Could not determine current yt-dlp version, skipping auto-update")
-                self.update_finished.emit(False, "Could not determine current yt-dlp version")
+                logger.warning(
+                    "AutoUpdateThread: Could not determine current yt-dlp version, skipping auto-update"
+                )
+                self.update_finished.emit(
+                    False, "Could not determine current yt-dlp version"
+                )
                 return
 
             # Get latest version from PyPI
@@ -499,7 +519,9 @@ class AutoUpdateThread(QThread):
                     success = self._perform_update()
 
                     if success:
-                        logger.info("AutoUpdateThread: Auto-update completed successfully!")
+                        logger.info(
+                            "AutoUpdateThread: Auto-update completed successfully!"
+                        )
                         # Update the last check timestamp
                         config = load_config()
                         config["last_update_check"] = time.time()
@@ -523,7 +545,9 @@ class AutoUpdateThread(QThread):
                     )
 
             except requests.RequestException as e:
-                logger.warning(f"AutoUpdateThread: Network error during auto-update check: {e}")
+                logger.warning(
+                    f"AutoUpdateThread: Network error during auto-update check: {e}"
+                )
                 self.update_finished.emit(False, f"Network error: {e}")
             except Exception as e:
                 logger.error(
@@ -533,7 +557,9 @@ class AutoUpdateThread(QThread):
                 self.update_finished.emit(False, f"Update check error: {e}")
 
         except Exception as e:
-            logger.critical(f"AutoUpdateThread: Critical error in auto-update: {e}", exc_info=True)
+            logger.critical(
+                f"AutoUpdateThread: Critical error in auto-update: {e}", exc_info=True
+            )
             self.update_finished.emit(False, f"Critical error: {e}")
 
     def _perform_update(self) -> bool:
@@ -554,7 +580,9 @@ class AutoUpdateThread(QThread):
                 return self._update_via_pip()
 
         except Exception as e:
-            logger.error(f"AutoUpdateThread: Error in _perform_update: {e}", exc_info=True)
+            logger.error(
+                f"AutoUpdateThread: Error in _perform_update: {e}", exc_info=True
+            )
             return False
 
     def _update_binary(self, yt_dlp_path: Path) -> bool:
@@ -603,7 +631,9 @@ class AutoUpdateThread(QThread):
                 current_version = pkg_resources.get_distribution("yt-dlp").version
                 logger.info(f"AutoUpdateThread: Current version: {current_version}")
             except pkg_resources.DistributionNotFound:
-                logger.warning("AutoUpdateThread: yt-dlp not found via pip, attempting installation...")
+                logger.warning(
+                    "AutoUpdateThread: yt-dlp not found via pip, attempting installation..."
+                )
                 current_version = "0.0.0"
 
             # Get the latest version from PyPI
@@ -638,7 +668,9 @@ class AutoUpdateThread(QThread):
                     logger.info("AutoUpdateThread: Pip update completed successfully!")
                     return True
                 else:
-                    logger.error(f"AutoUpdateThread: Pip update failed: {update_result.stderr}")
+                    logger.error(
+                        f"AutoUpdateThread: Pip update failed: {update_result.stderr}"
+                    )
                     return False
             else:
                 logger.info("AutoUpdateThread: yt-dlp is already up to date!")

@@ -79,7 +79,9 @@ class DownloadThread(QThread):
         self.paused = False
         self.cancelled = False
         self.process = None
-        self.use_direct_command = True  # Flag to use direct CLI command instead of Python API
+        self.use_direct_command = (
+            True  # Flag to use direct CLI command instead of Python API
+        )
         self.last_output_time = time.time()
         self.timeout_timer = None
         self.current_filename = None  # Initialize filename storage
@@ -210,7 +212,9 @@ class DownloadThread(QThread):
                             if fmt.get("format_id") == clean_format_id:
                                 if fmt.get("vcodec") == "none" or "audio only" in fmt.get("format_note", "").lower():
                                     is_audio_format = True
-                                    logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
+                                    logger.debug(
+                                        f"Detected audio-only format for ID: {clean_format_id}"
+                                    )
                                 break
             except Exception as e:
                 logger.debug(f"Error checking if format is audio-only: {e}")
@@ -227,7 +231,9 @@ class DownloadThread(QThread):
             if not is_audio_format:
                 try:
                     format_ext = None
-                    logger.debug(f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
+                    logger.debug(
+                        f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})"
+                    )
                     if YT_DLP_AVAILABLE:
                         ydl_opts = {
                             "quiet": True,
@@ -258,7 +264,9 @@ class DownloadThread(QThread):
                     pass
         else:
             # If no specific format ID, use resolution-based sorting (-S)
-            res_value = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified
+            res_value = (
+                self.resolution if self.resolution else "720"
+            )  # Default to 720p if no resolution specified
             cmd.extend(["-S", f"res:{res_value}"])
 
         # Output template with resolution in filename
@@ -453,7 +461,9 @@ class DownloadThread(QThread):
                             f"Download failed with return code {return_code}. This may be due to a conflict with multiple yt-dlp installations. Try uninstalling any system-installed yt-dlp (e.g. through snap or apt) and restart the application."
                         )
                     else:
-                        self.error_signal.emit(f"Download failed with return code {return_code}")
+                        self.error_signal.emit(
+                            f"Download failed with return code {return_code}"
+                        )
                     self.cleanup_partial_files()
 
         except Exception as e:
@@ -540,7 +550,9 @@ class DownloadThread(QThread):
                     # If it's a relative path, make it absolute based on current path
                     subtitle_file = Path.joinpath(self.path, subtitle_file)
                 self.subtitle_files.append(subtitle_file)
-                logger.debug(f"Tracking subtitle file for later cleanup: {subtitle_file}")
+                logger.debug(
+                    f"Tracking subtitle file for later cleanup: {subtitle_file}"
+                )
             return
 
         # Send status updates based on output line content

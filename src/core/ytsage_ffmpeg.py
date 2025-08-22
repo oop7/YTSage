@@ -43,7 +43,9 @@ def download_file(url, dest_path, progress_callback=None) -> bool:
                     f.write(data)
                     if progress_callback:
                         progress = int((downloaded / total_size) * 100)
-                        progress_callback(f"⚡ Downloading FFmpeg components... {progress}%")
+                        progress_callback(
+                            f"⚡ Downloading FFmpeg components... {progress}%"
+                        )
         return True
     except requests.RequestException as e:
         logger.info(f"Download error: {str(e)}")
@@ -219,10 +221,14 @@ def install_ffmpeg_windows() -> bool:
                             timeout=300,
                         )  # 5-minute timeout
                     except Exception as e:
-                        logger.error(f"7z extraction failed: {str(e)}, trying zip fallback...")
+                        logger.error(
+                            f"7z extraction failed: {str(e)}, trying zip fallback..."
+                        )
                         use_7zip = False
                 else:
-                    logger.error("SHA-256 verification failed for 7z file, trying zip fallback...")
+                    logger.error(
+                        "SHA-256 verification failed for 7z file, trying zip fallback..."
+                    )
                     use_7zip = False
 
         # Fallback to zip method if 7z failed or not available

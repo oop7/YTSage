@@ -211,7 +211,9 @@ class DownloadSettingsDialog(QDialog):
         frequency_label.setStyleSheet("color: #ffffff; margin-top: 10px;")
         auto_update_layout.addWidget(frequency_label)
 
-        self.startup_radio = QRadioButton("Check on every startup (minimum 1 hour between checks)")
+        self.startup_radio = QRadioButton(
+            "Check on every startup (minimum 1 hour between checks)"
+        )
         self.daily_radio = QRadioButton("Check daily")
         self.weekly_radio = QRadioButton("Check weekly")
 
@@ -240,7 +242,9 @@ class DownloadSettingsDialog(QDialog):
         layout.addWidget(auto_update_group_box)
 
         # Dialog buttons (OK/Cancel)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -411,7 +415,9 @@ class AutoUpdateSettingsDialog(QDialog):
         layout.addWidget(title_label)
 
         # Description
-        desc_label = QLabel("Configure automatic updates for yt-dlp to ensure you always have the latest features and bug fixes.")
+        desc_label = QLabel(
+            "Configure automatic updates for yt-dlp to ensure you always have the latest features and bug fixes."
+        )
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         desc_label.setStyleSheet("color: #cccccc; margin: 10px; font-size: 11px;")
@@ -570,7 +576,9 @@ class AutoUpdateSettingsDialog(QDialog):
 
             last_check = settings["last_check"]
             if last_check > 0:
-                last_check_time = datetime.fromtimestamp(last_check).strftime("%Y-%m-%d %H:%M:%S")
+                last_check_time = datetime.fromtimestamp(last_check).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
                 self.last_check_label.setText(f"Last update check: {last_check_time}")
             else:
                 self.last_check_label.setText("Last update check: Never")
