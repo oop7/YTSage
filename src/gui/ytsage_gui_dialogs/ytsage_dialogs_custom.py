@@ -6,12 +6,19 @@ Contains dialogs for custom commands, cookies, time ranges, and other special fe
 import subprocess
 import threading
 from pathlib import Path
+<<<<<<< HEAD
 from typing import TYPE_CHECKING, cast
 
 from PySide6.QtCore import Q_ARG, QMetaObject, Qt, Signal, QObject
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
+=======
+
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt
+from PySide6.QtWidgets import (
+    QCheckBox,
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
     QDialog,
     QDialogButtonBox,
     QFileDialog,
@@ -21,7 +28,10 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QPlainTextEdit,
     QPushButton,
+<<<<<<< HEAD
     QRadioButton,
+=======
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
     QTabWidget,
     QTextEdit,
     QVBoxLayout,
@@ -29,16 +39,24 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
+<<<<<<< HEAD
 from src.utils.ytsage_constants import YTDLP_DOCS_URL
 
 try:
     import yt_dlp
 
+=======
+from typing import cast, TYPE_CHECKING
+
+try:
+    import yt_dlp
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
     YT_DLP_AVAILABLE = True
 except ImportError:
     YT_DLP_AVAILABLE = False
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from src.gui.ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
 
 
@@ -105,14 +123,276 @@ class CommandWorker(QObject):
         except Exception as e:
             self.output_received.emit("=" * 50)
             self.error_occurred.emit(f"❌ Error executing command: {str(e)}")
+=======
+    from src.gui.ytsage_gui_main import YTSageApp   # only for type hints (no runtime import)
+
+class CustomCommandDialog(QDialog):
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+        self._parent = self.parent()
+        self.setWindowTitle("Custom yt-dlp Command")
+        self.setMinimumSize(600, 400)
+
+        layout = QVBoxLayout(self)
+
+        # Help text
+        help_text = QLabel(
+            "Enter custom yt-dlp commands below. The URL will be automatically appended.\n"
+            "Example: --extract-audio --audio-format mp3 --audio-quality 0\n"
+            "Note: Download path and output template will be preserved."
+        )
+        help_text.setWordWrap(True)
+        help_text.setStyleSheet("color: #999999; padding: 10px;")
+        layout.addWidget(help_text)
+
+        # Command input
+        self.command_input = QPlainTextEdit()
+        self.command_input.setPlaceholderText("Enter yt-dlp arguments...")
+        self.command_input.setStyleSheet(
+            """
+            QPlainTextEdit {
+                background-color: #1d1e22;
+                color: #ffffff;
+                border: 2px solid #1d1e22;
+                border-radius: 4px;
+                padding: 8px;
+                font-family: Consolas, monospace;
+            }
+        """
+        )
+        layout.addWidget(self.command_input)
+
+        # Add SponsorBlock checkbox
+        self.sponsorblock_checkbox = QCheckBox("Remove Sponsor Segments")
+        self.sponsorblock_checkbox.setStyleSheet(
+            """
+            QCheckBox {
+                color: #ffffff;
+                padding: 5px;
+                margin-left: 20px;
+            }
+            QCheckBox::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #1d1e22;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+                border-radius: 9px;
+            }
+        """
+        )
+        layout.insertWidget(layout.indexOf(self.command_input), self.sponsorblock_checkbox)
+
+        # Buttons
+        button_layout = QHBoxLayout()
+
+        self.run_btn = QPushButton("Run Command")
+        self.run_btn.clicked.connect(self.run_custom_command)
+
+        self.close_btn = QPushButton("Close")
+        self.close_btn.clicked.connect(self.close)
+
+        button_layout.addWidget(self.run_btn)
+        button_layout.addWidget(self.close_btn)
+        layout.addLayout(button_layout)
+
+        # Log output
+        self.log_output = QTextEdit()
+        self.log_output.setReadOnly(True)
+        self.log_output.setStyleSheet(
+            """
+            QTextEdit {
+                background-color: #1d1e22;
+                color: #ffffff;
+                border: 2px solid #1d1e22;
+                border-radius: 4px;
+                padding: 8px;
+                font-family: Consolas, monospace;
+                font-size: 12px;
+            }
+        """
+        )
+        layout.addWidget(self.log_output)
+
+        self.setStyleSheet(
+            """
+            QDialog {
+                background-color: #15181b;
+            }
+            QPushButton {
+                padding: 8px 15px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #a50000;
+            }
+        """
+        )
+
+    def run_custom_command(self) -> None:
+        url = self._parent.url_input.text().strip() # type: ignore[reportAttributeAccessIssue]
+        if not url:
+            self.log_output.append("Error: No URL provided")
+            return
+
+        command = self.command_input.toPlainText().strip()
+        path = self._parent.path_input.text().strip() # type: ignore[reportAttributeAccessIssue]
+
+        self.log_output.clear()
+        self.log_output.append(f"Running command with URL: {url}")
+        self.run_btn.setEnabled(False)
+
+        # Start command in thread
+        threading.Thread(target=self._run_command_thread, args=(command, url, path), daemon=True).start()
+
+    def _run_command_thread(self, command, url, path) -> None:
+        try:
+
+            class CommandLogger:
+                def debug(self, msg):
+                    self.dialog.log_output.append(msg)
+
+                def warning(self, msg):
+                    self.dialog.log_output.append(f"Warning: {msg}")
+
+                def error(self, msg):
+                    self.dialog.log_output.append(f"Error: {msg}")
+
+                def __init__(self, dialog):
+                    self.dialog = dialog
+
+            # Split command into arguments
+            args = command.split()
+
+            # Base options
+            ydl_opts = {
+                "logger": CommandLogger(self),
+                "paths": {"home": path},
+                "debug_printout": True,
+                "postprocessors": [],
+            }
+
+            # Add SponsorBlock options if enabled
+            if self.sponsorblock_checkbox.isChecked():
+                ydl_opts["postprocessors"].extend(
+                    [
+                        {
+                            "key": "SponsorBlock",
+                            "categories": ["sponsor", "selfpromo", "interaction"],
+                            "api": "https://sponsor.ajay.app",
+                        },
+                        {
+                            "key": "ModifyChapters",
+                            "remove_sponsor_segments": [
+                                "sponsor",
+                                "selfpromo",
+                                "interaction",
+                            ],
+                            "sponsorblock_chapter_title": "[SponsorBlock]: %(category_names)l",
+                            "force_keyframes": True,
+                        },
+                    ]
+                )
+
+            # Add custom arguments
+            for i in range(0, len(args), 2):
+                if i + 1 < len(args):
+                    key = args[i].lstrip("-").replace("-", "_")
+                    value = args[i + 1]
+                    try:
+                        # Try to convert to appropriate type
+                        if value.lower() in ("true", "false"):
+                            value = value.lower() == "true"
+                        elif value.isdigit():
+                            value = int(value)
+                        ydl_opts[key] = value
+                    except:
+                        ydl_opts[key] = value
+
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([url])
+
+            self.log_output.append("Command completed successfully")
+
+        except Exception as e:
+            self.log_output.append(f"Error: {str(e)}")
+        finally:
+            self.run_btn.setEnabled(True)
+
+
+class CookieLoginDialog(QDialog):
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("Login with Cookies")
+        self.setMinimumSize(400, 150)
+
+        layout = QVBoxLayout(self)
+
+        help_text = QLabel(
+            "Select the Netscape-format cookies file for logging in.\n"
+            "This allows downloading of private videos and premium quality audio."
+        )
+        help_text.setWordWrap(True)
+        help_text.setStyleSheet("color: #999999; padding: 10px;")
+        layout.addWidget(help_text)
+
+        # File path input and browse button
+        path_layout = QHBoxLayout()
+        self.cookie_path_input = QLineEdit()
+        self.cookie_path_input.setPlaceholderText("Path to cookies file (Netscape format)")
+        path_layout.addWidget(self.cookie_path_input)
+
+        self.browse_button = QPushButton("Browse")
+        self.browse_button.clicked.connect(self.browse_cookie_file)
+        path_layout.addWidget(self.browse_button)
+
+        layout.addLayout(path_layout)
+
+        # Dialog buttons
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        button_box.accepted.connect(self.accept)
+        button_box.rejected.connect(self.reject)
+        layout.addWidget(button_box)
+
+    def browse_cookie_file(self) -> None:
+        # Open file dialog to select cookie file
+        selected_files, _ = QFileDialog.getOpenFileName(
+            self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)"
+        )
+        if selected_files:
+            self.cookie_path_input.setText(selected_files[0])
+
+    def get_cookie_file_path(self) -> str:
+        # Return the selected cookie file path
+        return self.cookie_path_input.text()
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
 
 class CustomOptionsDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
+<<<<<<< HEAD
         self._parent: YTSageApp = cast("YTSageApp", self.parent())  # cast will help with auto complete and type hint checking.
         self.setWindowTitle("Custom Options")
         self.setMinimumSize(550, 400)  # Made even shorter
+=======
+        self._parent: YTSageApp = cast("YTSageApp",self.parent()) # cast will help with auto complete and type hint checking.
+        self.setWindowTitle("Custom Options")
+        self.setMinimumSize(600, 500)
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         layout = QVBoxLayout(self)
 
         # Create tab widget to organize content
@@ -125,13 +405,18 @@ class CustomOptionsDialog(QDialog):
 
         # Help text
         help_text = QLabel(
+<<<<<<< HEAD
             "Choose how to provide cookies for logging in.\n"
+=======
+            "Select the Netscape-format cookies file for logging in.\n"
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
             "This allows downloading of private videos and premium quality audio."
         )
         help_text.setWordWrap(True)
         help_text.setStyleSheet("color: #999999; padding: 10px;")
         cookies_layout.addWidget(help_text)
 
+<<<<<<< HEAD
         # Cookie source selection
         cookie_source_group = QGroupBox("Cookie Source")
         cookie_source_layout = QVBoxLayout(cookie_source_group)
@@ -152,21 +437,28 @@ class CustomOptionsDialog(QDialog):
         self.cookie_file_group = QGroupBox("Cookie File")
         file_layout = QVBoxLayout(self.cookie_file_group)
 
+=======
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         # File path input and browse button
         path_layout = QHBoxLayout()
         self.cookie_path_input = QLineEdit()
         self.cookie_path_input.setPlaceholderText("Path to cookies file (Netscape format)")
         if hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
+<<<<<<< HEAD
             # Convert Path to string properly and validate
             cookie_path_str = str(self._parent.cookie_file_path)
             # Only set if it looks like a valid path (more than just a drive letter)
             if len(cookie_path_str) > 3 and not cookie_path_str.endswith(':'):
                 self.cookie_path_input.setText(cookie_path_str)
+=======
+            self.cookie_path_input.setText(self._parent.cookie_file_path.as_posix())
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         path_layout.addWidget(self.cookie_path_input)
 
         self.browse_button = QPushButton("Browse")
         self.browse_button.clicked.connect(self.browse_cookie_file)
         path_layout.addWidget(self.browse_button)
+<<<<<<< HEAD
         file_layout.addLayout(path_layout)
 
         cookies_layout.addWidget(self.cookie_file_group)
@@ -211,6 +503,9 @@ class CustomOptionsDialog(QDialog):
 
         # Initially hide browser group
         self.cookie_browser_group.setVisible(False)
+=======
+        cookies_layout.addLayout(path_layout)  # Add the horizontal layout to cookies layout
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
         # Status indicator for cookies
         self.cookie_status = QLabel("")
@@ -223,6 +518,7 @@ class CustomOptionsDialog(QDialog):
         command_tab = QWidget()
         command_layout = QVBoxLayout(command_tab)
 
+<<<<<<< HEAD
         # Improved help text
         cmd_help_text = QLabel(
             "Enter your custom yt-dlp command below. The current URL will be automatically appended.<br><br>"
@@ -266,11 +562,55 @@ class CustomOptionsDialog(QDialog):
             "e.g. --extract-audio --audio-format mp3"
         )
         self.command_input.setMinimumHeight(80)  # Reduced further from 100
+=======
+        # Help text
+        cmd_help_text = QLabel(
+            "Enter custom yt-dlp commands below. The URL will be automatically appended.\n"
+            "Example: --extract-audio --audio-format mp3 --audio-quality 0\n"
+            "Note: Download path and output template will be preserved."
+        )
+        cmd_help_text.setWordWrap(True)
+        cmd_help_text.setStyleSheet("color: #999999; padding: 10px;")
+        command_layout.addWidget(cmd_help_text)
+
+        # Add SponsorBlock checkbox
+        self.sponsorblock_checkbox = QCheckBox("Remove Sponsor Segments")
+        self.sponsorblock_checkbox.setStyleSheet(
+            """
+            QCheckBox {
+                color: #ffffff;
+                padding: 5px;
+                margin-left: 0px;
+            }
+            QCheckBox::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #1d1e22;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+                border-radius: 9px;
+            }
+        """
+        )
+        command_layout.addWidget(self.sponsorblock_checkbox)
+
+        # Command input
+        self.command_input = QPlainTextEdit()
+        self.command_input.setPlaceholderText("Enter yt-dlp arguments...")
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         self.command_input.setStyleSheet(
             """
             QPlainTextEdit {
                 background-color: #1d1e22;
                 color: #ffffff;
+<<<<<<< HEAD
                 border: 2px solid #2a2d36;
                 border-radius: 6px;
                 padding: 12px;
@@ -280,11 +620,18 @@ class CustomOptionsDialog(QDialog):
             }
             QPlainTextEdit:focus {
                 border-color: #c90000;
+=======
+                border: 2px solid #1d1e22;
+                border-radius: 4px;
+                padding: 8px;
+                font-family: Consolas, monospace;
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
             }
         """
         )
         command_layout.addWidget(self.command_input)
 
+<<<<<<< HEAD
         # Button layout
         button_layout = QHBoxLayout()
         button_layout.setSpacing(10)
@@ -323,17 +670,27 @@ class CustomOptionsDialog(QDialog):
         output_label = QLabel("Command Output:")
         output_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #ffffff; margin-top: 15px;")
         command_layout.addWidget(output_label)
+=======
+        # Run command button
+        self.run_btn = QPushButton("Run Command")
+        self.run_btn.clicked.connect(self.run_custom_command)
+        command_layout.addWidget(self.run_btn)
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
         # Log output
         self.log_output = QTextEdit()
         self.log_output.setReadOnly(True)
+<<<<<<< HEAD
         self.log_output.setPlaceholderText("Command output will appear here...")
         self.log_output.setMinimumHeight(100)  # Reduced further from 120
+=======
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         self.log_output.setStyleSheet(
             """
             QTextEdit {
                 background-color: #1d1e22;
                 color: #ffffff;
+<<<<<<< HEAD
                 border: 2px solid #2a2d36;
                 border-radius: 6px;
                 padding: 12px;
@@ -343,6 +700,14 @@ class CustomOptionsDialog(QDialog):
             QTextEdit:focus {
                 border-color: #c90000;
             }
+=======
+                border: 2px solid #1d1e22;
+                border-radius: 4px;
+                padding: 8px;
+                font-family: Consolas, monospace;
+                font-size: 12px;
+            }
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         """
         )
         command_layout.addWidget(self.log_output)
@@ -352,7 +717,13 @@ class CustomOptionsDialog(QDialog):
         self.tab_widget.addTab(command_tab, "Custom Command")
 
         # Dialog buttons
+<<<<<<< HEAD
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+=======
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -385,6 +756,7 @@ class CustomOptionsDialog(QDialog):
             QLabel {
                 color: #ffffff;
             }
+<<<<<<< HEAD
             QGroupBox {
                 border: 1px solid #3d3d3d;
                 border-radius: 4px;
@@ -440,6 +812,8 @@ class CustomOptionsDialog(QDialog):
                 border: 1px solid #3d3d3d;
                 selection-background-color: #c90000;
             }
+=======
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
             QLineEdit {
                 padding: 8px;
                 border: 2px solid #1b2021;
@@ -461,6 +835,7 @@ class CustomOptionsDialog(QDialog):
         """
         )
 
+<<<<<<< HEAD
         # Initialize dialog with current settings (after all widgets and styles are set)
         self._initialize_cookie_settings()
 
@@ -512,10 +887,21 @@ class CustomOptionsDialog(QDialog):
             # Ensure we have a valid full path
             cookie_path = Path(selected_files).resolve()
             self.cookie_path_input.setText(str(cookie_path))
+=======
+    def browse_cookie_file(self) -> None:
+        # Open file dialog to select cookie file
+        selected_files, _ = QFileDialog.getOpenFileName(
+            self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)"
+        )
+
+        if selected_files:
+            self.cookie_path_input.setText(selected_files[0])
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
             self.cookie_status.setText("Cookie file selected - Click OK to apply")
             self.cookie_status.setStyleSheet("color: #00cc00; font-style: italic;")
 
     def get_cookie_file_path(self) -> Path | None:
+<<<<<<< HEAD
         # Return the selected cookie file path if it's not empty and using file mode
         if self.cookie_file_radio.isChecked():
             path_text = self.cookie_path_input.text().strip()
@@ -554,11 +940,27 @@ class CustomOptionsDialog(QDialog):
         if not command:
             self.log_output.append("❌ Error: No command provided. Please enter yt-dlp arguments.")
             return
+=======
+        # Return the selected cookie file path if it's not empty
+        path = Path(self.cookie_path_input.text().strip())
+        if path and path.exists():
+            return path
+        return None
+
+    def run_custom_command(self) -> None:
+        url = self._parent.url_input.text().strip()
+        if not url:
+            self.log_output.append("Error: No URL provided")
+            return
+
+        command = self.command_input.toPlainText().strip()
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
         # Get download path from parent
         path = self._parent.last_path
 
         self.log_output.clear()
+<<<<<<< HEAD
         self.log_output.append("🚀 Executing custom yt-dlp command")
         self.log_output.append(f"📍 URL: {url}")
         self.log_output.append(f"⚙️  Arguments: {command}")
@@ -594,6 +996,112 @@ class CustomOptionsDialog(QDialog):
         self.log_output.append(error_msg)
         self.run_btn.setEnabled(True)
         self.run_btn.setText("Run Command")
+=======
+        self.log_output.append(f"Running command with URL: {url}")
+        self.run_btn.setEnabled(False)
+
+        # Start command in thread
+        threading.Thread(target=self._run_command_thread, args=(command, url, path), daemon=True).start()
+
+    def _run_command_thread(self, command, url, path) -> None:
+        try:
+
+            class CommandLogger:
+                def debug(self, msg):
+                    QMetaObject.invokeMethod(
+                        self.dialog.log_output,
+                        b"append",
+                        Qt.ConnectionType.QueuedConnection,
+                        Q_ARG(str, msg),
+                    )
+
+                def warning(self, msg):
+                    QMetaObject.invokeMethod(
+                        self.dialog.log_output,
+                        b"append",
+                        Qt.ConnectionType.QueuedConnection,
+                        Q_ARG(str, f"Warning: {msg}"),
+                    )
+
+                def error(self, msg):
+                    QMetaObject.invokeMethod(
+                        self.dialog.log_output,
+                        b"append",
+                        Qt.ConnectionType.QueuedConnection,
+                        Q_ARG(str, f"Error: {msg}"),
+                    )
+
+                def __init__(self, dialog):
+                    self.dialog = dialog
+
+            # Split command into arguments
+            args = command.split()
+
+            # Add SponsorBlock if selected
+            yt_dlp_path = get_yt_dlp_path()
+            base_cmd = [yt_dlp_path] + args + [url]
+
+            if self.sponsorblock_checkbox.isChecked():
+                base_cmd.extend(["--sponsorblock-remove", "sponsor,selfpromo,interaction"])
+
+            # Show the full command
+            QMetaObject.invokeMethod(
+                self.log_output,
+                b"append",
+                Qt.ConnectionType.QueuedConnection,
+                Q_ARG(str, f"Full command: {' '.join(base_cmd)}"),
+            )
+
+            # Run the command
+            proc = subprocess.Popen(
+                base_cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+
+            # Stream output
+            for line in proc.stdout: # type: ignore[reportOptionalIterable]
+                QMetaObject.invokeMethod(
+                    self.log_output,
+                    b"append",
+                    Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(str, line.rstrip()),
+                )
+
+            ret = proc.wait()
+            if ret != 0:
+                QMetaObject.invokeMethod(
+                    self.log_output,
+                    b"append",
+                    Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(str, f"Command exited with code {ret}"),
+                )
+            else:
+                QMetaObject.invokeMethod(
+                    self.log_output,
+                    b"append",
+                    Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(str, "Command completed successfully"),
+                )
+        except Exception as e:
+            QMetaObject.invokeMethod(
+                self.log_output,
+                b"append",
+                Qt.ConnectionType.QueuedConnection,
+                Q_ARG(str, f"Error: {str(e)}"),
+            )
+        finally:
+            # Re-enable the run button
+            QMetaObject.invokeMethod(
+                self.run_btn,
+                b"setEnabled",
+                Qt.ConnectionType.QueuedConnection,
+                Q_ARG(bool, True),
+            )
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
 
 class TimeRangeDialog(QDialog):
@@ -664,8 +1172,40 @@ class TimeRangeDialog(QDialog):
         )
         layout.addWidget(self.force_keyframes)
 
+<<<<<<< HEAD
         # Buttons
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+=======
+        # Format preview
+        preview_group = QGroupBox("Command Preview")
+        preview_layout = QVBoxLayout()
+        self.preview_label = QLabel('--download-sections "*-"')
+        self.preview_label.setStyleSheet(
+            """
+            QLabel {
+                background-color: #1d1e22;
+                color: #ffffff;
+                border: 1px solid #3d3d3d;
+                border-radius: 4px;
+                padding: 8px;
+                font-family: Consolas, monospace;
+            }
+        """
+        )
+        preview_layout.addWidget(self.preview_label)
+        preview_group.setLayout(preview_layout)
+        layout.addWidget(preview_group)
+
+        # Connect signals for live preview updates
+        self.start_time_input.textChanged.connect(self.update_preview)
+        self.end_time_input.textChanged.connect(self.update_preview)
+        self.force_keyframes.stateChanged.connect(self.update_preview)
+
+        # Buttons
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -713,7 +1253,30 @@ class TimeRangeDialog(QDialog):
         )
 
         # Initialize preview
+<<<<<<< HEAD
         # self.update_preview() # Removed preview functionality
+=======
+        self.update_preview()
+
+    def update_preview(self) -> None:
+        start = self.start_time_input.text().strip()
+        end = self.end_time_input.text().strip()
+
+        if start and end:
+            time_range = f"*{start}-{end}"
+        elif start:
+            time_range = f"*{start}-"
+        elif end:
+            time_range = f"*-{end}"
+        else:
+            time_range = "*-"  # Full video
+
+        preview = f'--download-sections "{time_range}"'
+        if self.force_keyframes.isChecked():
+            preview += " --force-keyframes-at-cuts"
+
+        self.preview_label.setText(preview)
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
     def get_download_sections(self) -> str | None:
         """Returns the download sections command arguments or None if no selection made"""

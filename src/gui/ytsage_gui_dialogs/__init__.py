@@ -14,6 +14,11 @@ This package contains all dialog classes organized by functionality:
 # Re-export all dialog classes for backward compatibility
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_base import AboutDialog, LogWindow
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_custom import (
+<<<<<<< HEAD
+=======
+    CookieLoginDialog,
+    CustomCommandDialog,
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
     CustomOptionsDialog,
     TimeRangeDialog,
 )
@@ -24,7 +29,16 @@ from src.gui.ytsage_gui_dialogs.ytsage_dialogs_selection import (
     SubtitleSelectionDialog,
 )
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_settings import AutoUpdateSettingsDialog, DownloadSettingsDialog
+<<<<<<< HEAD
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import AutoUpdateThread, UpdateThread, VersionCheckThread, YTDLPUpdateDialog
+=======
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import (
+    AutoUpdateThread,
+    UpdateThread,
+    VersionCheckThread,
+    YTDLPUpdateDialog,
+)
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
 __all__ = [
     # Base dialogs
@@ -51,6 +65,11 @@ __all__ = [
     "SponsorBlockCategoryDialog",
     
     # Custom functionality dialogs
+<<<<<<< HEAD
+=======
+    "CustomCommandDialog",
+    "CookieLoginDialog",
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
     "CustomOptionsDialog",
     "TimeRangeDialog",
 ]

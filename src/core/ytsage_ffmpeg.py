@@ -13,7 +13,10 @@ from src.utils.ytsage_constants import (
     FFMPEG_7Z_SHA256_URL,
     FFMPEG_ZIP_DOWNLOAD_URL,
     OS_NAME,
+<<<<<<< HEAD
     SUBPROCESS_CREATIONFLAGS,
+=======
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 )
 
 
@@ -43,9 +46,7 @@ def download_file(url, dest_path, progress_callback=None) -> bool:
                     f.write(data)
                     if progress_callback:
                         progress = int((downloaded / total_size) * 100)
-                        progress_callback(
-                            f"⚡ Downloading FFmpeg components... {progress}%"
-                        )
+                        progress_callback(f"⚡ Downloading FFmpeg components... {progress}%")
         return True
     except requests.RequestException as e:
         logger.info(f"Download error: {str(e)}")
@@ -88,7 +89,11 @@ def verify_sha256(file_path, expected_hash_url) -> bool:
 
 def get_ffmpeg_install_path() -> Path:
     """Get the FFmpeg installation path."""
+<<<<<<< HEAD
     if OS_NAME == "Windows":
+=======
+    if sys.platform == "win32":
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         return Path(os.getenv("LOCALAPPDATA")) / "ffmpeg" / "ffmpeg-7.1.1-full_build" / "bin"  # type: ignore
 
     elif OS_NAME == "Darwin":
@@ -217,18 +222,18 @@ def install_ffmpeg_windows() -> bool:
                     try:
                         subprocess.run(
                             ["7z", "x", temp_file, f"-o{extract_dir}", "-y"],
+<<<<<<< HEAD
                             creationflags=SUBPROCESS_CREATIONFLAGS,
+=======
+                            creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
                             timeout=300,
                         )  # 5-minute timeout
                     except Exception as e:
-                        logger.error(
-                            f"7z extraction failed: {str(e)}, trying zip fallback..."
-                        )
+                        logger.error(f"7z extraction failed: {str(e)}, trying zip fallback...")
                         use_7zip = False
                 else:
-                    logger.error(
-                        "SHA-256 verification failed for 7z file, trying zip fallback..."
-                    )
+                    logger.error("SHA-256 verification failed for 7z file, trying zip fallback...")
                     use_7zip = False
 
         # Fallback to zip method if 7z failed or not available
@@ -259,7 +264,11 @@ def install_ffmpeg_windows() -> bool:
         if str(bin_dir) not in user_path.split(os.pathsep):
             subprocess.run(
                 ["setx", "PATH", f"{user_path};{bin_dir}"],
+<<<<<<< HEAD
                 creationflags=SUBPROCESS_CREATIONFLAGS,
+=======
+                creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
             )
             os.environ["PATH"] = f"{user_path};{bin_dir}"
 

@@ -6,6 +6,7 @@ Contains dialogs and threads for checking and installing FFmpeg.
 import contextlib
 import webbrowser
 from io import StringIO
+from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QIcon
@@ -56,14 +57,18 @@ class FFmpegCheckDialog(QDialog):
 
         # Header with title and improved spacing
         header_text = QLabel("FFmpeg Installation")
-        header_text.setStyleSheet(
-            "font-size: 16px; font-weight: bold; color: #ffffff; padding: 5px 0;"
-        )
+        header_text.setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff; padding: 5px 0;")
         header_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(header_text)
 
         # Message
+<<<<<<< HEAD
         self.message_label = QLabel("YTSage needs FFmpeg to process videos.\n\n" "Choose an installation option below:")
+=======
+        self.message_label = QLabel(
+            "YTSage needs FFmpeg to process videos.\n\n" "Choose an installation option below:"
+        )
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         self.message_label.setWordWrap(True)
         self.message_label.setStyleSheet(
             "font-size: 13px; color: #cccccc; padding: 10px 0; line-height: 1.4;"
@@ -191,9 +196,7 @@ class FFmpegCheckDialog(QDialog):
             self.manual_btn.hide()
         else:
             self.message_label.setText("FFmpeg installation encountered an issue.")
-            self.progress_label.setText(
-                "Please try using the manual installation guide instead."
-            )
+            self.progress_label.setText("Please try using the manual installation guide instead.")
             self.install_btn.setEnabled(True)
             self.manual_btn.setEnabled(True)
 

@@ -39,9 +39,7 @@ class FormatTableMixin:
         self.format_table.setAlternatingRowColors(True)
 
         # Set specific column widths and resize modes
-        self.format_table.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.ResizeMode.Fixed
-        )  # Select
+        self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)  # Select
         self.format_table.setColumnWidth(0, 50)  # Select column width
 
         self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)  # Quality
@@ -145,7 +143,13 @@ class FormatTableMixin:
         filtered_formats = []
 
         if hasattr(self, "video_button") and self.video_button.isChecked():  # type: ignore[reportAttributeAccessIssue]
+<<<<<<< HEAD
             filtered_formats.extend([f for f in self.all_formats if f.get("vcodec") != "none" and f.get("filesize") is not None])
+=======
+            filtered_formats.extend(
+                [f for f in self.all_formats if f.get("vcodec") != "none" and f.get("filesize") is not None]
+            )
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
         if hasattr(self, "audio_button") and self.audio_button.isChecked():  # type: ignore[reportAttributeAccessIssue]
             filtered_formats.extend(
@@ -191,9 +195,7 @@ class FormatTableMixin:
             self.format_table.setColumnHidden(7, True)
 
             # Set specific resize modes for playlist columns
-            self.format_table.horizontalHeader().setSectionResizeMode(
-                0, QHeaderView.ResizeMode.Fixed
-            )
+            self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(0, 50)
             self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
             self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
@@ -219,33 +221,19 @@ class FormatTableMixin:
                 self.format_table.setColumnHidden(i, False)
 
             # Reapply resize modes for non-playlist mode if needed (optional, might be okay without)
-            self.format_table.horizontalHeader().setSectionResizeMode(
-                0, QHeaderView.ResizeMode.Fixed
-            )
+            self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(0, 50)
-            self.format_table.horizontalHeader().setSectionResizeMode(
-                1, QHeaderView.ResizeMode.Fixed
-            )
+            self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(1, 100)
-            self.format_table.horizontalHeader().setSectionResizeMode(
-                2, QHeaderView.ResizeMode.Fixed
-            )
+            self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(2, 80)
-            self.format_table.horizontalHeader().setSectionResizeMode(
-                3, QHeaderView.ResizeMode.Fixed
-            )
+            self.format_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(3, 100)
-            self.format_table.horizontalHeader().setSectionResizeMode(
-                4, QHeaderView.ResizeMode.Fixed
-            )
+            self.format_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(4, 100)
-            self.format_table.horizontalHeader().setSectionResizeMode(
-                5, QHeaderView.ResizeMode.Fixed
-            )
+            self.format_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(5, 150)
-            self.format_table.horizontalHeader().setSectionResizeMode(
-                6, QHeaderView.ResizeMode.Fixed
-            )
+            self.format_table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(6, 120)
             self.format_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)
 

@@ -211,9 +211,7 @@ class DownloadSettingsDialog(QDialog):
         frequency_label.setStyleSheet("color: #ffffff; margin-top: 10px;")
         auto_update_layout.addWidget(frequency_label)
 
-        self.startup_radio = QRadioButton(
-            "Check on every startup (minimum 1 hour between checks)"
-        )
+        self.startup_radio = QRadioButton("Check on every startup (minimum 1 hour between checks)")
         self.daily_radio = QRadioButton("Check daily")
         self.weekly_radio = QRadioButton("Check weekly")
 
@@ -576,9 +574,7 @@ class AutoUpdateSettingsDialog(QDialog):
 
             last_check = settings["last_check"]
             if last_check > 0:
-                last_check_time = datetime.fromtimestamp(last_check).strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
+                last_check_time = datetime.fromtimestamp(last_check).strftime("%Y-%m-%d %H:%M:%S")
                 self.last_check_label.setText(f"Last update check: {last_check_time}")
             else:
                 self.last_check_label.setText("Last update check: Never")

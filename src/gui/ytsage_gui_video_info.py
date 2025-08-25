@@ -8,6 +8,10 @@ from PIL import Image
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
+<<<<<<< HEAD
+=======
+from yt_dlp import YoutubeDL
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
 from src.core.ytsage_logging import logger
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
@@ -31,9 +35,7 @@ class VideoInfoMixin:
         # Thumbnail on the left
         self.thumbnail_label = QLabel()
         self.thumbnail_label.setFixedSize(320, 180)
-        self.thumbnail_label.setStyleSheet(
-            "border: 2px solid #3d3d3d; border-radius: 4px;"
-        )
+        self.thumbnail_label.setStyleSheet("border: 2px solid #3d3d3d; border-radius: 4px;")
         self.thumbnail_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         thumbnail_layout.addWidget(self.thumbnail_label)
         thumbnail_layout.addStretch()
@@ -164,9 +166,7 @@ class VideoInfoMixin:
 
         # Label to show selection count
         self.selected_sponsorblock_label = QLabel("0 selected")
-        self.selected_sponsorblock_label.setStyleSheet(
-            "color: #cccccc; padding-left: 5px;"
-        )
+        self.selected_sponsorblock_label.setStyleSheet("color: #cccccc; padding-left: 5px;")
         sponsorblock_layout.addWidget(self.selected_sponsorblock_label)
 
         sponsorblock_layout.addStretch()
@@ -325,9 +325,7 @@ class VideoInfoMixin:
 
         if dialog.exec():
             self.selected_sponsorblock_categories = dialog.get_selected_categories()
-            logger.info(
-                f"SponsorBlock categories selected: {self.selected_sponsorblock_categories}"
-            )
+            logger.info(f"SponsorBlock categories selected: {self.selected_sponsorblock_categories}")
             self._update_sponsorblock_display()
 
     def _update_sponsorblock_display(self) -> None:
@@ -377,9 +375,12 @@ class VideoInfoMixin:
             return False
 
         try:
+<<<<<<< HEAD
             # Import yt_dlp locally to avoid import errors when yt-dlp is not installed
             from yt_dlp import YoutubeDL
 
+=======
+>>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
             logger.debug(f"Attempting to save thumbnail for URL: {video_url}")
 
             ydl_opts = {
