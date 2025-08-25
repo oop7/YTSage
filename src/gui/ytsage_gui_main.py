@@ -8,7 +8,7 @@ from pathlib import Path
 import markdown
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, Slot
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
@@ -30,14 +30,8 @@ from PySide6.QtWidgets import (
 
 from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
 from src.core.ytsage_logging import logger
-
 from src.core.ytsage_utils import check_ffmpeg  # Import utility functions
-from src.core.ytsage_utils import (
-    get_config_file_path,
-    load_saved_path,
-    save_path,
-    should_check_for_auto_update,
-)
+from src.core.ytsage_utils import load_saved_path, save_path, should_check_for_auto_update
 from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     AboutDialog,
@@ -49,8 +43,9 @@ from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__
     TimeRangeDialog,
     YTDLPUpdateDialog,
 )
-from src.gui.ytsage_gui_format_table import FormatTableMixin  # Import FormatTableMixin
-from src.gui.ytsage_gui_video_info import VideoInfoMixin  # Import VideoInfoMixin
+from src.gui.ytsage_gui_format_table import FormatTableMixin
+from src.gui.ytsage_gui_video_info import VideoInfoMixin
+from src.utils.ytsage_constants import ICON_PATH, SOUND_PATH, SUBPROCESS_CREATIONFLAGS
 
 try:
     import yt_dlp
@@ -97,16 +92,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Check for auto-updates if enabled
         self.check_auto_update_ytdlp()
 
-        self.config_file = get_config_file_path()
         load_saved_path(self)
         # Load custom icon
-        # Navigate from src/gui/ to project root, then to assets/Icon/
-        project_root = Path(__name__).parent.parent.parent
-        icon_path = Path(project_root) / "assets" / "Icon" / "icon.png"
-        if icon_path.exists():
-            self.setWindowIcon(QIcon(icon_path.as_posix()))
+        if ICON_PATH.exists():
+            self.setWindowIcon(QIcon(ICON_PATH.as_posix()))
         else:
-            self.logger.warning(f"Icon file not found at {icon_path}. Using default icon.")
+            self.logger.warning(f"Icon file not found at {ICON_PATH}. Using default icon.")
             self.setWindowIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowDown))  # Fallback
         self.signals = SignalManager()
         self.download_paused = False
@@ -322,16 +313,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 pygame.mixer.init()
                 self.sound_enabled = True
 
-                # Get the notification sound path
-                # Navigate from src/gui/ to project root, then to assets/sound/
-                project_root = Path(__file__).parent.parent.parent
-                self.notification_sound_path = project_root / "assets" / "sound" / "notification.mp3"
+                # sound_path logic moved to src\utils\ytsage_constants.py
+                self.notification_sound_path = SOUND_PATH
 
                 # Check if the notification sound file exists
                 if not self.notification_sound_path.exists():
-                    self.logger.warning(
-                        f"Notification sound file not found at: {self.notification_sound_path}"
-                    )
+                    self.logger.warning(f"Notification sound file not found at: {self.notification_sound_path}")
                     self.sound_enabled = False
                 else:
                     self.logger.info(f"Notification sound loaded from: {self.notification_sound_path}")
@@ -632,9 +619,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # --- Rename Path Button to Settings Button ---
         self.settings_button = QPushButton("Download Settings")  # Renamed button
         self.settings_button.clicked.connect(self.show_download_settings_dialog)  # Renamed method
-        self.settings_button.setToolTip(
-            f"Current Path: {self.last_path}\nSpeed Limit: None"
-        )  # Update initial tooltip
+        self.settings_button.setToolTip(f"Current Path: {self.last_path}\nSpeed Limit: None")  # Update initial tooltip
         # --- End Settings Button ---
 
         self.download_btn = QPushButton("Download")
@@ -716,6 +701,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.signals.update_status.connect(self.status_label.setText)
         self.signals.update_progress.connect(self.update_progress_bar)
 
+        # Connect new signals
+        self.signals.playlist_info_label_visible.connect(self.playlist_info_label.setVisible)
+        self.signals.playlist_info_label_text.connect(self.playlist_info_label.setText)
+        self.signals.selected_subs_label_text.connect(self.selected_subs_label.setText)
+        self.signals.playlist_select_btn_visible.connect(self.playlist_select_btn.setVisible)
+        self.signals.playlist_select_btn_text.connect(self.playlist_select_btn.setText)
+
     def analyze_url(self) -> None:
         url = self.url_input.text().strip()
         if not url:
@@ -793,9 +785,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         self.is_playlist = True
                         self.playlist_info = basic_info
                         self.selected_playlist_items = None  # Reset selection for new playlist
-                        self.playlist_entries = [
-                            entry for entry in basic_info.get("entries", []) if entry
-                        ]  # Store entries
+                        self.playlist_entries = [entry for entry in basic_info.get("entries", []) if entry]  # Store entries
 
                         # Ensure there are entries before proceeding
                         if not self.playlist_entries:
@@ -810,41 +800,22 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                             # Use the ydl_detail instance with no_warnings
                             self.video_info = ydl_detail.extract_info(first_video_url, download=False)
                         except Exception as first_video_error:
-                            raise Exception(
-                                f"Failed to extract info for the first playlist video: {first_video_error}"
-                            )
+                            raise Exception(f"Failed to extract info for the first playlist video: {first_video_error}")
 
                         # Update playlist info label text (remains the same)
                         playlist_text = (
-                            f"Playlist: {basic_info.get('title', 'Unknown Playlist')} | "
-                            f"{len(self.playlist_entries)} videos"
+                            f"Playlist: {basic_info.get('title', 'Unknown Playlist')} | " f"{len(self.playlist_entries)} videos"
                         )  # Simplified label
-                        QMetaObject.invokeMethod(
-                            self.playlist_info_label,
-                            b"setText",
-                            Qt.ConnectionType.QueuedConnection,
-                            Q_ARG(str, playlist_text),
-                        )
-                        QMetaObject.invokeMethod(
-                            self.playlist_info_label,
-                            b"setVisible",
-                            Qt.ConnectionType.QueuedConnection,
-                            Q_ARG(bool, True),
-                        )
+
+                        # update signal method from QMetaObject.invokeMethod to signals
+                        self.signals.playlist_info_label_text.emit(playlist_text)
+                        self.signals.playlist_info_label_visible.emit(True)
 
                         # Show playlist selection BUTTON
-                        QMetaObject.invokeMethod(
-                            self,  # Target object is the YTSageApp instance
-                            b"update_playlist_button_text",  # Name of the slot
-                            Qt.ConnectionType.QueuedConnection,
-                            Q_ARG(str, "Select Videos... (All selected)"),  # Argument for the slot
-                        )
-                        QMetaObject.invokeMethod(
-                            self.playlist_select_btn,
-                            b"setVisible",
-                            Qt.ConnectionType.QueuedConnection,
-                            Q_ARG(bool, True),
-                        )
+                        # update signal method from QMetaObject.invokeMethod to signals
+                        self.signals.playlist_select_btn_text.emit("Select Videos... (All selected)")
+                        self.signals.playlist_select_btn_visible.emit(True)
+
                     else:  # Single video
                         self.is_playlist = False
                         # Use ydl_detail instance here too for consistency
@@ -853,24 +824,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         self.selected_playlist_items = None  # Clear selection
 
                         # Hide playlist info label and button
-                        QMetaObject.invokeMethod(
-                            self.playlist_info_label,
-                            b"setVisible",
-                            Qt.ConnectionType.QueuedConnection,
-                            Q_ARG(bool, False),
-                        )
-                        QMetaObject.invokeMethod(
-                            self.playlist_select_btn,
-                            b"setVisible",
-                            Qt.ConnectionType.QueuedConnection,
-                            Q_ARG(bool, False),
-                        )
+                        # update signal method from QMetaObject.invokeMethod to signals
+                        self.signals.playlist_info_label_visible.emit(False)
+                        self.signals.playlist_select_btn_visible.emit(False)
 
                     # Verify we have format information
                     if not self.video_info or "formats" not in self.video_info:
-                        self.logger.debug(
-                            f"video_info keys: {self.video_info.keys() if self.video_info else 'None'}"
-                        )
+                        self.logger.debug(f"video_info keys: {self.video_info.keys() if self.video_info else 'None'}")
                         raise Exception("No format information available")
 
                     self.signals.update_status.emit("Analyzing (60%)... Processing formats")
@@ -883,9 +843,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     self.signals.update_status.emit("Analyzing (75%)... Loading thumbnail")
                     # Try to get thumbnail from playlist info first
                     # Fallback to video thumbnail if playlist thumbnail not found or not a playlist
-                    thumbnail_url = (self.playlist_info or {}).get("thumbnail") or (
-                        self.video_info or {}
-                    ).get("thumbnail")
+                    thumbnail_url = (self.playlist_info or {}).get("thumbnail") or (self.video_info or {}).get("thumbnail")
 
                     self.download_thumbnail(thumbnail_url)
 
@@ -902,15 +860,24 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     self.available_subtitles = self.video_info.get("subtitles", {})
                     self.available_automatic_subtitles = self.video_info.get("automatic_captions", {})
                     # Update the UI elements related to subtitle selection state
-                    QMetaObject.invokeMethod(
-                        self.selected_subs_label,
-                        b"setText",
-                        Qt.ConnectionType.QueuedConnection,
-                        Q_ARG(str, "0 selected"),
-                    )
-                    # QMetaObject.invokeMethod(self.subtitle_select_btn, "setProperty", Qt.ConnectionType.QueuedConnection, Q_ARG(str, "subtitlesSelected"), Q_ARG(bool, False)) # <-- COMMENT OUT THIS LINE
+                    # update signal method from QMetaObject.invokeMethod to signals
+                    self.signals.selected_subs_label_text.emit("0 selected")
+
+                    # QMetaObject.invokeMethod(
+                    #     self.subtitle_select_btn,
+                    #     b"setProperty",
+                    #     Qt.ConnectionType.QueuedConnection,
+                    #     Q_ARG(str, b"subtitlesSelected"),
+                    #     Q_ARG(bool, False),
+                    # )  # <-- COMMENT OUT THIS LINE
+
                     # REMOVE the merge_subs_checkbox update call from here
-                    # QMetaObject.invokeMethod(self.merge_subs_checkbox, "setEnabled", Qt.ConnectionType.QueuedConnection, Q_ARG(bool, False))
+                    # QMetaObject.invokeMethod(
+                    #     self.merge_subs_checkbox,
+                    #     b"setEnabled",
+                    #     Qt.ConnectionType.QueuedConnection,
+                    #     Q_ARG(bool, False),
+                    # )
 
                     # Update format table
                     self.signals.update_status.emit("Analyzing (95%)... Updating format table")
@@ -925,21 +892,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     raise Exception(f"Failed to extract video details: {str(e)}")
 
         except Exception as e:
-            self.logger.error("Error in analysis: {}",e, exc_info=True)
+            self.logger.error(f"Error in analysis: {e}", exc_info=True)
             self.signals.update_status.emit(f"Error: {e}")
             # Ensure playlist UI is hidden on error too
-            QMetaObject.invokeMethod(
-                self.playlist_info_label,
-                b"setVisible",
-                Qt.ConnectionType.QueuedConnection,
-                Q_ARG(bool, False),
-            )
-            QMetaObject.invokeMethod(
-                self.playlist_select_btn,
-                b"setVisible",
-                Qt.ConnectionType.QueuedConnection,
-                Q_ARG(bool, False),
-            )
+            # update signal method from QMetaObject.invokeMethod to signals
+            self.signals.playlist_info_label_visible.emit(False)
+            self.signals.playlist_select_btn_visible.emit(False)
 
     def paste_url(self) -> None:
         clipboard = QApplication.clipboard()
@@ -953,9 +911,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         dialog.show()  # Use show() instead of exec() to avoid blocking
 
     def show_download_settings_dialog(self) -> None:  # Renamed method
-        dialog = DownloadSettingsDialog(
-            self.last_path, self.speed_limit_value, self.speed_limit_unit_index, self
-        )
+        dialog = DownloadSettingsDialog(self.last_path, self.speed_limit_value, self.speed_limit_unit_index, self)
         if dialog.exec():
             # Update Path
             new_path = dialog.get_selected_path()
@@ -1162,9 +1118,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # Compare versions
             if version.parse(latest_version) > version.parse(self.version):
                 changelog = latest_release.get("body", "No changelog available.")  # Get changelog body
-                self.show_update_dialog(
-                    latest_version, latest_release["html_url"], changelog
-                )  # Pass changelog
+                self.show_update_dialog(latest_version, latest_release["html_url"], changelog)  # Pass changelog
         except Exception as e:
             self.logger.error(f"Failed to check for updates: {str(e)}", exc_info=True)
 
@@ -1180,10 +1134,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 msg.setWindowIcon(self.windowIcon())
             else:
                 # Fallback to icon file
-                icon_path = Path(__file__).resolve().parent.parent.parent / "assets" / "Icon" / "icon.png"
-
-                if icon_path.exists():
-                    msg.setWindowIcon(QIcon(icon_path.as_posix()))
+                # icon_path logic moved to src\utils\ytsage_constants.py
+                if ICON_PATH.exists():
+                    msg.setWindowIcon(QIcon(ICON_PATH.as_posix()))
         except Exception:
             pass
 
@@ -1543,21 +1496,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 selected_indices = dialog._parse_selection_string(self.selected_playlist_items)
                 count = len(selected_indices)
                 display_text = (
-                    self.selected_playlist_items
-                    if len(self.selected_playlist_items) < 30
-                    else f"{count} videos selected"
+                    self.selected_playlist_items if len(self.selected_playlist_items) < 30 else f"{count} videos selected"
                 )
                 button_text = f"Select Videos... ({display_text})"
             self.playlist_select_btn.setText(button_text)  # Direct call is fine here
 
     # --- New Slot for Updating Playlist Button Text ---
-    @Slot(str)
-    def update_playlist_button_text(self, text) -> None:
-        """Safely updates the playlist selection button's text from any thread."""
-        if hasattr(self, "playlist_select_btn"):
-            self.playlist_select_btn.setText(text)
-
-    # --- End New Slot ---
+    # moved to SignalManager as Signal and added to init_ui() method.
 
     def toggle_download_controls(self, enabled=True) -> None:
         """Enable or disable download-related controls"""
@@ -1737,21 +1682,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 cmd.extend(["--cookies", self.cookie_file_path])
 
             # Execute command with hidden console window on Windows
-            if sys.platform == "win32":
-                # Hide the console window on Windows
-                startupinfo = subprocess.STARTUPINFO()
-                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                startupinfo.wShowWindow = subprocess.SW_HIDE
-                result = subprocess.run(
-                    cmd,
-                    capture_output=True,
-                    text=True,
-                    timeout=60,
-                    startupinfo=startupinfo,
-                )
-            else:
-                # For other platforms, use normal subprocess call
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            # Extra logic moved to src\utils\ytsage_constants.py
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60, creationflags=SUBPROCESS_CREATIONFLAGS)
 
             if result.returncode != 0:
                 raise Exception(f"yt-dlp failed: {result.stderr}")
@@ -1791,35 +1723,19 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
                 # Update playlist info label
                 playlist_text = (
-                    f"Playlist: {first_info.get('title', 'Unknown Playlist')} | "
-                    f"{len(self.playlist_entries)} videos"
+                    f"Playlist: {first_info.get('title', 'Unknown Playlist')} | " f"{len(self.playlist_entries)} videos"
                 )
-                QMetaObject.invokeMethod(
-                    self.playlist_info_label,
-                    b"setText",
-                    Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(str, playlist_text),
-                )
-                QMetaObject.invokeMethod(
-                    self.playlist_info_label,
-                    b"setVisible",
-                    Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(bool, True),
-                )
+                # update signal method from QMetaObject.invokeMethod to signals
+                self.signals.playlist_info_label_text.emit(playlist_text)
+                self.signals.playlist_info_label_visible.emit(True)
 
                 # Show playlist selection button
-                QMetaObject.invokeMethod(
-                    self,
-                    b"update_playlist_button_text",
-                    Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(str, "Select Videos... (All selected)"),
-                )
-                QMetaObject.invokeMethod(
-                    self.playlist_select_btn,
-                    b"setVisible",
-                    Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(bool, True),
-                )
+                # update signal method from QMetaObject.invokeMethod to signals
+                self.signals.playlist_select_btn_text.emit("Select Videos... (All selected)")
+
+                # update signal method from QMetaObject.invokeMethod to signals
+                self.signals.playlist_select_btn_visible.emit(True)
+
             else:
                 # Handle single video
                 self.is_playlist = False
@@ -1828,18 +1744,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 self.selected_playlist_items = None
 
                 # Hide playlist UI
-                QMetaObject.invokeMethod(
-                    self.playlist_info_label,
-                    b"setVisible",
-                    Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(bool, False),
-                )
-                QMetaObject.invokeMethod(
-                    self.playlist_select_btn,
-                    b"setVisible",
-                    Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(bool, False),
-                )
+                # update signal method from QMetaObject.invokeMethod to signals
+                self.signals.playlist_info_label_visible.emit(False)
+
+                # update signal method from QMetaObject.invokeMethod to signals
+                self.signals.playlist_select_btn_visible.emit(False)
 
             # Verify we have format information
             if not self.video_info or "formats" not in self.video_info:
@@ -1855,9 +1764,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.signals.update_status.emit("Analyzing (85%)... Loading thumbnail")
             # Try to get thumbnail from playlist info first
             # Fallback to video thumbnail if playlist thumbnail not found or not a playlist
-            thumbnail_url = (self.playlist_info or {}).get("thumbnail") or (self.video_info or {}).get(
-                "thumbnail"
-            )
+            thumbnail_url = (self.playlist_info or {}).get("thumbnail") or (self.video_info or {}).get("thumbnail")
 
             self.download_thumbnail(thumbnail_url)
 
@@ -1872,12 +1779,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.available_automatic_subtitles = self.video_info.get("automatic_captions", {})
 
             # Update subtitle UI
-            QMetaObject.invokeMethod(
-                self.selected_subs_label,
-                b"setText",
-                Qt.ConnectionType.QueuedConnection,
-                Q_ARG(str, "0 selected"),
-            )
+            # update signal method from QMetaObject.invokeMethod to signals
+            self.signals.selected_subs_label_text.emit("0 selected")
 
             # Update format table
             self.signals.update_status.emit("Analyzing (95%)... Updating format table")

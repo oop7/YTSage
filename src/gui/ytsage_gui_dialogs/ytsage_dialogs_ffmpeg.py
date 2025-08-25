@@ -13,6 +13,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 
 from src.core.ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
+from src.utils.ytsage_constants import ICON_PATH
 
 
 class FFmpegInstallThread(QThread):
@@ -45,15 +46,10 @@ class FFmpegCheckDialog(QDialog):
             self.setWindowIcon(parent.windowIcon())
         else:
             # Try to load the icon directly if parent not available
-            # Navigate from src/gui/dialogs/ to project root, then to assets/Icon/
-            current_dir = Path(__file__).resolve().parent  # dialogs/
-            gui_dir = current_dir.parent  # gui/
-            src_dir = gui_dir.parent  # src/
-            project_root = src_dir.parent  # project root
-            icon_path = project_root / "assets" / "Icon" / "icon.png"  # icon path
+            # icon_path logic moved to src\utils\ytsage_constants.py
 
-            if icon_path.exists():
-                self.setWindowIcon(QIcon(icon_path.as_posix()))
+            if ICON_PATH.exists():
+                self.setWindowIcon(QIcon(ICON_PATH.as_posix()))
 
         layout = QVBoxLayout(self)
         layout.setSpacing(15)

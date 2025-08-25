@@ -9,6 +9,7 @@ from PySide6.QtCore import QObject, QThread, Signal
 
 from src.core.ytsage_logging import logger
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
+from src.utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
 
 try:
     import yt_dlp  # Keep yt_dlp import here - only downloader uses it.
@@ -23,6 +24,11 @@ class SignalManager(QObject):
     update_formats = Signal(list)
     update_status = Signal(str)
     update_progress = Signal(float)
+    playlist_info_label_visible = Signal(bool)
+    playlist_info_label_text = Signal(str)
+    selected_subs_label_text = Signal(str)
+    playlist_select_btn_visible = Signal(bool)
+    playlist_select_btn_text = Signal(str)
 
 
 class DownloadThread(QThread):
@@ -393,10 +399,7 @@ class DownloadThread(QThread):
             self.progress_signal.emit(0)
 
             # Start the process
-            # Add creationflags=subprocess.CREATE_NO_WINDOW to hide console on Windows
-            creation_flags = 0
-            if os.name == "nt":  # Only use flag on Windows
-                creation_flags = subprocess.CREATE_NO_WINDOW
+            # Extra logic moved to src\utils\ytsage_constants.py
 
             self.process = subprocess.Popen(
                 cmd,
@@ -405,7 +408,7 @@ class DownloadThread(QThread):
                 text=True,
                 bufsize=1,  # Line buffered
                 universal_newlines=True,
-                creationflags=creation_flags,  # Add this flag
+                creationflags=SUBPROCESS_CREATIONFLAGS
             )
 
             # Process output line by line to update progress

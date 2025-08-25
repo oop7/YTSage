@@ -462,8 +462,6 @@ class AboutDialog(QDialog):
         self.refresh_btn.setEnabled(False)
 
         # Perform refresh in a separate thread to avoid blocking UI
-        from PySide6.QtCore import QThread, Signal
-
         class RefreshThread(QThread):
             finished = Signal(bool)
 

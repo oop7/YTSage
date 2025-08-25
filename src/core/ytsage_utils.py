@@ -12,7 +12,15 @@ from packaging import version
 
 from src.core.ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
 from src.core.ytsage_logging import logger
-from src.core.ytsage_yt_dlp import get_yt_dlp_path  # Import the new function to avoid import errors
+from src.core.ytsage_yt_dlp import get_yt_dlp_path
+from src.utils.ytsage_constants import (
+    APP_CONFIG_FILE,
+    OS_NAME,
+    SUBPROCESS_CREATIONFLAGS,
+    USER_HOME_DIR,
+    YTDLP_APP_BIN_PATH,
+    YTDLP_DOWNLOAD_URL,
+)
 
 # Cache for version information to avoid delays
 _version_cache = {
@@ -183,19 +191,9 @@ def get_ytdlp_version_direct(yt_dlp_path=None) -> str:
         if not yt_dlp_path or yt_dlp_path == "yt-dlp":
             return "Not found"
 
-        # Create startupinfo to hide console on Windows
-        startupinfo = None
-        if sys.platform == "win32" and hasattr(subprocess, "STARTUPINFO"):
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            startupinfo.wShowWindow = 0  # SW_HIDE
-
+        # Extra logic moved to src\utils\ytsage_constants.py
         result = subprocess.run(
-            [yt_dlp_path, "--version"],
-            capture_output=True,
-            text=True,
-            timeout=10,
-            startupinfo=startupinfo,
+            [yt_dlp_path, "--version"], capture_output=True, text=True, timeout=10, creationflags=SUBPROCESS_CREATIONFLAGS
         )
 
         if result.returncode == 0:
@@ -210,19 +208,9 @@ def get_ytdlp_version_direct(yt_dlp_path=None) -> str:
 def get_ffmpeg_version_direct() -> str:
     """Get FFmpeg version directly without caching."""
     try:
-        # Create startupinfo to hide console on Windows
-        startupinfo = None
-        if sys.platform == "win32" and hasattr(subprocess, "STARTUPINFO"):
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            startupinfo.wShowWindow = 0  # SW_HIDE
-
+        # Extra logic moved to src\utils\ytsage_constants.py
         result = subprocess.run(
-            ["ffmpeg", "-version"],
-            capture_output=True,
-            text=True,
-            timeout=10,
-            startupinfo=startupinfo,
+            ["ffmpeg", "-version"], capture_output=True, text=True, timeout=10, creationflags=SUBPROCESS_CREATIONFLAGS
         )
 
         if result.returncode == 0:
@@ -244,18 +232,14 @@ def get_ffmpeg_version_direct() -> str:
         # If ffmpeg is not in PATH, try the installation directory
         try:
             ffmpeg_path = get_ffmpeg_install_path()
-            if sys.platform == "win32":
+            if OS_NAME == "Windows":
                 ffmpeg_exe = Path(ffmpeg_path).joinpath("ffmpeg.exe")
             else:
                 ffmpeg_exe = Path(ffmpeg_path).joinpath("ffmpeg")
 
             if ffmpeg_exe.exists():
                 result = subprocess.run(
-                    [ffmpeg_exe, "-version"],
-                    capture_output=True,
-                    text=True,
-                    timeout=10,
-                    startupinfo=startupinfo,
+                    [ffmpeg_exe, "-version"], capture_output=True, text=True, timeout=10, creationflags=SUBPROCESS_CREATIONFLAGS
                 )
 
                 if result.returncode == 0:
@@ -278,36 +262,15 @@ def get_ffmpeg_version_direct() -> str:
         return "Error getting version"
 
 
-def get_app_data_dir() -> Path:
-    """Get the OS-specific application data directory."""
-    if sys.platform == "win32":
-        # Windows: %LOCALAPPDATA%\YTSage\data\
-        return Path(os.environ.get("LOCALAPPDATA", "")) / "YTSage" / "data"
-    elif sys.platform == "darwin":
-        # macOS: ~/Library/Application Support/YTSage/data/
-        return Path.home() / "Library" / "Application Support" / "YTSage" / "data"
-    else:
-        # Linux: ~/.local/share/YTSage/data/
-        return Path.home() / ".local" / "share" / "YTSage" / "data"
-
-
-def get_config_file_path() -> Path:
-    """Get the path to the main configuration file."""
-    return get_app_data_dir() / "ytsage_config.json"
-
-
-def ensure_app_data_dir() -> Path:
-    """Ensure the application data directory exists."""
-    data_dir = get_app_data_dir()
-    data_dir.mkdir(parents=True, exist_ok=True)
-    return data_dir
+# get_app_data_dir() moved to src\utils\ytsage_constants.py
+# get_config_file_path() moved to src\utils\ytsage_constants.py
+# ensure_app_data_dir() moved to src\utils\ytsage_constants.py
 
 
 def load_config() -> dict:
     """Load the application configuration from file."""
-    config_file = get_config_file_path()
     default_config = {
-        "download_path": str(Path.home() / "Downloads"),
+        "download_path": str(USER_HOME_DIR / "Downloads"),
         "speed_limit_value": None,
         "speed_limit_unit_index": 0,
         "cookie_file_path": None,
@@ -322,8 +285,8 @@ def load_config() -> dict:
     }
 
     try:
-        if config_file.exists():
-            with open(config_file, "r", encoding="utf-8") as f:
+        if APP_CONFIG_FILE.exists():
+            with open(APP_CONFIG_FILE, "r", encoding="utf-8") as f:
                 config = json.load(f)
                 # Merge with defaults to ensure all keys exist
                 for key, value in default_config.items():
@@ -340,12 +303,8 @@ def load_config() -> dict:
 
 def save_config(config) -> bool:
     """Save the application configuration to file."""
-    config_file = get_config_file_path()
     try:
-        # Ensure the config directory exists
-        ensure_app_data_dir()
-
-        with open(config_file, "w", encoding="utf-8") as f:
+        with open(APP_CONFIG_FILE, "w", encoding="utf-8") as f:
             json.dump(config, f, ensure_ascii=False, indent=2)
         return True
     except Exception as e:
@@ -361,7 +320,7 @@ def check_ffmpeg() -> bool:
             return True
 
         # For Windows, try to add the FFmpeg path to environment
-        if sys.platform == "win32":
+        if OS_NAME == "Windows":
             ffmpeg_path = get_ffmpeg_install_path()
             if ffmpeg_path.joinpath("ffmpeg.exe").exists():
                 try:
@@ -373,7 +332,7 @@ def check_ffmpeg() -> bool:
                     return False
 
         # For macOS, check common paths
-        elif sys.platform == "darwin":
+        elif OS_NAME == "Darwin":
             common_paths = [
                 "/usr/local/bin/ffmpeg",
                 "/opt/homebrew/bin/ffmpeg",
@@ -398,11 +357,10 @@ def check_ffmpeg() -> bool:
 
 def load_saved_path(main_window_instance) -> None:
     """Load saved download path with enhanced error handling."""
-    config_file = get_config_file_path()
     try:
-        if config_file.exists():
+        if APP_CONFIG_FILE.exists():
             try:
-                with open(config_file, "r", encoding="utf-8") as f:
+                with open(APP_CONFIG_FILE, "r", encoding="utf-8") as f:
                     config = json.load(f)
                     saved_path = config.get("download_path", "")
                     if Path(saved_path).exists() and os.access(saved_path, os.W_OK):
@@ -412,12 +370,12 @@ def load_saved_path(main_window_instance) -> None:
                 logger.error(f"Error reading config file: {e}")
                 # If config file is corrupted, try to remove it
                 try:
-                    config_file.unlink(missing_ok=True)
+                    APP_CONFIG_FILE.unlink(missing_ok=True)
                 except Exception:
                     pass
 
         # Fallback to Downloads folder
-        downloads_path = Path.home() / "Downloads"
+        downloads_path = USER_HOME_DIR / "Downloads"
         if downloads_path.exists() and os.access(downloads_path, os.W_OK):
             main_window_instance.last_path = downloads_path
         else:
@@ -431,7 +389,6 @@ def load_saved_path(main_window_instance) -> None:
 
 def save_path(main_window_instance, path) -> bool:
     """Save download path with enhanced error handling."""
-    config_file = get_config_file_path()
     try:
         # Verify the path is valid and writable
         if not Path(path).exists():
@@ -445,12 +402,9 @@ def save_path(main_window_instance, path) -> bool:
             logger.info("Path is not writable")
             return False
 
-        # Ensure the config directory exists
-        ensure_app_data_dir()
-
         # Save the config
         config = {"download_path": path}
-        with open(config_file, "w", encoding="utf-8") as f:
+        with open(APP_CONFIG_FILE, "w", encoding="utf-8") as f:
             json.dump(config, f, ensure_ascii=False)
         return True
 
@@ -465,33 +419,19 @@ def update_yt_dlp() -> bool:
         # Get the yt-dlp path
         yt_dlp_path = get_yt_dlp_path()
 
-        # Create startupinfo to hide console on Windows
-        startupinfo = None
-        if sys.platform == "win32" and hasattr(subprocess, "STARTUPINFO"):
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            startupinfo.wShowWindow = 0  # SW_HIDE
+        # Extra logic moved to src\utils\ytsage_constants.py
 
         # For binaries downloaded with our app, use direct binary update approach
-        if yt_dlp_path.parent in [
-            Path.home() / "AppData" / "Local" / "YTSage" / "bin",  # Windows LOCALAPPDATA
-            Path.home() / "Library" / "Application Support" / "YTSage" / "bin",  # macOS
-            Path.home() / ".local" / "share" / "YTSage" / "bin",  # Linux
-        ]:
+        if yt_dlp_path.samefile(YTDLP_APP_BIN_PATH):
             # We're using a binary installed by our app, update directly
             logger.info(f"Updating yt-dlp binary at {yt_dlp_path}")
 
             # Determine the URL based on OS
-            if sys.platform == "win32":
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
-            elif sys.platform == "darwin":
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
-            else:
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
+            # Extra logic moved to src\utils\ytsage_constants.py
 
             # Download the latest version
             try:
-                response = requests.get(url, stream=True)
+                response = requests.get(YTDLP_DOWNLOAD_URL, stream=True)
                 if response.status_code == 200:
                     # Create a temporary file
                     temp_file = f"{yt_dlp_path}.new"
@@ -501,13 +441,13 @@ def update_yt_dlp() -> bool:
                             f.write(chunk)
 
                     # Make executable on Unix systems
-                    if sys.platform != "win32":
+                    if OS_NAME != "Windows":
                         os.chmod(temp_file, 0o755)
 
                     # Replace the old file with the new one
                     try:
                         # On Windows, we need to remove the old file first
-                        if sys.platform == "win32" and yt_dlp_path.exists():
+                        if OS_NAME == "Windows" and yt_dlp_path.exists():
                             yt_dlp_path.unlink(missing_ok=True)
 
                         Path(temp_file).rename(yt_dlp_path)
@@ -557,7 +497,7 @@ def update_yt_dlp() -> bool:
                             capture_output=True,
                             text=True,
                             check=False,
-                            startupinfo=startupinfo,
+                            creationflags=SUBPROCESS_CREATIONFLAGS,
                         )
                         if update_result.returncode == 0:
                             logger.info("yt-dlp successfully updated")

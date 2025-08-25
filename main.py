@@ -5,7 +5,6 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from src.core.ytsage_logging import logger
 from src.core.ytsage_yt_dlp import (  # Import the new yt-dlp setup functions
     check_ytdlp_binary,
-    get_ytdlp_executable_path,
     setup_ytdlp,
 )
 from src.gui.ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
@@ -26,7 +25,6 @@ def main():
         app = QApplication(sys.argv)
 
         # Get the expected binary path and check if it exists
-        expected_path = get_ytdlp_executable_path()
         if not check_ytdlp_binary():
             # No app-specific binary found, show setup dialog regardless of Python package
             logger.warning("No yt-dlp binary found, starting setup process")

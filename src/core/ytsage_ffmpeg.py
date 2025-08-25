@@ -14,18 +14,14 @@ from src.utils.ytsage_constants import (
     FFMPEG_7Z_SHA256_URL,
     FFMPEG_ZIP_DOWNLOAD_URL,
     OS_NAME,
+    SUBPROCESS_CREATIONFLAGS,
 )
 
 
 def check_7zip_installed() -> bool:
     """Check if 7-Zip is installed on Windows."""
     try:
-        subprocess.run(
-            ["7z", "--help"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0,
-        )
+        subprocess.run(["7z", "--help"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=SUBPROCESS_CREATIONFLAGS)
         return True
     except (subprocess.SubprocessError, FileNotFoundError):
         return False
@@ -91,10 +87,10 @@ def verify_sha256(file_path, expected_hash_url) -> bool:
 
 def get_ffmpeg_install_path() -> Path:
     """Get the FFmpeg installation path."""
-    if sys.platform == "win32":
+    if OS_NAME == "Windows":
         return Path(os.getenv("LOCALAPPDATA")) / "ffmpeg" / "ffmpeg-7.1.1-full_build" / "bin"  # type: ignore
 
-    elif sys.platform == "darwin":
+    elif OS_NAME == "Darwin":
         paths = ["/usr/local/bin", "/opt/homebrew/bin", "/usr/bin"]
         for path in paths:
             if Path(path).joinpath("ffmpeg").exists():
@@ -112,20 +108,16 @@ def get_ffmpeg_path() -> str | Path:
     """
     try:
         # First try to find ffmpeg in PATH using 'where' on Windows or 'which' on Unix
-        if sys.platform == "win32":
+        if OS_NAME == "Windows":
             # On Windows, use 'where' command and hide console window
-            startupinfo = None
-            if hasattr(subprocess, "STARTUPINFO"):
-                startupinfo = subprocess.STARTUPINFO()
-                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                startupinfo.wShowWindow = 0  # SW_HIDE
+            # Extra logic moved to src\utils\ytsage_constants.py
 
             result = subprocess.run(
                 ["where", "ffmpeg"],
                 capture_output=True,
                 text=True,
                 check=False,
-                startupinfo=startupinfo,
+                creationflags=SUBPROCESS_CREATIONFLAGS,
             )
             if result.returncode == 0 and result.stdout.strip():
                 ffmpeg_path = result.stdout.strip().split("\n")[0]
@@ -141,7 +133,7 @@ def get_ffmpeg_path() -> str | Path:
 
     # If not found in PATH, check the installation directory
     ffmpeg_install_path = get_ffmpeg_install_path()
-    if sys.platform == "win32":
+    if OS_NAME == "Windows":
         ffmpeg_exe = Path(ffmpeg_install_path).joinpath("ffmpeg.exe")
     else:
         ffmpeg_exe = Path(ffmpeg_install_path).joinpath("ffmpeg")
@@ -162,14 +154,14 @@ def check_ffmpeg_installed() -> bool:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=True,
-            creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0,
+            creationflags=SUBPROCESS_CREATIONFLAGS,
             timeout=5,
         )  # Added timeout
         return True
     except (subprocess.SubprocessError, FileNotFoundError):
         # If not in PATH, check the installation directory
         ffmpeg_path = get_ffmpeg_install_path()
-        if sys.platform == "win32":
+        if OS_NAME == "Windows":
             ffmpeg_exe = Path(ffmpeg_path).joinpath("ffmpeg.exe")
         else:
             ffmpeg_exe = Path(ffmpeg_path).joinpath("ffmpeg")
@@ -224,7 +216,7 @@ def install_ffmpeg_windows() -> bool:
                     try:
                         subprocess.run(
                             ["7z", "x", temp_file, f"-o{extract_dir}", "-y"],
-                            creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
+                            creationflags=SUBPROCESS_CREATIONFLAGS,
                             timeout=300,
                         )  # 5-minute timeout
                     except Exception as e:
@@ -262,7 +254,7 @@ def install_ffmpeg_windows() -> bool:
         if str(bin_dir) not in user_path.split(os.pathsep):
             subprocess.run(
                 ["setx", "PATH", f"{user_path};{bin_dir}"],
-                creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
+                creationflags=SUBPROCESS_CREATIONFLAGS,
             )
             os.environ["PATH"] = f"{user_path};{bin_dir}"
 
@@ -360,5 +352,5 @@ def auto_install_ffmpeg() -> bool:
     elif OS_NAME == "Linux":
         return install_ffmpeg_linux()
     else:
-        logger.info(f"Unsupported operating system: {sys.platform}")
+        logger.info(f"Unsupported operating system: {OS_NAME}")
         return False

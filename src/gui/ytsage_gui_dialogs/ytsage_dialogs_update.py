@@ -10,7 +10,6 @@ import time
 from pathlib import Path
 
 import requests
-import yt_dlp.version
 from packaging import version
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushButton, QVBoxLayout
@@ -18,6 +17,7 @@ from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushB
 from src.core.ytsage_logging import logger
 from src.core.ytsage_utils import get_ytdlp_version, load_config, save_config
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
+from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH, YTDLP_DOWNLOAD_URL
 
 try:
     import yt_dlp
@@ -46,22 +46,12 @@ class VersionCheckThread(QThread):
                     capture_output=True,
                     text=True,
                     timeout=30,  # 30 second timeout
-                    startupinfo=(
-                        None
-                        if sys.platform != "win32"
-                        else subprocess.STARTUPINFO(
-                            dwFlags=subprocess.STARTF_USESHOWWINDOW,
-                            wShowWindow=subprocess.SW_HIDE,
-                        )
-                    ),
-                    creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
+                    creationflags=SUBPROCESS_CREATIONFLAGS,
                 )
                 if result.returncode == 0:
                     current_version = result.stdout.strip()
                 else:  # Try fallback if command failed
                     if YT_DLP_AVAILABLE:
-                        import yt_dlp
-
                         current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
                     else:
                         error_message = "yt-dlp not available."
@@ -116,44 +106,31 @@ class UpdateThread(QThread):
             # Get the yt-dlp path
             try:
                 yt_dlp_path = get_yt_dlp_path()
-                self.update_status.emit(f"📍 Found yt-dlp at: {yt_dlp_path.name}")
+                self.update_status.emit(f"📍 Found yt-dlp at: {yt_dlp_path}")
             except Exception as e:
                 self.update_status.emit(f"❌ Error getting yt-dlp path: {e}")
                 self.update_finished.emit(False, f"❌ Error getting yt-dlp path: {e}")
                 return
 
-            # Create startupinfo to hide console on Windows
-            startupinfo = None
-            if sys.platform == "win32" and hasattr(subprocess, "STARTUPINFO"):
-                startupinfo = subprocess.STARTUPINFO()
-                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                startupinfo.wShowWindow = 0  # SW_HIDE
+            # Extra logic moved to src\utils\ytsage_constants.py
 
             self.update_progress.emit(20)
 
-            # Check if we're using an app-managed binary or system installation
-            app_managed_dirs = [
-                Path(os.environ.get("LOCALAPPDATA", "")) / "YTSage" / "bin",
-                Path.home() / "Library" / "Application Support" / "YTSage" / "bin",
-                Path.home() / ".local" / "share" / "YTSage" / "bin",
-            ]
-
-            is_app_managed = any(yt_dlp_path.parent == dir_path for dir_path in app_managed_dirs)
+            # Extra logic moved to src\utils\ytsage_constants.py
+            is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
 
             if is_app_managed:
                 self.update_status.emit("📦 Updating app-managed yt-dlp binary...")
                 success = self._update_binary(yt_dlp_path)
             else:
                 self.update_status.emit("🐍 Updating system yt-dlp via pip...")
-                success = self._update_via_pip(startupinfo)
+                success = self._update_via_pip()
 
             if success:
                 self.update_progress.emit(100)
                 error_message = "✅ yt-dlp has been successfully updated!"
             else:
-                error_message = (
-                    "❌ Failed to update yt-dlp. Please try again or check your internet connection."
-                )
+                error_message = "❌ Failed to update yt-dlp. Please try again or check your internet connection."
 
         except requests.RequestException as e:
             error_message = f"❌ Network error during update: {str(e)}"
@@ -173,18 +150,13 @@ class UpdateThread(QThread):
             self.update_progress.emit(30)
 
             # Determine the URL based on OS
-            if sys.platform == "win32":
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
-            elif sys.platform == "darwin":
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
-            else:
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
+            # Extra logic moved to src\utils\ytsage_constants.py
 
             self.update_status.emit("⬇️ Downloading latest yt-dlp binary...")
             self.update_progress.emit(40)
 
             # Download with progress tracking and timeout
-            response = requests.get(url, stream=True, timeout=30)
+            response = requests.get(YTDLP_DOWNLOAD_URL, stream=True, timeout=30)
             if response.status_code != 200:
                 self.update_status.emit(f"❌ Download failed: HTTP {response.status_code}")
                 return False
@@ -211,13 +183,13 @@ class UpdateThread(QThread):
             self.update_progress.emit(85)
 
             # Make executable on Unix systems
-            if sys.platform != "win32":
+            if OS_NAME != "Windows":
                 os.chmod(temp_file, 0o755)
 
             # Replace the old file with the new one
             try:
                 # On Windows, we need to remove the old file first
-                if sys.platform == "win32" and Path(yt_dlp_path).exists():
+                if OS_NAME == "Windows" and Path(yt_dlp_path).exists():
                     yt_dlp_path.unlink(missing_ok=True)
 
                 temp_file.rename(yt_dlp_path)
@@ -242,7 +214,7 @@ class UpdateThread(QThread):
             self.update_status.emit(f"❌ Binary update failed: {e}")
             return False
 
-    def _update_via_pip(self, startupinfo) -> bool:
+    def _update_via_pip(self) -> bool:
         """Update yt-dlp via pip."""
         try:
             import pkg_resources
@@ -287,7 +259,7 @@ class UpdateThread(QThread):
                         text=True,
                         check=False,
                         timeout=300,  # 5 minute timeout for pip install
-                        startupinfo=startupinfo,
+                        creationflags=SUBPROCESS_CREATIONFLAGS,
                     )
 
                     self.update_progress.emit(85)
@@ -500,11 +472,7 @@ class YTDLPUpdateDialog(QDialog):
             # Re-enable update button on failure after a short delay
             QTimer.singleShot(
                 3000,
-                lambda: (
-                    self.update_btn.setEnabled(True)
-                    if not (hasattr(self, "_closing") and self._closing)
-                    else None
-                ),
+                lambda: (self.update_btn.setEnabled(True) if not (hasattr(self, "_closing") and self._closing) else None),
             )
 
     def closeEvent(self, event) -> None:
@@ -538,9 +506,7 @@ class AutoUpdateThread(QThread):
             # Get current version
             current_version = get_ytdlp_version()
             if "Error" in current_version:
-                logger.warning(
-                    "AutoUpdateThread: Could not determine current yt-dlp version, skipping auto-update"
-                )
+                logger.warning("AutoUpdateThread: Could not determine current yt-dlp version, skipping auto-update")
                 self.update_finished.emit(False, "Could not determine current yt-dlp version")
                 return
 
@@ -559,9 +525,7 @@ class AutoUpdateThread(QThread):
 
                 # Compare versions
                 if version.parse(latest_version) > version.parse(current_version):
-                    logger.info(
-                        f"AutoUpdateThread: Auto-updating yt-dlp from {current_version} to {latest_version}..."
-                    )
+                    logger.info(f"AutoUpdateThread: Auto-updating yt-dlp from {current_version} to {latest_version}...")
 
                     # Perform the update
                     success = self._perform_update()
@@ -610,14 +574,9 @@ class AutoUpdateThread(QThread):
             # Get the yt-dlp path
             yt_dlp_path = get_yt_dlp_path()
 
-            # Check if we're using an app-managed binary or system installation
-            app_managed_dirs = [
-                Path(os.environ.get("LOCALAPPDATA", "")) / "YTSage" / "bin",
-                Path.home() / "Library" / "Application Support" / "YTSage" / "bin",
-                Path.home() / ".local" / "share" / "YTSage" / "bin",
-            ]
+            # Extra logic moved to src\utils\ytsage_constants.py
 
-            is_app_managed = any(yt_dlp_path.parent == dir_path for dir_path in app_managed_dirs)
+            is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
 
             if is_app_managed:
                 logger.info("AutoUpdateThread: Updating app-managed yt-dlp binary...")
@@ -631,59 +590,37 @@ class AutoUpdateThread(QThread):
             return False
 
     def _update_binary(self, yt_dlp_path: Path) -> bool:
-        """Update yt-dlp binary directly from GitHub releases (silent version)."""
+        """Update yt-dlp binary using its built-in updater."""
         try:
-            # Determine the URL based on OS
-            if sys.platform == "win32":
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
-            elif sys.platform == "darwin":
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
-            else:
-                url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
+            logger.info("AutoUpdateThread: Checking for yt-dlp updates...")
 
-            logger.info("AutoUpdateThread: Downloading latest yt-dlp binary...")
+            result = subprocess.run(
+                [yt_dlp_path, "-U"],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                creationflags=SUBPROCESS_CREATIONFLAGS,
+            )
 
-            # Download without progress tracking (silent)
-            response = requests.get(url, stream=True)
-            if response.status_code != 200:
-                logger.error(f"AutoUpdateThread: Download failed: HTTP {response.status_code}")
-                return False
+            if result.returncode == 0:
+                # Make executable on Unix systems
+                if OS_NAME != "Windows":
+                    os.chmod(yt_dlp_path, 0o755)
 
-            temp_file = yt_dlp_path.with_name(yt_dlp_path.name + ".new")
-
-            with open(temp_file, "wb") as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
-
-            logger.info("AutoUpdateThread: Installing updated binary...")
-
-            # Make executable on Unix systems
-            if sys.platform != "win32":
-                os.chmod(temp_file, 0o755)
-
-            # Replace the old file with the new one
-            try:
-                # On Windows, we need to remove the old file first
-                if sys.platform == "win32" and yt_dlp_path.exists():
-                    yt_dlp_path.unlink(missing_ok=True)
-
-                temp_file.rename(yt_dlp_path)
-                logger.info("AutoUpdateThread: Binary successfully updated!")
+                logger.info("AutoUpdateThread: yt-dlp update completed successfully.")
+                if result.stdout:
+                    logger.debug(f"yt-dlp output: {result.stdout.strip()}")
                 return True
-
-            except Exception as e:
-                logger.error(f"AutoUpdateThread: Error installing binary: {e}")
-                # Clean up temp file if it exists
-                if temp_file.exists():
-                    try:
-                        temp_file.unlink(missing_ok=True)
-                    except:
-                        pass
+            else:
+                logger.error(f"AutoUpdateThread: yt-dlp update failed. {result.stderr.strip()}")
                 return False
+
+        except subprocess.TimeoutExpired:
+            logger.error("AutoUpdateThread: yt-dlp update timed out.")
+            return False
 
         except Exception as e:
-            logger.error(f"AutoUpdateThread: Binary update failed: {e}", exc_info=True)
+            logger.error(f"AutoUpdateThread: Unexpected error during update: {e}", exc_info=True)
             return False
 
     def _update_via_pip(self) -> bool:
@@ -717,12 +654,7 @@ class AutoUpdateThread(QThread):
             if version.parse(latest_version) > version.parse(current_version):
                 logger.info(f"AutoUpdateThread: Updating from {current_version} to {latest_version}...")
 
-                # Create startupinfo to hide console on Windows
-                startupinfo = None
-                if sys.platform == "win32" and hasattr(subprocess, "STARTUPINFO"):
-                    startupinfo = subprocess.STARTUPINFO()
-                    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                    startupinfo.wShowWindow = 0  # SW_HIDE
+                # Extra logic moved to src\utils\ytsage_constants.py
 
                 # Run pip update
                 logger.info("AutoUpdateThread: Running pip install --upgrade...")
@@ -731,7 +663,7 @@ class AutoUpdateThread(QThread):
                     capture_output=True,
                     text=True,
                     check=False,
-                    startupinfo=startupinfo,
+                    creationflags=SUBPROCESS_CREATIONFLAGS,
                 )
 
                 if update_result.returncode == 0:
