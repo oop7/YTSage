@@ -1,14 +1,6 @@
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QColor
-from PySide6.QtWidgets import (
-    QCheckBox,
-    QHBoxLayout,
-    QHeaderView,
-    QSizePolicy,
-    QTableWidget,
-    QTableWidgetItem,
-    QWidget,
-)
+from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QHeaderView, QSizePolicy, QTableWidget, QTableWidgetItem, QWidget
 
 
 class FormatSignals(QObject):
@@ -143,13 +135,7 @@ class FormatTableMixin:
         filtered_formats = []
 
         if hasattr(self, "video_button") and self.video_button.isChecked():  # type: ignore[reportAttributeAccessIssue]
-<<<<<<< HEAD
             filtered_formats.extend([f for f in self.all_formats if f.get("vcodec") != "none" and f.get("filesize") is not None])
-=======
-            filtered_formats.extend(
-                [f for f in self.all_formats if f.get("vcodec") != "none" and f.get("filesize") is not None]
-            )
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
         if hasattr(self, "audio_button") and self.audio_button.isChecked():  # type: ignore[reportAttributeAccessIssue]
             filtered_formats.extend(

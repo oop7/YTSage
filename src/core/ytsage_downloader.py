@@ -208,14 +208,7 @@ class DownloadThread(QThread):
                         info = ydl.extract_info(self.url, download=False) or {}
                         for fmt in info.get("formats", []):
                             if fmt.get("format_id") == clean_format_id:
-<<<<<<< HEAD
                                 if fmt.get("vcodec") == "none" or "audio only" in fmt.get("format_note", "").lower():
-=======
-                                if (
-                                    fmt.get("vcodec") == "none"
-                                    or "audio only" in fmt.get("format_note", "").lower()
-                                ):
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
                                     is_audio_format = True
                                     logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
                                 break
@@ -234,9 +227,7 @@ class DownloadThread(QThread):
             if not is_audio_format:
                 try:
                     format_ext = None
-                    logger.debug(
-                        f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})"
-                    )
+                    logger.debug(f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
                     if YT_DLP_AVAILABLE:
                         ydl_opts = {
                             "quiet": True,
@@ -267,9 +258,7 @@ class DownloadThread(QThread):
                     pass
         else:
             # If no specific format ID, use resolution-based sorting (-S)
-            res_value = (
-                self.resolution if self.resolution else "720"
-            )  # Default to 720p if no resolution specified
+            res_value = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified
             cmd.extend(["-S", f"res:{res_value}"])
 
         # Output template with resolution in filename

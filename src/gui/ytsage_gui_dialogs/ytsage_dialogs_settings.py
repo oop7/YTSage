@@ -240,9 +240,7 @@ class DownloadSettingsDialog(QDialog):
         layout.addWidget(auto_update_group_box)
 
         # Dialog buttons (OK/Cancel)
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -413,9 +411,7 @@ class AutoUpdateSettingsDialog(QDialog):
         layout.addWidget(title_label)
 
         # Description
-        desc_label = QLabel(
-            "Configure automatic updates for yt-dlp to ensure you always have the latest features and bug fixes."
-        )
+        desc_label = QLabel("Configure automatic updates for yt-dlp to ensure you always have the latest features and bug fixes.")
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         desc_label.setStyleSheet("color: #cccccc; margin: 10px; font-size: 11px;")

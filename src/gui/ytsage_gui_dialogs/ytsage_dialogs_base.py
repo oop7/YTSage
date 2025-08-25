@@ -18,13 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_ffmpeg import get_ffmpeg_path
-from src.core.ytsage_utils import (
-    _version_cache,
-    check_ffmpeg,
-    get_ffmpeg_version,
-    get_ytdlp_version,
-    refresh_version_cache,
-)
+from src.core.ytsage_utils import _version_cache, check_ffmpeg, get_ffmpeg_version, get_ytdlp_version, refresh_version_cache
 from src.core.ytsage_yt_dlp import check_ytdlp_installed, get_yt_dlp_path
 
 
@@ -302,13 +296,7 @@ class AboutDialog(QDialog):
 
         self.status_container.addWidget(loading_label)
 
-<<<<<<< HEAD
     def _create_status_item(self, icon, name, status_text, version_text, path_text=None, cache_status="") -> QWidget:
-=======
-    def _create_status_item(
-        self, icon, name, status_text, version_text, path_text=None, cache_status=""
-    ) -> QWidget:
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         """Create a compact status item widget"""
         item_widget = QWidget()
         # Adjust height based on whether we have path info
@@ -355,9 +343,7 @@ class AboutDialog(QDialog):
         # Second row: Path (if provided)
         if path_text:
             path_label = QLabel(f"📁 {path_text}")
-            path_label.setStyleSheet(
-                "font-size: 10px; color: #aaaaaa; margin-left: 12px;"
-            )  # Increased from 9px, better color
+            path_label.setStyleSheet("font-size: 10px; color: #aaaaaa; margin-left: 12px;")  # Increased from 9px, better color
             path_label.setWordWrap(False)
             # Truncate very long paths
             if len(str(path_text)) > 60:
@@ -409,9 +395,7 @@ class AboutDialog(QDialog):
             from datetime import datetime
 
             cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
-            cache_status = (
-                f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
-            )
+            cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
 
         ytdlp_item = self._create_status_item(
             "🎥",
@@ -445,9 +429,7 @@ class AboutDialog(QDialog):
             from datetime import datetime
 
             cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
-            cache_status = (
-                f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
-            )
+            cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
 
         ffmpeg_item = self._create_status_item(
             "🎬",

@@ -29,16 +29,7 @@ from src.gui.ytsage_gui_dialogs.ytsage_dialogs_selection import (
     SubtitleSelectionDialog,
 )
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_settings import AutoUpdateSettingsDialog, DownloadSettingsDialog
-<<<<<<< HEAD
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import AutoUpdateThread, UpdateThread, VersionCheckThread, YTDLPUpdateDialog
-=======
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import (
-    AutoUpdateThread,
-    UpdateThread,
-    VersionCheckThread,
-    YTDLPUpdateDialog,
-)
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
 __all__ = [
     # Base dialogs
