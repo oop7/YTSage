@@ -1,14 +1,6 @@
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QColor
-from PySide6.QtWidgets import (
-    QCheckBox,
-    QHBoxLayout,
-    QHeaderView,
-    QSizePolicy,
-    QTableWidget,
-    QTableWidgetItem,
-    QWidget,
-)
+from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QHeaderView, QSizePolicy, QTableWidget, QTableWidgetItem, QWidget
 
 
 class FormatSignals(QObject):
@@ -45,19 +37,13 @@ class FormatTableMixin:
         self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)  # Quality
         self.format_table.setColumnWidth(1, 100)  # Quality width
 
-        self.format_table.horizontalHeader().setSectionResizeMode(
-            2, QHeaderView.ResizeMode.Fixed
-        )  # Extension
+        self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)  # Extension
         self.format_table.setColumnWidth(2, 80)  # Extension width
 
-        self.format_table.horizontalHeader().setSectionResizeMode(
-            3, QHeaderView.ResizeMode.Fixed
-        )  # Resolution
+        self.format_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)  # Resolution
         self.format_table.setColumnWidth(3, 100)  # Resolution width
 
-        self.format_table.horizontalHeader().setSectionResizeMode(
-            4, QHeaderView.ResizeMode.Fixed
-        )  # File Size
+        self.format_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)  # File Size
         self.format_table.setColumnWidth(4, 100)  # File Size width
 
         self.format_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)  # Codec
@@ -66,9 +52,7 @@ class FormatTableMixin:
         self.format_table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)  # Audio
         self.format_table.setColumnWidth(6, 120)  # Audio width
 
-        self.format_table.horizontalHeader().setSectionResizeMode(
-            7, QHeaderView.ResizeMode.Stretch
-        )  # Notes (will stretch)
+        self.format_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)  # Notes (will stretch)
 
         # Set vertical header (row numbers) visible to false
         self.format_table.verticalHeader().setVisible(False)
@@ -151,9 +135,7 @@ class FormatTableMixin:
         filtered_formats = []
 
         if hasattr(self, "video_button") and self.video_button.isChecked():  # type: ignore[reportAttributeAccessIssue]
-            filtered_formats.extend(
-                [f for f in self.all_formats if f.get("vcodec") != "none" and f.get("filesize") is not None]
-            )
+            filtered_formats.extend([f for f in self.all_formats if f.get("vcodec") != "none" and f.get("filesize") is not None])
 
         if hasattr(self, "audio_button") and self.audio_button.isChecked():  # type: ignore[reportAttributeAccessIssue]
             filtered_formats.extend(
@@ -306,14 +288,8 @@ class FormatTableMixin:
                 self.format_table.setItem(row, 2, QTableWidgetItem(f.get("ext", "").upper()))
 
             # Column 4 in playlist mode, Column 6 in normal mode: Audio Status
-            needs_audio = (
-                f.get("acodec") == "none" and f.get("vcodec") != "none"
-            )  # Only mark video-only as needing merge
-            audio_status = (
-                "Will merge audio"
-                if needs_audio
-                else ("✓ Has Audio" if f.get("vcodec") != "none" else "Audio Only")
-            )
+            needs_audio = f.get("acodec") == "none" and f.get("vcodec") != "none"  # Only mark video-only as needing merge
+            audio_status = "Will merge audio" if needs_audio else ("✓ Has Audio" if f.get("vcodec") != "none" else "Audio Only")
             audio_item = QTableWidgetItem(audio_status)
             if needs_audio:
                 audio_item.setForeground(QColor("#ffa500"))

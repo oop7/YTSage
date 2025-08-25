@@ -240,9 +240,7 @@ class DownloadSettingsDialog(QDialog):
         layout.addWidget(auto_update_group_box)
 
         # Dialog buttons (OK/Cancel)
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -413,9 +411,7 @@ class AutoUpdateSettingsDialog(QDialog):
         layout.addWidget(title_label)
 
         # Description
-        desc_label = QLabel(
-            "Configure automatic updates for yt-dlp to ensure you always have the latest features and bug fixes."
-        )
+        desc_label = QLabel("Configure automatic updates for yt-dlp to ensure you always have the latest features and bug fixes.")
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         desc_label.setStyleSheet("color: #cccccc; margin: 10px; font-size: 11px;")
@@ -616,9 +612,7 @@ class AutoUpdateSettingsDialog(QDialog):
                 self.next_check_label.setText("Next check: Now (overdue)")
             else:
                 next_check_datetime = datetime.fromtimestamp(next_check_time)
-                self.next_check_label.setText(
-                    f"Next check: {next_check_datetime.strftime('%Y-%m-%d %H:%M:%S')}"
-                )
+                self.next_check_label.setText(f"Next check: {next_check_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
 
         except Exception as e:
             self.next_check_label.setText("Next check: Error calculating")
@@ -745,7 +739,5 @@ class AutoUpdateSettingsDialog(QDialog):
                 msg_box.exec()
         except Exception as e:
             logger.error(f"Error saving auto-update settings: {e}")
-            msg_box = self._create_styled_message_box(
-                QMessageBox.Icon.Critical, "Error", f"❌ Error saving settings: {str(e)}"
-            )
+            msg_box = self._create_styled_message_box(QMessageBox.Icon.Critical, "Error", f"❌ Error saving settings: {str(e)}")
             msg_box.exec()

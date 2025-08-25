@@ -1,6 +1,5 @@
 import json
 import subprocess
-import sys
 import threading
 import webbrowser
 from pathlib import Path

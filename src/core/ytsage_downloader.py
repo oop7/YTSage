@@ -1,4 +1,3 @@
-import os
 import re
 import shlex  # For safely parsing command arguments
 import subprocess  # For direct CLI command execution
@@ -117,15 +116,11 @@ class DownloadThread(QThread):
             for f in self.subtitle_files or []:
                 deleted_count[0] += safe_delete(path=Path(f))
             else:
-                logger.debug(
-                    f"Deleted {deleted_count[0]} of {len(self.subtitle_files)} tracked subtitle files"
-                )
+                logger.debug(f"Deleted {deleted_count[0]} of {len(self.subtitle_files)} tracked subtitle files")
 
             # --- Method 2: Delete new subtitle files not in initial set ---
             new_subtitle_files = {
-                f
-                for f in Path(self.path).rglob("*")
-                if f.suffix in [".vtt", ".srt"] and f not in self.initial_subtitle_files
+                f for f in Path(self.path).rglob("*") if f.suffix in [".vtt", ".srt"] and f not in self.initial_subtitle_files
             }
             for subtitle_file in new_subtitle_files:
                 deleted_count[1] += safe_delete(path=subtitle_file)
@@ -208,10 +203,7 @@ class DownloadThread(QThread):
                         info = ydl.extract_info(self.url, download=False) or {}
                         for fmt in info.get("formats", []):
                             if fmt.get("format_id") == clean_format_id:
-                                if (
-                                    fmt.get("vcodec") == "none"
-                                    or "audio only" in fmt.get("format_note", "").lower()
-                                ):
+                                if fmt.get("vcodec") == "none" or "audio only" in fmt.get("format_note", "").lower():
                                     is_audio_format = True
                                     logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
                                 break
@@ -230,9 +222,7 @@ class DownloadThread(QThread):
             if not is_audio_format:
                 try:
                     format_ext = None
-                    logger.debug(
-                        f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})"
-                    )
+                    logger.debug(f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
                     if YT_DLP_AVAILABLE:
                         ydl_opts = {
                             "quiet": True,
@@ -263,9 +253,7 @@ class DownloadThread(QThread):
                     pass
         else:
             # If no specific format ID, use resolution-based sorting (-S)
-            res_value = (
-                self.resolution if self.resolution else "720"
-            )  # Default to 720p if no resolution specified
+            res_value = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified
             cmd.extend(["-S", f"res:{res_value}"])
 
         # Output template with resolution in filename
@@ -338,9 +326,7 @@ class DownloadThread(QThread):
             if self.force_keyframes:
                 cmd.append("--force-keyframes-at-cuts")
 
-            logger.debug(
-                f"Added download section: {self.download_section}, Force keyframes: {self.force_keyframes}"
-            )
+            logger.debug(f"Added download section: {self.download_section}, Force keyframes: {self.force_keyframes}")
 
         # Add the URL as the final argument
         cmd.append(self.url)
@@ -368,9 +354,7 @@ class DownloadThread(QThread):
                     for file in self.path.rglob("*"):
                         if file.suffix in {".vtt", ".srt"}:
                             self.initial_subtitle_files.add(file)
-                    logger.debug(
-                        f"Found {len(self.initial_subtitle_files)} existing subtitle files before download"
-                    )
+                    logger.debug(f"Found {len(self.initial_subtitle_files)} existing subtitle files before download")
                 except Exception as e:
                     logger.warning(f"Error scanning for initial subtitle files: {e}")
 
@@ -408,7 +392,7 @@ class DownloadThread(QThread):
                 text=True,
                 bufsize=1,  # Line buffered
                 universal_newlines=True,
-                creationflags=SUBPROCESS_CREATIONFLAGS
+                creationflags=SUBPROCESS_CREATIONFLAGS,
             )
 
             # Process output line by line to update progress

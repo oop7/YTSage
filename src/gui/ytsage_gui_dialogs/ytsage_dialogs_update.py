@@ -144,74 +144,42 @@ class UpdateThread(QThread):
         self.update_finished.emit(success, error_message)
 
     def _update_binary(self, yt_dlp_path: Path) -> bool:
-        """Update yt-dlp binary directly from GitHub releases."""
+        """Update yt-dlp binary using its built-in updater (same logic as AutoUpdateThread)."""
         try:
-            self.update_status.emit("🌐 Determining download URL...")
-            self.update_progress.emit(30)
+            logger.info("UpdateThread: Checking for yt-dlp updates...")
 
-            # Determine the URL based on OS
-            # Extra logic moved to src\utils\ytsage_constants.py
+            result = subprocess.run(
+                [yt_dlp_path, "-U"],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                creationflags=SUBPROCESS_CREATIONFLAGS,
+            )
 
-            self.update_status.emit("⬇️ Downloading latest yt-dlp binary...")
-            self.update_progress.emit(40)
+            if result.returncode == 0:
+                # Make executable on Unix systems
+                if OS_NAME != "Windows":
+                    os.chmod(yt_dlp_path, 0o755)
 
-            # Download with progress tracking and timeout
-            response = requests.get(YTDLP_DOWNLOAD_URL, stream=True, timeout=30)
-            if response.status_code != 200:
-                self.update_status.emit(f"❌ Download failed: HTTP {response.status_code}")
-                return False
-
-            total_size = int(response.headers.get("content-length", 0))
-            temp_file = yt_dlp_path.with_name(yt_dlp_path.name + ".new")
-
-            downloaded = 0
-
-            self.update_status.emit("💾 Downloading and saving binary...")
-
-            with open(temp_file, "wb") as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
-                        downloaded += len(chunk)
-
-                        # Update progress (40-80% for download)
-                        if total_size > 0:
-                            progress = 40 + int((downloaded / total_size) * 40)
-                            self.update_progress.emit(progress)
-
-            self.update_status.emit("🔧 Installing updated binary...")
-            self.update_progress.emit(85)
-
-            # Make executable on Unix systems
-            if OS_NAME != "Windows":
-                os.chmod(temp_file, 0o755)
-
-            # Replace the old file with the new one
-            try:
-                # On Windows, we need to remove the old file first
-                if OS_NAME == "Windows" and Path(yt_dlp_path).exists():
-                    yt_dlp_path.unlink(missing_ok=True)
-
-                temp_file.rename(yt_dlp_path)
+                logger.info("UpdateThread: yt-dlp update completed successfully.")
+                if result.stdout:
+                    logger.debug(f"yt-dlp output: {result.stdout.strip()}")
                 self.update_status.emit("✅ Binary successfully updated!")
                 self.update_progress.emit(95)
                 return True
-
-            except Exception as e:
-                self.update_status.emit(f"❌ Error installing binary: {e}")
-                # Clean up temp file if it exists
-                if temp_file.exists():
-                    try:
-                        temp_file.unlink(missing_ok=True)
-                    except:
-                        pass
+            else:
+                logger.error(f"UpdateThread: yt-dlp update failed. {result.stderr.strip()}")
+                self.update_status.emit(f"❌ yt-dlp update failed: {result.stderr.strip()}")
                 return False
 
-        except requests.RequestException as e:
-            self.update_status.emit(f"❌ Network error: {e}")
+        except subprocess.TimeoutExpired:
+            logger.error("UpdateThread: yt-dlp update timed out.")
+            self.update_status.emit("❌ yt-dlp update timed out.")
             return False
+
         except Exception as e:
-            self.update_status.emit(f"❌ Binary update failed: {e}")
+            logger.error(f"UpdateThread: Unexpected error during update: {e}", exc_info=True)
+            self.update_status.emit(f"❌ Unexpected error during update: {e}")
             return False
 
     def _update_via_pip(self) -> bool:

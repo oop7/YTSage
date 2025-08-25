@@ -72,9 +72,7 @@ class SubtitleSelectionDialog(QDialog):
         self.populate_list()
 
         # OK and Cancel buttons
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 
@@ -130,9 +128,7 @@ class SubtitleSelectionDialog(QDialog):
                     combined_subs[lang_code] = f"{lang_code} - Auto-generated"
 
         if not combined_subs:
-            no_subs_label = QLabel(
-                "No subtitles available" + (f" matching '{filter_text}'" if filter_text else "")
-            )
+            no_subs_label = QLabel("No subtitles available" + (f" matching '{filter_text}'" if filter_text else ""))
             no_subs_label.setStyleSheet("color: #aaaaaa; padding: 10px;")
             self.list_layout.addWidget(no_subs_label)
             return
@@ -254,9 +250,7 @@ class PlaylistSelectionDialog(QDialog):
         self._populate_list(previously_selected_string)
 
         # Dialog buttons (OK/Cancel)
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 
@@ -567,9 +561,7 @@ class SponsorBlockCategoryDialog(QDialog):
 
             # Create description label
             desc_label = QLabel(category_info["description"])
-            desc_label.setStyleSheet(
-                "color: #aaaaaa; font-size: 11px; margin-left: 28px; margin-bottom: 8px;"
-            )
+            desc_label.setStyleSheet("color: #aaaaaa; font-size: 11px; margin-left: 28px; margin-bottom: 8px;")
             desc_label.setWordWrap(True)
 
             category_layout.addWidget(checkbox)
@@ -605,9 +597,7 @@ class SponsorBlockCategoryDialog(QDialog):
         layout.addLayout(button_layout)
 
         # Dialog buttons
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 

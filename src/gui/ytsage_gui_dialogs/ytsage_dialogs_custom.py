@@ -6,6 +6,7 @@ Contains dialogs for custom commands, cookies, time ranges, and other special fe
 import subprocess
 import threading
 from pathlib import Path
+from typing import TYPE_CHECKING, cast
 
 from PySide6.QtCore import Q_ARG, QMetaObject, Qt
 from PySide6.QtWidgets import (
@@ -26,16 +27,17 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from typing import cast, TYPE_CHECKING
 
 try:
     import yt_dlp
+
     YT_DLP_AVAILABLE = True
 except ImportError:
     YT_DLP_AVAILABLE = False
 
 if TYPE_CHECKING:
-    from src.gui.ytsage_gui_main import YTSageApp   # only for type hints (no runtime import)
+    from src.gui.ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
+
 
 class CustomCommandDialog(QDialog):
     def __init__(self, parent=None) -> None:
@@ -152,13 +154,13 @@ class CustomCommandDialog(QDialog):
         )
 
     def run_custom_command(self) -> None:
-        url = self._parent.url_input.text().strip() # type: ignore[reportAttributeAccessIssue]
+        url = self._parent.url_input.text().strip()  # type: ignore[reportAttributeAccessIssue]
         if not url:
             self.log_output.append("Error: No URL provided")
             return
 
         command = self.command_input.toPlainText().strip()
-        path = self._parent.path_input.text().strip() # type: ignore[reportAttributeAccessIssue]
+        path = self._parent.path_input.text().strip()  # type: ignore[reportAttributeAccessIssue]
 
         self.log_output.clear()
         self.log_output.append(f"Running command with URL: {url}")
@@ -271,18 +273,14 @@ class CookieLoginDialog(QDialog):
         layout.addLayout(path_layout)
 
         # Dialog buttons
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
 
     def browse_cookie_file(self) -> None:
         # Open file dialog to select cookie file
-        selected_files, _ = QFileDialog.getOpenFileName(
-            self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)"
-        )
+        selected_files, _ = QFileDialog.getOpenFileName(self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)")
         if selected_files:
             self.cookie_path_input.setText(selected_files[0])
 
@@ -294,7 +292,7 @@ class CookieLoginDialog(QDialog):
 class CustomOptionsDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self._parent: YTSageApp = cast("YTSageApp",self.parent()) # cast will help with auto complete and type hint checking.
+        self._parent: YTSageApp = cast("YTSageApp", self.parent())  # cast will help with auto complete and type hint checking.
         self.setWindowTitle("Custom Options")
         self.setMinimumSize(600, 500)
         layout = QVBoxLayout(self)
@@ -423,9 +421,7 @@ class CustomOptionsDialog(QDialog):
         self.tab_widget.addTab(command_tab, "Custom Command")
 
         # Dialog buttons
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -481,9 +477,7 @@ class CustomOptionsDialog(QDialog):
 
     def browse_cookie_file(self) -> None:
         # Open file dialog to select cookie file
-        selected_files, _ = QFileDialog.getOpenFileName(
-            self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)"
-        )
+        selected_files, _ = QFileDialog.getOpenFileName(self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)")
 
         if selected_files:
             self.cookie_path_input.setText(selected_files[0])
@@ -575,7 +569,7 @@ class CustomOptionsDialog(QDialog):
             )
 
             # Stream output
-            for line in proc.stdout: # type: ignore[reportOptionalIterable]
+            for line in proc.stdout:  # type: ignore[reportOptionalIterable]
                 QMetaObject.invokeMethod(
                     self.log_output,
                     b"append",
@@ -709,9 +703,7 @@ class TimeRangeDialog(QDialog):
         self.force_keyframes.stateChanged.connect(self.update_preview)
 
         # Buttons
-        button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)

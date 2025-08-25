@@ -6,7 +6,6 @@ Contains dialogs and threads for checking and installing FFmpeg.
 import contextlib
 import webbrowser
 from io import StringIO
-from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QIcon
@@ -62,13 +61,9 @@ class FFmpegCheckDialog(QDialog):
         layout.addWidget(header_text)
 
         # Message
-        self.message_label = QLabel(
-            "YTSage needs FFmpeg to process videos.\n\n" "Choose an installation option below:"
-        )
+        self.message_label = QLabel("YTSage needs FFmpeg to process videos.\n\n" "Choose an installation option below:")
         self.message_label.setWordWrap(True)
-        self.message_label.setStyleSheet(
-            "font-size: 13px; color: #cccccc; padding: 10px 0; line-height: 1.4;"
-        )
+        self.message_label.setStyleSheet("font-size: 13px; color: #cccccc; padding: 10px 0; line-height: 1.4;")
         self.message_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.message_label)
 
@@ -108,9 +103,7 @@ class FFmpegCheckDialog(QDialog):
 
         # Manual install button
         self.manual_btn = QPushButton("Manual Guide")
-        self.manual_btn.clicked.connect(
-            lambda: webbrowser.open("https://github.com/oop7/ffmpeg-install-guide")
-        )
+        self.manual_btn.clicked.connect(lambda: webbrowser.open("https://github.com/oop7/ffmpeg-install-guide"))
         button_layout.addWidget(self.manual_btn)
 
         # Close button
@@ -164,9 +157,7 @@ class FFmpegCheckDialog(QDialog):
         # Check if FFmpeg is already installed
         if check_ffmpeg_installed():
             self.message_label.setText("FFmpeg is already installed!")
-            self.progress_label.setText(
-                "Installation complete. You can close this dialog and continue using YTSage."
-            )
+            self.progress_label.setText("Installation complete. You can close this dialog and continue using YTSage.")
             self.progress_label.show()
             self.install_btn.hide()
             self.manual_btn.hide()
@@ -187,9 +178,7 @@ class FFmpegCheckDialog(QDialog):
     def installation_finished(self, success) -> None:
         if success:
             self.message_label.setText("FFmpeg has been installed successfully!")
-            self.progress_label.setText(
-                "Installation complete. You can now close this dialog and continue using YTSage."
-            )
+            self.progress_label.setText("Installation complete. You can now close this dialog and continue using YTSage.")
             self.install_btn.hide()
             self.manual_btn.hide()
         else:

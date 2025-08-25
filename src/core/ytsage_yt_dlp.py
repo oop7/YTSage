@@ -1,7 +1,6 @@
 import os
 import shutil
 import subprocess
-from optparse import Option
 from pathlib import Path
 from typing import Optional
 

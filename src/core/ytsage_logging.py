@@ -5,7 +5,6 @@ This module provides centralized logging configuration for the entire YTSage app
 It replaces the inefficient print statements with structured logging using loguru.
 """
 
-import os
 import sys
 from pathlib import Path
 
