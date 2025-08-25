@@ -9,9 +9,12 @@ import os
 import sys
 from pathlib import Path
 
+from src.utils.ytsage_constants import APP_LOG_DIR
+
 # Try to import loguru, but handle case where it might not be available
 try:
     from loguru import logger
+
     LOGURU_AVAILABLE = True
 except ImportError:
     LOGURU_AVAILABLE = False
@@ -73,19 +76,8 @@ def setup_logging():
 
     # Get the application data directory with fallbacks
     try:
-        if sys.platform == "win32":
-            localappdata = os.environ.get("LOCALAPPDATA")
-            if localappdata:
-                log_dir = Path(localappdata) / "YTSage" / "logs"
-            else:
-                # Fallback for PyInstaller or when LOCALAPPDATA is not set
-                log_dir = Path.home() / "AppData" / "Local" / "YTSage" / "logs"
-        elif sys.platform == "darwin":
-            log_dir = (
-                Path.home() / "Library" / "Application Support" / "YTSage" / "logs"
-            )
-        else:
-            log_dir = Path.home() / ".local" / "share" / "YTSage" / "logs"
+        # logic moved to src\utils\ytsage_constants.py
+        log_dir = APP_LOG_DIR
     except Exception:
         # Ultimate fallback - use current directory
         log_dir = Path.cwd() / "logs"

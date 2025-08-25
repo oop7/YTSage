@@ -7,32 +7,18 @@ import requests
 from PIL import Image
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import (
-    QHBoxLayout,
-    QLabel,
-    QMainWindow,
-    QPushButton,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
+from yt_dlp import YoutubeDL
 
 from src.core.ytsage_logging import logger
-from src.gui.ytsage_gui_dialogs import (
+from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     SponsorBlockCategoryDialog,
     SubtitleSelectionDialog,
 )
 
-try:
-    import yt_dlp
-
-    YT_DLP_AVAILABLE = True
-except ImportError:
-    YT_DLP_AVAILABLE = False
-    logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
-
 
 class VideoInfoMixin:
-    def setup_video_info_section(self):
+    def setup_video_info_section(self) -> QHBoxLayout:
         # Create a horizontal layout for thumbnail and video info
         media_info_layout = QHBoxLayout()
         media_info_layout.setSpacing(15)
@@ -46,9 +32,7 @@ class VideoInfoMixin:
         # Thumbnail on the left
         self.thumbnail_label = QLabel()
         self.thumbnail_label.setFixedSize(320, 180)
-        self.thumbnail_label.setStyleSheet(
-            "border: 2px solid #3d3d3d; border-radius: 4px;"
-        )
+        self.thumbnail_label.setStyleSheet("border: 2px solid #3d3d3d; border-radius: 4px;")
         self.thumbnail_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         thumbnail_layout.addWidget(self.thumbnail_label)
         thumbnail_layout.addStretch()
@@ -106,9 +90,7 @@ class VideoInfoMixin:
         subtitle_layout.setSpacing(10)
 
         # Subtitle selection button
-        self.subtitle_select_btn = QPushButton(
-            "Select Subtitles..."
-        )  # Renamed & changed text
+        self.subtitle_select_btn = QPushButton("Select Subtitles...")  # Renamed & changed text
         self.subtitle_select_btn.setFixedHeight(30)
         # self.subtitle_select_btn.setFixedWidth(150) # Let it size naturally or adjust as needed
         self.subtitle_select_btn.clicked.connect(self.open_subtitle_dialog)
@@ -133,9 +115,7 @@ class VideoInfoMixin:
             }
         """
         )
-        self.subtitle_select_btn.setProperty(
-            "subtitlesSelected", False
-        )  # Custom property for styling
+        self.subtitle_select_btn.setProperty("subtitlesSelected", False)  # Custom property for styling
         subtitle_layout.addWidget(self.subtitle_select_btn)
 
         # Label to show number of selected subtitles
@@ -183,9 +163,7 @@ class VideoInfoMixin:
 
         # Label to show selection count
         self.selected_sponsorblock_label = QLabel("0 selected")
-        self.selected_sponsorblock_label.setStyleSheet(
-            "color: #cccccc; padding-left: 5px;"
-        )
+        self.selected_sponsorblock_label.setStyleSheet("color: #cccccc; padding-left: 5px;")
         sponsorblock_layout.addWidget(self.selected_sponsorblock_label)
 
         sponsorblock_layout.addStretch()
@@ -206,7 +184,7 @@ class VideoInfoMixin:
 
         return media_info_layout
 
-    def setup_playlist_info_section(self):
+    def setup_playlist_info_section(self) -> QLabel:
         self.playlist_info_label = QLabel()
         self.playlist_info_label.setVisible(False)
         self.playlist_info_label.setStyleSheet(
@@ -224,17 +202,13 @@ class VideoInfoMixin:
             }
         """
         )
-        self.playlist_info_label.setAlignment(
-            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
-        )
+        self.playlist_info_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         return self.playlist_info_label
 
-    def update_video_info(self, info):
+    def update_video_info(self, info) -> None:
         if hasattr(self, "is_playlist") and self.is_playlist:
             # Playlist Mode: Show playlist title and video count
-            self.title_label.setText(
-                self.playlist_info.get("title", "Unknown Playlist")
-            )
+            self.title_label.setText(self.playlist_info.get("title", "Unknown Playlist"))
 
             num_videos = len(getattr(self, "playlist_entries", []))
             self.duration_label.setText(f"Total Videos: {num_videos}")
@@ -280,18 +254,14 @@ class VideoInfoMixin:
 
             # Update labels
             self.title_label.setText(info.get("title", "Unknown title"))
-            self.channel_label.setText(
-                f"Channel: {info.get('uploader', 'Unknown channel')}"
-            )
+            self.channel_label.setText(f"Channel: {info.get('uploader', 'Unknown channel')}")
             self.views_label.setText(f"Views: {formatted_views}")
             self.like_count_label.setText(f"Likes: {formatted_likes}")
             self.date_label.setText(f"Upload date: {formatted_date}")
             self.duration_label.setText(f"Duration: {duration_str}")
 
-    def open_subtitle_dialog(self):
-        if not hasattr(self, "available_subtitles") or not hasattr(
-            self, "available_automatic_subtitles"
-        ):
+    def open_subtitle_dialog(self) -> None:
+        if not hasattr(self, "available_subtitles") or not hasattr(self, "available_automatic_subtitles"):
             logger.warning("Subtitle info not loaded yet.")
             return
 
@@ -327,10 +297,7 @@ class VideoInfoMixin:
             # Enable/disable the merge checkbox in the parent window
             if merge_checkbox:
                 # Only enable merge checkbox if we're not in Audio Only mode
-                is_audio_only = (
-                    hasattr(main_window, "audio_button")
-                    and main_window.audio_button.isChecked()
-                )
+                is_audio_only = hasattr(main_window, "audio_button") and main_window.audio_button.isChecked()
                 # In audio-only mode, we still allow subtitle selection but not merging
                 should_enable = count > 0 and not is_audio_only
                 merge_checkbox.setEnabled(should_enable)
@@ -342,13 +309,10 @@ class VideoInfoMixin:
             self.subtitle_select_btn.style().polish(self.subtitle_select_btn)
         # No else needed for cancel, state remains unchanged
 
-    def open_sponsorblock_dialog(self):
+    def open_sponsorblock_dialog(self) -> None:
         """Open the SponsorBlock category selection dialog."""
         # Initialize selected categories if not exists or empty (first time opening)
-        if (
-            not hasattr(self, "selected_sponsorblock_categories")
-            or not self.selected_sponsorblock_categories
-        ):
+        if not hasattr(self, "selected_sponsorblock_categories") or not self.selected_sponsorblock_categories:
             # Use None to let the dialog set its own defaults
             dialog_categories = None
         else:
@@ -358,12 +322,10 @@ class VideoInfoMixin:
 
         if dialog.exec():
             self.selected_sponsorblock_categories = dialog.get_selected_categories()
-            logger.info(
-                f"SponsorBlock categories selected: {self.selected_sponsorblock_categories}"
-            )
+            logger.info(f"SponsorBlock categories selected: {self.selected_sponsorblock_categories}")
             self._update_sponsorblock_display()
 
-    def _update_sponsorblock_display(self):
+    def _update_sponsorblock_display(self) -> None:
         """Update the SponsorBlock button and label to reflect current selection."""
         if not hasattr(self, "selected_sponsorblock_categories"):
             self.selected_sponsorblock_categories = []
@@ -385,7 +347,7 @@ class VideoInfoMixin:
         self.sponsorblock_select_btn.style().unpolish(self.sponsorblock_select_btn)
         self.sponsorblock_select_btn.style().polish(self.sponsorblock_select_btn)
 
-    def download_thumbnail(self, url):
+    def download_thumbnail(self, url) -> None:
         try:
             # Store both thumbnail URL and video URL
             self.thumbnail_url = url
@@ -405,13 +367,11 @@ class VideoInfoMixin:
         except Exception as e:
             logger.error(f"Error loading thumbnail: {str(e)}")
 
-    def download_thumbnail_file(self, video_url, path):
+    def download_thumbnail_file(self, video_url, path) -> bool:
         if not self.save_thumbnail:
             return False
 
         try:
-            from yt_dlp import YoutubeDL
-
             logger.debug(f"Attempting to save thumbnail for URL: {video_url}")
 
             ydl_opts = {
@@ -461,6 +421,6 @@ class VideoInfoMixin:
             self.signals.update_status.emit(error_msg)
             return False
 
-    def sanitize_filename(self, name):
+    def sanitize_filename(self, name) -> str:
         """Clean filename for filesystem safety"""
         return re.sub(r'[\\/*?:"<>|]', "", name).strip()[:75]

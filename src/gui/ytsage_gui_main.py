@@ -28,11 +28,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src.core.ytsage_downloader import (  # Import downloader related classes
-    DownloadThread,
-    SignalManager,
-)
+from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
 from src.core.ytsage_logging import logger
+
 from src.core.ytsage_utils import check_ffmpeg  # Import utility functions
 from src.core.ytsage_utils import (
     get_config_file_path,
@@ -40,12 +38,10 @@ from src.core.ytsage_utils import (
     save_path,
     should_check_for_auto_update,
 )
-from src.core.ytsage_yt_dlp import (  # Import the new yt-dlp functions
-    get_yt_dlp_path,
-    setup_ytdlp,
-)
-from src.gui.ytsage_gui_dialogs import (
+from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
+from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     AboutDialog,
+    AutoUpdateThread,
     CustomOptionsDialog,
     DownloadSettingsDialog,
     FFmpegCheckDialog,
@@ -72,7 +68,7 @@ except ImportError:
 
 
 class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from mixins
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Initialize logger for this class
@@ -80,9 +76,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         # Log startup warnings for missing dependencies
         if not YT_DLP_AVAILABLE:
-            self.logger.warning(
-                "yt-dlp not available at startup, will be downloaded at runtime"
-            )
+            self.logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
         if not PYGAME_AVAILABLE:
             self.logger.warning("pygame not available, audio notifications disabled")
 
@@ -112,12 +106,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         if icon_path.exists():
             self.setWindowIcon(QIcon(icon_path.as_posix()))
         else:
-            self.logger.warning(
-                f"Icon file not found at {icon_path}. Using default icon."
-            )
-            self.setWindowIcon(
-                self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowDown)
-            )  # Fallback
+            self.logger.warning(f"Icon file not found at {icon_path}. Using default icon.")
+            self.setWindowIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowDown))  # Fallback
         self.signals = SignalManager()
         self.download_paused = False
         self.current_download = None
@@ -140,9 +130,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.selected_subtitles = []  # Initialize selected subtitles list
         self.cookie_file_path = None  # Initialize cookie file path
         self.speed_limit_value = None  # Store speed limit value
-        self.speed_limit_unit_index = (
-            0  # Store speed limit unit index (0: KB/s, 1: MB/s)
-        )
+        self.speed_limit_unit_index = 0  # Store speed limit unit index (0: KB/s, 1: MB/s)
         self.download_section = None
         self.force_keyframes = False
 
@@ -327,7 +315,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize pygame for sound notifications
         self.init_sound()
 
-    def init_sound(self):
+    def init_sound(self) -> None:
         """Initialize pygame mixer for sound notifications"""
         try:
             if PYGAME_AVAILABLE:
@@ -337,9 +325,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 # Get the notification sound path
                 # Navigate from src/gui/ to project root, then to assets/sound/
                 project_root = Path(__file__).parent.parent.parent
-                self.notification_sound_path = (
-                    project_root / "assets" / "sound" / "notification.mp3"
-                )
+                self.notification_sound_path = project_root / "assets" / "sound" / "notification.mp3"
 
                 # Check if the notification sound file exists
                 if not self.notification_sound_path.exists():
@@ -348,9 +334,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     )
                     self.sound_enabled = False
                 else:
-                    self.logger.info(
-                        f"Notification sound loaded from: {self.notification_sound_path}"
-                    )
+                    self.logger.info(f"Notification sound loaded from: {self.notification_sound_path}")
             else:
                 self.sound_enabled = False
                 self.logger.info("Sound notifications disabled - pygame not available")
@@ -359,12 +343,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.logger.error(f"Error initializing sound: {e}")
             self.sound_enabled = False
 
-    def play_notification_sound(self):
+    def play_notification_sound(self) -> None:
         """Play notification sound in a separate thread to avoid blocking the UI"""
         if not self.sound_enabled:
             return
 
-        def play_sound():
+        def play_sound() -> None:
             try:
                 if PYGAME_AVAILABLE:
                     # Load and play the sound
@@ -383,17 +367,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         sound_thread.daemon = True
         sound_thread.start()
 
-    def load_saved_path(
-        self,
-    ):  # Using function from ytsage_utils now - no longer needed in class
-        pass  # Handled in class init now via ytsage_utils.load_saved_path(self)
+    # Removed load_saved_path and save_path methods since their functionality is now handled directly by ytsage_utils
 
-    def save_path(
-        self, path
-    ):  # Using function from ytsage_utils now - no longer needed in class
-        save_path(self, path)  # Call the utility function
-
-    def init_ui(self):
+    def init_ui(self) -> None:
         self.setWindowTitle(f"YTSage  v{self.version}")
         self.setMinimumSize(900, 750)
 
@@ -591,9 +567,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Add Save Description Checkbox (Moved here)
         self.save_description_checkbox = QCheckBox("Save Description")
         self.save_description_checkbox.setChecked(False)
-        self.save_description_checkbox.stateChanged.connect(
-            self.toggle_save_description
-        )
+        self.save_description_checkbox.stateChanged.connect(self.toggle_save_description)
         self.save_description_checkbox.setStyleSheet(
             """
             QCheckBox {
@@ -657,9 +631,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         # --- Rename Path Button to Settings Button ---
         self.settings_button = QPushButton("Download Settings")  # Renamed button
-        self.settings_button.clicked.connect(
-            self.show_download_settings_dialog
-        )  # Renamed method
+        self.settings_button.clicked.connect(self.show_download_settings_dialog)  # Renamed method
         self.settings_button.setToolTip(
             f"Current Path: {self.last_path}\nSpeed Limit: None"
         )  # Update initial tooltip
@@ -744,20 +716,16 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.signals.update_status.connect(self.status_label.setText)
         self.signals.update_progress.connect(self.update_progress_bar)
 
-    def analyze_url(self):
+    def analyze_url(self) -> None:
         url = self.url_input.text().strip()
         if not url:
             self.signals.update_status.emit("Invalid URL or please enter a URL.")
             return
 
         self.signals.update_status.emit("Analyzing (0%)... Preparing request")
-        import threading  # Import threading here as it is only used in GUI and downloader
+        threading.Thread(target=self._analyze_url_thread, args=(url,), daemon=True).start()
 
-        threading.Thread(
-            target=self._analyze_url_thread, args=(url,), daemon=True
-        ).start()
-
-    def _analyze_url_thread(self, url):
+    def _analyze_url_thread(self, url) -> None:
         try:
             self.signals.update_status.emit("Analyzing (15%)... Extracting basic info")
 
@@ -795,13 +763,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         raise Exception("Could not extract basic video information")
                 except Exception as e:
                     self.logger.error(f"First extraction failed: {str(e)}")
-                    raise Exception(
-                        "Could not extract video information, please check your link"
-                    )
+                    raise Exception("Could not extract video information, please check your link")
 
-            self.signals.update_status.emit(
-                "Analyzing (30%)... Extracting detailed info"
-            )
+            self.signals.update_status.emit("Analyzing (30%)... Extracting detailed info")
             # Configure options for detailed extraction (keep other options)
             # Add no_warnings here as well, as this is where detailed info is fetched
             ydl_opts_detail = {
@@ -824,15 +788,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # Use a separate options dict for the detailed extraction
             with yt_dlp.YoutubeDL(ydl_opts_detail) as ydl_detail:
                 try:
-                    self.signals.update_status.emit(
-                        "Analyzing (45%)... Processing video data"
-                    )
+                    self.signals.update_status.emit("Analyzing (45%)... Processing video data")
                     if basic_info.get("_type") == "playlist":
                         self.is_playlist = True
                         self.playlist_info = basic_info
-                        self.selected_playlist_items = (
-                            None  # Reset selection for new playlist
-                        )
+                        self.selected_playlist_items = None  # Reset selection for new playlist
                         self.playlist_entries = [
                             entry for entry in basic_info.get("entries", []) if entry
                         ]  # Store entries
@@ -845,14 +805,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         # This provides formats/subs for the UI, assuming consistency
                         first_video_url = self.playlist_entries[0].get("url")
                         if not first_video_url:
-                            raise Exception(
-                                "Could not get URL for the first playlist video."
-                            )
+                            raise Exception("Could not get URL for the first playlist video.")
                         try:
                             # Use the ydl_detail instance with no_warnings
-                            self.video_info = ydl_detail.extract_info(
-                                first_video_url, download=False
-                            )
+                            self.video_info = ydl_detail.extract_info(first_video_url, download=False)
                         except Exception as first_video_error:
                             raise Exception(
                                 f"Failed to extract info for the first playlist video: {first_video_error}"
@@ -881,9 +837,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                             self,  # Target object is the YTSageApp instance
                             b"update_playlist_button_text",  # Name of the slot
                             Qt.ConnectionType.QueuedConnection,
-                            Q_ARG(
-                                str, "Select Videos... (All selected)"
-                            ),  # Argument for the slot
+                            Q_ARG(str, "Select Videos... (All selected)"),  # Argument for the slot
                         )
                         QMetaObject.invokeMethod(
                             self.playlist_select_btn,
@@ -919,18 +873,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         )
                         raise Exception("No format information available")
 
-                    self.signals.update_status.emit(
-                        "Analyzing (60%)... Processing formats"
-                    )
+                    self.signals.update_status.emit("Analyzing (60%)... Processing formats")
                     self.all_formats = self.video_info["formats"]
 
                     # Update UI
                     self.update_video_info(self.video_info)
 
                     # Update thumbnail
-                    self.signals.update_status.emit(
-                        "Analyzing (75%)... Loading thumbnail"
-                    )
+                    self.signals.update_status.emit("Analyzing (75%)... Loading thumbnail")
                     # Try to get thumbnail from playlist info first
                     # Fallback to video thumbnail if playlist thumbnail not found or not a playlist
                     thumbnail_url = (self.playlist_info or {}).get("thumbnail") or (
@@ -942,19 +892,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     # Save thumbnail if enabled - use the stored VIDEO URL
                     if self.save_thumbnail:
                         self.download_thumbnail_file(
-                            self.video_url, self.path_input.text() # type: ignore[reportAttributeAccessIssue]
+                            self.video_url, self.path_input.text()  # type: ignore[reportAttributeAccessIssue]
                         )
 
                     # --- Subtitle Handling ---
-                    self.signals.update_status.emit(
-                        "Analyzing (85%)... Processing subtitles"
-                    )
+                    self.signals.update_status.emit("Analyzing (85%)... Processing subtitles")
                     # Clear previous selections when analyzing a new video
                     self.selected_subtitles = []
                     self.available_subtitles = self.video_info.get("subtitles", {})
-                    self.available_automatic_subtitles = self.video_info.get(
-                        "automatic_captions", {}
-                    )
+                    self.available_automatic_subtitles = self.video_info.get("automatic_captions", {})
                     # Update the UI elements related to subtitle selection state
                     QMetaObject.invokeMethod(
                         self.selected_subs_label,
@@ -967,9 +913,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     # QMetaObject.invokeMethod(self.merge_subs_checkbox, "setEnabled", Qt.ConnectionType.QueuedConnection, Q_ARG(bool, False))
 
                     # Update format table
-                    self.signals.update_status.emit(
-                        "Analyzing (95%)... Updating format table"
-                    )
+                    self.signals.update_status.emit("Analyzing (95%)... Updating format table")
                     self.video_button.setChecked(True)
                     self.audio_button.setChecked(False)
                     self.filter_formats()
@@ -977,15 +921,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     self.signals.update_status.emit("Analysis complete!")
 
                 except Exception as e:
-                    self.logger.error(
-                        f"Detailed extraction failed: {str(e)}", exc_info=True
-                    )
+                    logger.error(f"Detailed extraction failed: {e}", exc_info=True)
                     raise Exception(f"Failed to extract video details: {str(e)}")
 
         except Exception as e:
-            error_message = str(e)
-            self.logger.error(f"Error in analysis: {error_message}", exc_info=True)
-            self.signals.update_status.emit(f"Error: {error_message}")
+            self.logger.error("Error in analysis: {}",e, exc_info=True)
+            self.signals.update_status.emit(f"Error: {e}")
             # Ensure playlist UI is hidden on error too
             QMetaObject.invokeMethod(
                 self.playlist_info_label,
@@ -1000,18 +941,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 Q_ARG(bool, False),
             )
 
-    def paste_url(self):
+    def paste_url(self) -> None:
         clipboard = QApplication.clipboard()
         self.url_input.setText(clipboard.text())
 
-    def update_ytdlp(self):
+    def update_ytdlp(self) -> None:
         """Show the yt-dlp update dialog with proper progress tracking"""
         # Make the dialog non-modal to prevent blocking the main UI
         dialog = YTDLPUpdateDialog(self)
         dialog.setModal(False)  # Make it non-modal
         dialog.show()  # Use show() instead of exec() to avoid blocking
 
-    def show_download_settings_dialog(self):  # Renamed method
+    def show_download_settings_dialog(self) -> None:  # Renamed method
         dialog = DownloadSettingsDialog(
             self.last_path, self.speed_limit_value, self.speed_limit_unit_index, self
         )
@@ -1021,7 +962,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             path_changed = False
             if new_path != self.last_path:
                 self.last_path = new_path
-                self.save_path(self.last_path)  # Save the updated path
+                save_path(self, self.last_path)  # Save the updated path
                 path_changed = True
                 self.logger.info(f"Download path updated to: {self.last_path}")
 
@@ -1029,10 +970,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             new_limit_value = dialog.get_selected_speed_limit()
             new_unit_index = dialog.get_selected_unit_index()
             limit_changed = False
-            if (
-                new_limit_value != self.speed_limit_value
-                or new_unit_index != self.speed_limit_unit_index
-            ):
+            if new_limit_value != self.speed_limit_value or new_unit_index != self.speed_limit_unit_index:
                 self.speed_limit_value = new_limit_value
                 self.speed_limit_unit_index = new_unit_index
                 limit_changed = True
@@ -1045,11 +983,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 limit_text = "None"
                 if self.speed_limit_value:
                     limit_text = f"{self.speed_limit_value} {['KB/s', 'MB/s'][self.speed_limit_unit_index]}"
-                self.settings_button.setToolTip(
-                    f"Current Path: {self.last_path}\nSpeed Limit: {limit_text}"
-                )
+                self.settings_button.setToolTip(f"Current Path: {self.last_path}\nSpeed Limit: {limit_text}")
 
-    def start_download(self):
+    def start_download(self) -> None:
         url = self.url_input.text().strip()
         # --- Use self.last_path instead of reading from QLineEdit ---
         path = self.last_path
@@ -1057,9 +993,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         if not url or not path:
             # More specific error message if path is missing
             if not path:
-                self.status_label.setText(
-                    "Please set a download path using 'Change Path'"
-                )
+                self.status_label.setText("Please set a download path using 'Change Path'")
             elif not url:
                 self.status_label.setText("Please enter a URL")
             else:
@@ -1087,16 +1021,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 break
 
         # Get subtitle selection if available - Now get the list
-        selected_subs = (
-            self.selected_subtitles if hasattr(self, "selected_subtitles") else []
-        )
+        selected_subs = self.selected_subtitles if hasattr(self, "selected_subtitles") else []
 
         # Get playlist selection IF in playlist mode - USE STORED VALUE
         playlist_items_to_download = None
         if self.is_playlist:
-            playlist_items_to_download = (
-                self.selected_playlist_items
-            )  # Use the stored selection string
+            playlist_items_to_download = self.selected_playlist_items  # Use the stored selection string
 
         # --- Use stored speed limit values ---
         rate_limit = None
@@ -1109,9 +1039,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     rate_limit = f"{int(limit_value * 1024 * 1024)}"
             except ValueError:
                 # Use a signal to show error in status bar, similar to URL/Path errors
-                self.signals.update_status.emit(
-                    "❌ Error: Invalid speed limit value set in settings."
-                )
+                self.signals.update_status.emit("❌ Error: Invalid speed limit value set in settings.")
                 return
         # --- End speed limit update ---
 
@@ -1167,7 +1095,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.download_thread.start()
         self.toggle_download_controls(False)
 
-    def download_finished(self):
+    def download_finished(self) -> None:
         self.toggle_download_controls(True)
         self.pause_btn.setVisible(False)
         self.cancel_btn.setVisible(False)
@@ -1194,14 +1122,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Play notification sound when download completes
         self.play_notification_sound()
 
-    def download_error(self, error_message):
+    def download_error(self, error_message) -> None:
         self.toggle_download_controls(True)
         self.pause_btn.setVisible(False)
         self.cancel_btn.setVisible(False)
         self.status_label.setText(f"Error: {error_message}")
         self.download_details_label.setText("")  # Clear details label on error
 
-    def update_progress_bar(self, value):
+    def update_progress_bar(self, value) -> None:
         try:
             # Ensure the value is an integer
             int_value = int(value)
@@ -1209,7 +1137,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         except Exception as e:
             self.logger.error(f"Progress bar update error: {str(e)}")
 
-    def toggle_pause(self):
+    def toggle_pause(self) -> None:
         if self.current_download:
             self.current_download.paused = not self.current_download.paused
             if self.current_download.paused:
@@ -1219,7 +1147,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 self.pause_btn.setText("Pause")
                 self.signals.update_status.emit("Download resumed")
 
-    def check_for_updates(self):
+    def check_for_updates(self) -> None:
         try:
             # Get the latest release info from GitHub
             response = requests.get(
@@ -1233,18 +1161,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             # Compare versions
             if version.parse(latest_version) > version.parse(self.version):
-                changelog = latest_release.get(
-                    "body", "No changelog available."
-                )  # Get changelog body
+                changelog = latest_release.get("body", "No changelog available.")  # Get changelog body
                 self.show_update_dialog(
                     latest_version, latest_release["html_url"], changelog
                 )  # Pass changelog
         except Exception as e:
             self.logger.error(f"Failed to check for updates: {str(e)}", exc_info=True)
 
-    def show_update_dialog(
-        self, latest_version, release_url, changelog
-    ):  # Added changelog parameter
+    def show_update_dialog(self, latest_version, release_url, changelog) -> None:  # Added changelog parameter
         msg = QDialog(self)
         msg.setWindowTitle("Update Available")
         msg.setMinimumWidth(600)  # Increased width for better layout
@@ -1256,12 +1180,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 msg.setWindowIcon(self.windowIcon())
             else:
                 # Fallback to icon file
-                icon_path = (
-                    Path(__file__).resolve().parent.parent.parent
-                    / "assets"
-                    / "Icon"
-                    / "icon.png"
-                )
+                icon_path = Path(__file__).resolve().parent.parent.parent / "assets" / "Icon" / "icon.png"
 
                 if icon_path.exists():
                     msg.setWindowIcon(QIcon(icon_path.as_posix()))
@@ -1277,17 +1196,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         # Add update icon
         icon_label = QLabel()
-        icon_label.setPixmap(
-            self.style()
-            .standardIcon(QStyle.StandardPixmap.SP_BrowserReload)
-            .pixmap(32, 32)
-        )
+        icon_label.setPixmap(self.style().standardIcon(QStyle.StandardPixmap.SP_BrowserReload).pixmap(32, 32))
         header_layout.addWidget(icon_label)
 
         # Title
-        title_label = QLabel(
-            "<h2 style='color: #c90000; margin: 0;'>Update Available</h2>"
-        )
+        title_label = QLabel("<h2 style='color: #c90000; margin: 0;'>Update Available</h2>")
         header_layout.addWidget(title_label)
         header_layout.addStretch()
 
@@ -1316,9 +1229,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         layout.addWidget(message_label)
 
         # Changelog Section
-        changelog_label = QLabel(
-            "<b style='color: #ffffff; font-size: 14px;'>Changelog:</b>"
-        )
+        changelog_label = QLabel("<b style='color: #ffffff; font-size: 14px;'>Changelog:</b>")
         changelog_label.setStyleSheet("padding: 5px 0; margin-top: 10px;")
         layout.addWidget(changelog_label)
 
@@ -1445,7 +1356,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
     def open_release_page(self, url):
         webbrowser.open(url)
 
-    def check_auto_update_ytdlp(self):
+    def check_auto_update_ytdlp(self) -> None:
         """Check and perform auto-update for yt-dlp if enabled and due."""
         try:
             # Check if auto-update should be performed
@@ -1455,27 +1366,22 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 # We don't want to block the UI startup for this
                 from PySide6.QtCore import QTimer
 
-                QTimer.singleShot(
-                    2000, self._perform_auto_update
-                )  # Delay 2 seconds after startup
+                QTimer.singleShot(2000, self._perform_auto_update)  # Delay 2 seconds after startup
         except Exception as e:
             self.logger.error(f"Error in auto-update check: {e}", exc_info=True)
 
-    def _perform_auto_update(self):
+    def _perform_auto_update(self) -> None:
         """Actually perform the auto-update check and update if needed in a background thread."""
         try:
             # Create and start the auto-update thread to avoid blocking the UI
-            from .ytsage_gui_dialogs import AutoUpdateThread
 
             self.auto_update_thread = AutoUpdateThread()
-            self.auto_update_thread.update_finished.connect(
-                self._on_auto_update_finished
-            )
+            self.auto_update_thread.update_finished.connect(self._on_auto_update_finished)
             self.auto_update_thread.start()
         except Exception as e:
             self.logger.error(f"Error starting auto-update thread: {e}", exc_info=True)
 
-    def _on_auto_update_finished(self, success, message):
+    def _on_auto_update_finished(self, success, message) -> None:
         """Handle auto-update completion."""
         if success:
             self.logger.info(f"Auto-update completed successfully: {message}")
@@ -1493,19 +1399,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # Remove the reference
             delattr(self, "auto_update_thread")
 
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         """Handle application close event to ensure proper cleanup of background threads."""
         try:
             # Stop the auto-update thread if it's running
-            if (
-                hasattr(self, "auto_update_thread")
-                and self.auto_update_thread.isRunning()
-            ):
+            if hasattr(self, "auto_update_thread") and self.auto_update_thread.isRunning():
                 self.logger.info("Stopping auto-update thread...")
                 self.auto_update_thread.quit()
-                if not self.auto_update_thread.wait(
-                    3000
-                ):  # Wait up to 3 seconds for graceful shutdown
+                if not self.auto_update_thread.wait(3000):  # Wait up to 3 seconds for graceful shutdown
                     self.logger.warning("Force terminating auto-update thread...")
                     self.auto_update_thread.terminate()
                     self.auto_update_thread.wait(1000)  # Wait for termination
@@ -1514,9 +1415,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             if self.current_download and self.current_download.isRunning():
                 self.logger.info("Canceling running download...")
                 self.current_download.cancel()
-                if not self.current_download.wait(
-                    3000
-                ):  # Wait up to 3 seconds for graceful shutdown
+                if not self.current_download.wait(3000):  # Wait up to 3 seconds for graceful shutdown
                     self.logger.warning("Force terminating download thread...")
                     self.current_download.terminate()
                     self.current_download.wait(1000)  # Wait for termination
@@ -1527,7 +1426,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.logger.error(f"Error during application close: {e}", exc_info=True)
             event.accept()  # Accept the close event anyway
 
-    def show_custom_options(self):
+    def show_custom_options(self) -> None:
         dialog = CustomOptionsDialog(self)
         if dialog.exec():
             # Handle cookies if set
@@ -1544,11 +1443,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 # Don't clear the cookie path if nothing was selected
                 pass
 
-    def show_about_dialog(self):  # ADDED METHOD HERE
+    def show_about_dialog(self) -> None:  # ADDED METHOD HERE
         dialog = AboutDialog(self)
         dialog.exec()
 
-    def file_already_exists(self, filename):
+    def file_already_exists(self, filename) -> None:
         """Handle case when file already exists - simplified version"""
         self.toggle_download_controls(True)
         self.pause_btn.setVisible(False)
@@ -1609,43 +1508,29 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         msg_box.exec()
 
     # --- Add Toggle Methods Here ---
-    def toggle_save_thumbnail(self, state):
-        self.logger.debug(
-            f"Raw thumbnail state received: {state}"
-        )  # Debug: Print raw state
-        self.save_thumbnail = bool(
-            state == 2
-        )  # Compare state directly with 2 (Checked state)
+    def toggle_save_thumbnail(self, state) -> None:
+        self.logger.debug(f"Raw thumbnail state received: {state}")  # Debug: Print raw state
+        self.save_thumbnail = bool(state == 2)  # Compare state directly with 2 (Checked state)
         self.logger.debug(f"Save thumbnail toggled: {self.save_thumbnail}")
 
-    def toggle_save_description(self, state):
-        self.logger.debug(
-            f"Raw description state received: {state}"
-        )  # Debug: Print raw state
-        self.save_description = bool(
-            state == 2
-        )  # Compare state directly with 2 (Checked state)
+    def toggle_save_description(self, state) -> None:
+        self.logger.debug(f"Raw description state received: {state}")  # Debug: Print raw state
+        self.save_description = bool(state == 2)  # Compare state directly with 2 (Checked state)
         self.logger.debug(f"Save description toggled: {self.save_description}")
 
-    def toggle_embed_chapters(self, state):
-        self.logger.debug(
-            f"Raw chapters state received: {state}"
-        )  # Debug: Print raw state
-        self.embed_chapters = bool(
-            state == 2
-        )  # Compare state directly with 2 (Checked state)
+    def toggle_embed_chapters(self, state) -> None:
+        self.logger.debug(f"Raw chapters state received: {state}")  # Debug: Print raw state
+        self.embed_chapters = bool(state == 2)  # Compare state directly with 2 (Checked state)
         self.logger.debug(f"Embed chapters toggled: {self.embed_chapters}")
 
     # --- End Toggle Methods ---
 
-    def open_playlist_selection_dialog(self):
+    def open_playlist_selection_dialog(self) -> None:
         if not self.is_playlist or not self.playlist_entries:
             self.logger.info("No playlist data available to select from.")
             return
 
-        dialog = PlaylistSelectionDialog(
-            self.playlist_entries, self.selected_playlist_items, self
-        )
+        dialog = PlaylistSelectionDialog(self.playlist_entries, self.selected_playlist_items, self)
 
         if dialog.exec():
             self.selected_playlist_items = dialog.get_selected_items_string()
@@ -1655,9 +1540,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             if self.selected_playlist_items is None:
                 button_text = "Select Videos... (All selected)"
             else:
-                selected_indices = dialog._parse_selection_string(
-                    self.selected_playlist_items
-                )
+                selected_indices = dialog._parse_selection_string(self.selected_playlist_items)
                 count = len(selected_indices)
                 display_text = (
                     self.selected_playlist_items
@@ -1669,20 +1552,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
     # --- New Slot for Updating Playlist Button Text ---
     @Slot(str)
-    def update_playlist_button_text(self, text):
+    def update_playlist_button_text(self, text) -> None:
         """Safely updates the playlist selection button's text from any thread."""
         if hasattr(self, "playlist_select_btn"):
             self.playlist_select_btn.setText(text)
 
     # --- End New Slot ---
 
-    def toggle_download_controls(self, enabled=True):
+    def toggle_download_controls(self, enabled=True) -> None:
         """Enable or disable download-related controls"""
         self.url_input.setEnabled(enabled)
         self.analyze_button.setEnabled(enabled)
-        self.format_table.setEnabled(
-            enabled
-        )  # Changed from format_scroll_area to format_table
+        self.format_table.setEnabled(enabled)  # Changed from format_scroll_area to format_table
         self.download_btn.setEnabled(enabled)
         if hasattr(self, "subtitle_combo"):
             self.subtitle_combo.setEnabled(enabled)  # type: ignore[reportAttributeAccessIssue]
@@ -1690,12 +1571,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.audio_button.setEnabled(enabled)
         if hasattr(self, "sponsorblock_select_btn"):
             self.sponsorblock_select_btn.setEnabled(enabled)
-        self.merge_subs_checkbox.setEnabled(
-            enabled
-        )  # Enable/disable merge subs checkbox
-        self.custom_options_btn.setEnabled(
-            enabled
-        )  # Enable/disable custom options button
+        self.merge_subs_checkbox.setEnabled(enabled)  # Enable/disable merge subs checkbox
+        self.custom_options_btn.setEnabled(enabled)  # Enable/disable custom options button
         self.update_ytdlp_btn.setEnabled(enabled)  # Enable/disable update button
         self.time_range_btn.setEnabled(enabled)  # Enable/disable time range button
         self.settings_button.setEnabled(enabled)  # Enable/disable settings button
@@ -1706,20 +1583,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.status_label.setText("Ready")
             self.download_details_label.setText("")  # Clear details label
 
-    def handle_format_selection(self, button):
+    def handle_format_selection(self, button) -> None:
         # Update formats
         self.filter_formats()
 
-    def handle_mode_change(self):
+    def handle_mode_change(self) -> None:
         """Enable or disable features based on video/audio mode"""
         if self.audio_button.isChecked():
             # In Audio Only mode, disable video-specific features
             if hasattr(self, "sponsorblock_select_btn"):
                 self.sponsorblock_select_btn.setEnabled(False)
             if hasattr(self, "selected_sponsorblock_categories"):
-                self.selected_sponsorblock_categories = (
-                    []
-                )  # Clear selection when disabled
+                self.selected_sponsorblock_categories = []  # Clear selection when disabled
             if hasattr(self, "_update_sponsorblock_display"):
                 self._update_sponsorblock_display()
             self.merge_subs_checkbox.setEnabled(False)
@@ -1743,12 +1618,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 self.subtitle_select_btn.setEnabled(True)
 
     # Keep these methods for backwards compatibility - they just call the new dialog now
-    def show_custom_command(self):
+    def show_custom_command(self) -> None:
         dialog = CustomOptionsDialog(self)
         dialog.tab_widget.setCurrentIndex(1)  # Select the Custom Command tab
         dialog.exec()
 
-    def show_cookie_login_dialog(self):
+    def show_cookie_login_dialog(self) -> None:
         dialog = CustomOptionsDialog(self)
         dialog.tab_widget.setCurrentIndex(0)  # Select the Cookie Login tab
         if dialog.exec():
@@ -1761,24 +1636,20 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     f"Cookie file selected: {self.cookie_file_path}",
                 )
             else:
-                self.cookie_file_path = (
-                    None  # Clear path if dialog accepted but no file selected
-                )
+                self.cookie_file_path = None  # Clear path if dialog accepted but no file selected
 
-    def cancel_download(self):
+    def cancel_download(self) -> None:
         if self.current_download:
             self.current_download.cancelled = True
             self.status_label.setText("Cancelling download...")  # Set status directly
-            self.download_details_label.setText(
-                ""
-            )  # Clear details label on cancellation
+            self.download_details_label.setText("")  # Clear details label on cancellation
 
-    def show_ffmpeg_dialog(self):
+    def show_ffmpeg_dialog(self) -> None:
         dialog = FFmpegCheckDialog(self)
         dialog.exec()
 
     # Add method for showing time range dialog
-    def show_time_range_dialog(self):
+    def show_time_range_dialog(self) -> None:
         dialog = TimeRangeDialog(self)
         if dialog.exec():
             # Store the time range settings
@@ -1810,16 +1681,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 self.time_range_btn.setStyleSheet("")
                 self.time_range_btn.setToolTip("")
 
-    def show_ytdlp_setup_dialog(self):
+    def show_ytdlp_setup_dialog(self) -> None:
         """Show the yt-dlp setup dialog to configure yt-dlp"""
         yt_dlp_path = setup_ytdlp(self)
         if yt_dlp_path != "yt-dlp":
             success_dialog = QMessageBox(self)
             success_dialog.setIcon(QMessageBox.Icon.Information)
             success_dialog.setWindowTitle("yt-dlp Setup")
-            success_dialog.setText(
-                f"yt-dlp has been successfully configured at:\n{yt_dlp_path}"
-            )
+            success_dialog.setText(f"yt-dlp has been successfully configured at:\n{yt_dlp_path}")
             success_dialog.setWindowIcon(self.windowIcon())
             success_dialog.setStyleSheet(
                 """
@@ -1845,19 +1714,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             )
             success_dialog.exec()
 
-    def _analyze_url_with_subprocess(self, url):
+    def _analyze_url_with_subprocess(self, url) -> None:
         """Analyze URL using yt-dlp executable when Python module is not available"""
 
         try:
             yt_dlp_path = get_yt_dlp_path()
             if not yt_dlp_path:
-                raise Exception(
-                    "yt-dlp executable not found. Please install yt-dlp first."
-                )
+                raise Exception("yt-dlp executable not found. Please install yt-dlp first.")
 
-            self.signals.update_status.emit(
-                "Analyzing (30%)... Extracting info with yt-dlp executable"
-            )
+            self.signals.update_status.emit("Analyzing (30%)... Extracting info with yt-dlp executable")
 
             # Clean up the URL to handle both playlist and video URLs
             if "list=" in url and "watch?v=" in url:
@@ -1892,11 +1757,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 raise Exception(f"yt-dlp failed: {result.stderr}")
 
             # Parse JSON output - yt-dlp outputs one JSON object per line for playlists
-            json_lines = [
-                line.strip()
-                for line in result.stdout.strip().split("\n")
-                if line.strip()
-            ]
+            json_lines = [line.strip() for line in result.stdout.strip().split("\n") if line.strip()]
 
             if not json_lines:
                 raise Exception("No data returned from yt-dlp")
@@ -1994,23 +1855,21 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.signals.update_status.emit("Analyzing (85%)... Loading thumbnail")
             # Try to get thumbnail from playlist info first
             # Fallback to video thumbnail if playlist thumbnail not found or not a playlist
-            thumbnail_url = (self.playlist_info or {}).get("thumbnail") or (
-                self.video_info or {}
-            ).get("thumbnail")
+            thumbnail_url = (self.playlist_info or {}).get("thumbnail") or (self.video_info or {}).get(
+                "thumbnail"
+            )
 
             self.download_thumbnail(thumbnail_url)
 
             # Save thumbnail if enabled
             if self.save_thumbnail:
-                self.download_thumbnail_file(self.video_url, self.path_input.text()) # type: ignore[reportAttributeAccessIssue]
+                self.download_thumbnail_file(self.video_url, self.path_input.text())  # type: ignore[reportAttributeAccessIssue]
 
             # Handle subtitles
             self.signals.update_status.emit("Analyzing (90%)... Processing subtitles")
             self.selected_subtitles = []
             self.available_subtitles = self.video_info.get("subtitles", {})
-            self.available_automatic_subtitles = self.video_info.get(
-                "automatic_captions", {}
-            )
+            self.available_automatic_subtitles = self.video_info.get("automatic_captions", {})
 
             # Update subtitle UI
             QMetaObject.invokeMethod(

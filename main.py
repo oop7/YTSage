@@ -8,9 +8,7 @@ from src.core.ytsage_yt_dlp import (  # Import the new yt-dlp setup functions
     get_ytdlp_executable_path,
     setup_ytdlp,
 )
-from src.gui.ytsage_gui_main import (
-    YTSageApp,
-)  # Import the main application class from ytsage_gui_main
+from src.gui.ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
 
 
 def show_error_dialog(message):

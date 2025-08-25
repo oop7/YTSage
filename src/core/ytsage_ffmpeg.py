@@ -9,9 +9,15 @@ from pathlib import Path
 import requests
 
 from src.core.ytsage_logging import logger
+from src.utils.ytsage_constants import (
+    FFMPEG_7Z_DOWNLOAD_URL,
+    FFMPEG_7Z_SHA256_URL,
+    FFMPEG_ZIP_DOWNLOAD_URL,
+    OS_NAME,
+)
 
 
-def check_7zip_installed():
+def check_7zip_installed() -> bool:
     """Check if 7-Zip is installed on Windows."""
     try:
         subprocess.run(
@@ -25,7 +31,7 @@ def check_7zip_installed():
         return False
 
 
-def download_file(url, dest_path, progress_callback=None):
+def download_file(url, dest_path, progress_callback=None) -> bool:
     """Download a file from URL to destination path with progress indication."""
     try:
         response = requests.get(url, stream=True, timeout=30)  # Added timeout
@@ -42,16 +48,14 @@ def download_file(url, dest_path, progress_callback=None):
                     f.write(data)
                     if progress_callback:
                         progress = int((downloaded / total_size) * 100)
-                        progress_callback(
-                            f"⚡ Downloading FFmpeg components... {progress}%"
-                        )
+                        progress_callback(f"⚡ Downloading FFmpeg components... {progress}%")
         return True
     except requests.RequestException as e:
         logger.info(f"Download error: {str(e)}")
         return False
 
 
-def get_file_sha256(file_path):
+def get_file_sha256(file_path) -> str:
     """Calculate SHA-256 hash of a file."""
     sha256_hash = hashlib.sha256()
     with open(file_path, "rb") as f:
@@ -88,12 +92,7 @@ def verify_sha256(file_path, expected_hash_url) -> bool:
 def get_ffmpeg_install_path() -> Path:
     """Get the FFmpeg installation path."""
     if sys.platform == "win32":
-        return (
-            Path(os.getenv("LOCALAPPDATA"))  # type: ignore
-            / "ffmpeg"
-            / "ffmpeg-7.1.1-full_build"
-            / "bin"
-        )
+        return Path(os.getenv("LOCALAPPDATA")) / "ffmpeg" / "ffmpeg-7.1.1-full_build" / "bin"  # type: ignore
 
     elif sys.platform == "darwin":
         paths = ["/usr/local/bin", "/opt/homebrew/bin", "/usr/bin"]
@@ -105,7 +104,7 @@ def get_ffmpeg_install_path() -> Path:
         return Path("/usr/bin")  # Standard Linux path
 
 
-def get_ffmpeg_path():
+def get_ffmpeg_path() -> str | Path:
     """
     Get the FFmpeg executable path, either from PATH or installation directory.
     Returns:
@@ -133,9 +132,7 @@ def get_ffmpeg_path():
                 return ffmpeg_path
         else:
             # On Unix systems, use 'which' command
-            result = subprocess.run(
-                ["which", "ffmpeg"], capture_output=True, text=True, check=False
-            )
+            result = subprocess.run(["which", "ffmpeg"], capture_output=True, text=True, check=False)
             if result.returncode == 0 and result.stdout.strip():
                 ffmpeg_path = result.stdout.strip()
                 return ffmpeg_path
@@ -156,7 +153,7 @@ def get_ffmpeg_path():
     return "ffmpeg"
 
 
-def check_ffmpeg_installed():
+def check_ffmpeg_installed() -> bool:
     """Check if FFmpeg is installed and accessible."""
     try:
         # First try the PATH
@@ -179,9 +176,7 @@ def check_ffmpeg_installed():
 
         if ffmpeg_exe.exists():
             # Add to PATH if found
-            os.environ["PATH"] = (
-                f"{ffmpeg_path}{os.pathsep}{os.environ.get('PATH', '')}"
-            )
+            os.environ["PATH"] = f"{ffmpeg_path}{os.pathsep}{os.environ.get('PATH', '')}"
             return True
         return False
     except Exception as e:
@@ -189,7 +184,7 @@ def check_ffmpeg_installed():
         return False
 
 
-def install_ffmpeg_windows():
+def install_ffmpeg_windows() -> bool:
     """Install FFmpeg on Windows using 7z method primarily, with zip as fallback."""
     ffmpeg_path = get_ffmpeg_install_path()
 
@@ -200,12 +195,10 @@ def install_ffmpeg_windows():
 
     try:
         # Define variables - prioritize 7z version
-        ffmpeg_7z_url = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.7z"
-        ffmpeg_zip_url = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.zip"
-        sha256_url = "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-7.1.1-full_build.7z.sha256"
+        # ffmpeg variables moved to src\utils\ytsage_constants.py
         extract_dir = Path(os.getenv("LOCALAPPDATA")) / "ffmpeg"  # type: ignore
-        full_build_dir = Path(extract_dir) / "ffmpeg-7.1.1-full_build"
-        bin_dir = Path(full_build_dir) / "bin"
+        full_build_dir = extract_dir / "ffmpeg-7.1.1-full_build"
+        bin_dir = full_build_dir / "bin"
 
         # Create extraction directory if it doesn't exist
         extract_dir.mkdir(exist_ok=True)
@@ -218,7 +211,7 @@ def install_ffmpeg_windows():
 
             # Download 7z file
             if not download_file(
-                ffmpeg_7z_url,
+                FFMPEG_7Z_DOWNLOAD_URL,
                 temp_file,
                 progress_callback=lambda msg: logger.debug(msg),
             ):
@@ -226,27 +219,19 @@ def install_ffmpeg_windows():
                 use_7zip = False
             else:
                 # Verify SHA-256 hash for 7z file
-                if verify_sha256(temp_file, sha256_url):
+                if verify_sha256(temp_file, FFMPEG_7Z_SHA256_URL):
                     logger.info("Extracting FFmpeg components from 7z archive...")
                     try:
                         subprocess.run(
                             ["7z", "x", temp_file, f"-o{extract_dir}", "-y"],
-                            creationflags=(
-                                subprocess.CREATE_NO_WINDOW
-                                if sys.platform == "win32"
-                                else 0
-                            ),
+                            creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
                             timeout=300,
                         )  # 5-minute timeout
                     except Exception as e:
-                        logger.error(
-                            f"7z extraction failed: {str(e)}, trying zip fallback..."
-                        )
+                        logger.error(f"7z extraction failed: {str(e)}, trying zip fallback...")
                         use_7zip = False
                 else:
-                    logger.error(
-                        "SHA-256 verification failed for 7z file, trying zip fallback..."
-                    )
+                    logger.error("SHA-256 verification failed for 7z file, trying zip fallback...")
                     use_7zip = False
 
         # Fallback to zip method if 7z failed or not available
@@ -256,13 +241,11 @@ def install_ffmpeg_windows():
 
             # Download zip file
             if not download_file(
-                ffmpeg_zip_url,
+                FFMPEG_ZIP_DOWNLOAD_URL,
                 temp_file,
                 progress_callback=lambda msg: logger.debug(msg),
             ):
-                raise Exception(
-                    "Failed to download FFmpeg (both 7z and zip methods failed)"
-                )
+                raise Exception("Failed to download FFmpeg (both 7z and zip methods failed)")
 
             logger.info("Extracting FFmpeg components from zip archive...")
             try:
@@ -279,9 +262,7 @@ def install_ffmpeg_windows():
         if str(bin_dir) not in user_path.split(os.pathsep):
             subprocess.run(
                 ["setx", "PATH", f"{user_path};{bin_dir}"],
-                creationflags=(
-                    subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
-                ),
+                creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
             )
             os.environ["PATH"] = f"{user_path};{bin_dir}"
 
@@ -303,7 +284,7 @@ def install_ffmpeg_windows():
         return False
 
 
-def install_ffmpeg_macos():
+def install_ffmpeg_macos() -> bool:
     """Install FFmpeg on macOS using Homebrew."""
     try:
         # Check if Homebrew is installed
@@ -335,21 +316,17 @@ def install_ffmpeg_macos():
         return False
 
 
-def install_ffmpeg_linux():
+def install_ffmpeg_linux() -> bool:
     """Install FFmpeg on Linux using appropriate package manager."""
     try:
         # Detect the package manager
         if shutil.which("apt"):
             # Debian/Ubuntu
             subprocess.run(["sudo", "apt", "update"], check=True, timeout=60)
-            subprocess.run(
-                ["sudo", "apt", "install", "-y", "ffmpeg"], check=True, timeout=300
-            )
+            subprocess.run(["sudo", "apt", "install", "-y", "ffmpeg"], check=True, timeout=300)
         elif shutil.which("dnf"):
             # Fedora
-            subprocess.run(
-                ["sudo", "dnf", "install", "-y", "ffmpeg"], check=True, timeout=300
-            )
+            subprocess.run(["sudo", "dnf", "install", "-y", "ffmpeg"], check=True, timeout=300)
         elif shutil.which("pacman"):
             # Arch Linux
             subprocess.run(
@@ -359,9 +336,7 @@ def install_ffmpeg_linux():
             )
         elif shutil.which("snap"):
             # Universal snap package
-            subprocess.run(
-                ["sudo", "snap", "install", "ffmpeg"], check=True, timeout=300
-            )
+            subprocess.run(["sudo", "snap", "install", "ffmpeg"], check=True, timeout=300)
         else:
             raise Exception("No supported package manager found")
 
@@ -376,13 +351,13 @@ def install_ffmpeg_linux():
         return False
 
 
-def auto_install_ffmpeg():
+def auto_install_ffmpeg() -> bool:
     """Automatically install FFmpeg based on the operating system."""
-    if sys.platform == "win32":
+    if OS_NAME == "Windows":
         return install_ffmpeg_windows()
-    elif sys.platform == "darwin":
+    elif OS_NAME == "Darwin":
         return install_ffmpeg_macos()
-    elif sys.platform.startswith("linux"):
+    elif OS_NAME == "Linux":
         return install_ffmpeg_linux()
     else:
         logger.info(f"Unsupported operating system: {sys.platform}")

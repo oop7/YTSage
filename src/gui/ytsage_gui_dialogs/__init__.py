@@ -2,33 +2,31 @@
 Dialog modules for YTSage GUI.
 
 This package contains all dialog classes organized by functionality:
-- Base dialogs (LogWindow, AboutDialog)
-- Settings dialogs (DownloadSettingsDialog, AutoUpdateSettingsDialog)
-- Update dialogs (YTDLPUpdateDialog, update threads)
-- FFmpeg dialogs (FFmpegCheckDialog, installation)
-- Selection dialogs (SubtitleSelectionDialog, PlaylistSelectionDialog)
-- Custom dialogs (CustomCommandDialog, CookieLoginDialog, etc.)
+
+    - ytsage_dialogs_base: Base utility dialogs
+    - ytsage_dialogs_settings: Settings configuration dialogs
+    - ytsage_dialogs_update: Update-related dialogs and threads
+    - ytsage_dialogs_ffmpeg: FFmpeg installation dialogs
+    - ytsage_dialogs_selection: Subtitle and playlist selection dialogs
+    - ytsage_dialogs_custom: Custom functionality dialogs
 """
 
 # Re-export all dialog classes for backward compatibility
-from src.gui.dialogs.ytsage_dialogs_base import AboutDialog, LogWindow
-from src.gui.dialogs.ytsage_dialogs_custom import (
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_base import AboutDialog, LogWindow
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_custom import (
     CookieLoginDialog,
     CustomCommandDialog,
     CustomOptionsDialog,
     TimeRangeDialog,
 )
-from src.gui.dialogs.ytsage_dialogs_ffmpeg import FFmpegCheckDialog, FFmpegInstallThread
-from src.gui.dialogs.ytsage_dialogs_selection import (
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_ffmpeg import FFmpegCheckDialog, FFmpegInstallThread
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_selection import (
     PlaylistSelectionDialog,
     SponsorBlockCategoryDialog,
     SubtitleSelectionDialog,
 )
-from src.gui.dialogs.ytsage_dialogs_settings import (
-    AutoUpdateSettingsDialog,
-    DownloadSettingsDialog,
-)
-from src.gui.dialogs.ytsage_dialogs_update import (
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_settings import AutoUpdateSettingsDialog, DownloadSettingsDialog
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import (
     AutoUpdateThread,
     UpdateThread,
     VersionCheckThread,

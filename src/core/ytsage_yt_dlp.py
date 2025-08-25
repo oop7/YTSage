@@ -4,7 +4,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
 
 import requests
 from PySide6.QtCore import Qt, QThread, Signal
@@ -38,9 +37,7 @@ def get_ytdlp_install_dir() -> Path:
     system = platform.system()
     if system == "win32":
         # Prefer LOCALAPPDATA if set
-        local_appdata = Path(
-            os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local")
-        )
+        local_appdata = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
         return local_appdata / "YTSage" / "bin"
 
     elif system == "Darwin":  # macOS
@@ -84,7 +81,7 @@ class DownloadYtdlpThread(QThread):
         super().__init__()
         self.os_type = os_type
 
-    def run(self):
+    def run(self) -> None:
         try:
             url = YTDLP_URLS[self.os_type]
             install_dir = ensure_install_dir_exists()
@@ -216,16 +213,14 @@ class YtdlpSetupDialog(QDialog):
         """
         )
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         layout = QVBoxLayout()
         layout.setSpacing(15)
         layout.setContentsMargins(25, 25, 25, 25)
 
         # Header title
         title_label = QLabel("yt-dlp Setup Required")
-        title_label.setStyleSheet(
-            "font-size: 16px; font-weight: bold; color: #ffffff; padding: 5px 0;"
-        )
+        title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff; padding: 5px 0;")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
 
@@ -245,9 +240,7 @@ class YtdlpSetupDialog(QDialog):
         )
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label.setWordWrap(True)
-        info_label.setStyleSheet(
-            "font-size: 13px; color: #cccccc; padding: 5px; line-height: 1.4;"
-        )
+        info_label.setStyleSheet("font-size: 13px; color: #cccccc; padding: 5px; line-height: 1.4;")
         layout.addWidget(info_label)
 
         # Radio buttons with minimal spacing
@@ -292,9 +285,7 @@ class YtdlpSetupDialog(QDialog):
         # Status label with better spacing
         self.status_label = QLabel("")
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.status_label.setStyleSheet(
-            "font-size: 12px; color: #cccccc; padding: 8px 0;"
-        )
+        self.status_label.setStyleSheet("font-size: 12px; color: #cccccc; padding: 8px 0;")
         self.status_label.setWordWrap(True)
         layout.addWidget(self.status_label)
 
@@ -324,7 +315,7 @@ class YtdlpSetupDialog(QDialog):
         else:
             self.select_ytdlp_path()
 
-    def download_ytdlp(self):
+    def download_ytdlp(self) -> None:
         self.progress_bar.setVisible(True)
         self.progress_bar.setValue(0)
         self.status_label.setText("Downloading yt-dlp...")
@@ -336,10 +327,10 @@ class YtdlpSetupDialog(QDialog):
         self.download_thread.finished_signal.connect(self.download_finished)
         self.download_thread.start()
 
-    def update_progress(self, value):
+    def update_progress(self, value) -> None:
         self.progress_bar.setValue(value)
 
-    def download_finished(self, success, result):
+    def download_finished(self, success, result) -> None:
         self.setup_button.setEnabled(True)
         self.cancel_button.setEnabled(True)
 
@@ -379,7 +370,7 @@ class YtdlpSetupDialog(QDialog):
             )
             error_dialog.exec()
 
-    def select_ytdlp_path(self):
+    def select_ytdlp_path(self) -> None:
         if self.os_type == "windows":
             file_filter = "Executable Files (*.exe)"
         else:
@@ -411,9 +402,7 @@ class YtdlpSetupDialog(QDialog):
         """
         )
 
-        file_path, _ = file_dialog.getOpenFileName(
-            self, "Select yt-dlp executable", "", file_filter
-        )
+        file_path, _ = file_dialog.getOpenFileName(self, "Select yt-dlp executable", "", file_filter)
 
         if file_path:
             logger.debug(f"User selected file: {file_path}")
@@ -435,9 +424,7 @@ class YtdlpSetupDialog(QDialog):
                     check=False,
                     startupinfo=startupinfo,
                 )
-                logger.debug(
-                    f"Version check result: {result.returncode}, Output: {result.stdout.strip()}"
-                )
+                logger.debug(f"Version check result: {result.returncode}, Output: {result.stdout.strip()}")
 
                 if result.returncode == 0:
                     # File is valid, copy it to our app's bin directory
@@ -463,12 +450,8 @@ class YtdlpSetupDialog(QDialog):
                             logger.debug(f"Permissions set on Unix system")
 
                         # Return the path of the copied file
-                        self.status_label.setText(
-                            f"yt-dlp successfully copied to {target_path}"
-                        )
-                        logger.debug(
-                            f"Emitting setup_complete signal with path: {target_path}"
-                        )
+                        self.status_label.setText(f"yt-dlp successfully copied to {target_path}")
+                        logger.debug(f"Emitting setup_complete signal with path: {target_path}")
                         self.setup_complete.emit(target_path)
                         self.accept()
                     except Exception as copy_error:
@@ -476,9 +459,7 @@ class YtdlpSetupDialog(QDialog):
                         error_dialog = QMessageBox(self)
                         error_dialog.setIcon(QMessageBox.Icon.Critical)
                         error_dialog.setWindowTitle("Setup Error")
-                        error_dialog.setText(
-                            f"Error copying yt-dlp to app directory: {str(copy_error)}"
-                        )
+                        error_dialog.setText(f"Error copying yt-dlp to app directory: {str(copy_error)}")
                         error_dialog.setStyleSheet(
                             """
                             QMessageBox {
@@ -503,15 +484,11 @@ class YtdlpSetupDialog(QDialog):
                         )
                         error_dialog.exec()
                 else:
-                    logger.debug(
-                        f"File verification failed with return code: {result.returncode}"
-                    )
+                    logger.debug(f"File verification failed with return code: {result.returncode}")
                     error_dialog = QMessageBox(self)
                     error_dialog.setIcon(QMessageBox.Icon.Warning)
                     error_dialog.setWindowTitle("Invalid Executable")
-                    error_dialog.setText(
-                        "The selected file does not appear to be a valid yt-dlp executable."
-                    )
+                    error_dialog.setText("The selected file does not appear to be a valid yt-dlp executable.")
                     error_dialog.setStyleSheet(
                         """
                         QMessageBox {
@@ -580,9 +557,7 @@ def check_ytdlp_binary() -> Path | None:
                 os.chmod(exe_path, 0o755)
                 logger.info(f"Fixed permissions on yt-dlp at {exe_path}")
             except Exception as e:
-                logger.warning(
-                    f"Could not set executable permissions on {exe_path}: {e}"
-                )
+                logger.warning(f"Could not set executable permissions on {exe_path}: {e}")
                 return None
         return exe_path
 
@@ -610,9 +585,7 @@ def check_ytdlp_binary() -> Path | None:
                 return Path(yt_dlp_path)
         else:
             # On Unix systems, use 'which' command
-            result = subprocess.run(
-                ["which", "yt-dlp"], capture_output=True, text=True, check=False
-            )
+            result = subprocess.run(["which", "yt-dlp"], capture_output=True, text=True, check=False)
             if result.returncode == 0 and result.stdout.strip():
                 yt_dlp_path = result.stdout.strip()
                 logger.info(f"Found yt-dlp in PATH: {yt_dlp_path}")
@@ -672,7 +645,8 @@ def get_yt_dlp_path() -> Path:
 
     # If not found anywhere, fall back to the command name as a last resort
     logger.info("yt-dlp not found in app directory or PATH, falling back to command name")
-    return "yt-dlp" # type: ignore[return-value]
+    return "yt-dlp"  # type: ignore[return-value]
+
 
 def setup_ytdlp(parent_widget=None):
     """
@@ -686,7 +660,7 @@ def setup_ytdlp(parent_widget=None):
     # Store the setup result from the signal
     setup_result = {"path": None}
 
-    def on_setup_complete(path):
+    def on_setup_complete(path) -> None:
         logger.debug(f"Received setup_complete signal with path: {path}")
         setup_result["path"] = path
 
@@ -726,9 +700,7 @@ def setup_ytdlp(parent_widget=None):
                 error_dialog = QMessageBox(parent_widget)
                 error_dialog.setIcon(QMessageBox.Icon.Warning)
                 error_dialog.setWindowTitle("Setup Failed")
-                error_dialog.setText(
-                    "Failed to set up yt-dlp. Some features may not work correctly."
-                )
+                error_dialog.setText("Failed to set up yt-dlp. Some features may not work correctly.")
                 # Set the window icon to match the parent
                 error_dialog.setWindowIcon(parent_widget.windowIcon())
                 error_dialog.setStyleSheet(

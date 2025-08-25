@@ -19,9 +19,7 @@ from PySide6.QtWidgets import (
 
 
 class SubtitleSelectionDialog(QDialog):
-    def __init__(
-        self, available_manual, available_auto, previously_selected, parent=None
-    ):
+    def __init__(self, available_manual, available_auto, previously_selected, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle("Select Subtitles")
         self.setMinimumWidth(400)
@@ -29,12 +27,8 @@ class SubtitleSelectionDialog(QDialog):
 
         self.available_manual = available_manual
         self.available_auto = available_auto
-        self.previously_selected = set(
-            previously_selected
-        )  # Use a set for quick lookups
-        self.selected_subtitles = list(
-            previously_selected
-        )  # Initialize with previous selection
+        self.previously_selected = set(previously_selected)  # Use a set for quick lookups
+        self.selected_subtitles = list(previously_selected)  # Initialize with previous selection
 
         layout = QVBoxLayout(self)
         layout.setSpacing(10)
@@ -63,9 +57,7 @@ class SubtitleSelectionDialog(QDialog):
         # Scroll Area for the list
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
-        scroll_area.setStyleSheet(
-            "QScrollArea { border: none; }"
-        )  # Remove border around scroll area
+        scroll_area.setStyleSheet("QScrollArea { border: none; }")  # Remove border around scroll area
         layout.addWidget(scroll_area)
 
         # Container widget for list items (needed for scroll area)
@@ -115,7 +107,7 @@ class SubtitleSelectionDialog(QDialog):
 
         layout.addWidget(button_box)
 
-    def populate_list(self, filter_text=""):
+    def populate_list(self, filter_text="") -> None:
         # Clear existing checkboxes from layout
         while self.list_layout.count():
             item = self.list_layout.takeAt(0)
@@ -139,8 +131,7 @@ class SubtitleSelectionDialog(QDialog):
 
         if not combined_subs:
             no_subs_label = QLabel(
-                "No subtitles available"
-                + (f" matching '{filter_text}'" if filter_text else "")
+                "No subtitles available" + (f" matching '{filter_text}'" if filter_text else "")
             )
             no_subs_label.setStyleSheet("color: #aaaaaa; padding: 10px;")
             self.list_layout.addWidget(no_subs_label)
@@ -153,9 +144,7 @@ class SubtitleSelectionDialog(QDialog):
             item_text = combined_subs[lang_code]
             checkbox = QCheckBox(item_text)
             checkbox.setProperty("subtitle_id", item_text)  # Store the identifier
-            checkbox.setChecked(
-                item_text in self.previously_selected
-            )  # Check if previously selected
+            checkbox.setChecked(item_text in self.previously_selected)  # Check if previously selected
             checkbox.stateChanged.connect(self.update_selection)
             checkbox.setStyleSheet(
                 """
@@ -182,10 +171,10 @@ class SubtitleSelectionDialog(QDialog):
 
         self.list_layout.addStretch()  # Pushes items up if list is short
 
-    def filter_list(self):
+    def filter_list(self) -> None:
         self.populate_list(self.filter_input.text())
 
-    def update_selection(self, state):
+    def update_selection(self, state) -> None:
         sender = self.sender()
         subtitle_id = sender.property("subtitle_id")
         if state == Qt.CheckState.Checked.value:
@@ -195,18 +184,18 @@ class SubtitleSelectionDialog(QDialog):
             if subtitle_id in self.previously_selected:
                 self.previously_selected.remove(subtitle_id)
 
-    def get_selected_subtitles(self):
+    def get_selected_subtitles(self) -> list:
         # Return the final set as a list
         return list(self.previously_selected)
 
-    def accept(self):
+    def accept(self) -> None:
         # Update the final list before closing
         self.selected_subtitles = self.get_selected_subtitles()
         super().accept()
 
 
 class PlaylistSelectionDialog(QDialog):
-    def __init__(self, playlist_entries, previously_selected_string, parent=None):
+    def __init__(self, playlist_entries, previously_selected_string, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle("Select Playlist Videos")
         self.setMinimumWidth(500)
@@ -252,9 +241,7 @@ class PlaylistSelectionDialog(QDialog):
         # Scrollable area for checkboxes
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
-        scroll_area.setStyleSheet(
-            "QScrollArea { border: none; }"
-        )  # Remove border around scroll area
+        scroll_area.setStyleSheet("QScrollArea { border: none; }")  # Remove border around scroll area
         scroll_widget = QWidget()
         self.list_layout = QVBoxLayout(scroll_widget)  # Layout for checkboxes
         self.list_layout.setContentsMargins(0, 0, 0, 0)
@@ -327,7 +314,7 @@ class PlaylistSelectionDialog(QDialog):
         """
         )
 
-    def _parse_selection_string(self, selection_string):
+    def _parse_selection_string(self, selection_string) -> set:
         """Parses a yt-dlp playlist selection string (e.g., '1-3,5,7-9') into a set of 1-based indices."""
         selected_indices = set()
         if not selection_string:
@@ -351,7 +338,7 @@ class PlaylistSelectionDialog(QDialog):
                     pass  # Ignore invalid numbers
         return selected_indices
 
-    def _populate_list(self, previously_selected_string):
+    def _populate_list(self, previously_selected_string) -> None:
         """Populates the scroll area with checkboxes for each video."""
         selected_indices = self._parse_selection_string(previously_selected_string)
 
@@ -399,47 +386,40 @@ class PlaylistSelectionDialog(QDialog):
             self.checkboxes.append(checkbox)
         self.list_layout.addStretch()  # Push checkboxes to the top
 
-    def _select_all(self):
+    def _select_all(self) -> None:
         for checkbox in self.checkboxes:
             checkbox.setChecked(True)
 
-    def _deselect_all(self):
+    def _deselect_all(self) -> None:
         for checkbox in self.checkboxes:
             checkbox.setChecked(False)
 
-    def _condense_indices(self, indices):
+    def _condense_indices(self, indices: list[int]) -> str:
         """Condenses a list of 1-based indices into a yt-dlp selection string."""
         if not indices:
             return ""
-        indices = sorted(list(set(indices)))
-        if not indices:  # Check again after sorting/set conversion
-            return ""
+
+        # Remove duplicates and sort in one step
+        indices = sorted(set(indices))
 
         ranges = []
-        start = indices[0]
-        end = indices[0]
-        for i in range(1, len(indices)):
-            if indices[i] == end + 1:
-                end = indices[i]
+        start = end = indices[0]
+
+        for num in indices[1:]:
+            if num == end + 1:
+                end = num
             else:
-                if start == end:
-                    ranges.append(str(start))
-                else:
-                    ranges.append(f"{start}-{end}")
-                start = indices[i]
-                end = indices[i]
-        # Add the last range
-        if start == end:
-            ranges.append(str(start))
-        else:
-            ranges.append(f"{start}-{end}")
+                ranges.append(f"{start}-{end}" if start != end else str(start))
+                start = end = num
+
+        # Append the last range
+        ranges.append(f"{start}-{end}" if start != end else str(start))
+
         return ",".join(ranges)
 
-    def get_selected_items_string(self):
+    def get_selected_items_string(self) -> str | None:
         """Returns the selection string based on checked boxes."""
-        selected_indices = [
-            cb.property("video_index") for cb in self.checkboxes if cb.isChecked()
-        ]
+        selected_indices = [cb.property("video_index") for cb in self.checkboxes if cb.isChecked()]
 
         # Check if all items are selected
         if len(selected_indices) == len(self.playlist_entries):
@@ -495,7 +475,7 @@ class SponsorBlockCategoryDialog(QDialog):
         },
     }
 
-    def __init__(self, previously_selected=None, parent=None):
+    def __init__(self, previously_selected=None, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle("SponsorBlock Categories")
         self.setMinimumWidth(500)
@@ -505,23 +485,19 @@ class SponsorBlockCategoryDialog(QDialog):
         if parent:
             self.setWindowIcon(parent.windowIcon())
 
-        self.previously_selected = (
-            set(previously_selected) if previously_selected else set()
-        )
+        self.previously_selected = set(previously_selected) if previously_selected else set()
         self.checkboxes = {}
 
         self.init_ui()
         self.apply_styling()
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         layout = QVBoxLayout(self)
 
         # Title and description
         title_label = QLabel("SponsorBlock Categories")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet(
-            "font-size: 16px; font-weight: bold; color: #ffffff; margin: 10px;"
-        )
+        title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff; margin: 10px;")
         layout.addWidget(title_label)
 
         desc_label = QLabel(
@@ -647,7 +623,7 @@ class SponsorBlockCategoryDialog(QDialog):
 
         layout.addWidget(button_box)
 
-    def _get_button_style(self):
+    def _get_button_style(self) -> str:
         """Returns the standard button style for this dialog."""
         return """
             QPushButton {
@@ -666,7 +642,7 @@ class SponsorBlockCategoryDialog(QDialog):
             }
         """
 
-    def apply_styling(self):
+    def apply_styling(self) -> None:
         """Apply the dialog styling to match the rest of the application."""
         self.setStyleSheet(
             """
@@ -683,23 +659,23 @@ class SponsorBlockCategoryDialog(QDialog):
         """
         )
 
-    def select_defaults(self):
+    def select_defaults(self) -> None:
         """Select only the default categories."""
         for category_id, checkbox in self.checkboxes.items():
             default_value = self.SPONSORBLOCK_CATEGORIES[category_id]["default"]
             checkbox.setChecked(default_value)
 
-    def select_all(self):
+    def select_all(self) -> None:
         """Select all categories."""
         for checkbox in self.checkboxes.values():
             checkbox.setChecked(True)
 
-    def deselect_all(self):
+    def deselect_all(self) -> None:
         """Deselect all categories."""
         for checkbox in self.checkboxes.values():
             checkbox.setChecked(False)
 
-    def get_selected_categories(self):
+    def get_selected_categories(self) -> list:
         """Returns a list of selected category IDs."""
         selected = []
         for category_id, checkbox in self.checkboxes.items():
@@ -707,7 +683,7 @@ class SponsorBlockCategoryDialog(QDialog):
                 selected.append(category_id)
         return selected
 
-    def get_selected_categories_string(self):
+    def get_selected_categories_string(self) -> str:
         """Returns a comma-separated string of selected categories for yt-dlp."""
         selected = self.get_selected_categories()
         return ",".join(selected) if selected else ""

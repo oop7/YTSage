@@ -29,7 +29,7 @@ from src.core.ytsage_yt_dlp import check_ytdlp_installed, get_yt_dlp_path
 
 
 class LogWindow(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle("yt-dlp Log")
         self.setMinimumSize(700, 500)
@@ -53,7 +53,7 @@ class LogWindow(QDialog):
 
         layout.addWidget(self.log_text)
 
-    def append_log(self, message):
+    def append_log(self, message) -> None:
         self.log_text.append(message)
         # Auto-scroll to bottom
         scrollbar = self.log_text.verticalScrollBar()
@@ -61,7 +61,7 @@ class LogWindow(QDialog):
 
 
 class AboutDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._parent = parent  # Store parent to access version etc.
         self.setWindowTitle("About YTSage")
@@ -147,7 +147,7 @@ class AboutDialog(QDialog):
         """
         )
 
-    def _create_app_info_section(self):
+    def _create_app_info_section(self) -> QWidget:
         """Create the application information section - compact version"""
         widget = QWidget()
         layout = QVBoxLayout(widget)
@@ -167,14 +167,10 @@ class AboutDialog(QDialog):
         layout.addWidget(version_label)
 
         # Description - more compact
-        description_label = QLabel(
-            "A simple GUI frontend for the powerful yt-dlp video downloader."
-        )
+        description_label = QLabel("A simple GUI frontend for the powerful yt-dlp video downloader.")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        description_label.setStyleSheet(
-            "color: #ffffff; font-size: 11px; margin: 6px 0;"
-        )
+        description_label.setStyleSheet("color: #ffffff; font-size: 11px; margin: 6px 0;")
         layout.addWidget(description_label)
 
         # Author and Links - compact single line
@@ -203,7 +199,7 @@ class AboutDialog(QDialog):
 
         return widget
 
-    def _create_system_info_section(self):
+    def _create_system_info_section(self) -> QWidget:
         """Create the system information section with compact design"""
         # Create main container with compact styling
         container = QWidget()
@@ -289,7 +285,7 @@ class AboutDialog(QDialog):
 
         return container
 
-    def _show_loading_message(self):
+    def _show_loading_message(self) -> None:
         """Show a compact loading message while system information is being gathered."""
         loading_label = QLabel("🔄 Loading system information...")
         loading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -308,15 +304,13 @@ class AboutDialog(QDialog):
 
     def _create_status_item(
         self, icon, name, status_text, version_text, path_text=None, cache_status=""
-    ):
+    ) -> QWidget:
         """Create a compact status item widget"""
         item_widget = QWidget()
         # Adjust height based on whether we have path info
         item_height = 50 if path_text else 35
         item_widget.setMaximumHeight(item_height)
-        item_widget.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
-        )
+        item_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         # Main layout
         item_layout = QVBoxLayout(item_widget)
@@ -345,9 +339,7 @@ class AboutDialog(QDialog):
             version_info += cache_status
 
         version_label = QLabel(version_info)
-        version_label.setStyleSheet(
-            "font-size: 11px; color: #cccccc;"
-        )  # Increased from 10px
+        version_label.setStyleSheet("font-size: 11px; color: #cccccc;")  # Increased from 10px
         version_label.setWordWrap(False)
         first_row.addWidget(version_label)
 
@@ -386,7 +378,7 @@ class AboutDialog(QDialog):
 
         return item_widget
 
-    def update_system_info(self):
+    def update_system_info(self) -> None:
         """Update the system information display with compact layout."""
         # Clear existing items
         for i in reversed(range(self.status_container.count())):
@@ -415,7 +407,9 @@ class AboutDialog(QDialog):
             from datetime import datetime
 
             cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
-            cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
+            cache_status = (
+                f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
+            )
 
         ytdlp_item = self._create_status_item(
             "🎥",
@@ -449,7 +443,9 @@ class AboutDialog(QDialog):
             from datetime import datetime
 
             cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
-            cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
+            cache_status = (
+                f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
+            )
 
         ffmpeg_item = self._create_status_item(
             "🎬",
@@ -460,7 +456,7 @@ class AboutDialog(QDialog):
         )
         self.status_container.addWidget(ffmpeg_item)
 
-    def refresh_version_info(self):
+    def refresh_version_info(self) -> None:
         """Refresh version information manually."""
         self.refresh_btn.setText("🔄 Refreshing...")
         self.refresh_btn.setEnabled(False)
@@ -479,7 +475,7 @@ class AboutDialog(QDialog):
         self.refresh_thread.finished.connect(self.on_refresh_finished)
         self.refresh_thread.start()
 
-    def on_refresh_finished(self, success):
+    def on_refresh_finished(self, success) -> None:
         """Handle refresh completion."""
         self.refresh_btn.setText("🔄 Refresh")
         self.refresh_btn.setEnabled(True)

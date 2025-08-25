@@ -12,6 +12,7 @@ from src.core.ytsage_yt_dlp import get_yt_dlp_path
 
 try:
     import yt_dlp  # Keep yt_dlp import here - only downloader uses it.
+
     YT_DLP_AVAILABLE = True
 except ImportError:
     YT_DLP_AVAILABLE = False
@@ -50,7 +51,7 @@ class DownloadThread(QThread):
         rate_limit=None,
         download_section=None,
         force_keyframes=False,
-    ):
+    ) -> None:
         super().__init__()
         self.url = url
         self.path = Path(path)
@@ -59,9 +60,7 @@ class DownloadThread(QThread):
         self.is_playlist = is_playlist
         self.merge_subs = merge_subs
         self.enable_sponsorblock = enable_sponsorblock
-        self.sponsorblock_categories = (
-            sponsorblock_categories if sponsorblock_categories else ["sponsor"]
-        )
+        self.sponsorblock_categories = sponsorblock_categories if sponsorblock_categories else ["sponsor"]
         self.resolution = resolution
         self.playlist_items = playlist_items
         self.save_description = save_description
@@ -73,24 +72,18 @@ class DownloadThread(QThread):
         self.paused = False
         self.cancelled = False
         self.process = None
-        self.use_direct_command = (
-            True  # Flag to use direct CLI command instead of Python API
-        )
+        self.use_direct_command = True  # Flag to use direct CLI command instead of Python API
         self.last_output_time = time.time()
         self.timeout_timer = None
         self.current_filename = None  # Initialize filename storage
         self.last_file_path = None  # Initialize full file path storage
         self.subtitle_files = []  # Track subtitle files that are created
-        self.initial_subtitle_files = (
-            set()
-        )  # Track initial subtitle files before download
+        self.initial_subtitle_files = set()  # Track initial subtitle files before download
 
-    def cleanup_partial_files(self):
+    def cleanup_partial_files(self) -> None:
         """Delete any partial files including .part and unmerged format-specific files"""
         try:
-            pattern = re.compile(
-                r"\.f\d+\."
-            )  # Pattern to match format codes like .f243.
+            pattern = re.compile(r"\.f\d+\.")  # Pattern to match format codes like .f243.
             for file_path in self.path.iterdir():
                 if file_path.suffix == ".part" or pattern.search(file_path.name):
                     try:
@@ -100,7 +93,7 @@ class DownloadThread(QThread):
         except Exception as e:
             self.error_signal.emit(f"Error cleaning partial files: {str(e)}")
 
-    def cleanup_subtitle_files(self):
+    def cleanup_subtitle_files(self) -> None:
         """Delete subtitle files after they have been merged into the video file"""
         deleted_count = [0, 0]
 
@@ -131,13 +124,11 @@ class DownloadThread(QThread):
             for subtitle_file in new_subtitle_files:
                 deleted_count[1] += safe_delete(path=subtitle_file)
             else:
-                logger.debug(
-                    f"Deleted {deleted_count[1]} of {len(new_subtitle_files)} new subtitle files"
-                )
+                logger.debug(f"Deleted {deleted_count[1]} of {len(new_subtitle_files)} new subtitle files")
         except Exception as e:
             logger.error(f"Error cleaning subtitle files: {str(e)}")
 
-    def check_file_exists(self):
+    def check_file_exists(self) -> bool | None:
         """Check if the file already exists before downloading"""
         try:
             logger.debug("Starting file existence check")
@@ -148,9 +139,7 @@ class DownloadThread(QThread):
                 "no_warnings": True,  # <-- Suppress warnings during check
                 "ignoreerrors": True,  # Also ignore other potential errors during this check
                 "outtmpl": {"default": Path.joinpath(self.path, "%(title)s.%(ext)s")},
-                "format": (
-                    self.format_id if self.format_id else "best"
-                ),  # Use selected format or best
+                "format": (self.format_id if self.format_id else "best"),  # Use selected format or best
             }
             if self.cookie_file:
                 ydl_opts_check["cookiefile"] = self.cookie_file
@@ -161,9 +150,7 @@ class DownloadThread(QThread):
 
                     # Handle cases where info extraction fails silently
                     if not info:
-                        logger.debug(
-                            "Failed to extract info during file existence check. Skipping check."
-                        )
+                        logger.debug("Failed to extract info during file existence check. Skipping check.")
                         return False  # Proceed with download attempt
 
                 # Get the title and sanitize it for filename
@@ -190,21 +177,17 @@ class DownloadThread(QThread):
             traceback.print_exc()
             return None
 
-    def _build_yt_dlp_command(self):
+    def _build_yt_dlp_command(self) -> list:
         """Build the yt-dlp command line with all options for direct execution."""
         # Use the new yt-dlp path function from ytsage_yt_dlp module
         yt_dlp_path = get_yt_dlp_path()
-        cmd = [yt_dlp_path]
+        cmd: list = [yt_dlp_path]
         logger.debug(f"Using yt-dlp from: {yt_dlp_path}")
 
         # Format selection strategy - use format ID if provided or fallback to resolution
         if self.format_id:
             # Strip the -drc suffix if present to fix issues with certain audio formats
-            clean_format_id = (
-                self.format_id.split("-drc")[0]
-                if "-drc" in self.format_id
-                else self.format_id
-            )
+            clean_format_id = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
 
             # Check if this is an audio-only format
             is_audio_format = False
@@ -221,13 +204,10 @@ class DownloadThread(QThread):
                             if fmt.get("format_id") == clean_format_id:
                                 if (
                                     fmt.get("vcodec") == "none"
-                                    or "audio only"
-                                    in fmt.get("format_note", "").lower()
+                                    or "audio only" in fmt.get("format_note", "").lower()
                                 ):
                                     is_audio_format = True
-                                    logger.debug(
-                                        f"Detected audio-only format for ID: {clean_format_id}"
-                                    )
+                                    logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
                                 break
             except Exception as e:
                 logger.debug(f"Error checking if format is audio-only: {e}")
@@ -238,9 +218,7 @@ class DownloadThread(QThread):
                 logger.debug(f"Using audio-only format selection: {clean_format_id}")
             else:
                 cmd.extend(["-f", f"{clean_format_id}+bestaudio/best"])
-                logger.debug(
-                    f"Using video format selection with audio: {clean_format_id}+bestaudio/best"
-                )
+                logger.debug(f"Using video format selection with audio: {clean_format_id}+bestaudio/best")
 
             # Determine output format based on the selected format ID - only for video formats
             if not is_audio_format:
@@ -290,11 +268,9 @@ class DownloadThread(QThread):
         # Handle playlist directory creation if needed
         if self.is_playlist:
             # Create output template with playlist subfolder
-            output_template = self.path.joinpath(
-                "%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s"
-            )
+            output_template = self.path.joinpath("%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s")
 
-        cmd.extend(["-o", output_template])
+        cmd.extend(["-o", output_template.as_posix()])
 
         # Add common options
         cmd.append("--force-overwrites")
@@ -317,9 +293,7 @@ class DownloadThread(QThread):
                     lang_code = sub_selection.split(" - ")[0]
                     lang_codes.append(lang_code)
                 except Exception as e:
-                    logger.warning(
-                        f"Could not parse subtitle selection '{sub_selection}': {e}"
-                    )
+                    logger.warning(f"Could not parse subtitle selection '{sub_selection}': {e}")
 
             if lang_codes:
                 cmd.extend(["--sub-langs", ",".join(lang_codes)])
@@ -367,7 +341,7 @@ class DownloadThread(QThread):
 
         return cmd
 
-    def run(self):
+    def run(self) -> None:
         try:
             logger.debug("Starting download thread")
 
@@ -408,7 +382,7 @@ class DownloadThread(QThread):
 
             traceback.print_exc()
 
-    def _run_direct_command(self):
+    def _run_direct_command(self) -> None:
         """Run yt-dlp as a direct command line process instead of using Python API."""
         try:
             cmd = self._build_yt_dlp_command()
@@ -485,16 +459,14 @@ class DownloadThread(QThread):
                             f"Download failed with return code {return_code}. This may be due to a conflict with multiple yt-dlp installations. Try uninstalling any system-installed yt-dlp (e.g. through snap or apt) and restart the application."
                         )
                     else:
-                        self.error_signal.emit(
-                            f"Download failed with return code {return_code}"
-                        )
+                        self.error_signal.emit(f"Download failed with return code {return_code}")
                     self.cleanup_partial_files()
 
         except Exception as e:
             self.error_signal.emit(f"Error in direct command: {str(e)}")
             self.cleanup_partial_files()
 
-    def _parse_output_line(self, line):
+    def _parse_output_line(self, line) -> None:
         """Parse yt-dlp command output to update progress and status."""
         line = line.strip()
         # logger.info(f"yt-dlp: {line}")  # Log all output - OPTIONALLY UNCOMMENT FOR VERBOSE DEBUG
@@ -574,9 +546,7 @@ class DownloadThread(QThread):
                     # If it's a relative path, make it absolute based on current path
                     subtitle_file = Path.joinpath(self.path, subtitle_file)
                 self.subtitle_files.append(subtitle_file)
-                logger.debug(
-                    f"Tracking subtitle file for later cleanup: {subtitle_file}"
-                )
+                logger.debug(f"Tracking subtitle file for later cleanup: {subtitle_file}")
             return
 
         # Send status updates based on output line content
@@ -660,9 +630,7 @@ class DownloadThread(QThread):
 
                 self.file_exists_signal.emit(filename)
             else:
-                logger.info(
-                    f"Could not extract filename from 'already downloaded' line: {line}"
-                )
+                logger.info(f"Could not extract filename from 'already downloaded' line: {line}")
                 self.status_signal.emit("⚠️ File already exists")  # Fallback status
         elif "Finished downloading" in line:
             self.progress_signal.emit(100)
@@ -688,18 +656,18 @@ class DownloadThread(QThread):
 
             self.update_details.emit("")  # Clear details label on completion
 
-    def _run_python_api(self):
+    def _run_python_api(self) -> None:
         """Original download method using Python API - kept for reference."""
         # The existing run method code using yt_dlp.YoutubeDL starts here
         # This method is no longer used by default
 
-    def pause(self):
+    def pause(self) -> None:
         self.paused = True
 
-    def resume(self):
+    def resume(self) -> None:
         self.paused = False
 
-    def cancel(self):
+    def cancel(self) -> None:
         self.cancelled = True
         # Terminate the subprocess if it's running
         if self.process:

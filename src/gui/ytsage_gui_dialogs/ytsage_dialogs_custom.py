@@ -26,19 +26,21 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
+from typing import cast, TYPE_CHECKING
 
 try:
     import yt_dlp
-
     YT_DLP_AVAILABLE = True
 except ImportError:
     YT_DLP_AVAILABLE = False
 
+if TYPE_CHECKING:
+    from src.gui.ytsage_gui_main import YTSageApp   # only for type hints (no runtime import)
 
 class CustomCommandDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.parent = parent
+        self._parent = self.parent()
         self.setWindowTitle("Custom yt-dlp Command")
         self.setMinimumSize(600, 400)
 
@@ -97,9 +99,7 @@ class CustomCommandDialog(QDialog):
             }
         """
         )
-        layout.insertWidget(
-            layout.indexOf(self.command_input), self.sponsorblock_checkbox
-        )
+        layout.insertWidget(layout.indexOf(self.command_input), self.sponsorblock_checkbox)
 
         # Buttons
         button_layout = QHBoxLayout()
@@ -151,25 +151,23 @@ class CustomCommandDialog(QDialog):
         """
         )
 
-    def run_custom_command(self):
-        url = self.parent.url_input.text().strip()
+    def run_custom_command(self) -> None:
+        url = self._parent.url_input.text().strip() # type: ignore[reportAttributeAccessIssue]
         if not url:
             self.log_output.append("Error: No URL provided")
             return
 
         command = self.command_input.toPlainText().strip()
-        path = self.parent.path_input.text().strip()
+        path = self._parent.path_input.text().strip() # type: ignore[reportAttributeAccessIssue]
 
         self.log_output.clear()
         self.log_output.append(f"Running command with URL: {url}")
         self.run_btn.setEnabled(False)
 
         # Start command in thread
-        threading.Thread(
-            target=self._run_command_thread, args=(command, url, path), daemon=True
-        ).start()
+        threading.Thread(target=self._run_command_thread, args=(command, url, path), daemon=True).start()
 
-    def _run_command_thread(self, command, url, path):
+    def _run_command_thread(self, command, url, path) -> None:
         try:
 
             class CommandLogger:
@@ -245,7 +243,7 @@ class CustomCommandDialog(QDialog):
 
 
 class CookieLoginDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle("Login with Cookies")
         self.setMinimumSize(400, 150)
@@ -263,9 +261,7 @@ class CookieLoginDialog(QDialog):
         # File path input and browse button
         path_layout = QHBoxLayout()
         self.cookie_path_input = QLineEdit()
-        self.cookie_path_input.setPlaceholderText(
-            "Path to cookies file (Netscape format)"
-        )
+        self.cookie_path_input.setPlaceholderText("Path to cookies file (Netscape format)")
         path_layout.addWidget(self.cookie_path_input)
 
         self.browse_button = QPushButton("Browse")
@@ -275,35 +271,32 @@ class CookieLoginDialog(QDialog):
         layout.addLayout(path_layout)
 
         # Dialog buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
 
-    def browse_cookie_file(self):
+    def browse_cookie_file(self) -> None:
         # Open file dialog to select cookie file
-        file_dialog = QFileDialog(self)
-        file_dialog.setFileMode(QFileDialog.ExistingFile)
-        file_dialog.setNameFilter(
-            "Cookies files (*.txt *.lwp)"
-        )  # Common cookie file extensions
-        if file_dialog.exec():
-            selected_files = file_dialog.selectedFiles()
-            if selected_files:
-                self.cookie_path_input.setText(selected_files[0])
+        selected_files, _ = QFileDialog.getOpenFileName(
+            self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)"
+        )
+        if selected_files:
+            self.cookie_path_input.setText(selected_files[0])
 
-    def get_cookie_file_path(self):
+    def get_cookie_file_path(self) -> str:
         # Return the selected cookie file path
         return self.cookie_path_input.text()
 
 
 class CustomOptionsDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.parent = parent
+        self._parent: YTSageApp = cast("YTSageApp",self.parent()) # cast will help with auto complete and type hint checking.
         self.setWindowTitle("Custom Options")
         self.setMinimumSize(600, 500)
-
         layout = QVBoxLayout(self)
 
         # Create tab widget to organize content
@@ -326,19 +319,15 @@ class CustomOptionsDialog(QDialog):
         # File path input and browse button
         path_layout = QHBoxLayout()
         self.cookie_path_input = QLineEdit()
-        self.cookie_path_input.setPlaceholderText(
-            "Path to cookies file (Netscape format)"
-        )
-        if hasattr(parent, "cookie_file_path") and parent.cookie_file_path:
-            self.cookie_path_input.setText(parent.cookie_file_path)
+        self.cookie_path_input.setPlaceholderText("Path to cookies file (Netscape format)")
+        if hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
+            self.cookie_path_input.setText(self._parent.cookie_file_path.as_posix())
         path_layout.addWidget(self.cookie_path_input)
 
         self.browse_button = QPushButton("Browse")
         self.browse_button.clicked.connect(self.browse_cookie_file)
         path_layout.addWidget(self.browse_button)
-        cookies_layout.addLayout(
-            path_layout
-        )  # Add the horizontal layout to cookies layout
+        cookies_layout.addLayout(path_layout)  # Add the horizontal layout to cookies layout
 
         # Status indicator for cookies
         self.cookie_status = QLabel("")
@@ -434,7 +423,9 @@ class CustomOptionsDialog(QDialog):
         self.tab_widget.addTab(command_tab, "Custom Command")
 
         # Dialog buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -488,7 +479,7 @@ class CustomOptionsDialog(QDialog):
         """
         )
 
-    def browse_cookie_file(self):
+    def browse_cookie_file(self) -> None:
         # Open file dialog to select cookie file
         selected_files, _ = QFileDialog.getOpenFileName(
             self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)"
@@ -499,15 +490,15 @@ class CustomOptionsDialog(QDialog):
             self.cookie_status.setText("Cookie file selected - Click OK to apply")
             self.cookie_status.setStyleSheet("color: #00cc00; font-style: italic;")
 
-    def get_cookie_file_path(self):
+    def get_cookie_file_path(self) -> Path | None:
         # Return the selected cookie file path if it's not empty
-        path = self.cookie_path_input.text().strip()
-        if path and Path(path).exists():
+        path = Path(self.cookie_path_input.text().strip())
+        if path and path.exists():
             return path
         return None
 
-    def run_custom_command(self):
-        url = self.parent.url_input.text().strip()
+    def run_custom_command(self) -> None:
+        url = self._parent.url_input.text().strip()
         if not url:
             self.log_output.append("Error: No URL provided")
             return
@@ -515,25 +506,23 @@ class CustomOptionsDialog(QDialog):
         command = self.command_input.toPlainText().strip()
 
         # Get download path from parent
-        path = self.parent.last_path
+        path = self._parent.last_path
 
         self.log_output.clear()
         self.log_output.append(f"Running command with URL: {url}")
         self.run_btn.setEnabled(False)
 
         # Start command in thread
-        threading.Thread(
-            target=self._run_command_thread, args=(command, url, path), daemon=True
-        ).start()
+        threading.Thread(target=self._run_command_thread, args=(command, url, path), daemon=True).start()
 
-    def _run_command_thread(self, command, url, path):
+    def _run_command_thread(self, command, url, path) -> None:
         try:
 
             class CommandLogger:
                 def debug(self, msg):
                     QMetaObject.invokeMethod(
                         self.dialog.log_output,
-                        "append",
+                        b"append",
                         Qt.ConnectionType.QueuedConnection,
                         Q_ARG(str, msg),
                     )
@@ -541,7 +530,7 @@ class CustomOptionsDialog(QDialog):
                 def warning(self, msg):
                     QMetaObject.invokeMethod(
                         self.dialog.log_output,
-                        "append",
+                        b"append",
                         Qt.ConnectionType.QueuedConnection,
                         Q_ARG(str, f"Warning: {msg}"),
                     )
@@ -549,7 +538,7 @@ class CustomOptionsDialog(QDialog):
                 def error(self, msg):
                     QMetaObject.invokeMethod(
                         self.dialog.log_output,
-                        "append",
+                        b"append",
                         Qt.ConnectionType.QueuedConnection,
                         Q_ARG(str, f"Error: {msg}"),
                     )
@@ -565,14 +554,12 @@ class CustomOptionsDialog(QDialog):
             base_cmd = [yt_dlp_path] + args + [url]
 
             if self.sponsorblock_checkbox.isChecked():
-                base_cmd.extend(
-                    ["--sponsorblock-remove", "sponsor,selfpromo,interaction"]
-                )
+                base_cmd.extend(["--sponsorblock-remove", "sponsor,selfpromo,interaction"])
 
             # Show the full command
             QMetaObject.invokeMethod(
                 self.log_output,
-                "append",
+                b"append",
                 Qt.ConnectionType.QueuedConnection,
                 Q_ARG(str, f"Full command: {' '.join(base_cmd)}"),
             )
@@ -588,10 +575,10 @@ class CustomOptionsDialog(QDialog):
             )
 
             # Stream output
-            for line in proc.stdout:
+            for line in proc.stdout: # type: ignore[reportOptionalIterable]
                 QMetaObject.invokeMethod(
                     self.log_output,
-                    "append",
+                    b"append",
                     Qt.ConnectionType.QueuedConnection,
                     Q_ARG(str, line.rstrip()),
                 )
@@ -600,21 +587,21 @@ class CustomOptionsDialog(QDialog):
             if ret != 0:
                 QMetaObject.invokeMethod(
                     self.log_output,
-                    "append",
+                    b"append",
                     Qt.ConnectionType.QueuedConnection,
                     Q_ARG(str, f"Command exited with code {ret}"),
                 )
             else:
                 QMetaObject.invokeMethod(
                     self.log_output,
-                    "append",
+                    b"append",
                     Qt.ConnectionType.QueuedConnection,
                     Q_ARG(str, "Command completed successfully"),
                 )
         except Exception as e:
             QMetaObject.invokeMethod(
                 self.log_output,
-                "append",
+                b"append",
                 Qt.ConnectionType.QueuedConnection,
                 Q_ARG(str, f"Error: {str(e)}"),
             )
@@ -622,16 +609,15 @@ class CustomOptionsDialog(QDialog):
             # Re-enable the run button
             QMetaObject.invokeMethod(
                 self.run_btn,
-                "setEnabled",
+                b"setEnabled",
                 Qt.ConnectionType.QueuedConnection,
                 Q_ARG(bool, True),
             )
 
 
 class TimeRangeDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.parent = parent
         self.setWindowTitle("Download Video Section")
         self.setMinimumWidth(400)
 
@@ -670,9 +656,7 @@ class TimeRangeDialog(QDialog):
         layout.addWidget(time_group)
 
         # Force keyframes option
-        self.force_keyframes = QCheckBox(
-            "Force keyframes at cuts (better accuracy, slower)"
-        )
+        self.force_keyframes = QCheckBox("Force keyframes at cuts (better accuracy, slower)")
         self.force_keyframes.setChecked(True)
         self.force_keyframes.setStyleSheet(
             """
@@ -725,7 +709,9 @@ class TimeRangeDialog(QDialog):
         self.force_keyframes.stateChanged.connect(self.update_preview)
 
         # Buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -775,7 +761,7 @@ class TimeRangeDialog(QDialog):
         # Initialize preview
         self.update_preview()
 
-    def update_preview(self):
+    def update_preview(self) -> None:
         start = self.start_time_input.text().strip()
         end = self.end_time_input.text().strip()
 
@@ -794,7 +780,7 @@ class TimeRangeDialog(QDialog):
 
         self.preview_label.setText(preview)
 
-    def get_download_sections(self):
+    def get_download_sections(self) -> str | None:
         """Returns the download sections command arguments or None if no selection made"""
         start = self.start_time_input.text().strip()
         end = self.end_time_input.text().strip()
@@ -813,6 +799,6 @@ class TimeRangeDialog(QDialog):
 
         return time_range
 
-    def get_force_keyframes(self):
+    def get_force_keyframes(self) -> bool:
         """Returns whether to force keyframes at cuts"""
         return self.force_keyframes.isChecked()
