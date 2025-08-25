@@ -10,7 +10,6 @@ import time
 from pathlib import Path
 
 import requests
-import yt_dlp.version
 from packaging import version
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushButton, QVBoxLayout
@@ -48,6 +47,7 @@ class VersionCheckThread(QThread):
                     text=True,
                     timeout=30,  # 30 second timeout
 <<<<<<< HEAD
+<<<<<<< HEAD
                     creationflags=SUBPROCESS_CREATIONFLAGS,
 =======
                     startupinfo=(
@@ -60,16 +60,22 @@ class VersionCheckThread(QThread):
                     ),
                     creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
+=======
+                    creationflags=SUBPROCESS_CREATIONFLAGS,
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
                 )
                 if result.returncode == 0:
                     current_version = result.stdout.strip()
                 else:  # Try fallback if command failed
                     if YT_DLP_AVAILABLE:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         import yt_dlp
 
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
+=======
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
                         current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
                     else:
                         error_message = "yt-dlp not available."
@@ -135,6 +141,7 @@ class UpdateThread(QThread):
             self.update_progress.emit(20)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             # Extra logic moved to src\utils\ytsage_constants.py
             is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
 =======
@@ -147,6 +154,10 @@ class UpdateThread(QThread):
 
             is_app_managed = any(yt_dlp_path.parent == dir_path for dir_path in app_managed_dirs)
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
+=======
+            # Extra logic moved to src\utils\ytsage_constants.py
+            is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
 
             if is_app_managed:
                 self.update_status.emit("📦 Updating app-managed yt-dlp binary...")
@@ -159,9 +170,7 @@ class UpdateThread(QThread):
                 self.update_progress.emit(100)
                 error_message = "✅ yt-dlp has been successfully updated!"
             else:
-                error_message = (
-                    "❌ Failed to update yt-dlp. Please try again or check your internet connection."
-                )
+                error_message = "❌ Failed to update yt-dlp. Please try again or check your internet connection."
 
         except requests.RequestException as e:
             error_message = f"❌ Network error during update: {str(e)}"
@@ -183,6 +192,7 @@ class UpdateThread(QThread):
         try:
             logger.info("UpdateThread: Checking for yt-dlp updates...")
 
+<<<<<<< HEAD
             result = subprocess.run(
                 [yt_dlp_path, "-U"],
                 capture_output=True,
@@ -190,6 +200,10 @@ class UpdateThread(QThread):
                 timeout=60,
                 creationflags=SUBPROCESS_CREATIONFLAGS,
             )
+=======
+            # Determine the URL based on OS
+            # Extra logic moved to src\utils\ytsage_constants.py
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
 
             if result.returncode == 0:
                 # Make executable on Unix systems
@@ -202,7 +216,7 @@ class UpdateThread(QThread):
                     logger.debug(f"yt-dlp output: {result.stdout.strip()}")
 =======
             # Download with progress tracking and timeout
-            response = requests.get(url, stream=True, timeout=30)
+            response = requests.get(YTDLP_DOWNLOAD_URL, stream=True, timeout=30)
             if response.status_code != 200:
                 self.update_status.emit(f"❌ Download failed: HTTP {response.status_code}")
                 return False
@@ -229,13 +243,13 @@ class UpdateThread(QThread):
             self.update_progress.emit(85)
 
             # Make executable on Unix systems
-            if sys.platform != "win32":
+            if OS_NAME != "Windows":
                 os.chmod(temp_file, 0o755)
 
             # Replace the old file with the new one
             try:
                 # On Windows, we need to remove the old file first
-                if sys.platform == "win32" and Path(yt_dlp_path).exists():
+                if OS_NAME == "Windows" and Path(yt_dlp_path).exists():
                     yt_dlp_path.unlink(missing_ok=True)
 
                 temp_file.rename(yt_dlp_path)
@@ -254,6 +268,7 @@ class UpdateThread(QThread):
             return False
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         except Exception as e:
             logger.error(f"UpdateThread: Unexpected error during update: {e}", exc_info=True)
             self.update_status.emit(f"❌ Unexpected error during update: {e}")
@@ -263,6 +278,9 @@ class UpdateThread(QThread):
 =======
     def _update_via_pip(self, startupinfo) -> bool:
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
+=======
+    def _update_via_pip(self) -> bool:
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
         """Update yt-dlp via pip."""
         try:
             import pkg_resources
@@ -554,9 +572,7 @@ class AutoUpdateThread(QThread):
             # Get current version
             current_version = get_ytdlp_version()
             if "Error" in current_version:
-                logger.warning(
-                    "AutoUpdateThread: Could not determine current yt-dlp version, skipping auto-update"
-                )
+                logger.warning("AutoUpdateThread: Could not determine current yt-dlp version, skipping auto-update")
                 self.update_finished.emit(False, "Could not determine current yt-dlp version")
                 return
 
@@ -627,10 +643,14 @@ class AutoUpdateThread(QThread):
             # Extra logic moved to src\utils\ytsage_constants.py
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
 =======
             is_app_managed = any(yt_dlp_path.parent == dir_path for dir_path in app_managed_dirs)
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
+=======
+            is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
 
             if is_app_managed:
                 logger.info("AutoUpdateThread: Updating app-managed yt-dlp binary...")
@@ -645,10 +665,14 @@ class AutoUpdateThread(QThread):
 
     def _update_binary(self, yt_dlp_path: Path) -> bool:
 <<<<<<< HEAD
+<<<<<<< HEAD
         """Update yt-dlp binary using its built-in updater."""
 =======
         """Update yt-dlp binary directly from GitHub releases (silent version)."""
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
+=======
+        """Update yt-dlp binary using its built-in updater."""
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
         try:
             logger.info("AutoUpdateThread: Checking for yt-dlp updates...")
 
@@ -661,10 +685,14 @@ class AutoUpdateThread(QThread):
             )
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
             if result.returncode == 0:
                 # Make executable on Unix systems
                 if OS_NAME != "Windows":
                     os.chmod(yt_dlp_path, 0o755)
+<<<<<<< HEAD
 =======
             # Download without progress tracking (silent)
             response = requests.get(url, stream=True)
@@ -672,6 +700,8 @@ class AutoUpdateThread(QThread):
                 logger.error(f"AutoUpdateThread: Download failed: HTTP {response.status_code}")
                 return False
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
+=======
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
 
                 logger.info("AutoUpdateThread: yt-dlp update completed successfully.")
                 if result.stdout:
@@ -683,6 +713,13 @@ class AutoUpdateThread(QThread):
 
         except subprocess.TimeoutExpired:
             logger.error("AutoUpdateThread: yt-dlp update timed out.")
+<<<<<<< HEAD
+=======
+            return False
+
+        except Exception as e:
+            logger.error(f"AutoUpdateThread: Unexpected error during update: {e}", exc_info=True)
+>>>>>>> 9aae8aa (- refactor: QMetaObject.invokeMethod to Signal)
             return False
 
 <<<<<<< HEAD

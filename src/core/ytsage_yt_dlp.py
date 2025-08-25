@@ -1,8 +1,8 @@
 import os
-import platform
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Optional
 
 import requests
 from PySide6.QtCore import Qt, QThread, Signal
@@ -36,50 +36,6 @@ from src.utils.ytsage_constants import (
 # get_ytdlp_executable_path() moved to src\utils\ytsage_constants.py
 # get_os_type() moved to src\utils\ytsage_constants.py
 # ensure_install_dir_exists() moved to src\utils\ytsage_constants.py
-
-
-<<<<<<< HEAD
-=======
-# Define installation paths
-def get_ytdlp_install_dir() -> Path:
-    """Get the OS-specific yt-dlp installation directory"""
-    system = platform.system()
-    if system == "win32":
-        # Prefer LOCALAPPDATA if set
-        local_appdata = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
-        return local_appdata / "YTSage" / "bin"
-
-    elif system == "Darwin":  # macOS
-        return Path.home() / "Library" / "Application Support" / "YTSage" / "bin"
-
-    else:  # Linux and other UNIX-like
-        return Path.home() / ".local" / "share" / "YTSage" / "bin"
-
-
-def get_ytdlp_executable_path() -> Path:
-    """Get the full path to the yt-dlp executable based on OS"""
-    install_dir = get_ytdlp_install_dir()
-    if sys.platform == "win32":
-        return install_dir.joinpath("yt-dlp.exe")
-    else:
-        return install_dir.joinpath("yt-dlp")
-
-
-def get_os_type() -> str:
-    """Detect the operating system"""
-    if sys.platform == "win32":
-        return "windows"
-    elif sys.platform == "darwin":
-        return "macos"
-    else:
-        return "linux"
-
-
-def ensure_install_dir_exists() -> Path:
-    """Make sure the installation directory exists"""
-    install_dir = get_ytdlp_install_dir()
-    install_dir.mkdir(exist_ok=True)
-    return install_dir
 
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
@@ -365,11 +321,7 @@ class YtdlpSetupDialog(QDialog):
             error_dialog.exec()
 
     def select_ytdlp_path(self) -> None:
-<<<<<<< HEAD
         if OS_NAME == "Windows":
-=======
-        if self.os_type == "windows":
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
             file_filter = "Executable Files (*.exe)"
         else:
             file_filter = "All Files (*)"
@@ -410,15 +362,7 @@ class YtdlpSetupDialog(QDialog):
                 # Try to run yt-dlp --version
                 logger.debug(f"Verifying file with --version command")
                 result = subprocess.run(
-<<<<<<< HEAD
                     [file_path, "--version"], capture_output=True, text=True, check=False, creationflags=SUBPROCESS_CREATIONFLAGS
-=======
-                    [file_path, "--version"],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    startupinfo=startupinfo,
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
                 )
                 logger.debug(f"Version check result: {result.returncode}, Output: {result.stdout.strip()}")
 
@@ -550,10 +494,6 @@ def check_ytdlp_binary() -> Optional[Path]:
                 logger.info(f"Fixed permissions on yt-dlp at {exe_path}")
             except Exception as e:
                 logger.warning(f"Could not set executable permissions on {exe_path}: {e}")
-<<<<<<< HEAD
-=======
-                return None
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         return exe_path
 
     # If not found in app directory, check if yt-dlp is available in PATH

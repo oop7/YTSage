@@ -1,21 +1,9 @@
 import sys
 
-
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from src.core.ytsage_logging import logger
-from src.core.ytsage_yt_dlp import (  # Import the new yt-dlp setup functions
-    check_ytdlp_binary,
-    setup_ytdlp,
-)
-from src.gui.ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
-
-
-from src.core.ytsage_logging import logger
-from src.core.ytsage_yt_dlp import (  # Import the new yt-dlp setup functions
-    check_ytdlp_binary,
-    setup_ytdlp,
-)
+from src.core.ytsage_yt_dlp import check_ytdlp_binary, setup_ytdlp  # Import the new yt-dlp setup functions
 from src.gui.ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
 
 

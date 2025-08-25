@@ -12,7 +12,6 @@ from packaging import version
 
 from src.core.ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
 from src.core.ytsage_logging import logger
-<<<<<<< HEAD
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import (
     APP_CONFIG_FILE,
@@ -22,9 +21,6 @@ from src.utils.ytsage_constants import (
     YTDLP_APP_BIN_PATH,
     YTDLP_DOWNLOAD_URL,
 )
-=======
-from src.core.ytsage_yt_dlp import get_yt_dlp_path  # Import the new function to avoid import errors
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
 # Cache for version information to avoid delays
 _version_cache = {
@@ -269,20 +265,6 @@ def get_ffmpeg_version_direct() -> str:
 # get_app_data_dir() moved to src\utils\ytsage_constants.py
 # get_config_file_path() moved to src\utils\ytsage_constants.py
 # ensure_app_data_dir() moved to src\utils\ytsage_constants.py
-
-
-<<<<<<< HEAD
-=======
-def get_config_file_path() -> Path:
-    """Get the path to the main configuration file."""
-    return get_app_data_dir() / "ytsage_config.json"
-
-
-def ensure_app_data_dir() -> Path:
-    """Ensure the application data directory exists."""
-    data_dir = get_app_data_dir()
-    data_dir.mkdir(parents=True, exist_ok=True)
-    return data_dir
 
 
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)

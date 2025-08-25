@@ -13,10 +13,7 @@ from src.utils.ytsage_constants import (
     FFMPEG_7Z_SHA256_URL,
     FFMPEG_ZIP_DOWNLOAD_URL,
     OS_NAME,
-<<<<<<< HEAD
     SUBPROCESS_CREATIONFLAGS,
-=======
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 )
 
 
@@ -89,11 +86,8 @@ def verify_sha256(file_path, expected_hash_url) -> bool:
 
 def get_ffmpeg_install_path() -> Path:
     """Get the FFmpeg installation path."""
-<<<<<<< HEAD
+
     if OS_NAME == "Windows":
-=======
-    if sys.platform == "win32":
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
         return Path(os.getenv("LOCALAPPDATA")) / "ffmpeg" / "ffmpeg-7.1.1-full_build" / "bin"  # type: ignore
 
     elif OS_NAME == "Darwin":
@@ -222,11 +216,7 @@ def install_ffmpeg_windows() -> bool:
                     try:
                         subprocess.run(
                             ["7z", "x", temp_file, f"-o{extract_dir}", "-y"],
-<<<<<<< HEAD
                             creationflags=SUBPROCESS_CREATIONFLAGS,
-=======
-                            creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
                             timeout=300,
                         )  # 5-minute timeout
                     except Exception as e:
@@ -264,11 +254,7 @@ def install_ffmpeg_windows() -> bool:
         if str(bin_dir) not in user_path.split(os.pathsep):
             subprocess.run(
                 ["setx", "PATH", f"{user_path};{bin_dir}"],
-<<<<<<< HEAD
                 creationflags=SUBPROCESS_CREATIONFLAGS,
-=======
-                creationflags=(subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0),
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
             )
             os.environ["PATH"] = f"{user_path};{bin_dir}"
 
