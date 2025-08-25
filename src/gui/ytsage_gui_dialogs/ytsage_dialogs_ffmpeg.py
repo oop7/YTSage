@@ -3,57 +3,52 @@ FFmpeg installation dialogs for YTSage application.
 Contains dialogs and threads for checking and installing FFmpeg.
 """
 
-import sys
-import os
-import webbrowser
 import contextlib
+import webbrowser
 from io import StringIO
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QPushButton, QStyle, QSizePolicy, QDialogButtonBox)
-from PySide6.QtCore import QThread, Signal, Qt
-from PySide6.QtGui import QIcon
 
-from ...core.ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
+from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+
+from src.core.ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
+from src.utils.ytsage_constants import ICON_PATH
 
 
 class FFmpegInstallThread(QThread):
     finished = Signal(bool)
     progress = Signal(str)
 
-    def run(self):
+    def run(self) -> None:
         # Redirect stdout to capture progress messages
         output = StringIO()
         with contextlib.redirect_stdout(output):
             success = auto_install_ffmpeg()
-            
+
         # Process captured output and emit progress signals
         for line in output.getvalue().splitlines():
             self.progress.emit(line)
-            
+
         self.finished.emit(success)
 
 
 class FFmpegCheckDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle('FFmpeg Installation')
+        self.setWindowTitle("FFmpeg Installation")
         self.setMinimumWidth(450)
         self.setMinimumHeight(200)
         self.resize(450, 220)
-        
+
         # Set the window icon to match the main app
         if parent and parent.windowIcon():
             self.setWindowIcon(parent.windowIcon())
         else:
             # Try to load the icon directly if parent not available
-            # Navigate from src/gui/dialogs/ to project root, then to assets/Icon/
-            current_dir = os.path.dirname(os.path.abspath(__file__))  # dialogs/
-            gui_dir = os.path.dirname(current_dir)                    # gui/
-            src_dir = os.path.dirname(gui_dir)                        # src/
-            project_root = os.path.dirname(src_dir)                   # project root
-            icon_path = os.path.join(project_root, 'assets', 'Icon', 'icon.png')
-            if os.path.exists(icon_path):
-                self.setWindowIcon(QIcon(icon_path))
+            # icon_path logic moved to src\utils\ytsage_constants.py
+
+            if ICON_PATH.exists():
+                self.setWindowIcon(QIcon(ICON_PATH.as_posix()))
 
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
@@ -66,10 +61,7 @@ class FFmpegCheckDialog(QDialog):
         layout.addWidget(header_text)
 
         # Message
-        self.message_label = QLabel(
-            "YTSage needs FFmpeg to process videos.\n\n"
-            "Choose an installation option below:"
-        )
+        self.message_label = QLabel("YTSage needs FFmpeg to process videos.\n\n" "Choose an installation option below:")
         self.message_label.setWordWrap(True)
         self.message_label.setStyleSheet("font-size: 13px; color: #cccccc; padding: 10px 0; line-height: 1.4;")
         self.message_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -80,7 +72,8 @@ class FFmpegCheckDialog(QDialog):
         self.progress_label.setWordWrap(True)
         self.progress_label.setMinimumHeight(60)  # Smaller but visible area
         self.progress_label.setMaximumHeight(80)  # Limit maximum height
-        self.progress_label.setStyleSheet("""
+        self.progress_label.setStyleSheet(
+            """
             QLabel {
                 background-color: #1d1e22;
                 color: #cccccc;
@@ -91,17 +84,18 @@ class FFmpegCheckDialog(QDialog):
                 font-size: 11px;
                 line-height: 1.2;
             }
-        """)
+        """
+        )
         self.progress_label.hide()
         layout.addWidget(self.progress_label)
-        
+
         # Add minimal stretch - just enough to push buttons down slightly
         layout.addSpacing(10)
 
         # Buttons container - simple approach that should work
         button_layout = QHBoxLayout()
         button_layout.setSpacing(15)  # Simple spacing
-        
+
         # Install button
         self.install_btn = QPushButton("Install FFmpeg")
         self.install_btn.clicked.connect(self.start_installation)
@@ -109,7 +103,7 @@ class FFmpegCheckDialog(QDialog):
 
         # Manual install button
         self.manual_btn = QPushButton("Manual Guide")
-        self.manual_btn.clicked.connect(lambda: webbrowser.open('https://github.com/oop7/ffmpeg-install-guide'))
+        self.manual_btn.clicked.connect(lambda: webbrowser.open("https://github.com/oop7/ffmpeg-install-guide"))
         button_layout.addWidget(self.manual_btn)
 
         # Close button
@@ -120,7 +114,8 @@ class FFmpegCheckDialog(QDialog):
         layout.addLayout(button_layout)
 
         # Style the dialog to match app theme
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QDialog {
                 background-color: #15181b;
                 color: #ffffff;
@@ -148,16 +143,17 @@ class FFmpegCheckDialog(QDialog):
                 background-color: #666666;
                 color: #999999;
             }
-        """)
+        """
+        )
 
         # Initialize installation thread
         self.install_thread = None
 
-    def start_installation(self):
+    def start_installation(self) -> None:
         self.install_btn.setEnabled(False)
         self.manual_btn.setEnabled(False)
         self.close_btn.setEnabled(False)
-        
+
         # Check if FFmpeg is already installed
         if check_ffmpeg_installed():
             self.message_label.setText("FFmpeg is already installed!")
@@ -167,7 +163,7 @@ class FFmpegCheckDialog(QDialog):
             self.manual_btn.hide()
             self.close_btn.setEnabled(True)
             return
-            
+
         self.message_label.setText("Installing FFmpeg... Please wait")
         self.progress_label.show()
 
@@ -176,10 +172,10 @@ class FFmpegCheckDialog(QDialog):
         self.install_thread.progress.connect(self.update_progress)
         self.install_thread.start()
 
-    def update_progress(self, message):
+    def update_progress(self, message) -> None:
         self.progress_label.setText(message)
 
-    def installation_finished(self, success):
+    def installation_finished(self, success) -> None:
         if success:
             self.message_label.setText("FFmpeg has been installed successfully!")
             self.progress_label.setText("Installation complete. You can now close this dialog and continue using YTSage.")
@@ -190,5 +186,5 @@ class FFmpegCheckDialog(QDialog):
             self.progress_label.setText("Please try using the manual installation guide instead.")
             self.install_btn.setEnabled(True)
             self.manual_btn.setEnabled(True)
-        
+
         self.close_btn.setEnabled(True)

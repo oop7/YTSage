@@ -149,4 +149,4 @@ QMessageBox QLabel {
 QMessageBox QPushButton {
     min-width: 80px;
 }
-""" 
+"""
