@@ -115,16 +115,16 @@ python main.py
 <div align="center">
 <table>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/f95f7bfb-8591-4d32-b795-68e61efd670c" alt="Main Interface" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/f7b3ebab-3054-4c77-8109-c899a8b10047" alt="Playlist Download" width="400"/></td>
+    <td><img src="assets\branding\screenshots\main.png" alt="Main Interface" width="400"/></td>
+    <td><img src="assets\branding\screenshots\playlist.png" alt="Playlist Download" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Main Interface</em></td>
     <td align="center"><em>Playlist Download</em></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/a80d2ae2-0031-4ed0-bee4-93293634c62a" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="https://github.com/user-attachments/assets/5236e3cc-8a8d-4d85-a660-782a740ef9af" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
+    <td><img src="assets\branding\screenshots\audio_format.png" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
+    <td><img src="assets\branding\screenshots\subtitle_options.png" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Audio Format</em></td>
