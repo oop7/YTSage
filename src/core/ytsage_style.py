@@ -79,21 +79,59 @@ QProgressBar::chunk {
     border-radius: 2px;
 }
 QComboBox {
-    padding: 5px;
+    padding: 8px;
     border: 2px solid #1b2021;
     border-radius: 4px;
     background-color: #1b2021;
     color: #ffffff;
     min-height: 20px;
 }
+QComboBox:hover {
+    border: 2px solid #c90000;
+}
+QComboBox:focus {
+    border: 2px solid #c90000;
+}
 QComboBox::drop-down {
     border: none;
-    width: 20px;
+    width: 30px;
+    background-color: #1b2021;
+    border-radius: 0 4px 4px 0;
+}
+QComboBox::drop-down:hover {
+    background-color: #c90000;
 }
 QComboBox::down-arrow {
-    image: url(down_arrow.png);
-    width: 12px;
-    height: 12px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #ffffff;
+    margin: auto;
+}
+QComboBox QAbstractItemView {
+    border: 2px solid #1b2021;
+    border-radius: 4px;
+    background-color: #1b2021;
+    color: #ffffff;
+    selection-background-color: #c90000;
+    selection-color: #ffffff;
+    outline: none;
+}
+QComboBox QAbstractItemView::item {
+    height: 30px;
+    padding: 5px;
+    border: none;
+    background-color: #1b2021;
+    color: #ffffff;
+}
+QComboBox QAbstractItemView::item:hover {
+    background-color: #c90000;
+    color: #ffffff;
+}
+QComboBox QAbstractItemView::item:selected {
+    background-color: #c90000;
+    color: #ffffff;
 }
 QCheckBox {
     spacing: 5px;
@@ -131,6 +169,20 @@ QRadioButton::indicator:checked {
 }
 QLabel {
     color: #ffffff;
+}
+QGroupBox {
+    color: #ffffff;
+    border: 2px solid #1b2021;
+    border-radius: 4px;
+    margin-top: 1ex;
+    padding-top: 10px;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px 0 5px;
+    color: #c90000;
+    font-weight: bold;
 }
 QTextEdit, QPlainTextEdit {
     background-color: #1b2021;
