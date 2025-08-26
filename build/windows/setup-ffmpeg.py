@@ -13,28 +13,11 @@ FFMPEG_PATH = os.environ.get('FFMPEG_PATH', r'C:\Users\atela\AppData\Local\ffmpe
 
 # Build options for executable
 build_exe_options = {
-    # Packages to include
+    # Let cx_Freeze auto-discover packages from main.py instead of explicit listing
     "packages": [
         "PySide6.QtCore",
         "PySide6.QtGui", 
         "PySide6.QtWidgets",
-        "src.gui.ytsage_gui_main",
-        "src.core.ytsage_utils",
-        "src.core.ytsage_downloader",
-        "src.core.ytsage_ffmpeg",
-        "src.core.ytsage_yt_dlp",
-        "src.core.ytsage_style",
-        "src.core.ytsage_logging",
-        "src.gui.ytsage_gui_format_table",
-        "src.gui.ytsage_gui_video_info",
-        "src.gui.ytsage_gui_dialogs",
-        "src.gui.ytsage_gui_dialogs.ytsage_dialogs_base",
-        "src.gui.ytsage_gui_dialogs.ytsage_dialogs_custom",
-        "src.gui.ytsage_gui_dialogs.ytsage_dialogs_ffmpeg",
-        "src.gui.ytsage_gui_dialogs.ytsage_dialogs_selection",
-        "src.gui.ytsage_gui_dialogs.ytsage_dialogs_settings",
-        "src.gui.ytsage_gui_dialogs.ytsage_dialogs_update",
-        "src.utils.ytsage_constants",
         # Additional packages that might be needed
         "requests",
         "PIL",  # Pillow is imported as PIL
@@ -73,8 +56,9 @@ build_exe_options = {
         "tests"
     ],
     
-    # Include files (assets + FFmpeg binaries)
+    # Include files (assets + FFmpeg binaries + source code)
     "include_files": [
+        ("src/", "src/"),  # Include entire src directory
         ("assets/Icon/icon.png", "assets/Icon/icon.png"),
         ("assets/sound/notification.mp3", "assets/sound/notification.mp3"),
         ("assets/branding/icons/YTSage.ico", "YTSage.ico"),
