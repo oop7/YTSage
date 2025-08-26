@@ -75,14 +75,14 @@ jobs:
       run: |
         .\venv\Scripts\Activate.ps1
         Write-Host "Building Standard Version..."
-        .\build\windows\windows-build-universal.ps1 -Verbose
+        python build\windows\windows_build_universal.py --verbose
     
     - name: Build FFmpeg Version (MSI + ZIP)
       shell: powershell
       run: |
         .\venv\Scripts\Activate.ps1
         Write-Host "Building FFmpeg Version..."
-        .\build\windows\windows-build-universal.ps1 -FFmpeg -Verbose
+        python build\windows\windows_build_universal.py --ffmpeg --verbose
     
     - name: Prepare release artifacts
       shell: powershell
