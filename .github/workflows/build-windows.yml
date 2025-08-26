@@ -68,12 +68,7 @@ jobs:
         $setupFFmpegContent = $setupFFmpegContent -replace 'version="[^"]*"', "version=`"$version`""
         Set-Content "build/windows/setup-ffmpeg.py" -Value $setupFFmpegContent
         
-        # Update build script
-        $buildScript = Get-Content "build/windows/windows-build-universal.ps1" -Raw
-        $buildScript = $buildScript -replace '\$SCRIPT_VERSION = "[^"]*"', "`$SCRIPT_VERSION = `"$version`""
-        Set-Content "build/windows/windows-build-universal.ps1" -Value $buildScript
-        
-        Write-Host "Version updated in all files"
+        Write-Host "Version updated in setup files (build script auto-detects version)"
     
     - name: Build Standard Version (MSI + ZIP)
       shell: powershell
