@@ -60,17 +60,17 @@ jobs:
         
         # Update setup.py
         $setupContent = Get-Content "build/windows/setup.py" -Raw
-        $setupContent = $setupContent -replace 'version\s*=\s*["\'][^"\']*["\']', "version='$version'"
+        $setupContent = $setupContent -replace 'version="[^"]*"', "version=`"$version`""
         Set-Content "build/windows/setup.py" -Value $setupContent
         
         # Update setup-ffmpeg.py
         $setupFFmpegContent = Get-Content "build/windows/setup-ffmpeg.py" -Raw
-        $setupFFmpegContent = $setupFFmpegContent -replace 'version\s*=\s*["\'][^"\']*["\']', "version='$version'"
+        $setupFFmpegContent = $setupFFmpegContent -replace 'version="[^"]*"', "version=`"$version`""
         Set-Content "build/windows/setup-ffmpeg.py" -Value $setupFFmpegContent
         
         # Update build script
         $buildScript = Get-Content "build/windows/windows-build-universal.ps1" -Raw
-        $buildScript = $buildScript -replace '\$SCRIPT_VERSION\s*=\s*["\'][^"\']*["\']', "`$SCRIPT_VERSION = '$version'"
+        $buildScript = $buildScript -replace '\$SCRIPT_VERSION = "[^"]*"', "`$SCRIPT_VERSION = `"$version`""
         Set-Content "build/windows/windows-build-universal.ps1" -Value $buildScript
         
         Write-Host "Version updated in all files"
