@@ -53,6 +53,7 @@ class DownloadThread(QThread):
         save_description=False,
         embed_chapters=False,
         cookie_file=None,
+        browser_cookies=None,
         rate_limit=None,
         download_section=None,
         force_keyframes=False,
@@ -71,6 +72,7 @@ class DownloadThread(QThread):
         self.save_description = save_description
         self.embed_chapters = embed_chapters
         self.cookie_file = cookie_file
+        self.browser_cookies = browser_cookies
         self.rate_limit = rate_limit
         self.download_section = download_section
         self.force_keyframes = force_keyframes
@@ -143,7 +145,10 @@ class DownloadThread(QThread):
                 "format": (self.format_id if self.format_id else "best"),  # Use selected format or best
             }
             if self.cookie_file:
-                ydl_opts_check["cookiefile"] = self.cookie_file
+                ydl_opts_check["cookiefile"] = str(self.cookie_file)
+            elif self.browser_cookies:
+                ydl_opts_check["cookiesfrombrowser"] = (self.browser_cookies.split(':')[0], 
+                                                       self.browser_cookies.split(':')[1] if ':' in self.browser_cookies else None)
 
             if YT_DLP_AVAILABLE:
                 with yt_dlp.YoutubeDL(ydl_opts_check) as ydl:
@@ -312,7 +317,9 @@ class DownloadThread(QThread):
 
         # Add cookies if specified
         if self.cookie_file:
-            cmd.extend(["--cookies", self.cookie_file])
+            cmd.extend(["--cookies", str(self.cookie_file)])
+        elif self.browser_cookies:
+            cmd.extend(["--cookies-from-browser", self.browser_cookies])
 
         # Add rate limit if specified
         if self.rate_limit:
