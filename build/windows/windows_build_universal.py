@@ -57,23 +57,23 @@ class YTSageBuildScript:
     
     def print_step(self, message):
         """Print step message"""
-        print(f"🔄 {message}")
+        print(f"[STEP] {message}")
     
     def print_info(self, message):
         """Print info message"""
-        print(f"ℹ️  {message}")
+        print(f"[INFO] {message}")
     
     def print_success(self, message):
         """Print success message"""
-        print(f"✅ {message}")
+        print(f"[SUCCESS] {message}")
     
     def print_warning(self, message):
         """Print warning message"""
-        print(f"⚠️  {message}")
+        print(f"[WARNING] {message}")
     
     def print_error(self, message):
         """Print error message"""
-        print(f"❌ {message}")
+        print(f"[ERROR] {message}")
     
     def run_command(self, cmd, check=True, shell=True):
         """Run a command and return the result"""
