@@ -14,8 +14,6 @@ This package contains all dialog classes organized by functionality:
 # Re-export all dialog classes for backward compatibility
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_base import AboutDialog, LogWindow
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_custom import (
-    CookieLoginDialog,
-    CustomCommandDialog,
     CustomOptionsDialog,
     TimeRangeDialog,
 )
@@ -53,8 +51,6 @@ __all__ = [
     "SponsorBlockCategoryDialog",
     
     # Custom functionality dialogs
-    "CustomCommandDialog",
-    "CookieLoginDialog",
     "CustomOptionsDialog",
     "TimeRangeDialog",
 ]
