@@ -94,6 +94,44 @@ jobs:
           Write-Host "Created ZIP: YTSage-v$version.zip"
         }
     
+    - name: Setup FFmpeg for bundle
+      shell: powershell
+      run: |
+        Write-Host "Setting up FFmpeg for bundled version..."
+        
+        # Create ffmpeg directory
+        New-Item -ItemType Directory -Path "ffmpeg-temp" -Force
+        
+        # Download FFmpeg
+        $ffmpegUrl = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
+        Write-Host "Downloading FFmpeg from: $ffmpegUrl"
+        Invoke-WebRequest -Uri $ffmpegUrl -OutFile "ffmpeg-temp\ffmpeg.zip"
+        
+        # Extract FFmpeg
+        Expand-Archive -Path "ffmpeg-temp\ffmpeg.zip" -DestinationPath "ffmpeg-temp" -Force
+        
+        # Find the extracted directory (it has a timestamp in the name)
+        $ffmpegDir = Get-ChildItem -Path "ffmpeg-temp" -Directory | Where-Object { $_.Name -like "ffmpeg-*" } | Select-Object -First 1
+        
+        if ($ffmpegDir) {
+          # Set environment variable for the build
+          $ffmpegBinPath = Join-Path $ffmpegDir.FullName "bin"
+          Write-Host "FFmpeg binaries found at: $ffmpegBinPath"
+          echo "FFMPEG_PATH=$ffmpegBinPath" >> $env:GITHUB_ENV
+          
+          # Verify files exist
+          $ffmpegExe = Join-Path $ffmpegBinPath "ffmpeg.exe"
+          $ffprobeExe = Join-Path $ffmpegBinPath "ffprobe.exe"
+          $ffplayExe = Join-Path $ffmpegBinPath "ffplay.exe"
+          
+          if (Test-Path $ffmpegExe) { Write-Host "✓ ffmpeg.exe found" } else { Write-Host "✗ ffmpeg.exe missing" }
+          if (Test-Path $ffprobeExe) { Write-Host "✓ ffprobe.exe found" } else { Write-Host "✗ ffprobe.exe missing" }
+          if (Test-Path $ffplayExe) { Write-Host "✓ ffplay.exe found" } else { Write-Host "✗ ffplay.exe missing" }
+        } else {
+          Write-Host "Error: Could not find FFmpeg directory after extraction"
+          exit 1
+        }
+    
     - name: Build FFmpeg Version (MSI + ZIP)
       shell: powershell
       run: |
