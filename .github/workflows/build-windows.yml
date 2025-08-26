@@ -3,24 +3,11 @@ name: Build Windows Release
 on:
   push:
     tags:
-      - 'v*        # Update setup.py
-        $setupContent = Get-Content "build/windows/setup.py" -Raw
-        $setupContent = $setupContent -replace 'version\s*=\s*["\'][^"\']*["\']', "version='$version'"
-        Set-Content "build/windows/setup.py" -Value $setupContent
-        
-        # Update setup-ffmpeg.py
-        $setupFFmpegContent = Get-Content "build/windows/setup-ffmpeg.py" -Raw
-        $setupFFmpegContent = $setupFFmpegContent -replace 'version\s*=\s*["\'][^"\']*["\']', "version='$version'"
-        Set-Content "build/windows/setup-ffmpeg.py" -Value $setupFFmpegContent
-        
-        # Update build script
-        $buildScript = Get-Content "build/windows/windows-build-universal.ps1" -Raw
-        $buildScript = $buildScript -replace '\$SCRIPT_VERSION\s*=\s*["\'][^"\']*["\']', "`$SCRIPT_VERSION = '$version'"
-        Set-Content "build/windows/windows-build-universal.ps1" -Value $buildScripton version tags like v4.8.0, v4.8.1, etc.
+      - 'v*'
 
 env:
   PYTHON_VERSION: '3.12.10'
-  
+
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -37,61 +24,54 @@ jobs:
       run: |
         $tag = "${{ github.ref_name }}"
         $version = $tag -replace '^v', ''
+        Write-Host "Extracted version: $version"
         echo "VERSION=$version" >> $env:GITHUB_OUTPUT
-        echo "TAG=$tag" >> $env:GITHUB_OUTPUT
-        Write-Host "Extracted version: $version from tag: $tag"
-    
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
+
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-    
+
     - name: Cache Python dependencies
       uses: actions/cache@v3
       with:
         path: |
-          ~\AppData\Local\pip\Cache
           venv
-        key: ${{ runner.os }}-python-${{ env.PYTHON_VERSION }}-${{ hashFiles('requirements.txt') }}
+          ~\AppData\Local\pip\Cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          ${{ runner.os }}-python-${{ env.PYTHON_VERSION }}-
-    
+          ${{ runner.os }}-pip-
+
     - name: Create virtual environment and install dependencies
       shell: powershell
       run: |
-        Write-Host "Creating virtual environment..."
         python -m venv venv
         .\venv\Scripts\Activate.ps1
-        
-        Write-Host "Installing dependencies..."
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install cx_Freeze
-        
-        Write-Host "Verifying installation..."
-        python --version
-        pip list
-    
-    - name: Update version in source files
+        pip install --no-cache-dir -r requirements.txt
+        pip install --no-cache-dir cx_Freeze
+        pip install --no-cache-dir yt-dlp
+
+    - name: Update version in setup files
       shell: powershell
       run: |
         $version = "${{ steps.get_version.outputs.VERSION }}"
         Write-Host "Updating version to: $version"
         
         # Update setup.py
-        $setupContent = Get-Content "setup.py" -Raw
+        $setupContent = Get-Content "build/windows/setup.py" -Raw
         $setupContent = $setupContent -replace 'version\s*=\s*["\'][^"\']*["\']', "version='$version'"
-        Set-Content "setup.py" -Value $setupContent
+        Set-Content "build/windows/setup.py" -Value $setupContent
         
         # Update setup-ffmpeg.py
-        $setupFFmpegContent = Get-Content "setup-ffmpeg.py" -Raw
+        $setupFFmpegContent = Get-Content "build/windows/setup-ffmpeg.py" -Raw
         $setupFFmpegContent = $setupFFmpegContent -replace 'version\s*=\s*["\'][^"\']*["\']', "version='$version'"
-        Set-Content "setup-ffmpeg.py" -Value $setupFFmpegContent
+        Set-Content "build/windows/setup-ffmpeg.py" -Value $setupFFmpegContent
         
-        # Update build scripts version
-        $buildScript = Get-Content "windows-build-universal.ps1" -Raw
+        # Update build script
+        $buildScript = Get-Content "build/windows/windows-build-universal.ps1" -Raw
         $buildScript = $buildScript -replace '\$SCRIPT_VERSION\s*=\s*["\'][^"\']*["\']', "`$SCRIPT_VERSION = '$version'"
-        Set-Content "windows-build-universal.ps1" -Value $buildScript
+        Set-Content "build/windows/windows-build-universal.ps1" -Value $buildScript
         
         Write-Host "Version updated in all files"
     
@@ -113,115 +93,89 @@ jobs:
       shell: powershell
       run: |
         $version = "${{ steps.get_version.outputs.VERSION }}"
+        
         Write-Host "Preparing artifacts for version: $version"
+        New-Item -ItemType Directory -Path "artifacts" -Force
         
-        # Create artifacts directory
-        New-Item -ItemType Directory -Force -Path "artifacts"
-        
-        # List all files in releases directory
-        Write-Host "Files in releases directory:"
-        Get-ChildItem "releases" -Recurse | ForEach-Object { Write-Host $_.FullName }
-        
-        # Copy and rename artifacts with proper versioning
-        $standardMsi = Get-ChildItem "releases" -Filter "*YTSage*.msi" | Where-Object { $_.Name -notlike "*ffmpeg*" } | Select-Object -First 1
-        $standardZip = Get-ChildItem "releases" -Filter "*YTSage*portable*.zip" | Where-Object { $_.Name -notlike "*ffmpeg*" } | Select-Object -First 1
-        $ffmpegMsi = Get-ChildItem "releases" -Filter "*ffmpeg*.msi" | Select-Object -First 1
-        $ffmpegZip = Get-ChildItem "releases" -Filter "*ffmpeg*portable*.zip" | Select-Object -First 1
-        
+        # Find and copy standard build artifacts
+        $standardMsi = Get-ChildItem -Path "releases" -Filter "YTSage-v$version.msi" -Recurse | Select-Object -First 1
         if ($standardMsi) {
           Copy-Item $standardMsi.FullName "artifacts\YTSage-v$version.msi"
           Write-Host "Copied: $($standardMsi.Name) -> YTSage-v$version.msi"
         }
         
+        $standardZip = Get-ChildItem -Path "releases" -Filter "YTSage-v$version.zip" -Recurse | Select-Object -First 1
         if ($standardZip) {
           Copy-Item $standardZip.FullName "artifacts\YTSage-v$version.zip"
           Write-Host "Copied: $($standardZip.Name) -> YTSage-v$version.zip"
         }
         
+        # Find and copy FFmpeg build artifacts
+        $ffmpegMsi = Get-ChildItem -Path "releases" -Filter "YTSage-v$version-ffmpeg.msi" -Recurse | Select-Object -First 1
         if ($ffmpegMsi) {
           Copy-Item $ffmpegMsi.FullName "artifacts\YTSage-v$version-ffmpeg.msi"
           Write-Host "Copied: $($ffmpegMsi.Name) -> YTSage-v$version-ffmpeg.msi"
         }
         
+        $ffmpegZip = Get-ChildItem -Path "releases" -Filter "YTSage-v$version-ffmpeg.zip" -Recurse | Select-Object -First 1
         if ($ffmpegZip) {
           Copy-Item $ffmpegZip.FullName "artifacts\YTSage-v$version-ffmpeg.zip"
           Write-Host "Copied: $($ffmpegZip.Name) -> YTSage-v$version-ffmpeg.zip"
         }
         
-        # Verify artifacts
+        # List all artifacts
         Write-Host "Final artifacts:"
-        Get-ChildItem "artifacts" | ForEach-Object { 
-          Write-Host "$($_.Name) - $([math]::Round($_.Length / 1MB, 2)) MB"
-        }
-    
-    - name: Create Release Notes
-      shell: powershell
-      run: |
-        $version = "${{ steps.get_version.outputs.VERSION }}"
-        $tag = "${{ steps.get_version.outputs.TAG }}"
-        $releaseDate = Get-Date -Format "yyyy-MM-dd"
-        
-        $releaseNotes = @"
-# YTSage $version
+        Get-ChildItem artifacts | ForEach-Object { Write-Host "  $($_.Name)" }
 
-Released: $releaseDate
-
-## Downloads
-
-### Standard Version
-- **YTSage-v$version.msi** - Windows Installer (Recommended)
-- **YTSage-v$version.zip** - Portable ZIP (No installation required)
-
-### FFmpeg Bundle Version
-- **YTSage-v$version-ffmpeg.msi** - Windows Installer with FFmpeg included
-- **YTSage-v$version-ffmpeg.zip** - Portable ZIP with FFmpeg included
-
-## Installation
-
-### MSI Installer (Recommended)
-1. Download the `.msi` file
-2. Double-click to install
-3. Follow the installation wizard
-
-### Portable ZIP
-1. Download the `.zip` file
-2. Extract to your preferred location
-3. Run `YTSage.exe`
-
-## System Requirements
-
-- Windows 10/11 (64-bit)
-- .NET Framework (usually pre-installed)
-- Internet connection for yt-dlp updates
-
-## Notes
-
-- Standard version: Downloads FFmpeg automatically when needed
-- FFmpeg bundle: Includes FFmpeg binaries for offline use
-
----
-
-**Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ steps.get_version.outputs.VERSION }}...HEAD
-"@
-        
-        Set-Content "artifacts\RELEASE_NOTES.md" -Value $releaseNotes
-        Write-Host "Release notes created"
-    
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: windows-release-${{ steps.get_version.outputs.VERSION }}
-        path: artifacts/
-        retention-days: 30
-    
-    - name: Create Draft Release
+    - name: Create draft release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ steps.get_version.outputs.TAG }}
-        name: YTSage ${{ steps.get_version.outputs.VERSION }}
-        body_path: artifacts/RELEASE_NOTES.md
+        tag_name: ${{ github.ref_name }}
+        name: YTSage ${{ github.ref_name }}
         draft: true
         prerelease: false
+        body: |
+          # YTSage ${{ github.ref_name }}
+          
+          **Release Date**: ${{ github.event.head_commit.timestamp }}
+          
+          ## Downloads
+          
+          ### Standard Version
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}.msi** - Windows Installer (Recommended)
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}.zip** - Portable ZIP (No installation required)
+          
+          ### FFmpeg Bundle Version
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.msi** - Windows Installer with FFmpeg included
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.zip** - Portable ZIP with FFmpeg included
+          
+          ## Installation Instructions
+          
+          ### MSI Installer
+          1. Download the `.msi` file
+          2. Double-click to run the installer
+          3. Follow the installation wizard
+          4. YTSage will be available in your Start Menu
+          
+          ### Portable ZIP
+          1. Download the `.zip` file
+          2. Extract to your preferred location
+          3. Run `YTSage.exe`
+          
+          ## System Requirements
+          
+          - Windows 10/11 (64-bit)
+          - .NET Framework (usually pre-installed)
+          - Internet connection for yt-dlp updates
+          
+          ## Notes
+          
+          - Standard version: Downloads FFmpeg automatically when needed
+          - FFmpeg bundle: Includes FFmpeg binaries for offline use
+          
+          ---
+          
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
         files: |
           artifacts/YTSage-v${{ steps.get_version.outputs.VERSION }}.msi
           artifacts/YTSage-v${{ steps.get_version.outputs.VERSION }}.zip
