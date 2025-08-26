@@ -38,7 +38,7 @@ $RELEASE_DATE = Get-Date -Format "yyyy-MM-dd"
 function Get-VersionFromSetup {
     try {
         $setupContent = Get-Content "build\windows\setup.py" -Raw
-        if ($setupContent -match 'version\s*=\s*["\']([^"\']+)["\']') {
+        if ($setupContent -match 'version="([^"]*)"') {
             $version = $matches[1]
             Write-Host "Detected version: $version" -ForegroundColor Gray
             return $version
@@ -312,37 +312,28 @@ function Move-MSIFiles {
 function New-ReleaseNotes {
     Write-Step "Creating release notes..."
     
-    $releaseNotes = @"
-# YTSage v$SCRIPT_VERSION Release
-
-**Release Date:** $RELEASE_DATE  
-**Build Type:** $BUILD_TYPE
-
-## Installation Options
-
-### MSI Installer (Recommended)
-- **File:** $OUTPUT_NAME_BASE.msi
-- **Installation:** Double-click to install system-wide
-- **Updates:** Automatic update notifications
-- **Uninstall:** Via Windows Programs & Features
-
-### Portable ZIP
-- **File:** $OUTPUT_NAME_BASE.zip
-- **Installation:** Extract and run - no installation required
-- **Updates:** Manual download and replacement
-- **Uninstall:** Simply delete the folder
-
-## System Requirements
-- Windows 10/11 (64-bit)
-- .NET Framework 4.7.2 or later
-- Internet connection for yt-dlp updates
-
-## Support
-For issues or questions, please visit the project repository.
-
----
-*Built with cx_Freeze v$(pip show cx_Freeze | Select-String "Version" | ForEach-Object { ($_ -split ":")[1].Trim() })*
-"@
+    $releaseNotes = "# YTSage v$SCRIPT_VERSION Release`n`n"
+    $releaseNotes += "**Release Date:** $RELEASE_DATE`n"
+    $releaseNotes += "**Build Type:** $BUILD_TYPE`n`n"
+    $releaseNotes += "## Installation Options`n`n"
+    $releaseNotes += "### MSI Installer (Recommended)`n"
+    $releaseNotes += "- **File:** $OUTPUT_NAME_BASE.msi`n"
+    $releaseNotes += "- **Installation:** Double-click to install system-wide`n"
+    $releaseNotes += "- **Updates:** Automatic update notifications`n"
+    $releaseNotes += "- **Uninstall:** Via Windows Programs `& Features`n`n"
+    $releaseNotes += "### Portable ZIP`n"
+    $releaseNotes += "- **File:** $OUTPUT_NAME_BASE.zip`n"
+    $releaseNotes += "- **Installation:** Extract and run - no installation required`n"
+    $releaseNotes += "- **Updates:** Manual download and replacement`n"
+    $releaseNotes += "- **Uninstall:** Simply delete the folder`n`n"
+    $releaseNotes += "## System Requirements`n"
+    $releaseNotes += "- Windows 10/11 64-bit`n"
+    $releaseNotes += "- .NET Framework 4.7.2 or later`n"
+    $releaseNotes += "- Internet connection for yt-dlp updates`n`n"
+    $releaseNotes += "## Support`n"
+    $releaseNotes += "For issues or questions, please visit the project repository.`n`n"
+    $releaseNotes += "---`n"
+    $releaseNotes += "*Built with cx_Freeze*`n"
 
     try {
         $releaseNotesPath = Join-Path $OutputDir "RELEASE_NOTES.md"
