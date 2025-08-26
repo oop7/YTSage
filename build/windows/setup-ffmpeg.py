@@ -11,6 +11,24 @@ import os
 # Get FFmpeg path from environment variable or use default
 FFMPEG_PATH = os.environ.get('FFMPEG_PATH', r'C:\Users\atela\AppData\Local\ffmpeg\ffmpeg-7.1.1-full_build\bin')
 
+# Prepare include files list
+include_files = [
+    ("src/", "src/"),  # Include entire src directory
+    ("assets/Icon/icon.png", "assets/Icon/icon.png"),
+    ("assets/sound/notification.mp3", "assets/sound/notification.mp3"),
+    ("assets/branding/icons/YTSage.ico", "YTSage.ico"),
+]
+
+# Add FFmpeg binaries if they exist
+ffmpeg_binaries = ["ffmpeg.exe", "ffprobe.exe", "ffplay.exe"]
+for binary in ffmpeg_binaries:
+    ffmpeg_file = os.path.join(FFMPEG_PATH, binary)
+    if os.path.exists(ffmpeg_file):
+        include_files.append((ffmpeg_file, binary))
+        print(f"Including FFmpeg binary: {binary}")
+    else:
+        print(f"Warning: FFmpeg binary not found: {ffmpeg_file}")
+
 # Build options for executable
 build_exe_options = {
     # Let cx_Freeze auto-discover packages from main.py instead of explicit listing
@@ -57,16 +75,7 @@ build_exe_options = {
     ],
     
     # Include files (assets + FFmpeg binaries + source code)
-    "include_files": [
-        ("src/", "src/"),  # Include entire src directory
-        ("assets/Icon/icon.png", "assets/Icon/icon.png"),
-        ("assets/sound/notification.mp3", "assets/sound/notification.mp3"),
-        ("assets/branding/icons/YTSage.ico", "YTSage.ico"),
-        # FFmpeg binaries
-        (os.path.join(FFMPEG_PATH, "ffmpeg.exe"), "ffmpeg.exe"),
-        (os.path.join(FFMPEG_PATH, "ffprobe.exe"), "ffprobe.exe"),
-        (os.path.join(FFMPEG_PATH, "ffplay.exe"), "ffplay.exe"),
-    ],
+    "include_files": include_files,
     
     # Zip includes (can help reduce file count)
     "zip_include_packages": "*",
