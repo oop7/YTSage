@@ -39,6 +39,9 @@ if OS_NAME == "Windows":
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp.exe"
+    
+    # Documentation URLs
+    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = subprocess.CREATE_NO_WINDOW
 
@@ -54,6 +57,9 @@ elif OS_NAME == "Darwin":  # macOS
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp"
+    
+    # Documentation URLs
+    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = 0
 
@@ -69,6 +75,9 @@ else:  # Linux and other UNIX-like
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp"
+    
+    # Documentation URLs
+    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = 0
 
@@ -91,6 +100,7 @@ if __name__ == "__main__":
         "APP_CONFIG_FILE": str(APP_CONFIG_FILE),
         "YTDLP_DOWNLOAD_URL": YTDLP_DOWNLOAD_URL,
         "YTDLP_APP_BIN_PATH": YTDLP_APP_BIN_PATH,
+        "YTDLP_DOCS_URL": YTDLP_DOCS_URL,
         "SUBPROCESS_CREATIONFLAGS": SUBPROCESS_CREATIONFLAGS,
     }
     for key, value in info.items():
