@@ -55,11 +55,10 @@ except ImportError:
     YT_DLP_AVAILABLE = False
 
 try:
-    import pygame
-
-    PYGAME_AVAILABLE = True
+    from playsound3 import playsound
+    PLAYSOUND_AVAILABLE = True
 except ImportError:
-    PYGAME_AVAILABLE = False
+    PLAYSOUND_AVAILABLE = False
 
 
 class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from mixins
@@ -72,8 +71,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Log startup warnings for missing dependencies
         if not YT_DLP_AVAILABLE:
             self.logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
-        if not PYGAME_AVAILABLE:
-            self.logger.warning("pygame not available, audio notifications disabled")
+        if not PLAYSOUND_AVAILABLE:
+            self.logger.warning("playsound3 not available, audio notifications disabled")
 
         # Check for FFmpeg before proceeding
         if not check_ffmpeg():
@@ -305,14 +304,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize UI state based on current mode
         self.handle_mode_change()
 
-        # Initialize pygame for sound notifications
+        # Initialize playsound3 for sound notifications
         self.init_sound()
 
     def init_sound(self) -> None:
-        """Initialize pygame mixer for sound notifications"""
+        """Initialize playsound3 for sound notifications"""
         try:
-            if PYGAME_AVAILABLE:
-                pygame.mixer.init()
+            if PLAYSOUND_AVAILABLE:
                 self.sound_enabled = True
 
                 # sound_path logic moved to src\utils\ytsage_constants.py
@@ -326,7 +324,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     self.logger.info(f"Notification sound loaded from: {self.notification_sound_path}")
             else:
                 self.sound_enabled = False
-                self.logger.info("Sound notifications disabled - pygame not available")
+                self.logger.info("Sound notifications disabled - playsound3 not available")
 
         except Exception as e:
             self.logger.error(f"Error initializing sound: {e}")
@@ -339,14 +337,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         def play_sound() -> None:
             try:
-                if PYGAME_AVAILABLE:
-                    # Load and play the sound
-                    pygame.mixer.music.load(self.notification_sound_path)
-                    pygame.mixer.music.play()
-
-                    # Wait for the sound to finish playing
-                    while pygame.mixer.music.get_busy():
-                        pygame.time.wait(100)
+                if PLAYSOUND_AVAILABLE:
+                    # Play the sound using playsound3
+                    playsound(str(self.notification_sound_path))
 
             except Exception as e:
                 self.logger.error(f"Error playing notification sound: {e}")

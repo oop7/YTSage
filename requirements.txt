@@ -4,6 +4,6 @@ requests
 pillow
 packaging
 markdown
-pygame
+playsound3
 loguru
 setuptools
