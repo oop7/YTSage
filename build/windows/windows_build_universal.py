@@ -30,16 +30,26 @@ class YTSageBuildScript:
         self.release_date = datetime.now().strftime("%Y-%m-%d")
         self.script_version = self.get_version_from_setup()
         self.build_type = "FFmpeg" if args.ffmpeg else "Standard"
-        self.setup_file = "build/windows/setup-ffmpeg.py" if args.ffmpeg else "build/windows/setup.py"
+        # Use absolute paths to ensure proper resolution
+        self.project_root = Path.cwd()
+        setup_filename = "setup-ffmpeg.py" if args.ffmpeg else "setup.py"
+        self.setup_file = self.project_root / "build" / "windows" / setup_filename
         self.output_dir = Path(args.output_dir)
         self.output_name_base = f"{self.app_name}-v{self.script_version}" + ("-ffmpeg" if args.ffmpeg else "")
+        
+        # Debug information
+        if self.args.verbose:
+            self.print_info(f"Project root: {self.project_root}")
+            self.print_info(f"Setup file path: {self.setup_file}")
+            self.print_info(f"Setup file exists: {self.setup_file.exists()}")
         
     def get_version_from_setup(self):
         """Extract version from setup.py file"""
         try:
-            setup_path = Path("build/windows/setup.py")
+            # Use absolute path from project root
+            setup_path = Path.cwd() / "build" / "windows" / "setup.py"
             if not setup_path.exists():
-                self.print_warning("Setup file not found, using 1.0.0")
+                self.print_warning(f"Setup file not found at {setup_path}, using 1.0.0")
                 return "1.0.0"
                 
             content = setup_path.read_text(encoding='utf-8')
@@ -177,11 +187,27 @@ class YTSageBuildScript:
         """Remove existing build artifacts"""
         self.print_step("Cleaning build artifacts...")
         
-        for path in ["build", "dist"]:
-            if Path(path).exists():
-                shutil.rmtree(path)
-                if self.args.verbose:
-                    self.print_info(f"Removed {path} directory")
+        # Remove dist directory completely
+        dist_path = self.project_root / "dist"
+        if dist_path.exists():
+            shutil.rmtree(dist_path)
+            if self.args.verbose:
+                self.print_info(f"Removed dist directory")
+        
+        # Remove build output directories but keep the build/windows scripts
+        build_path = self.project_root / "build"
+        if build_path.exists():
+            for item in build_path.iterdir():
+                # Remove everything except the windows folder
+                if item.name != "windows":
+                    if item.is_dir():
+                        shutil.rmtree(item)
+                        if self.args.verbose:
+                            self.print_info(f"Removed {item}")
+                    else:
+                        item.unlink()
+                        if self.args.verbose:
+                            self.print_info(f"Removed {item}")
         
         self.print_success("Build artifacts cleaned")
     
@@ -190,8 +216,16 @@ class YTSageBuildScript:
         self.print_step("Building executable...")
         python_exe = self.get_python_exe()
         
+        # Verify setup file exists before proceeding
+        if not self.setup_file.exists():
+            raise Exception(f"Setup file not found: {self.setup_file}")
+        
+        self.print_info(f"Using setup file: {self.setup_file}")
+        
         try:
-            self.run_command(f'"{python_exe}" {self.setup_file} build')
+            # Use absolute path for setup file
+            setup_file_str = str(self.setup_file)
+            self.run_command(f'"{python_exe}" "{setup_file_str}" build')
             self.print_success("Executable built successfully")
         except subprocess.CalledProcessError:
             raise Exception("Failed to build executable")
@@ -204,8 +238,14 @@ class YTSageBuildScript:
         self.print_step("Building MSI installer...")
         python_exe = self.get_python_exe()
         
+        # Verify setup file exists before proceeding
+        if not self.setup_file.exists():
+            raise Exception(f"Setup file not found: {self.setup_file}")
+        
         try:
-            self.run_command(f'"{python_exe}" {self.setup_file} bdist_msi')
+            # Use absolute path for setup file
+            setup_file_str = str(self.setup_file)
+            self.run_command(f'"{python_exe}" "{setup_file_str}" bdist_msi')
             self.print_success("MSI installer built successfully")
         except subprocess.CalledProcessError:
             raise Exception("Failed to build MSI installer")
@@ -218,7 +258,7 @@ class YTSageBuildScript:
         self.print_step("Creating ZIP distribution...")
         
         # Find the built executable directory
-        build_dirs = list(Path("build").glob("exe.*"))
+        build_dirs = list((self.project_root / "build").glob("exe.*"))
         if not build_dirs:
             raise Exception("No executable build directory found")
         
@@ -252,7 +292,7 @@ class YTSageBuildScript:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
         # Find and move MSI files
-        msi_files = list(Path("dist").glob("*.msi"))
+        msi_files = list((self.project_root / "dist").glob("*.msi"))
         
         for msi_file in msi_files:
             new_name = f"{self.output_name_base}.msi"
