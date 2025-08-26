@@ -155,7 +155,7 @@ class AboutDialog(QDialog):
         layout.addWidget(title_label)
 
         version_label = QLabel(
-            f"<span style='color: #cccccc; font-size: 13px; font-weight: normal;'>Version {getattr(self._parent, 'version', '4.7.0')}</span>"
+            f"<span style='color: #cccccc; font-size: 13px; font-weight: normal;'>Version {getattr(self._parent, 'version', '4.8.0b')}</span>"
         )
         version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(version_label)
