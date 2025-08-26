@@ -209,7 +209,7 @@ python main.py
 
 #### 🛡️ Windows Defender / Antivirus Warning
 
-Some antivirus software may flag the `.exe` files as false positives. This is a **known limitation** of PyInstaller-packaged applications.
+Some antivirus software may flag the `.exe` files as false positives. This is a **known limitation** of packaged applications.
 
 **Why this happens:**
 - PyInstaller bundles Python runtime and libraries together
