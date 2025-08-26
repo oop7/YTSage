@@ -30,7 +30,7 @@ from PySide6.QtWidgets import (
 from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
 from src.core.ytsage_logging import logger
 from src.core.ytsage_utils import check_ffmpeg  # Import utility functions
-from src.core.ytsage_utils import load_saved_path, save_path, should_check_for_auto_update
+from src.core.ytsage_utils import load_saved_path, save_path, should_check_for_auto_update, parse_yt_dlp_error
 from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     AboutDialog,
@@ -48,6 +48,7 @@ from src.utils.ytsage_constants import ICON_PATH, SOUND_PATH, SUBPROCESS_CREATIO
 
 try:
     import yt_dlp
+    from yt_dlp.utils import ExtractorError, DownloadError
 
     YT_DLP_AVAILABLE = True
 except ImportError:
@@ -85,7 +86,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         else:
             self.logger.info(f"Using yt-dlp from: {ytdlp_path}")
 
-        self.version = "4.7.0"
+        self.version = "4.8.0b"
         self.check_for_updates()
 
         # Check for auto-updates if enabled
@@ -118,7 +119,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.thumbnail_image = None
         self.video_url = ""
         self.selected_subtitles = []  # Initialize selected subtitles list
-        self.cookie_file_path = None  # Initialize cookie file path
+        # Initialize cookie settings - ensure they start clean
+        self.cookie_file_path = None  
+        self.browser_cookies_option = None  
         self.speed_limit_value = None  # Store speed limit value
         self.speed_limit_unit_index = 0  # Store speed limit unit index (0: KB/s, 1: MB/s)
         self.download_section = None
@@ -737,7 +740,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 "no_warnings": True,  # <-- Suppress warnings for initial check
                 "extract_flat": True,
                 "force_generic_extractor": False,
-                "ignoreerrors": True,
+                "ignoreerrors": False,  # Set to False to catch errors properly
                 "no_color": True,
                 "verbose": True,
                 "cookiefile": None,
@@ -745,16 +748,27 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             # Add cookies argument if cookie file path is set
             if self.cookie_file_path:
-                ydl_opts["cookiefile"] = self.cookie_file_path
+                ydl_opts["cookiefile"] = str(self.cookie_file_path)
+            elif self.browser_cookies_option:
+                ydl_opts["cookiesfrombrowser"] = (self.browser_cookies_option.split(':')[0], 
+                                                 self.browser_cookies_option.split(':')[1] if ':' in self.browser_cookies_option else None)
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 try:
                     basic_info = ydl.extract_info(url, download=False)
                     if not basic_info:
-                        raise Exception("Could not extract basic video information")
+                        # This case usually means the URL is invalid or not found
+                        raise Exception("Invalid URL or video not found. Please check the link and try again.")
+                except (ExtractorError, DownloadError) as e:
+                    # This is a yt-dlp specific error, use the original message
+                    user_friendly_error = parse_yt_dlp_error(str(e))
+                    raise Exception(user_friendly_error)
                 except Exception as e:
+                    # This is our own exception or other unexpected error
                     self.logger.error(f"First extraction failed: {str(e)}")
-                    raise Exception("Could not extract video information, please check your link")
+                    self.logger.error(f"Exception type: {type(e)}")
+                    user_friendly_error = parse_yt_dlp_error(str(e))
+                    raise Exception(user_friendly_error)
 
             self.signals.update_status.emit("Analyzing (30%)... Extracting detailed info")
             # Configure options for detailed extraction (keep other options)
@@ -774,7 +788,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             # Add cookies argument if cookie file path is set
             if self.cookie_file_path:
-                ydl_opts_detail["cookiefile"] = self.cookie_file_path
+                ydl_opts_detail["cookiefile"] = str(self.cookie_file_path)
+            elif self.browser_cookies_option:
+                ydl_opts_detail["cookiesfrombrowser"] = (self.browser_cookies_option.split(':')[0], 
+                                                        self.browser_cookies_option.split(':')[1] if ':' in self.browser_cookies_option else None)
 
             # Use a separate options dict for the detailed extraction
             with yt_dlp.YoutubeDL(ydl_opts_detail) as ydl_detail:
@@ -798,8 +815,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         try:
                             # Use the ydl_detail instance with no_warnings
                             self.video_info = ydl_detail.extract_info(first_video_url, download=False)
+                        except (ExtractorError, DownloadError) as first_video_error:
+                            # Use error parser for yt-dlp specific playlist video errors
+                            user_friendly_error = parse_yt_dlp_error(str(first_video_error))
+                            raise Exception(f"Failed to extract info for the first playlist video: {user_friendly_error}")
                         except Exception as first_video_error:
-                            raise Exception(f"Failed to extract info for the first playlist video: {first_video_error}")
+                            # Use error parser for other playlist video errors too
+                            user_friendly_error = parse_yt_dlp_error(str(first_video_error))
+                            raise Exception(f"Failed to extract info for the first playlist video: {user_friendly_error}")
 
                         # Update playlist info label text (remains the same)
                         playlist_text = (
@@ -886,9 +909,16 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
                     self.signals.update_status.emit("Analysis complete!")
 
+                except (ExtractorError, DownloadError) as e:
+                    logger.error(f"yt-dlp detailed extraction failed: {e}", exc_info=True)
+                    # Use the error parser for yt-dlp specific errors
+                    user_friendly_error = parse_yt_dlp_error(str(e))
+                    raise Exception(user_friendly_error)
                 except Exception as e:
                     logger.error(f"Detailed extraction failed: {e}", exc_info=True)
-                    raise Exception(f"Failed to extract video details: {str(e)}")
+                    # Use the error parser for other extraction errors too
+                    user_friendly_error = parse_yt_dlp_error(str(e))
+                    raise Exception(user_friendly_error)
 
         except Exception as e:
             self.logger.error(f"Error in analysis: {e}", exc_info=True)
@@ -1023,6 +1053,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             save_description=self.save_description,  # Pass the new flag here
             embed_chapters=self.embed_chapters,  # Pass the embed chapters flag
             cookie_file=self.cookie_file_path,  # Pass the cookie file path
+            browser_cookies=self.browser_cookies_option,  # Pass the browser cookies option
             rate_limit=rate_limit,  # Pass the calculated rate limit
             download_section=self.download_section,  # Pass the download section
             force_keyframes=self.force_keyframes,  # Pass the force keyframes setting
@@ -1381,8 +1412,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
     def show_custom_options(self) -> None:
         dialog = CustomOptionsDialog(self)
         if dialog.exec():
-            # Handle cookies if set
+            # Handle cookies
             cookie_path = dialog.get_cookie_file_path()
+            browser_cookies = dialog.get_browser_cookies_option()
+            
+            # Clear both first to avoid conflicts
+            self.cookie_file_path = None
+            self.browser_cookies_option = None
+            
             if cookie_path:
                 self.cookie_file_path = cookie_path
                 self.logger.info(f"Selected cookie file: {self.cookie_file_path}")
@@ -1391,9 +1428,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     "Cookie File Selected",
                     f"Cookie file selected: {self.cookie_file_path}",
                 )
-            else:
-                # Don't clear the cookie path if nothing was selected
-                pass
+            elif browser_cookies:
+                self.browser_cookies_option = browser_cookies
+                self.logger.info(f"Selected browser cookies: {self.browser_cookies_option}")
+                QMessageBox.information(
+                    self,
+                    "Browser Cookies Selected",
+                    f"Browser cookies will be extracted from: {browser_cookies}",
+                )
+            # If neither is selected, both remain None (cleared above)
 
     def show_about_dialog(self) -> None:  # ADDED METHOD HERE
         dialog = AboutDialog(self)
@@ -1571,16 +1614,31 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         dialog = CustomOptionsDialog(self)
         dialog.tab_widget.setCurrentIndex(0)  # Select the Cookie Login tab
         if dialog.exec():
-            self.cookie_file_path = dialog.get_cookie_file_path()
-            if self.cookie_file_path:
+            # Handle cookies
+            cookie_path = dialog.get_cookie_file_path()
+            browser_cookies = dialog.get_browser_cookies_option()
+            
+            if cookie_path:
+                self.cookie_file_path = cookie_path
+                self.browser_cookies_option = None  # Clear browser cookies if file is used
                 self.logger.info(f"Selected cookie file: {self.cookie_file_path}")
                 QMessageBox.information(
                     self,
                     "Cookie File Selected",
                     f"Cookie file selected: {self.cookie_file_path}",
                 )
+            elif browser_cookies:
+                self.browser_cookies_option = browser_cookies
+                self.cookie_file_path = None  # Clear file cookies if browser is used
+                self.logger.info(f"Selected browser cookies: {self.browser_cookies_option}")
+                QMessageBox.information(
+                    self,
+                    "Browser Cookies Selected",
+                    f"Browser cookies will be extracted from: {browser_cookies}",
+                )
             else:
                 self.cookie_file_path = None  # Clear path if dialog accepted but no file selected
+                self.browser_cookies_option = None  # Clear browser cookies too
 
     def cancel_download(self) -> None:
         if self.current_download:
@@ -1678,7 +1736,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             # Add cookies if available
             if self.cookie_file_path:
-                cmd.extend(["--cookies", self.cookie_file_path])
+                cmd.extend(["--cookies", str(self.cookie_file_path)])
+            elif self.browser_cookies_option:
+                cmd.extend(["--cookies-from-browser", self.browser_cookies_option])
 
             # Execute command with hidden console window on Windows
             # Extra logic moved to src\utils\ytsage_constants.py
