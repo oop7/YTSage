@@ -75,14 +75,48 @@ jobs:
       run: |
         .\venv\Scripts\Activate.ps1
         Write-Host "Building Standard Version..."
-        python build\windows\windows_build_universal.py --verbose
+        
+        # Clean previous build artifacts
+        if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
+        if (Test-Path "dist") { Remove-Item "dist" -Recurse -Force }
+        
+        # Build executable
+        python build\windows\setup.py build
+        
+        # Build MSI installer
+        python build\windows\setup.py bdist_msi
+        
+        # Create ZIP distribution
+        $exeDir = Get-ChildItem -Path "build" -Directory -Filter "exe.*" | Select-Object -First 1
+        if ($exeDir) {
+          $version = "${{ steps.get_version.outputs.VERSION }}"
+          Compress-Archive -Path "$($exeDir.FullName)\*" -DestinationPath "dist\YTSage-v$version.zip" -Force
+          Write-Host "Created ZIP: YTSage-v$version.zip"
+        }
     
     - name: Build FFmpeg Version (MSI + ZIP)
       shell: powershell
       run: |
         .\venv\Scripts\Activate.ps1
         Write-Host "Building FFmpeg Version..."
-        python build\windows\windows_build_universal.py --ffmpeg --verbose
+        
+        # Clean previous build artifacts
+        if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
+        if (Test-Path "dist\*.msi") { Remove-Item "dist\*.msi" -Force }
+        
+        # Build executable with FFmpeg
+        python build\windows\setup-ffmpeg.py build
+        
+        # Build MSI installer with FFmpeg
+        python build\windows\setup-ffmpeg.py bdist_msi
+        
+        # Create ZIP distribution with FFmpeg
+        $exeDir = Get-ChildItem -Path "build" -Directory -Filter "exe.*" | Select-Object -First 1
+        if ($exeDir) {
+          $version = "${{ steps.get_version.outputs.VERSION }}"
+          Compress-Archive -Path "$($exeDir.FullName)\*" -DestinationPath "dist\YTSage-v$version-ffmpeg.zip" -Force
+          Write-Host "Created ZIP: YTSage-v$version-ffmpeg.zip"
+        }
     
     - name: Prepare release artifacts
       shell: powershell
@@ -92,27 +126,27 @@ jobs:
         Write-Host "Preparing artifacts for version: $version"
         New-Item -ItemType Directory -Path "artifacts" -Force
         
-        # Find and copy standard build artifacts
-        $standardMsi = Get-ChildItem -Path "releases" -Filter "YTSage-v$version.msi" -Recurse | Select-Object -First 1
+        # Find and copy standard build artifacts from dist directory
+        $standardMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -notlike "*ffmpeg*" } | Select-Object -First 1
         if ($standardMsi) {
           Copy-Item $standardMsi.FullName "artifacts\YTSage-v$version.msi"
           Write-Host "Copied: $($standardMsi.Name) -> YTSage-v$version.msi"
         }
         
-        $standardZip = Get-ChildItem -Path "releases" -Filter "YTSage-v$version.zip" -Recurse | Select-Object -First 1
+        $standardZip = Get-ChildItem -Path "dist" -Filter "YTSage-v$version.zip" | Select-Object -First 1
         if ($standardZip) {
           Copy-Item $standardZip.FullName "artifacts\YTSage-v$version.zip"
           Write-Host "Copied: $($standardZip.Name) -> YTSage-v$version.zip"
         }
         
-        # Find and copy FFmpeg build artifacts
-        $ffmpegMsi = Get-ChildItem -Path "releases" -Filter "YTSage-v$version-ffmpeg.msi" -Recurse | Select-Object -First 1
+        # Find and copy FFmpeg build artifacts from dist directory
+        $ffmpegMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -like "*ffmpeg*" } | Select-Object -First 1
         if ($ffmpegMsi) {
           Copy-Item $ffmpegMsi.FullName "artifacts\YTSage-v$version-ffmpeg.msi"
           Write-Host "Copied: $($ffmpegMsi.Name) -> YTSage-v$version-ffmpeg.msi"
         }
         
-        $ffmpegZip = Get-ChildItem -Path "releases" -Filter "YTSage-v$version-ffmpeg.zip" -Recurse | Select-Object -First 1
+        $ffmpegZip = Get-ChildItem -Path "dist" -Filter "YTSage-v$version-ffmpeg.zip" | Select-Object -First 1
         if ($ffmpegZip) {
           Copy-Item $ffmpegZip.FullName "artifacts\YTSage-v$version-ffmpeg.zip"
           Write-Host "Copied: $($ffmpegZip.Name) -> YTSage-v$version-ffmpeg.zip"
