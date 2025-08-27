@@ -94,9 +94,12 @@ def setup_logging():
 
     # Console handler - INFO and above, with colors
     # Check if stdout is available (it might be None in PyInstaller windowed apps)
+    # Also check if we're running in a windowed mode (likely PyInstaller --windowed)
     stdout_available = sys.stdout is not None
-
-    if stdout_available:
+    is_windowed_app = getattr(sys, 'frozen', False) and sys.stdout is None
+    
+    # Skip console output if we're in a windowed application to prevent brief console window
+    if stdout_available and not is_windowed_app:
         try:
             logger.add(
                 sys.stdout,
@@ -117,13 +120,13 @@ def setup_logging():
             except Exception:
                 stdout_available = False
 
-    # If stdout is not available, try stderr or skip console logging entirely
-    if not stdout_available:
+    # If stdout is not available or we're in windowed mode, try stderr for critical messages only
+    if (not stdout_available or is_windowed_app) and not is_windowed_app:
         try:
             if sys.stderr is not None:
                 logger.add(
                     sys.stderr,
-                    level="WARNING",  # Only warnings and errors to stderr
+                    level="ERROR",  # Only errors to stderr to minimize console window appearance
                     format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {message}",
                     catch=True,
                 )
@@ -159,28 +162,27 @@ def setup_logging():
             # If file logging fails, just log to console
             logger.warning(f"Could not set up file logging: {e}")
 
-    # Log startup message if we have any handlers
-    if logger._core.handlers:
+    # Log startup message 
+    try:
         logger.info("YTSage logging system initialized")
         if log_dir and log_dir.exists():
             logger.debug(f"Log directory: {log_dir}")
         else:
             logger.warning("File logging disabled - could not create log directory")
+    except Exception:
+        # If logging fails, continue silently
+        pass
 
     # If no handlers were successfully added, add a null handler to prevent errors
-    if not logger._core.handlers:
-        # Add a minimal handler that just discards messages
-        # This prevents loguru from complaining about no handlers
+    try:
+        # Try to add a minimal fallback handler if needed
         import tempfile
-
-        try:
-            # Try to add a temporary file handler as last resort
-            temp_log = Path(tempfile.gettempdir()) / "ytsage_temp.log"
-            logger.add(temp_log, level="ERROR", catch=True)
-        except Exception:
-            # If even that fails, we're in a very restricted environment
-            # loguru should handle this gracefully with its internal fallbacks
-            pass
+        temp_log = Path(tempfile.gettempdir()) / "ytsage_temp.log"
+        logger.add(temp_log, level="ERROR", catch=True)
+    except Exception:
+        # If even that fails, we're in a very restricted environment
+        # loguru should handle this gracefully with its internal fallbacks
+        pass
 
     return logger
 

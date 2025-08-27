@@ -1,4 +1,14 @@
 import sys
+import os
+
+# Suppress console window for windowed applications (PyInstaller --windowed)
+if getattr(sys, 'frozen', False):
+    # Running as compiled executable
+    if sys.stdout is None or sys.stderr is None:
+        # Windowed mode - redirect stdout/stderr to prevent console window flicker
+        import io
+        sys.stdout = io.StringIO()
+        sys.stderr = io.StringIO()
 
 from PySide6.QtWidgets import QApplication, QMessageBox
 

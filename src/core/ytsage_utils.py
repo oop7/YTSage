@@ -4,7 +4,11 @@ import subprocess
 import sys
 import tempfile
 import time
+import warnings
 from pathlib import Path
+
+# Suppress the pkg_resources deprecation warning to prevent console window flicker
+warnings.filterwarnings("ignore", message=".*pkg_resources is deprecated.*", category=UserWarning)
 
 import pkg_resources
 import requests
