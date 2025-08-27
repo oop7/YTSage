@@ -188,8 +188,6 @@ jobs:
         } else {
           Write-Host "Warning: FFmpeg executable directory not found at $distDir"
         }
-          Write-Host "Created ZIP: YTSage-v$version-ffmpeg.zip"
-        }
     
     - name: Prepare release artifacts
       shell: powershell
