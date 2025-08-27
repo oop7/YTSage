@@ -69,18 +69,12 @@ build_exe_options = {
     "build_exe": "dist/YTSage",  # Output directory for executable
 }
 
-# MSI build options
+# MSI build options - simplified to avoid cx_Freeze issues
 bdist_msi_options = {
     "upgrade_code": "{12345678-1234-5678-9ABC-123456789ABC}",  # Generate unique GUID
     "add_to_path": False,
-    "initial_target_dir": r"[ProgramFilesFolder]\YTSage",
-    # Remove problematic install_icon that might be causing MSI build to fail
-    # "install_icon": "assets/branding/icons/YTSage.ico",
-    "summary_data": {
-        "author": "oop7",
-        "comments": "YouTube Video Downloader - Easy to use video downloading tool",
-        "keywords": "youtube, downloader, video, audio, converter"
-    }
+    "initial_target_dir": r"[ProgramFilesFolder]\YTSage"
+    # Removed target_name and summary_data that might cause silent failures
 }
 
 # Base configuration for Windows GUI application
@@ -93,7 +87,7 @@ executable = Executable(
     "main.py",
     base=base,
     icon="assets/branding/icons/YTSage.ico",
-    target_name="YTSage-v4.8.0.exe",
+    target_name="YTSage-v4.7.4.exe",
     copyright="Copyright (c) 2024-2025 YTSage",
     trademarks="YTSage"
 )
@@ -101,7 +95,7 @@ executable = Executable(
 # Setup configuration
 setup(
     name="YTSage",
-    version="4.8.0",
+    version="4.7.4",  # Updated to match expected version
     description="YouTube Video Downloader",
     author="oop7",
     author_email="oop7_support@proton.me",

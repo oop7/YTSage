@@ -64,11 +64,13 @@ jobs:
         # Update setup.py
         $setupContent = Get-Content "build/windows/setup.py" -Raw
         $setupContent = $setupContent -replace 'version="[^"]*"', "version=`"$version`""
+        $setupContent = $setupContent -replace 'target_name="[^"]*"', "target_name=`"YTSage-v$version.exe`""
         Set-Content "build/windows/setup.py" -Value $setupContent
         
         # Update setup-ffmpeg.py
         $setupFFmpegContent = Get-Content "build/windows/setup-ffmpeg.py" -Raw
         $setupFFmpegContent = $setupFFmpegContent -replace 'version="[^"]*"', "version=`"$version`""
+        $setupFFmpegContent = $setupFFmpegContent -replace 'target_name="[^"]*"', "target_name=`"YTSage-v$version-ffmpeg.exe`""
         Set-Content "build/windows/setup-ffmpeg.py" -Value $setupFFmpegContent
         
         Write-Host "Version updated in setup files (build script auto-detects version)"
@@ -81,6 +83,7 @@ jobs:
         
         # Clean previous build artifacts
         if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
+        if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
         if (Test-Path "dist") { Remove-Item "dist" -Recurse -Force }
         
         # Build executable
@@ -88,13 +91,38 @@ jobs:
         
         # Build MSI installer with error handling
         Write-Host "Building standard MSI installer..."
-        python build\windows\setup.py bdist_msi
+        Write-Host "Current working directory: $(Get-Location)"
+        Write-Host "Setup.py path: $(Resolve-Path 'build\windows\setup.py')"
+        
+        # Run with maximum verbosity to capture any hidden errors
+        python build\windows\setup.py bdist_msi --verbose
         if ($LASTEXITCODE -eq 0) {
           Write-Host "Standard MSI build completed successfully"
           # List MSI files created
           Write-Host "MSI files in dist directory after standard build:"
           if (Test-Path "dist") {
-            Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
+            $msiFiles = Get-ChildItem -Path "dist" -Filter "*.msi"
+            if ($msiFiles) {
+              $msiFiles | ForEach-Object { Write-Host "  $($_.Name)" }
+            } else {
+              Write-Host "  No MSI files found! Attempting alternative build method..."
+              # Alternative approach: try building without excludes that might cause issues
+              Write-Host "Retrying MSI build with simplified configuration..."
+              python build\windows\setup.py bdist_msi --skip-build
+              if (Test-Path "dist/*.msi") {
+                Write-Host "Alternative MSI build succeeded!"
+                Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
+              } else {
+                Write-Host "ERROR: MSI creation failed completely. Build directory contents:"
+                if (Test-Path "build") {
+                  Get-ChildItem -Path "build" -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
+                }
+                exit 1
+              }
+            }
+          } else {
+            Write-Host "  No dist directory found!"
+            exit 1
           }
         } else {
           Write-Host "Error building standard MSI - exit code: $LASTEXITCODE"
@@ -159,6 +187,7 @@ jobs:
         
         # Clean previous build artifacts
         if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
+        if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
         if (Test-Path "dist\*.msi") { Remove-Item "dist\*.msi" -Force }
         
         # Build executable with FFmpeg
