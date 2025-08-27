@@ -29,7 +29,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.utils.ytsage_constants import YTDLP_DOCS_URL
+from src.utils.ytsage_constants import YTDLP_DOCS_URL, SUBPROCESS_CREATIONFLAGS
 
 try:
     import yt_dlp
@@ -85,6 +85,7 @@ class CommandWorker(QObject):
                 text=True,
                 encoding="utf-8",
                 errors="replace",
+                creationflags=SUBPROCESS_CREATIONFLAGS,
             )
 
             # Stream output
