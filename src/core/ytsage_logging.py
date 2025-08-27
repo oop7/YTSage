@@ -98,8 +98,21 @@ def setup_logging():
     stdout_available = sys.stdout is not None
     is_windowed_app = getattr(sys, 'frozen', False) and sys.stdout is None
     
-    # Skip console output if we're in a windowed application to prevent brief console window
-    if stdout_available and not is_windowed_app:
+    # Additional check for windowed mode - check if console window exists on Windows
+    is_console_hidden = False
+    if sys.platform == 'win32' and getattr(sys, 'frozen', False):
+        try:
+            import ctypes
+            kernel32 = ctypes.windll.kernel32
+            console_window = kernel32.GetConsoleWindow()
+            if console_window == 0:
+                is_console_hidden = True
+        except:
+            # If console detection fails, assume we might be windowed
+            is_console_hidden = True
+    
+    # Skip console output if we're in a windowed application or console is hidden
+    if stdout_available and not is_windowed_app and not is_console_hidden:
         try:
             logger.add(
                 sys.stdout,
@@ -120,8 +133,8 @@ def setup_logging():
             except Exception:
                 stdout_available = False
 
-    # If stdout is not available or we're in windowed mode, try stderr for critical messages only
-    if (not stdout_available or is_windowed_app) and not is_windowed_app:
+    # If stdout is not available or we're in windowed mode, skip stderr too to prevent console windows
+    if (not stdout_available or is_windowed_app or is_console_hidden) and not (is_windowed_app or is_console_hidden):
         try:
             if sys.stderr is not None:
                 logger.add(

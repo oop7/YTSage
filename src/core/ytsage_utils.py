@@ -36,6 +36,37 @@ _version_cache = {
 CACHE_EXPIRY = 300
 
 
+def run_subprocess_hidden(cmd_args, **kwargs):
+    """
+    Run subprocess with proper console window hiding for windowed applications.
+    
+    Args:
+        cmd_args: Command arguments list
+        **kwargs: Additional subprocess.run arguments
+    
+    Returns:
+        subprocess.CompletedProcess result
+    """
+    # Set up creation flags to hide console window
+    creation_flags = SUBPROCESS_CREATIONFLAGS
+    if getattr(sys, 'frozen', False):
+        # Running as compiled executable - use additional flags to prevent console flicker
+        creation_flags |= subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
+    
+    # Set default parameters to suppress console
+    default_kwargs = {
+        'capture_output': True,
+        'text': True,
+        'creationflags': creation_flags,
+        'stdin': subprocess.DEVNULL
+    }
+    
+    # Merge with provided kwargs (user kwargs take precedence)
+    default_kwargs.update(kwargs)
+    
+    return subprocess.run(cmd_args, **default_kwargs)
+
+
 def get_file_mtime(filepath) -> float:
     """Get file modification time safely."""
     try:
@@ -196,8 +227,8 @@ def get_ytdlp_version_direct(yt_dlp_path=None) -> str:
             return "Not found"
 
         # Extra logic moved to src\utils\ytsage_constants.py
-        result = subprocess.run(
-            [yt_dlp_path, "--version"], capture_output=True, text=True, timeout=10, creationflags=SUBPROCESS_CREATIONFLAGS
+        result = run_subprocess_hidden(
+            [yt_dlp_path, "--version"], timeout=10
         )
 
         if result.returncode == 0:
@@ -213,8 +244,8 @@ def get_ffmpeg_version_direct() -> str:
     """Get FFmpeg version directly without caching."""
     try:
         # Extra logic moved to src\utils\ytsage_constants.py
-        result = subprocess.run(
-            ["ffmpeg", "-version"], capture_output=True, text=True, timeout=10, creationflags=SUBPROCESS_CREATIONFLAGS
+        result = run_subprocess_hidden(
+            ["ffmpeg", "-version"], timeout=10
         )
 
         if result.returncode == 0:
@@ -242,8 +273,8 @@ def get_ffmpeg_version_direct() -> str:
                 ffmpeg_exe = Path(ffmpeg_path).joinpath("ffmpeg")
 
             if ffmpeg_exe.exists():
-                result = subprocess.run(
-                    [ffmpeg_exe, "-version"], capture_output=True, text=True, timeout=10, creationflags=SUBPROCESS_CREATIONFLAGS
+                result = run_subprocess_hidden(
+                    [ffmpeg_exe, "-version"], timeout=10
                 )
 
                 if result.returncode == 0:
@@ -489,7 +520,7 @@ def update_yt_dlp() -> bool:
                     # Compare versions and update if needed
                     if version.parse(latest_version) > version.parse(current_version):
                         logger.info(f"Updating yt-dlp from {current_version} to {latest_version}...")
-                        update_result = subprocess.run(
+                        update_result = run_subprocess_hidden(
                             [
                                 sys.executable,
                                 "-m",
@@ -498,10 +529,7 @@ def update_yt_dlp() -> bool:
                                 "--upgrade",
                                 "yt-dlp",
                             ],
-                            capture_output=True,
-                            text=True,
-                            check=False,
-                            creationflags=SUBPROCESS_CREATIONFLAGS,
+                            check=False
                         )
                         if update_result.returncode == 0:
                             logger.info("yt-dlp successfully updated")

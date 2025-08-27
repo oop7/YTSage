@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -500,10 +501,22 @@ def check_ytdlp_binary() -> Optional[Path]:
         # Use subprocess to check if yt-dlp is available
         if OS_NAME == "Windows":
             # On Windows, use 'where' command and hide console window
-            # Extra logic moved to src\utils\ytsage_constants.py
+            # For windowed applications, use additional flags to prevent console window flicker
+            creation_flags = SUBPROCESS_CREATIONFLAGS
+            if getattr(sys, 'frozen', False):
+                # Running as compiled executable - use additional flags
+                creation_flags |= subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
 
             result = subprocess.run(
-                ["where", "yt-dlp"], capture_output=True, text=True, check=False, creationflags=SUBPROCESS_CREATIONFLAGS
+                ["where", "yt-dlp"], 
+                capture_output=True, 
+                text=True, 
+                check=False, 
+                creationflags=creation_flags,
+                # Additional parameters to suppress console
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
             )
             if result.returncode == 0 and result.stdout.strip():
                 yt_dlp_path = result.stdout.strip().split("\n")[0]
@@ -534,9 +547,22 @@ def check_ytdlp_installed() -> bool:
         if ytdlp_path:
             # Try to run yt-dlp --version to verify it's working
             try:
-                # Extra logic moved to src\utils\ytsage_constants.py
+                # For windowed applications, use additional flags to prevent console window flicker
+                creation_flags = SUBPROCESS_CREATIONFLAGS
+                if getattr(sys, 'frozen', False):
+                    # Running as compiled executable - use additional flags
+                    creation_flags |= subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
+
                 result = subprocess.run(
-                    [ytdlp_path, "--version"], capture_output=True, text=True, timeout=5, creationflags=SUBPROCESS_CREATIONFLAGS
+                    [ytdlp_path, "--version"], 
+                    capture_output=True, 
+                    text=True, 
+                    timeout=5, 
+                    creationflags=creation_flags,
+                    # Additional parameters to suppress console
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
                 )
                 return result.returncode == 0
             except Exception:

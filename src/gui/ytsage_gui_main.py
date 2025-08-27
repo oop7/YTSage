@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 import threading
 import webbrowser
 from pathlib import Path
@@ -1735,7 +1736,21 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             # Execute command with hidden console window on Windows
             # Extra logic moved to src\utils\ytsage_constants.py
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60, creationflags=SUBPROCESS_CREATIONFLAGS)
+            creation_flags = SUBPROCESS_CREATIONFLAGS
+            if getattr(sys, 'frozen', False):
+                # Running as compiled executable - use additional flags to prevent console flicker
+                creation_flags |= subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
+            
+            result = subprocess.run(
+                cmd, 
+                capture_output=True, 
+                text=True, 
+                timeout=60, 
+                creationflags=creation_flags,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
 
             if result.returncode != 0:
                 raise Exception(f"yt-dlp failed: {result.stderr}")
