@@ -91,6 +91,11 @@ jobs:
         python build\windows\setup.py bdist_msi
         if ($LASTEXITCODE -eq 0) {
           Write-Host "Standard MSI build completed successfully"
+          # List MSI files created
+          Write-Host "MSI files in dist directory after standard build:"
+          if (Test-Path "dist") {
+            Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
+          }
         } else {
           Write-Host "Error building standard MSI - exit code: $LASTEXITCODE"
           # Continue anyway to try ZIP creation
@@ -174,6 +179,11 @@ jobs:
         python build\windows\setup-ffmpeg.py bdist_msi
         if ($LASTEXITCODE -eq 0) {
           Write-Host "FFmpeg MSI build completed successfully"
+          # List MSI files created
+          Write-Host "MSI files in dist directory after FFmpeg build:"
+          if (Test-Path "dist") {
+            Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
+          }
         } else {
           Write-Host "Error building FFmpeg MSI - exit code: $LASTEXITCODE"
           # Continue anyway to try ZIP creation
@@ -206,12 +216,16 @@ jobs:
         }
         
         # Find and copy standard build artifacts from dist directory
-        $standardMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -notlike "*ffmpeg*" } | Select-Object -First 1
+        # Look for any MSI file that doesn't contain "ffmpeg" in the name
+        $standardMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -notlike "*ffmpeg*" -and $_.Name -notlike "*FFmpeg*" } | Select-Object -First 1
         if ($standardMsi) {
           Copy-Item $standardMsi.FullName "artifacts\YTSage-v$version.msi"
           Write-Host "Copied: $($standardMsi.Name) -> YTSage-v$version.msi"
         } else {
           Write-Host "Warning: Standard MSI not found"
+          # List all MSI files for debugging
+          Write-Host "Available MSI files:"
+          Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
         }
         
         $standardZip = Get-ChildItem -Path "dist" -Filter "YTSage-v$version.zip" | Select-Object -First 1
@@ -223,7 +237,8 @@ jobs:
         }
         
         # Find and copy FFmpeg build artifacts from dist directory
-        $ffmpegMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -like "*ffmpeg*" } | Select-Object -First 1
+        # Look for any MSI file that contains "ffmpeg" or "FFmpeg" in the name
+        $ffmpegMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -like "*ffmpeg*" -or $_.Name -like "*FFmpeg*" } | Select-Object -First 1
         if ($ffmpegMsi) {
           Copy-Item $ffmpegMsi.FullName "artifacts\YTSage-v$version-ffmpeg.msi"
           Write-Host "Copied: $($ffmpegMsi.Name) -> YTSage-v$version-ffmpeg.msi"
