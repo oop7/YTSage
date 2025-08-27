@@ -188,7 +188,6 @@ jobs:
         # Clean previous build artifacts
         if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
         if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
-        if (Test-Path "dist\*.msi") { Remove-Item "dist\*.msi" -Force }
         
         # Build executable with FFmpeg
         python build\windows\setup-ffmpeg.py build
