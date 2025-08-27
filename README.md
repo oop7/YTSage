@@ -212,7 +212,6 @@ python main.py
 Some antivirus software may flag the `.exe` files as false positives. This is a **known limitation** of packaged applications.
 
 **Why this happens:**
-- PyInstaller bundles Python runtime and libraries together
 - Antivirus heuristics can misidentify packed executables as suspicious
 - This affects many legitimate Python applications built with PyInstaller
 
