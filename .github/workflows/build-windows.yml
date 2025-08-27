@@ -73,7 +73,7 @@ jobs:
         
         Write-Host "Version updated in setup files (build script auto-detects version)"
     
-    - name: Build Standard Version (MSI + ZIP)
+    - name: Build Standard Version (MSI only)
       shell: powershell
       run: |
         .\venv\Scripts\Activate.ps1
@@ -98,17 +98,7 @@ jobs:
           }
         } else {
           Write-Host "Error building standard MSI - exit code: $LASTEXITCODE"
-          # Continue anyway to try ZIP creation
-        }
-        
-        # Create ZIP distribution from dist output
-        $distDir = "dist\YTSage"
-        if (Test-Path $distDir) {
-          $version = "${{ steps.get_version.outputs.VERSION }}"
-          Compress-Archive -Path "$distDir\*" -DestinationPath "dist\YTSage-v$version.zip" -Force
-          Write-Host "Created ZIP: YTSage-v$version.zip"
-        } else {
-          Write-Host "Warning: Standard executable directory not found at $distDir"
+          exit 1
         }
     
     - name: Setup FFmpeg for bundle
@@ -161,7 +151,7 @@ jobs:
           exit 1
         }
     
-    - name: Build FFmpeg Version (MSI + ZIP)
+    - name: Build FFmpeg Version (MSI only)
       shell: powershell
       run: |
         .\venv\Scripts\Activate.ps1
@@ -186,17 +176,7 @@ jobs:
           }
         } else {
           Write-Host "Error building FFmpeg MSI - exit code: $LASTEXITCODE"
-          # Continue anyway to try ZIP creation
-        }
-        
-        # Create ZIP distribution with FFmpeg from dist output
-        $distDir = "dist\YTSage-FFmpeg"
-        if (Test-Path $distDir) {
-          $version = "${{ steps.get_version.outputs.VERSION }}"
-          Compress-Archive -Path "$distDir\*" -DestinationPath "dist\YTSage-v$version-ffmpeg.zip" -Force
-          Write-Host "Created ZIP: YTSage-v$version-ffmpeg.zip"
-        } else {
-          Write-Host "Warning: FFmpeg executable directory not found at $distDir"
+          exit 1
         }
     
     - name: Prepare release artifacts
@@ -227,15 +207,7 @@ jobs:
           Write-Host "Available MSI files:"
           Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
         }
-        
-        $standardZip = Get-ChildItem -Path "dist" -Filter "YTSage-v$version.zip" | Select-Object -First 1
-        if ($standardZip) {
-          Copy-Item $standardZip.FullName "artifacts\YTSage-v$version.zip"
-          Write-Host "Copied: $($standardZip.Name) -> YTSage-v$version.zip"
-        } else {
-          Write-Host "Warning: Standard ZIP not found"
-        }
-        
+
         # Find and copy FFmpeg build artifacts from dist directory
         # Look for any MSI file that contains "ffmpeg" or "FFmpeg" in the name
         $ffmpegMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -like "*ffmpeg*" -or $_.Name -like "*FFmpeg*" } | Select-Object -First 1
@@ -244,14 +216,6 @@ jobs:
           Write-Host "Copied: $($ffmpegMsi.Name) -> YTSage-v$version-ffmpeg.msi"
         } else {
           Write-Host "Warning: FFmpeg MSI not found"
-        }
-        
-        $ffmpegZip = Get-ChildItem -Path "dist" -Filter "YTSage-v$version-ffmpeg.zip" | Select-Object -First 1
-        if ($ffmpegZip) {
-          Copy-Item $ffmpegZip.FullName "artifacts\YTSage-v$version-ffmpeg.zip"
-          Write-Host "Copied: $($ffmpegZip.Name) -> YTSage-v$version-ffmpeg.zip"
-        } else {
-          Write-Host "Warning: FFmpeg ZIP not found"
         }
         
         # List all artifacts
@@ -282,12 +246,10 @@ jobs:
           ## Downloads
           
           ### Standard Version
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}.msi** - Windows Installer (Recommended)
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}.zip** - Portable ZIP (No installation required)
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}.msi** - Windows Installer (Downloads FFmpeg when needed)
           
           ### FFmpeg Bundle Version
           - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.msi** - Windows Installer with FFmpeg included
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.zip** - Portable ZIP with FFmpeg included
           
           ## Installation Instructions
           
@@ -297,11 +259,6 @@ jobs:
           3. Follow the installation wizard
           4. YTSage will be available in your Start Menu
           
-          ### Portable ZIP
-          1. Download the `.zip` file
-          2. Extract to your preferred location
-          3. Run `YTSage.exe`
-          
           ## System Requirements
           
           - Windows 10/11 (64-bit)
@@ -310,8 +267,8 @@ jobs:
           
           ## Notes
           
-          - Standard version: Downloads FFmpeg automatically when needed
-          - FFmpeg bundle: Includes FFmpeg binaries for offline use
+          - **Standard version**: Downloads FFmpeg automatically when needed
+          - **FFmpeg bundle**: Includes FFmpeg binaries for offline use
           
           ---
           
