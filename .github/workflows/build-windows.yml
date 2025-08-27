@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  PYTHON_VERSION: '3.13.6'
+  PYTHON_VERSION: '3.13.5'
 
 jobs:
   build-windows:
@@ -252,33 +252,6 @@ jobs:
           # YTSage ${{ github.ref_name }}
           
           **Release Date**: ${{ github.event.head_commit.timestamp }}
-          
-          ## Downloads
-          
-          ### Standard Version (ZIP)
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-portable.zip** – Portable ZIP (downloads FFmpeg on first use if needed)
-          
-          ### FFmpeg Bundle Version (ZIP)
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg-portable.zip** – Portable ZIP with FFmpeg included
-          
-          ## Installation / Usage
-          
-          1. Download the `.zip` file you want.
-          2. Right-click the ZIP, choose Properties, and if you see "Unblock", check it and Apply.
-          3. Extract the ZIP to a folder (e.g., `C:\Apps\YTSage`).
-          4. Run `YTSage-v${{ steps.get_version.outputs.VERSION }}.exe` inside the extracted folder.
-          
-          ## System Requirements
-          
-          - Windows 10/11 (64-bit)
-          - Internet connection for yt-dlp updates
-          
-          ## Notes
-          
-          - **Standard version**: Downloads FFmpeg automatically when needed.
-          - **FFmpeg bundle**: Includes FFmpeg binaries for offline use.
-          
-          ---
           
           **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
         files: |
