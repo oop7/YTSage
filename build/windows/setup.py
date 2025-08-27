@@ -74,7 +74,8 @@ bdist_msi_options = {
     "upgrade_code": "{12345678-1234-5678-9ABC-123456789ABC}",  # Generate unique GUID
     "add_to_path": False,
     "initial_target_dir": r"[ProgramFilesFolder]\YTSage",
-    "install_icon": "assets/branding/icons/YTSage.ico",
+    # Remove problematic install_icon that might be causing MSI build to fail
+    # "install_icon": "assets/branding/icons/YTSage.ico",
     "summary_data": {
         "author": "oop7",
         "comments": "YouTube Video Downloader - Easy to use video downloading tool",

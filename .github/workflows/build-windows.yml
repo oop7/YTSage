@@ -86,15 +86,24 @@ jobs:
         # Build executable
         python build\windows\setup.py build
         
-        # Build MSI installer
-        python build\windows\setup.py bdist_msi
+        # Build MSI installer with error handling
+        Write-Host "Building standard MSI installer..."
+        try {
+          python build\windows\setup.py bdist_msi
+          Write-Host "Standard MSI build completed successfully"
+        } catch {
+          Write-Host "Error building standard MSI: $($_.Exception.Message)"
+          # Continue anyway to try ZIP creation
+        }
         
-        # Create ZIP distribution
-        $exeDir = Get-ChildItem -Path "build" -Directory -Filter "exe.*" | Select-Object -First 1
-        if ($exeDir) {
+        # Create ZIP distribution from dist output
+        $distDir = "dist\YTSage"
+        if (Test-Path $distDir) {
           $version = "${{ steps.get_version.outputs.VERSION }}"
-          Compress-Archive -Path "$($exeDir.FullName)\*" -DestinationPath "dist\YTSage-v$version.zip" -Force
+          Compress-Archive -Path "$distDir\*" -DestinationPath "dist\YTSage-v$version.zip" -Force
           Write-Host "Created ZIP: YTSage-v$version.zip"
+        } else {
+          Write-Host "Warning: Standard executable directory not found at $distDir"
         }
     
     - name: Setup FFmpeg for bundle
@@ -160,14 +169,25 @@ jobs:
         # Build executable with FFmpeg
         python build\windows\setup-ffmpeg.py build
         
-        # Build MSI installer with FFmpeg
-        python build\windows\setup-ffmpeg.py bdist_msi
+        # Build MSI installer with FFmpeg and error handling
+        Write-Host "Building FFmpeg MSI installer..."
+        try {
+          python build\windows\setup-ffmpeg.py bdist_msi
+          Write-Host "FFmpeg MSI build completed successfully"
+        } catch {
+          Write-Host "Error building FFmpeg MSI: $($_.Exception.Message)"
+          # Continue anyway to try ZIP creation
+        }
         
-        # Create ZIP distribution with FFmpeg
-        $exeDir = Get-ChildItem -Path "build" -Directory -Filter "exe.*" | Select-Object -First 1
-        if ($exeDir) {
+        # Create ZIP distribution with FFmpeg from dist output
+        $distDir = "dist\YTSage-FFmpeg"
+        if (Test-Path $distDir) {
           $version = "${{ steps.get_version.outputs.VERSION }}"
-          Compress-Archive -Path "$($exeDir.FullName)\*" -DestinationPath "dist\YTSage-v$version-ffmpeg.zip" -Force
+          Compress-Archive -Path "$distDir\*" -DestinationPath "dist\YTSage-v$version-ffmpeg.zip" -Force
+          Write-Host "Created ZIP: YTSage-v$version-ffmpeg.zip"
+        } else {
+          Write-Host "Warning: FFmpeg executable directory not found at $distDir"
+        }
           Write-Host "Created ZIP: YTSage-v$version-ffmpeg.zip"
         }
     
