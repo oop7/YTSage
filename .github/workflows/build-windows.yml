@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 env:
   PYTHON_VERSION: '3.12.10'
 
@@ -103,14 +106,14 @@ jobs:
         New-Item -ItemType Directory -Path "ffmpeg-temp" -Force
         
         # Download FFmpeg
-        $ffmpegUrl = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
+        $ffmpegUrl = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.zip"
         Write-Host "Downloading FFmpeg from: $ffmpegUrl"
         Invoke-WebRequest -Uri $ffmpegUrl -OutFile "ffmpeg-temp\ffmpeg.zip"
         
         # Extract FFmpeg
         Expand-Archive -Path "ffmpeg-temp\ffmpeg.zip" -DestinationPath "ffmpeg-temp" -Force
         
-        # Find the extracted directory (it has a timestamp in the name)
+        # Find the extracted directory (GyanD ffmpeg has specific naming)
         $ffmpegDir = Get-ChildItem -Path "ffmpeg-temp" -Directory | Where-Object { $_.Name -like "ffmpeg-*" } | Select-Object -First 1
         
         if ($ffmpegDir) {
@@ -176,17 +179,29 @@ jobs:
         Write-Host "Preparing artifacts for version: $version"
         New-Item -ItemType Directory -Path "artifacts" -Force
         
+        # List all files in dist directory first
+        Write-Host "Files in dist directory:"
+        if (Test-Path "dist") {
+          Get-ChildItem -Path "dist" -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
+        } else {
+          Write-Host "  No dist directory found!"
+        }
+        
         # Find and copy standard build artifacts from dist directory
         $standardMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -notlike "*ffmpeg*" } | Select-Object -First 1
         if ($standardMsi) {
           Copy-Item $standardMsi.FullName "artifacts\YTSage-v$version.msi"
           Write-Host "Copied: $($standardMsi.Name) -> YTSage-v$version.msi"
+        } else {
+          Write-Host "Warning: Standard MSI not found"
         }
         
         $standardZip = Get-ChildItem -Path "dist" -Filter "YTSage-v$version.zip" | Select-Object -First 1
         if ($standardZip) {
           Copy-Item $standardZip.FullName "artifacts\YTSage-v$version.zip"
           Write-Host "Copied: $($standardZip.Name) -> YTSage-v$version.zip"
+        } else {
+          Write-Host "Warning: Standard ZIP not found"
         }
         
         # Find and copy FFmpeg build artifacts from dist directory
@@ -194,17 +209,30 @@ jobs:
         if ($ffmpegMsi) {
           Copy-Item $ffmpegMsi.FullName "artifacts\YTSage-v$version-ffmpeg.msi"
           Write-Host "Copied: $($ffmpegMsi.Name) -> YTSage-v$version-ffmpeg.msi"
+        } else {
+          Write-Host "Warning: FFmpeg MSI not found"
         }
         
         $ffmpegZip = Get-ChildItem -Path "dist" -Filter "YTSage-v$version-ffmpeg.zip" | Select-Object -First 1
         if ($ffmpegZip) {
           Copy-Item $ffmpegZip.FullName "artifacts\YTSage-v$version-ffmpeg.zip"
           Write-Host "Copied: $($ffmpegZip.Name) -> YTSage-v$version-ffmpeg.zip"
+        } else {
+          Write-Host "Warning: FFmpeg ZIP not found"
         }
         
         # List all artifacts
         Write-Host "Final artifacts:"
-        Get-ChildItem artifacts | ForEach-Object { Write-Host "  $($_.Name)" }
+        if (Test-Path "artifacts") {
+          $artifactFiles = Get-ChildItem artifacts
+          if ($artifactFiles) {
+            $artifactFiles | ForEach-Object { Write-Host "  $($_.Name)" }
+          } else {
+            Write-Host "  No artifacts created!"
+          }
+        } else {
+          Write-Host "  Artifacts directory not found!"
+        }
 
     - name: Create draft release
       uses: softprops/action-gh-release@v1
@@ -256,9 +284,6 @@ jobs:
           
           **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
         files: |
-          artifacts/YTSage-v${{ steps.get_version.outputs.VERSION }}.msi
-          artifacts/YTSage-v${{ steps.get_version.outputs.VERSION }}.zip
-          artifacts/YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.msi
-          artifacts/YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.zip
+          artifacts/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
