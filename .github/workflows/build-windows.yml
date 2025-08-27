@@ -85,6 +85,13 @@ jobs:
           --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
           --include-files "src" `
           --include-files "assets"
+
+        # Exclude screenshots folder from Standard build output
+        $stdScreenshots = "dist\YTSage\assets\branding\screenshots"
+        if (Test-Path $stdScreenshots) {
+          Remove-Item $stdScreenshots -Recurse -Force
+          Write-Host "Removed screenshots from Standard build: $stdScreenshots"
+        }
     
     - name: Setup FFmpeg for bundle
       shell: powershell
@@ -176,6 +183,13 @@ jobs:
             }
           }
         }
+
+        # Exclude screenshots folder from FFmpeg build output
+        $ffScreenshots = "dist\YTSage-FFmpeg\assets\branding\screenshots"
+        if (Test-Path $ffScreenshots) {
+          Remove-Item $ffScreenshots -Recurse -Force
+          Write-Host "Removed screenshots from FFmpeg build: $ffScreenshots"
+        }
     
     - name: Package and prepare release artifacts (ZIPs)
       shell: powershell
@@ -194,10 +208,10 @@ jobs:
           exit 1
         }
 
-        # Create Standard ZIP
+        # Create Standard ZIP (portable)
         $standardDist = Join-Path (Get-Location) "dist\YTSage"
         if (Test-Path $standardDist) {
-          $stdZip = "artifacts\YTSage-v$version.zip"
+          $stdZip = "artifacts\YTSage-v$version-portable.zip"
           if (Test-Path $stdZip) { Remove-Item $stdZip -Force }
           Compress-Archive -Path "$standardDist\*" -DestinationPath $stdZip -CompressionLevel Optimal
           Write-Host "Created: $(Resolve-Path $stdZip)"
@@ -205,10 +219,10 @@ jobs:
           Write-Host "Warning: Standard dist folder not found at $standardDist"
         }
 
-        # Create FFmpeg ZIP
+        # Create FFmpeg ZIP (portable)
         $ffmpegDist = Join-Path (Get-Location) "dist\YTSage-FFmpeg"
         if (Test-Path $ffmpegDist) {
-          $ffZip = "artifacts\YTSage-v$version-ffmpeg.zip"
+          $ffZip = "artifacts\YTSage-v$version-ffmpeg-portable.zip"
           if (Test-Path $ffZip) { Remove-Item $ffZip -Force }
           Compress-Archive -Path "$ffmpegDist\*" -DestinationPath $ffZip -CompressionLevel Optimal
           Write-Host "Created: $(Resolve-Path $ffZip)"
@@ -244,10 +258,10 @@ jobs:
           ## Downloads
           
           ### Standard Version (ZIP)
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}.zip** – Portable ZIP (downloads FFmpeg on first use if needed)
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-portable.zip** – Portable ZIP (downloads FFmpeg on first use if needed)
           
           ### FFmpeg Bundle Version (ZIP)
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.zip** – Portable ZIP with FFmpeg included
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg-portable.zip** – Portable ZIP with FFmpeg included
           
           ## Installation / Usage
           
