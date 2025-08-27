@@ -83,10 +83,8 @@ jobs:
           --optimize 2 `
           --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,playsound3,loguru,setuptools" `
           --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
-          --include-files "src/:src/" `
-          --include-files "assets/Icon/icon.png:assets/Icon/icon.png" `
-          --include-files "assets/sound/notification.mp3:assets/sound/notification.mp3" `
-          --include-files "assets/branding/icons/YTSage.ico:YTSage.ico"
+          --include-files "src" `
+          --include-files "assets"
     
     - name: Setup FFmpeg for bundle
       shell: powershell
@@ -157,9 +155,9 @@ jobs:
           $ffmpegExe = Join-Path $env:FFMPEG_PATH "ffmpeg.exe"
           $ffprobeExe = Join-Path $env:FFMPEG_PATH "ffprobe.exe"
           $ffplayExe = Join-Path $env:FFMPEG_PATH "ffplay.exe"
-          if (Test-Path $ffmpegExe) { $ffinc1 = "--include-files `"$ffmpegExe:ffmpeg.exe`"" }
-          if (Test-Path $ffprobeExe) { $ffinc2 = "--include-files `"$ffprobeExe:ffprobe.exe`"" }
-          if (Test-Path $ffplayExe)  { $ffinc3 = "--include-files `"$ffplayExe:ffplay.exe`"" }
+          if (Test-Path $ffmpegExe) { $ffinc1 = "--include-files `"$ffmpegExe`"" }
+          if (Test-Path $ffprobeExe) { $ffinc2 = "--include-files `"$ffprobeExe`"" }
+          if (Test-Path $ffplayExe)  { $ffinc3 = "--include-files `"$ffplayExe`"" }
         }
 
         # Build executable with FFmpeg using cx_Freeze CLI
@@ -171,10 +169,8 @@ jobs:
           --optimize 2 `
           --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,playsound3,loguru,setuptools" `
           --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
-          --include-files "src/:src/" `
-          --include-files "assets/Icon/icon.png:assets/Icon/icon.png" `
-          --include-files "assets/sound/notification.mp3:assets/sound/notification.mp3" `
-          --include-files "assets/branding/icons/YTSage.ico:YTSage.ico" `
+          --include-files "src" `
+          --include-files "assets" `
           $ffinc1 $ffinc2 $ffinc3
     
     - name: Package and prepare release artifacts (ZIPs)
