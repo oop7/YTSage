@@ -91,7 +91,8 @@ bdist_msi_options = {
     "upgrade_code": "{87654321-4321-8765-CBA9-987654321CBA}",  # Different GUID for FFmpeg version
     "add_to_path": False,
     "initial_target_dir": r"[ProgramFilesFolder]\YTSage",
-    "install_icon": "assets/branding/icons/YTSage.ico",
+    # Remove problematic install_icon that might be causing MSI build to fail
+    # "install_icon": "assets/branding/icons/YTSage.ico",
     "summary_data": {
         "author": "oop7",
         "comments": "YouTube Video Downloader with FFmpeg - Complete video processing solution",

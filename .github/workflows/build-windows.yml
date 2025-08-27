@@ -88,11 +88,11 @@ jobs:
         
         # Build MSI installer with error handling
         Write-Host "Building standard MSI installer..."
-        try {
-          python build\windows\setup.py bdist_msi
+        python build\windows\setup.py bdist_msi
+        if ($LASTEXITCODE -eq 0) {
           Write-Host "Standard MSI build completed successfully"
-        } catch {
-          Write-Host "Error building standard MSI: $($_.Exception.Message)"
+        } else {
+          Write-Host "Error building standard MSI - exit code: $LASTEXITCODE"
           # Continue anyway to try ZIP creation
         }
         
@@ -171,11 +171,11 @@ jobs:
         
         # Build MSI installer with FFmpeg and error handling
         Write-Host "Building FFmpeg MSI installer..."
-        try {
-          python build\windows\setup-ffmpeg.py bdist_msi
+        python build\windows\setup-ffmpeg.py bdist_msi
+        if ($LASTEXITCODE -eq 0) {
           Write-Host "FFmpeg MSI build completed successfully"
-        } catch {
-          Write-Host "Error building FFmpeg MSI: $($_.Exception.Message)"
+        } else {
+          Write-Host "Error building FFmpeg MSI - exit code: $LASTEXITCODE"
           # Continue anyway to try ZIP creation
         }
         
