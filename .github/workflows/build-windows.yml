@@ -9,281 +9,141 @@ permissions:
   contents: write
 
 env:
-  PYTHON_VERSION: '3.13.6'
+  PYTHON_VERSION: '3.12.10'
 
 jobs:
   build-windows:
     runs-on: windows-latest
-    
+    defaults:
+      run:
+        shell: pwsh
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    
-    - name: Extract version from tag
-      id: get_version
-      shell: powershell
-      run: |
-        $tag = "${{ github.ref_name }}"
-        $version = $tag -replace '^v', ''
-        Write-Host "Extracted version: $version"
-        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+      - name: Derive version from tag
+        id: version
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $ver = $tag -replace '^v',''
+          echo "VERSION=$ver" >> $env:GITHUB_OUTPUT
+          echo "VERSION=$ver" >> $env:GITHUB_ENV
 
-    - name: Cache Python dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          venv
-          ~\AppData\Local\pip\Cache
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Create virtual environment and install dependencies
-      shell: powershell
-      run: |
-        python -m venv venv
-        .\venv\Scripts\Activate.ps1
-        python -m pip install --upgrade pip
-        pip install --no-cache-dir -r requirements.txt
-        pip install --no-cache-dir cx_Freeze
-        pip install --no-cache-dir yt-dlp
+      - name: Create venv and install dependencies
+        run: |
+          $py = $env:pythonLocation
+          & "$py\python.exe" -m venv venv
+          .\venv\Scripts\Activate.ps1
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir -r requirements.txt
+          pip install --no-cache-dir cx_Freeze yt-dlp
 
-    - name: Prepare build variables
-      shell: powershell
-      run: |
-        $version = "${{ steps.get_version.outputs.VERSION }}"
-        echo "VERSION=$version" >> $env:GITHUB_ENV
-        Write-Host "Prepared build variables for version: $version"
-    
-    - name: Build Standard Version (ZIP)
-      shell: powershell
-      run: |
-        .\venv\Scripts\Activate.ps1
-        $version = "$env:VERSION"
-        Write-Host "Building Standard Version v$version ..."
-        
-        # Clean previous build artifacts
-        if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
-        if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
-        if (Test-Path "dist") { Remove-Item "dist" -Recurse -Force }
-        
-        # Build executable using cx_Freeze CLI
-        cxfreeze main.py `
-          --target-dir "dist\YTSage" `
-          --base-name Win32GUI `
-          --icon "assets\branding\icons\YTSage.ico" `
-          --target-name "YTSage-v$version.exe" `
-          --optimize 2 `
-          --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,playsound3,loguru,setuptools" `
-          --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
-          --include-files "src" `
-          --include-files "assets"
+      - name: Build Standard (portable ZIP)
+        run: |
+          .\venv\Scripts\Activate.ps1
+          $version = "$env:VERSION"
+          Write-Host "Building Standard v$version"
 
-        # Exclude screenshots folder from Standard build output
-        $stdScreenshots = "dist\YTSage\assets\branding\screenshots"
-        if (Test-Path $stdScreenshots) {
-          Remove-Item $stdScreenshots -Recurse -Force
-          Write-Host "Removed screenshots from Standard build: $stdScreenshots"
-        }
-    
-    - name: Setup FFmpeg for bundle
-      shell: powershell
-      run: |
-        Write-Host "Setting up FFmpeg for bundled version..."
-        
-        # Create ffmpeg directory
-        New-Item -ItemType Directory -Path "ffmpeg-temp" -Force
-        
-        # Download FFmpeg
-        $ffmpegUrl = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.zip"
-        Write-Host "Downloading FFmpeg from: $ffmpegUrl"
-        Invoke-WebRequest -Uri $ffmpegUrl -OutFile "ffmpeg-temp\ffmpeg.zip"
-        
-        # Extract FFmpeg
-        Expand-Archive -Path "ffmpeg-temp\ffmpeg.zip" -DestinationPath "ffmpeg-temp" -Force
-        
-        # Find the extracted directory (GyanD ffmpeg has specific naming)
-        $ffmpegDir = Get-ChildItem -Path "ffmpeg-temp" -Directory | Where-Object { $_.Name -like "ffmpeg-*" } | Select-Object -First 1
-        
-        if ($ffmpegDir) {
-          # Set environment variable for the build
-          $ffmpegBinPath = Join-Path $ffmpegDir.FullName "bin"
-          Write-Host "FFmpeg binaries found at: $ffmpegBinPath"
-          echo "FFMPEG_PATH=$ffmpegBinPath" >> $env:GITHUB_ENV
-          
-          # Verify files exist
-          $ffmpegExe = Join-Path $ffmpegBinPath "ffmpeg.exe"
-          $ffprobeExe = Join-Path $ffmpegBinPath "ffprobe.exe"
-          $ffplayExe = Join-Path $ffmpegBinPath "ffplay.exe"
-          
-          if (Test-Path $ffmpegExe) { 
-            Write-Host "[OK] ffmpeg.exe found" 
-          } else { 
-            Write-Host "[ERROR] ffmpeg.exe missing" 
-          }
-          if (Test-Path $ffprobeExe) { 
-            Write-Host "[OK] ffprobe.exe found" 
-          } else { 
-            Write-Host "[ERROR] ffprobe.exe missing" 
-          }
-          if (Test-Path $ffplayExe) { 
-            Write-Host "[OK] ffplay.exe found" 
-          } else { 
-            Write-Host "[ERROR] ffplay.exe missing" 
-          }
-        } else {
-          Write-Host "Error: Could not find FFmpeg directory after extraction"
-          exit 1
-        }
-    
-    - name: Build FFmpeg Version (ZIP)
-      shell: powershell
-      run: |
-        .\venv\Scripts\Activate.ps1
-        $version = "$env:VERSION"
-        Write-Host "Building FFmpeg Version v$version ..."
-        
-        # Clean previous build artifacts
-        if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
-        if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
-        
-        # Build executable with FFmpeg using cx_Freeze CLI
-        cxfreeze main.py `
-          --target-dir "dist\YTSage-FFmpeg" `
-          --base-name Win32GUI `
-          --icon "assets\branding\icons\YTSage.ico" `
-          --target-name "YTSage-v$version-ffmpeg.exe" `
-          --optimize 2 `
-          --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,playsound3,loguru,setuptools" `
-          --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
-          --include-files "src" `
-          --include-files "assets"
+          if (Test-Path "build") { Remove-Item "build" -Recurse -Force }
+          if (Test-Path "dist")  { Remove-Item "dist"  -Recurse -Force }
 
-        # Copy FFmpeg binaries into dist folder post-build (more reliable than CLI include)
-        if ($env:FFMPEG_PATH) {
-          $destDir = "dist\YTSage-FFmpeg"
-          $ffmpegExe = Join-Path $env:FFMPEG_PATH "ffmpeg.exe"
-          $ffprobeExe = Join-Path $env:FFMPEG_PATH "ffprobe.exe"
-          $ffplayExe = Join-Path $env:FFMPEG_PATH "ffplay.exe"
+          .\venv\Scripts\python.exe -m cx_Freeze.cli cxfreeze main.py `
+            --target-dir "dist\YTSage" `
+            --base-name Win32GUI `
+            --icon "assets\branding\icons\YTSage.ico" `
+            --target-name "YTSage-v$version.exe" `
+            --optimize 2 `
+            --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,playsound3,loguru,setuptools" `
+            --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
+            --include-files "src" `
+            --include-files "assets"
 
-          foreach ($file in @($ffmpegExe, $ffprobeExe, $ffplayExe)) {
-            if (Test-Path $file) {
-              $name = Split-Path $file -Leaf
-              Copy-Item $file -Destination (Join-Path $destDir $name) -Force
-              Write-Host "Copied $name into $destDir"
-            } else {
-              Write-Host "Warning: FFmpeg binary not found: $file"
+          $stdScreenshots = "dist\YTSage\assets\branding\screenshots"
+          if (Test-Path $stdScreenshots) { Remove-Item $stdScreenshots -Recurse -Force }
+
+      - name: Download FFmpeg bundle
+        run: |
+          New-Item -ItemType Directory -Path "ffmpeg-temp" -Force | Out-Null
+          $ffmpegUrl = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.zip"
+          Invoke-WebRequest -Uri $ffmpegUrl -OutFile "ffmpeg-temp\ffmpeg.zip"
+          Expand-Archive -Path "ffmpeg-temp\ffmpeg.zip" -DestinationPath "ffmpeg-temp" -Force
+          $ffmpegDir = Get-ChildItem -Path "ffmpeg-temp" -Directory | Where-Object { $_.Name -like "ffmpeg-*" } | Select-Object -First 1
+          if (-not $ffmpegDir) { Write-Error "FFmpeg dir not found"; exit 1 }
+          $ffmpegBin = Join-Path $ffmpegDir.FullName "bin"
+          echo "FFMPEG_PATH=$ffmpegBin" >> $env:GITHUB_ENV
+
+      - name: Build FFmpeg bundle (portable ZIP)
+        run: |
+          .\venv\Scripts\Activate.ps1
+          $version = "$env:VERSION"
+          Write-Host "Building FFmpeg bundle v$version"
+
+          if (Test-Path "build\exe.*")  { Remove-Item "build\exe.*"  -Recurse -Force }
+          if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
+
+          .\venv\Scripts\python.exe -m cx_Freeze.cli cxfreeze main.py `
+            --target-dir "dist\YTSage-FFmpeg" `
+            --base-name Win32GUI `
+            --icon "assets\branding\icons\YTSage.ico" `
+            --target-name "YTSage-v$version-ffmpeg.exe" `
+            --optimize 2 `
+            --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,playsound3,loguru,setuptools" `
+            --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
+            --include-files "src" `
+            --include-files "assets"
+
+          if ($env:FFMPEG_PATH) {
+            $dest = "dist\YTSage-FFmpeg"
+            foreach ($n in 'ffmpeg.exe','ffprobe.exe','ffplay.exe') {
+              $src = Join-Path $env:FFMPEG_PATH $n
+              if (Test-Path $src) { Copy-Item $src -Destination (Join-Path $dest $n) -Force }
             }
           }
-        }
 
-        # Exclude screenshots folder from FFmpeg build output
-        $ffScreenshots = "dist\YTSage-FFmpeg\assets\branding\screenshots"
-        if (Test-Path $ffScreenshots) {
-          Remove-Item $ffScreenshots -Recurse -Force
-          Write-Host "Removed screenshots from FFmpeg build: $ffScreenshots"
-        }
-    
-    - name: Package and prepare release artifacts (ZIPs)
-      shell: powershell
-      run: |
-        $version = "${{ steps.get_version.outputs.VERSION }}"
-        
-        Write-Host "Preparing ZIP artifacts for version: $version"
-        New-Item -ItemType Directory -Path "artifacts" -Force
-        
-        # List dist directories
-        Write-Host "Files in dist directory:"
-        if (Test-Path "dist") {
-          Get-ChildItem -Path "dist" -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
-        } else {
-          Write-Host "  No dist directory found!"
-          exit 1
-        }
+          $ffShots = "dist\YTSage-FFmpeg\assets\branding\screenshots"
+          if (Test-Path $ffShots) { Remove-Item $ffShots -Recurse -Force }
 
-        # Create Standard ZIP (portable)
-        $standardDist = Join-Path (Get-Location) "dist\YTSage"
-        if (Test-Path $standardDist) {
-          $stdZip = "artifacts\YTSage-v$version-portable.zip"
-          if (Test-Path $stdZip) { Remove-Item $stdZip -Force }
-          Compress-Archive -Path "$standardDist\*" -DestinationPath $stdZip -CompressionLevel Optimal
-          Write-Host "Created: $(Resolve-Path $stdZip)"
-        } else {
-          Write-Host "Warning: Standard dist folder not found at $standardDist"
-        }
+      - name: Package artifacts
+        run: |
+          $version = "$env:VERSION"
+          New-Item -ItemType Directory -Path "artifacts" -Force | Out-Null
 
-        # Create FFmpeg ZIP (portable)
-        $ffmpegDist = Join-Path (Get-Location) "dist\YTSage-FFmpeg"
-        if (Test-Path $ffmpegDist) {
-          $ffZip = "artifacts\YTSage-v$version-ffmpeg-portable.zip"
-          if (Test-Path $ffZip) { Remove-Item $ffZip -Force }
-          Compress-Archive -Path "$ffmpegDist\*" -DestinationPath $ffZip -CompressionLevel Optimal
-          Write-Host "Created: $(Resolve-Path $ffZip)"
-        } else {
-          Write-Host "Warning: FFmpeg dist folder not found at $ffmpegDist"
-        }
-        
-        # List all artifacts
-        Write-Host "Final artifacts:"
-        if (Test-Path "artifacts") {
-          $artifactFiles = Get-ChildItem artifacts
-          if ($artifactFiles) {
-            $artifactFiles | ForEach-Object { Write-Host "  $($_.Name)" }
-          } else {
-            Write-Host "  No artifacts created!"
+          $std = "artifacts\YTSage-v$version-portable.zip"
+          if (Test-Path "dist\YTSage") {
+            if (Test-Path $std) { Remove-Item $std -Force }
+            Compress-Archive -Path "dist\YTSage\*" -DestinationPath $std -CompressionLevel Optimal
           }
-        } else {
-          Write-Host "  Artifacts directory not found!"
-        }
 
-    - name: Create draft release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: ${{ github.ref_name }}
-        name: YTSage ${{ github.ref_name }}
-        draft: true
-        prerelease: false
-        body: |
-          # YTSage ${{ github.ref_name }}
-          
-          **Release Date**: ${{ github.event.head_commit.timestamp }}
-          
-          ## Downloads
-          
-          ### Standard Version (ZIP)
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-portable.zip** – Portable ZIP (downloads FFmpeg on first use if needed)
-          
-          ### FFmpeg Bundle Version (ZIP)
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg-portable.zip** – Portable ZIP with FFmpeg included
-          
-          ## Installation / Usage
-          
-          1. Download the `.zip` file you want.
-          2. Right-click the ZIP, choose Properties, and if you see "Unblock", check it and Apply.
-          3. Extract the ZIP to a folder (e.g., `C:\Apps\YTSage`).
-          4. Run `YTSage-v${{ steps.get_version.outputs.VERSION }}.exe` inside the extracted folder.
-          
-          ## System Requirements
-          
-          - Windows 10/11 (64-bit)
-          - Internet connection for yt-dlp updates
-          
-          ## Notes
-          
-          - **Standard version**: Downloads FFmpeg automatically when needed.
-          - **FFmpeg bundle**: Includes FFmpeg binaries for offline use.
-          
-          ---
-          
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
-        files: |
-          artifacts/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          $ff = "artifacts\YTSage-v$version-ffmpeg-portable.zip"
+          if (Test-Path "dist\YTSage-FFmpeg") {
+            if (Test-Path $ff) { Remove-Item $ff -Force }
+            Compress-Archive -Path "dist\YTSage-FFmpeg\*" -DestinationPath $ff -CompressionLevel Optimal
+          }
+
+          Write-Host "Artifacts:"
+          Get-ChildItem artifacts | ForEach-Object { Write-Host " - $($_.Name)" }
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: YTSage ${{ github.ref_name }}
+          draft: true
+          prerelease: false
+          body: |
+            ## Downloads
+
+            - YTSage-v${{ steps.version.outputs.VERSION }}-portable.zip (portable)
+            - YTSage-v${{ steps.version.outputs.VERSION }}-ffmpeg-portable.zip (portable with FFmpeg included)
+
+            Extract and run the EXE. Console window is hidden.
+          files: |
+            artifacts/*
