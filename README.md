@@ -213,7 +213,6 @@ Some antivirus software may flag the `.exe` files as false positives. This is a 
 
 **Why this happens:**
 - Antivirus heuristics can misidentify packed executables as suspicious
-- This affects many legitimate Python applications built with PyInstaller
 
 **Safe alternatives:**
 - ✅ **Use pip installation:** `pip install ytsage` (recommended)
