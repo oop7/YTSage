@@ -124,9 +124,21 @@ jobs:
           $ffprobeExe = Join-Path $ffmpegBinPath "ffprobe.exe"
           $ffplayExe = Join-Path $ffmpegBinPath "ffplay.exe"
           
-          if (Test-Path $ffmpegExe) { Write-Host "✓ ffmpeg.exe found" } else { Write-Host "✗ ffmpeg.exe missing" }
-          if (Test-Path $ffprobeExe) { Write-Host "✓ ffprobe.exe found" } else { Write-Host "✗ ffprobe.exe missing" }
-          if (Test-Path $ffplayExe) { Write-Host "✓ ffplay.exe found" } else { Write-Host "✗ ffplay.exe missing" }
+          if (Test-Path $ffmpegExe) { 
+            Write-Host "[OK] ffmpeg.exe found" 
+          } else { 
+            Write-Host "[ERROR] ffmpeg.exe missing" 
+          }
+          if (Test-Path $ffprobeExe) { 
+            Write-Host "[OK] ffprobe.exe found" 
+          } else { 
+            Write-Host "[ERROR] ffprobe.exe missing" 
+          }
+          if (Test-Path $ffplayExe) { 
+            Write-Host "[OK] ffplay.exe found" 
+          } else { 
+            Write-Host "[ERROR] ffplay.exe missing" 
+          }
         } else {
           Write-Host "Error: Could not find FFmpeg directory after extraction"
           exit 1
