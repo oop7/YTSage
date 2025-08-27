@@ -55,79 +55,38 @@ jobs:
         pip install --no-cache-dir cx_Freeze
         pip install --no-cache-dir yt-dlp
 
-    - name: Update version in setup files
+    - name: Prepare build variables
       shell: powershell
       run: |
         $version = "${{ steps.get_version.outputs.VERSION }}"
-        Write-Host "Updating version to: $version"
-        
-        # Update setup.py
-        $setupContent = Get-Content "build/windows/setup.py" -Raw
-        $setupContent = $setupContent -replace 'version="[^"]*"', "version=`"$version`""
-        $setupContent = $setupContent -replace 'target_name="[^"]*"', "target_name=`"YTSage-v$version.exe`""
-        Set-Content "build/windows/setup.py" -Value $setupContent
-        
-        # Update setup-ffmpeg.py
-        $setupFFmpegContent = Get-Content "build/windows/setup-ffmpeg.py" -Raw
-        $setupFFmpegContent = $setupFFmpegContent -replace 'version="[^"]*"', "version=`"$version`""
-        $setupFFmpegContent = $setupFFmpegContent -replace 'target_name="[^"]*"', "target_name=`"YTSage-v$version-ffmpeg.exe`""
-        Set-Content "build/windows/setup-ffmpeg.py" -Value $setupFFmpegContent
-        
-        Write-Host "Version updated in setup files (build script auto-detects version)"
+        echo "VERSION=$version" >> $env:GITHUB_ENV
+        Write-Host "Prepared build variables for version: $version"
     
-    - name: Build Standard Version (MSI only)
+    - name: Build Standard Version (ZIP)
       shell: powershell
       run: |
         .\venv\Scripts\Activate.ps1
-        Write-Host "Building Standard Version..."
+        $version = "$env:VERSION"
+        Write-Host "Building Standard Version v$version ..."
         
         # Clean previous build artifacts
         if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
         if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
         if (Test-Path "dist") { Remove-Item "dist" -Recurse -Force }
         
-        # Build executable
-        python build\windows\setup.py build
-        
-        # Build MSI installer with error handling
-        Write-Host "Building standard MSI installer..."
-        Write-Host "Current working directory: $(Get-Location)"
-        Write-Host "Setup.py path: $(Resolve-Path 'build\windows\setup.py')"
-        
-        # Run with maximum verbosity to capture any hidden errors
-        python build\windows\setup.py bdist_msi --verbose
-        if ($LASTEXITCODE -eq 0) {
-          Write-Host "Standard MSI build completed successfully"
-          # List MSI files created
-          Write-Host "MSI files in dist directory after standard build:"
-          if (Test-Path "dist") {
-            $msiFiles = Get-ChildItem -Path "dist" -Filter "*.msi"
-            if ($msiFiles) {
-              $msiFiles | ForEach-Object { Write-Host "  $($_.Name)" }
-            } else {
-              Write-Host "  No MSI files found! Attempting alternative build method..."
-              # Alternative approach: try building without excludes that might cause issues
-              Write-Host "Retrying MSI build with simplified configuration..."
-              python build\windows\setup.py bdist_msi --skip-build
-              if (Test-Path "dist/*.msi") {
-                Write-Host "Alternative MSI build succeeded!"
-                Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
-              } else {
-                Write-Host "ERROR: MSI creation failed completely. Build directory contents:"
-                if (Test-Path "build") {
-                  Get-ChildItem -Path "build" -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
-                }
-                exit 1
-              }
-            }
-          } else {
-            Write-Host "  No dist directory found!"
-            exit 1
-          }
-        } else {
-          Write-Host "Error building standard MSI - exit code: $LASTEXITCODE"
-          exit 1
-        }
+        # Build executable using cx_Freeze CLI
+        cxfreeze main.py `
+          --target-dir "dist\YTSage" `
+          --base-name Win32GUI `
+          --icon "assets\branding\icons\YTSage.ico" `
+          --target-name "YTSage-v$version.exe" `
+          --optimize 2 `
+          --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,playsound3,loguru,setuptools" `
+          --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
+          --include-files "src/:src/" `
+          --include-files "assets/Icon/icon.png:assets/Icon/icon.png" `
+          --include-files "assets/sound/notification.mp3:assets/sound/notification.mp3" `
+          --include-files "assets/branding/icons/YTSage.ico:YTSage.ico"
     
     - name: Setup FFmpeg for bundle
       shell: powershell
@@ -179,71 +138,82 @@ jobs:
           exit 1
         }
     
-    - name: Build FFmpeg Version (MSI only)
+    - name: Build FFmpeg Version (ZIP)
       shell: powershell
       run: |
         .\venv\Scripts\Activate.ps1
-        Write-Host "Building FFmpeg Version..."
+        $version = "$env:VERSION"
+        Write-Host "Building FFmpeg Version v$version ..."
         
         # Clean previous build artifacts
         if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
         if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
         
-        # Build executable with FFmpeg
-        python build\windows\setup-ffmpeg.py build
-        
-        # Build MSI installer with FFmpeg and error handling
-        Write-Host "Building FFmpeg MSI installer..."
-        python build\windows\setup-ffmpeg.py bdist_msi
-        if ($LASTEXITCODE -eq 0) {
-          Write-Host "FFmpeg MSI build completed successfully"
-          # List MSI files created
-          Write-Host "MSI files in dist directory after FFmpeg build:"
-          if (Test-Path "dist") {
-            Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
-          }
-        } else {
-          Write-Host "Error building FFmpeg MSI - exit code: $LASTEXITCODE"
-          exit 1
+        # Prepare optional FFmpeg include arguments
+        $ffinc1 = ""
+        $ffinc2 = ""
+        $ffinc3 = ""
+        if ($env:FFMPEG_PATH) {
+          $ffmpegExe = Join-Path $env:FFMPEG_PATH "ffmpeg.exe"
+          $ffprobeExe = Join-Path $env:FFMPEG_PATH "ffprobe.exe"
+          $ffplayExe = Join-Path $env:FFMPEG_PATH "ffplay.exe"
+          if (Test-Path $ffmpegExe) { $ffinc1 = "--include-files `"$ffmpegExe:ffmpeg.exe`"" }
+          if (Test-Path $ffprobeExe) { $ffinc2 = "--include-files `"$ffprobeExe:ffprobe.exe`"" }
+          if (Test-Path $ffplayExe)  { $ffinc3 = "--include-files `"$ffplayExe:ffplay.exe`"" }
         }
+
+        # Build executable with FFmpeg using cx_Freeze CLI
+        cxfreeze main.py `
+          --target-dir "dist\YTSage-FFmpeg" `
+          --base-name Win32GUI `
+          --icon "assets\branding\icons\YTSage.ico" `
+          --target-name "YTSage-v$version-ffmpeg.exe" `
+          --optimize 2 `
+          --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,playsound3,loguru,setuptools" `
+          --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
+          --include-files "src/:src/" `
+          --include-files "assets/Icon/icon.png:assets/Icon/icon.png" `
+          --include-files "assets/sound/notification.mp3:assets/sound/notification.mp3" `
+          --include-files "assets/branding/icons/YTSage.ico:YTSage.ico" `
+          $ffinc1 $ffinc2 $ffinc3
     
-    - name: Prepare release artifacts
+    - name: Package and prepare release artifacts (ZIPs)
       shell: powershell
       run: |
         $version = "${{ steps.get_version.outputs.VERSION }}"
         
-        Write-Host "Preparing artifacts for version: $version"
+        Write-Host "Preparing ZIP artifacts for version: $version"
         New-Item -ItemType Directory -Path "artifacts" -Force
         
-        # List all files in dist directory first
+        # List dist directories
         Write-Host "Files in dist directory:"
         if (Test-Path "dist") {
           Get-ChildItem -Path "dist" -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
         } else {
           Write-Host "  No dist directory found!"
-        }
-        
-        # Find and copy standard build artifacts from dist directory
-        # Look for any MSI file that doesn't contain "ffmpeg" in the name
-        $standardMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -notlike "*ffmpeg*" -and $_.Name -notlike "*FFmpeg*" } | Select-Object -First 1
-        if ($standardMsi) {
-          Copy-Item $standardMsi.FullName "artifacts\YTSage-v$version.msi"
-          Write-Host "Copied: $($standardMsi.Name) -> YTSage-v$version.msi"
-        } else {
-          Write-Host "Warning: Standard MSI not found"
-          # List all MSI files for debugging
-          Write-Host "Available MSI files:"
-          Get-ChildItem -Path "dist" -Filter "*.msi" | ForEach-Object { Write-Host "  $($_.Name)" }
+          exit 1
         }
 
-        # Find and copy FFmpeg build artifacts from dist directory
-        # Look for any MSI file that contains "ffmpeg" or "FFmpeg" in the name
-        $ffmpegMsi = Get-ChildItem -Path "dist" -Filter "*.msi" | Where-Object { $_.Name -like "*ffmpeg*" -or $_.Name -like "*FFmpeg*" } | Select-Object -First 1
-        if ($ffmpegMsi) {
-          Copy-Item $ffmpegMsi.FullName "artifacts\YTSage-v$version-ffmpeg.msi"
-          Write-Host "Copied: $($ffmpegMsi.Name) -> YTSage-v$version-ffmpeg.msi"
+        # Create Standard ZIP
+        $standardDist = Join-Path (Get-Location) "dist\YTSage"
+        if (Test-Path $standardDist) {
+          $stdZip = "artifacts\YTSage-v$version.zip"
+          if (Test-Path $stdZip) { Remove-Item $stdZip -Force }
+          Compress-Archive -Path "$standardDist\*" -DestinationPath $stdZip -CompressionLevel Optimal
+          Write-Host "Created: $(Resolve-Path $stdZip)"
         } else {
-          Write-Host "Warning: FFmpeg MSI not found"
+          Write-Host "Warning: Standard dist folder not found at $standardDist"
+        }
+
+        # Create FFmpeg ZIP
+        $ffmpegDist = Join-Path (Get-Location) "dist\YTSage-FFmpeg"
+        if (Test-Path $ffmpegDist) {
+          $ffZip = "artifacts\YTSage-v$version-ffmpeg.zip"
+          if (Test-Path $ffZip) { Remove-Item $ffZip -Force }
+          Compress-Archive -Path "$ffmpegDist\*" -DestinationPath $ffZip -CompressionLevel Optimal
+          Write-Host "Created: $(Resolve-Path $ffZip)"
+        } else {
+          Write-Host "Warning: FFmpeg dist folder not found at $ffmpegDist"
         }
         
         # List all artifacts
@@ -273,30 +243,28 @@ jobs:
           
           ## Downloads
           
-          ### Standard Version
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}.msi** - Windows Installer (Downloads FFmpeg when needed)
+          ### Standard Version (ZIP)
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}.zip** – Portable ZIP (downloads FFmpeg on first use if needed)
           
-          ### FFmpeg Bundle Version
-          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.msi** - Windows Installer with FFmpeg included
+          ### FFmpeg Bundle Version (ZIP)
+          - **YTSage-v${{ steps.get_version.outputs.VERSION }}-ffmpeg.zip** – Portable ZIP with FFmpeg included
           
-          ## Installation Instructions
+          ## Installation / Usage
           
-          ### MSI Installer
-          1. Download the `.msi` file
-          2. Double-click to run the installer
-          3. Follow the installation wizard
-          4. YTSage will be available in your Start Menu
+          1. Download the `.zip` file you want.
+          2. Right-click the ZIP, choose Properties, and if you see "Unblock", check it and Apply.
+          3. Extract the ZIP to a folder (e.g., `C:\Apps\YTSage`).
+          4. Run `YTSage-v${{ steps.get_version.outputs.VERSION }}.exe` inside the extracted folder.
           
           ## System Requirements
           
           - Windows 10/11 (64-bit)
-          - .NET Framework (usually pre-installed)
           - Internet connection for yt-dlp updates
           
           ## Notes
           
-          - **Standard version**: Downloads FFmpeg automatically when needed
-          - **FFmpeg bundle**: Includes FFmpeg binaries for offline use
+          - **Standard version**: Downloads FFmpeg automatically when needed.
+          - **FFmpeg bundle**: Includes FFmpeg binaries for offline use.
           
           ---
           

@@ -10,7 +10,7 @@ The workflow is triggered when you push a git tag that starts with `v` (e.g., `v
 ### Build Process
 1. **Setup**: Uses Python 3.12.10 on Windows
 2. **Builds**: Creates both Standard and FFmpeg versions
-3. **Packages**: Generates MSI installers and ZIP portable versions
+3. **Packages**: Generates ZIP portable versions only (no MSI)
 4. **Release**: Creates a draft GitHub release with all artifacts
 
 ## Usage
@@ -38,9 +38,7 @@ The workflow is triggered when you push a git tag that starts with `v` (e.g., `v
 
 The workflow creates the following files:
 
-- `YTSage-v<version>.msi` - Standard Windows installer
 - `YTSage-v<version>.zip` - Standard portable version
-- `YTSage-v<version>-ffmpeg.msi` - FFmpeg bundle installer
 - `YTSage-v<version>-ffmpeg.zip` - FFmpeg bundle portable
 
 ### Release Notes
@@ -55,8 +53,7 @@ Automatic release notes are generated including:
 
 ### Automatic Version Detection
 - Extracts version from git tag (removes 'v' prefix)
-- Updates setup.py files with correct version
-- Names all artifacts consistently
+- Names all artifacts consistently (ZIPs)
 
 ### Caching
 - Python dependencies are cached to speed up builds
@@ -98,16 +95,16 @@ Key configuration options:
 - Release note templates
 
 ### Adding New Build Types
-To add new build configurations:
-1. Create new setup-*.py files
-2. Add build steps to the workflow
-3. Update artifact collection logic
+To add new platform packages (e.g., .dmg for macOS, .deb for Linux):
+1. Add separate jobs in `.github/workflows/build-windows.yml` (or a new workflow) targeting the OS (macos-latest, ubuntu-latest).
+2. Build the executable with cx_Freeze or PyInstaller for that platform.
+3. Package the build output (e.g., create DMG on macOS, DEB on Ubuntu) using platform tools.
+4. Upload the artifacts and include them in the release.
 
 
 ## Notes
 
 - The workflow only runs on Windows
-- Requires Python 3.12.10 for MSI compatibility
 - All builds use cx_Freeze for packaging
 - FFmpeg binaries are expected in standard locations
 - Draft releases allow for review before publication
