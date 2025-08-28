@@ -41,14 +41,6 @@ The workflow creates the following files:
 - `YTSage-v<version>.zip` - Standard portable version
 - `YTSage-v<version>-ffmpeg.zip` - FFmpeg bundle portable
 
-### Release Notes
-
-Automatic release notes are generated including:
-- Download links and descriptions
-- Installation instructions
-- System requirements
-- Feature highlights
-
 ## Workflow Features
 
 ### Automatic Version Detection
