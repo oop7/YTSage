@@ -7,44 +7,28 @@ from pathlib import Path
 import markdown
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QUrl
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (
-    QApplication,
-    QButtonGroup,
-    QCheckBox,
-    QDialog,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QMainWindow,
-    QMessageBox,
-    QProgressBar,
-    QPushButton,
-    QStyle,
-    QTextEdit,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtMultimedia import QSoundEffect
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QDialog,
+                               QHBoxLayout, QLabel, QLineEdit, QMainWindow,
+                               QMessageBox, QProgressBar, QPushButton, QStyle,
+                               QTextEdit, QVBoxLayout, QWidget)
 
-from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
+from src.core.ytsage_downloader import (  # Import downloader related classes
+    DownloadThread, SignalManager)
 from src.core.ytsage_logging import logger
 from src.core.ytsage_utils import check_ffmpeg  # Import utility functions
 from src.core.ytsage_utils import load_saved_path, save_path, should_check_for_auto_update, parse_yt_dlp_error
 from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
-    AboutDialog,
-    AutoUpdateThread,
-    CustomOptionsDialog,
-    DownloadSettingsDialog,
-    FFmpegCheckDialog,
-    PlaylistSelectionDialog,
-    TimeRangeDialog,
-    YTDLPUpdateDialog,
-)
+    AboutDialog, AutoUpdateThread, CustomOptionsDialog, DownloadSettingsDialog,
+    FFmpegCheckDialog, PlaylistSelectionDialog, TimeRangeDialog,
+    YTDLPUpdateDialog)
 from src.gui.ytsage_gui_format_table import FormatTableMixin
 from src.gui.ytsage_gui_video_info import VideoInfoMixin
-from src.utils.ytsage_constants import ICON_PATH, SOUND_PATH, SUBPROCESS_CREATIONFLAGS
+from src.utils.ytsage_constants import (ICON_PATH, SOUND_PATH,
+                                        SUBPROCESS_CREATIONFLAGS)
 
 try:
     import yt_dlp
@@ -100,7 +84,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         load_saved_path(self)
         # Load custom icon
         if ICON_PATH.exists():
-            self.setWindowIcon(QIcon(ICON_PATH.as_posix()))
+            self.setWindowIcon(QIcon(str(ICON_PATH)))
         else:
             self.logger.warning(f"Icon file not found at {ICON_PATH}. Using default icon.")
             self.setWindowIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowDown))  # Fallback
@@ -341,7 +325,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.sound_enabled = False
 
     def play_notification_sound(self) -> None:
-        """Play notification sound in a separate thread to avoid blocking the UI"""
+        """Play notification sound using QSoundEffect"""
         if not self.sound_enabled:
             return
 
@@ -352,15 +336,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     sound = pyglet.media.load(str(self.notification_sound_path))
                     sound.play()
 
-            except Exception as e:
-                self.logger.error(f"Error playing notification sound: {e}")
-
-        # Play sound in a separate thread to avoid blocking the UI
-        sound_thread = threading.Thread(target=play_sound)
-        sound_thread.daemon = True
-        sound_thread.start()
-
-    # Removed load_saved_path and save_path methods since their functionality is now handled directly by ytsage_utils
+        except Exception as e:
+            self.logger.error(f"Error playing notification sound: {e}")
 
     def init_ui(self) -> None:
         self.setWindowTitle(f"YTSage  v{self.version}")
@@ -1183,7 +1160,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 # Fallback to icon file
                 # icon_path logic moved to src\utils\ytsage_constants.py
                 if ICON_PATH.exists():
-                    msg.setWindowIcon(QIcon(ICON_PATH.as_posix()))
+                    msg.setWindowIcon(QIcon(str(ICON_PATH)))
         except Exception:
             pass
 

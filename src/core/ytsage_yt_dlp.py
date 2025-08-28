@@ -95,7 +95,7 @@ class YtdlpSetupDialog(QDialog):
             # icon_path logic moved to src\utils\ytsage_constants.py
             icon_path = ICON_PATH
             if Path.exists(icon_path):
-                self.setWindowIcon(QIcon(icon_path.as_posix()))
+                self.setWindowIcon(QIcon(str(icon_path)))
 
         self.init_ui()
 

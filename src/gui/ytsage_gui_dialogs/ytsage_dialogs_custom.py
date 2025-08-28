@@ -426,15 +426,8 @@ class CustomOptionsDialog(QDialog):
         self.cookie_path_input = QLineEdit()
         self.cookie_path_input.setPlaceholderText("Path to cookies file (Netscape format)")
         if hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
-<<<<<<< HEAD
-            # Convert Path to string properly and validate
-            cookie_path_str = str(self._parent.cookie_file_path)
-            # Only set if it looks like a valid path (more than just a drive letter)
-            if len(cookie_path_str) > 3 and not cookie_path_str.endswith(':'):
-                self.cookie_path_input.setText(cookie_path_str)
-=======
             self.cookie_path_input.setText(self._parent.cookie_file_path.as_posix())
->>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
+
         path_layout.addWidget(self.cookie_path_input)
 
         self.browse_button = QPushButton("Browse")
