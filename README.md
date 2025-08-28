@@ -375,7 +375,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
         <td>Markdown Rendering</td>
     </tr>
     <tr>
-        <td><a href="https://www.pygame.org/">pygame</a></td>
+        <td><a href="https://pyglet.org/">pyglet</a></td>
         <td>Audio Playback</td>
     </tr>
     <tr>
