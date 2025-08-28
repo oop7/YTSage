@@ -319,7 +319,7 @@ class CustomOptionsDialog(QDialog):
         self.cookie_path_input = QLineEdit()
         self.cookie_path_input.setPlaceholderText("Path to cookies file (Netscape format)")
         if hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
-            self.cookie_path_input.setText(self._parent.cookie_file_path.as_posix())
+            self.cookie_path_input.setText(str(self._parent.cookie_file_path))
         path_layout.addWidget(self.cookie_path_input)
 
         self.browse_button = QPushButton("Browse")

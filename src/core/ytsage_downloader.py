@@ -264,7 +264,7 @@ class DownloadThread(QThread):
             # Create output template with playlist subfolder
             output_template = self.path.joinpath("%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s")
 
-        cmd.extend(["-o", output_template.as_posix()])
+        cmd.extend(["-o", str(output_template)])
 
         # Add common options
         cmd.append("--force-overwrites")

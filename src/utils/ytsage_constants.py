@@ -20,7 +20,7 @@ from pathlib import Path
 
 # Assets Constants
 ICON_PATH: Path = Path("assets/Icon/icon.png")
-SOUND_PATH: Path = Path("assets/sound/notification.mp3")
+SOUND_PATH: Path = Path("assets/sound/notification.wav")
 
 OS_NAME: str = platform.system()  # Windows ; Darwin ; Linux
 
