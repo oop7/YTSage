@@ -8,6 +8,7 @@ import threading
 from pathlib import Path
 
 from typing import TYPE_CHECKING, cast
+from venv import logger
 
 from PySide6.QtCore import Q_ARG, QMetaObject, Qt, Signal, QObject
 from PySide6.QtWidgets import (
@@ -250,25 +251,12 @@ class CustomCommandDialog(QDialog):
     def _run_command_thread(self, command, url, path) -> None:
         try:
 
-            class CommandLogger:
-                def debug(self, msg):
-                    self.dialog.log_output.append(msg)
-
-                def warning(self, msg):
-                    self.dialog.log_output.append(f"Warning: {msg}")
-
-                def error(self, msg):
-                    self.dialog.log_output.append(f"Error: {msg}")
-
-                def __init__(self, dialog):
-                    self.dialog = dialog
-
             # Split command into arguments
             args = command.split()
 
             # Base options
             ydl_opts = {
-                "logger": CommandLogger(self),
+                "logger": logger,
                 "paths": {"home": path},
                 "debug_printout": True,
                 "postprocessors": [],
@@ -317,7 +305,7 @@ class CustomCommandDialog(QDialog):
             self.log_output.append("Command completed successfully")
 
         except Exception as e:
-            self.log_output.append(f"Error: {str(e)}")
+            self.log_output.append(f"Error: {e}")
         finally:
             self.run_btn.setEnabled(True)
 
@@ -1054,7 +1042,7 @@ class CustomOptionsDialog(QDialog):
                 self.log_output,
                 b"append",
                 Qt.ConnectionType.QueuedConnection,
-                Q_ARG(str, f"Error: {str(e)}"),
+                Q_ARG(str, f"Error: {e}"),
             )
         finally:
             # Re-enable the run button

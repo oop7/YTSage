@@ -1,44 +1,55 @@
+"""
+YTSage centralized logging with loguru.
+
+- This module provides centralized logging configuration for the entire YTSage application.
+- Two log files: ytsage.log (all logs) & ytsage_error.log (errors only).
+"""
+
 import sys
-from os import makedirs
-from pathlib import Path
 
 from loguru import logger
 
-LOGS_DIR = Path(".idea/ytsagetest")
-LOGS_FILE = LOGS_DIR / "ytsage_logs.log"
-LOG_LEVEL = "DEBUG"
-LOG_TO_CONSOL = True
-LOG_TO_FILE = True
+from src.utils.ytsage_constants import APP_LOG_DIR
 
-print(LOGS_DIR.absolute())
+# Separate configs for each handler
+CONSOLE_CONFIG = {
+    "sink": sys.stdout if sys.stdout else sys.stderr,
+    "level": "INFO",
+    "colorize": True,
+    "enqueue": True,
+}
 
-# Ensure the logs directory exists
-makedirs(LOGS_DIR, exist_ok=True)
+ALL_LOGS_CONFIG = {
+    "sink": APP_LOG_DIR / "ytsage.log",
+    "level": "DEBUG",
+    "rotation": "10 MB",
+    "retention": "14 days",
+    "compression": "zip",
+    "enqueue": True,
+}
 
-
-def init_loguru() -> None:
-
-    # Remove the default logger
-    logger.remove()
-
-    # Add file logger if LOG_TO_FILE is True
-    if LOG_TO_FILE:
-        logger.add(
-            LOGS_FILE,
-            level=LOG_LEVEL,
-            rotation="10 MB",
-            # retention="31 days",
-            compression="zip",
-        )
-
-    # Add consol logger if LOG_TO_CONSOL is True
-    if LOG_TO_CONSOL:
-        logger.add(
-            sys.stdout,
-            level=LOG_LEVEL,
-            colorize=True,
-        )
+ERROR_LOGS_CONFIG = {
+    "sink": APP_LOG_DIR / "ytsage_error.log",
+    "level": "ERROR",
+    "rotation": "5 MB",
+    "retention": "30 days",
+    "compression": "zip",
+    "enqueue": True,
+}
 
 
-init_loguru()
-logger.info("logger initilized from my logger.")
+# Logger initialization
+def init_logger() -> None:
+    """Configure loguru logger using separate configs for each handler."""
+    logger.remove()  # Remove default loguru handler
+
+    logger.add(**CONSOLE_CONFIG)
+    logger.add(**ALL_LOGS_CONFIG)
+    logger.add(**ERROR_LOGS_CONFIG)
+
+    logger.info("YTSage logger initialized")
+
+
+init_logger()
+
+__all__ = ["logger"]

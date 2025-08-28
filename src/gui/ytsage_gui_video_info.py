@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
+from typing import TYPE_CHECKING, cast
 
 import requests
 from PIL import Image
@@ -13,15 +14,20 @@ from PySide6.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QVB
 from yt_dlp import YoutubeDL
 >>>>>>> 1a2040f (- add: ytsage_constants.py file for one place to store all constants.)
 
-from src.core.ytsage_logging import logger
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     SponsorBlockCategoryDialog,
     SubtitleSelectionDialog,
 )
+from src.utils.ytsage_logger import logger
+
+if TYPE_CHECKING:
+    from src.gui.ytsage_gui_main import YTSageApp
 
 
 class VideoInfoMixin:
     def setup_video_info_section(self) -> QHBoxLayout:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         # Create a horizontal layout for thumbnail and video info
         media_info_layout = QHBoxLayout()
         media_info_layout.setSpacing(15)
@@ -188,6 +194,8 @@ class VideoInfoMixin:
         return media_info_layout
 
     def setup_playlist_info_section(self) -> QLabel:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         self.playlist_info_label = QLabel()
         self.playlist_info_label.setVisible(False)
         self.playlist_info_label.setStyleSheet(
@@ -209,6 +217,8 @@ class VideoInfoMixin:
         return self.playlist_info_label
 
     def update_video_info(self, info) -> None:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         if hasattr(self, "is_playlist") and self.is_playlist:
             # Playlist Mode: Show playlist title and video count
             self.title_label.setText(self.playlist_info.get("title", "Unknown Playlist"))
@@ -264,6 +274,8 @@ class VideoInfoMixin:
             self.duration_label.setText(f"Duration: {duration_str}")
 
     def open_subtitle_dialog(self) -> None:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         if not hasattr(self, "available_subtitles") or not hasattr(self, "available_automatic_subtitles"):
             logger.warning("Subtitle info not loaded yet.")
             return
@@ -278,16 +290,8 @@ class VideoInfoMixin:
             self,  # Parent for the dialog
         )
 
-        # Access the main application window (parent of the mixin's widget)
-        # to find the merge checkbox
-        main_window = self  # In this context, self should be the YTSageApp instance
-        if not isinstance(main_window, QMainWindow):
-            # If the structure is different, this might need adjustment
-            # Maybe self.parentWidget() or similar depending on how Mixin is used
-            logger.warning("Cannot find main window to access merge checkbox.")
-            merge_checkbox = None
-        else:
-            merge_checkbox = getattr(main_window, "merge_subs_checkbox", None)
+        # removed extra logic for mapping to main_windows
+        merge_checkbox = getattr(self, "merge_subs_checkbox", None)
 
         if dialog.exec():  # If user clicks OK
             self.selected_subtitles = dialog.get_selected_subtitles()
@@ -300,7 +304,7 @@ class VideoInfoMixin:
             # Enable/disable the merge checkbox in the parent window
             if merge_checkbox:
                 # Only enable merge checkbox if we're not in Audio Only mode
-                is_audio_only = hasattr(main_window, "audio_button") and main_window.audio_button.isChecked()
+                is_audio_only = hasattr(self, "audio_button") and self.audio_button.isChecked()
                 # In audio-only mode, we still allow subtitle selection but not merging
                 should_enable = count > 0 and not is_audio_only
                 merge_checkbox.setEnabled(should_enable)
@@ -314,6 +318,8 @@ class VideoInfoMixin:
 
     def open_sponsorblock_dialog(self) -> None:
         """Open the SponsorBlock category selection dialog."""
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         # Initialize selected categories if not exists or empty (first time opening)
         if not hasattr(self, "selected_sponsorblock_categories") or not self.selected_sponsorblock_categories:
             # Use None to let the dialog set its own defaults
@@ -330,6 +336,8 @@ class VideoInfoMixin:
 
     def _update_sponsorblock_display(self) -> None:
         """Update the SponsorBlock button and label to reflect current selection."""
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         if not hasattr(self, "selected_sponsorblock_categories"):
             self.selected_sponsorblock_categories = []
 
@@ -351,6 +359,8 @@ class VideoInfoMixin:
         self.sponsorblock_select_btn.style().polish(self.sponsorblock_select_btn)
 
     def download_thumbnail(self, url) -> None:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         try:
             # Store both thumbnail URL and video URL
             self.thumbnail_url = url
@@ -368,9 +378,11 @@ class VideoInfoMixin:
             pixmap.loadFromData(img_byte_arr.getvalue())
             self.thumbnail_label.setPixmap(pixmap)
         except Exception as e:
-            logger.error(f"Error loading thumbnail: {str(e)}")
+            logger.exception(f"Error loading thumbnail: {e}")
 
     def download_thumbnail_file(self, video_url, path) -> bool:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         if not self.save_thumbnail:
             return False
 
@@ -384,6 +396,7 @@ class VideoInfoMixin:
             logger.debug(f"Attempting to save thumbnail for URL: {video_url}")
 
             ydl_opts = {
+                "logger": logger,
                 "quiet": True,
                 "skip_download": True,
                 "force_generic_extractor": False,
@@ -396,7 +409,7 @@ class VideoInfoMixin:
                 thumbnails = info.get("thumbnails", [])
 
                 if not thumbnails:
-                    raise ValueError("No thumbnails available")
+                    logger.info("No thumbnails available")
 
                 thumbnail_url = max(
                     thumbnails,
@@ -404,7 +417,7 @@ class VideoInfoMixin:
                 ).get("url")
 
                 if not thumbnail_url:
-                    raise ValueError("Failed to extract thumbnail URL")
+                    logger.info("Failed to extract thumbnail URL")
 
                 # Download using requests
                 response = requests.get(thumbnail_url)
@@ -425,8 +438,8 @@ class VideoInfoMixin:
                 return True
 
         except Exception as e:
-            error_msg = f"❌ Thumbnail error: {str(e)}"
-            logger.error(f"Thumbnail Save Error: {str(e)}")
+            error_msg = f"❌ Thumbnail error: {e}"
+            logger.exception(f"Thumbnail Save Error: {e}")
             self.signals.update_status.emit(error_msg)
             return False
 

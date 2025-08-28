@@ -7,7 +7,7 @@ from pathlib import Path
 
 import requests
 
-from src.core.ytsage_logging import logger
+from src.utils.ytsage_logger import logger
 from src.utils.ytsage_constants import (
     FFMPEG_7Z_DOWNLOAD_URL,
     FFMPEG_7Z_SHA256_URL,
@@ -46,7 +46,7 @@ def download_file(url, dest_path, progress_callback=None) -> bool:
                         progress_callback(f"⚡ Downloading FFmpeg components... {progress}%")
         return True
     except requests.RequestException as e:
-        logger.info(f"Download error: {str(e)}")
+        logger.info(f"Download error: {e}")
         return False
 
 
@@ -80,7 +80,7 @@ def verify_sha256(file_path, expected_hash_url) -> bool:
             logger.info(f"Actual:   {actual_hash}")
             return False
     except Exception as e:
-        logger.info(f"⚠️ SHA-256 verification error: {str(e)}")
+        logger.info(f"⚠️ SHA-256 verification error: {e}")
         return False
 
 
@@ -129,7 +129,7 @@ def get_ffmpeg_path() -> str | Path:
                 ffmpeg_path = result.stdout.strip()
                 return ffmpeg_path
     except Exception as e:
-        logger.error(f"Error finding ffmpeg in PATH: {e}")
+        logger.exception(f"Error finding ffmpeg in PATH: {e}")
 
     # If not found in PATH, check the installation directory
     ffmpeg_install_path = get_ffmpeg_install_path()
@@ -172,7 +172,7 @@ def check_ffmpeg_installed() -> bool:
             return True
         return False
     except Exception as e:
-        logger.info(f"FFmpeg check error: {str(e)}")
+        logger.info(f"FFmpeg check error: {e}")
         return False
 
 
@@ -220,7 +220,7 @@ def install_ffmpeg_windows() -> bool:
                             timeout=300,
                         )  # 5-minute timeout
                     except Exception as e:
-                        logger.error(f"7z extraction failed: {str(e)}, trying zip fallback...")
+                        logger.exception(f"7z extraction failed: {e}, trying zip fallback...")
                         use_7zip = False
                 else:
                     logger.error("SHA-256 verification failed for 7z file, trying zip fallback...")
@@ -237,7 +237,8 @@ def install_ffmpeg_windows() -> bool:
                 temp_file,
                 progress_callback=lambda msg: logger.debug(msg),
             ):
-                raise Exception("Failed to download FFmpeg (both 7z and zip methods failed)")
+                logger.error("Failed to download FFmpeg (both 7z and zip methods failed)")
+                return False
 
             logger.info("Extracting FFmpeg components from zip archive...")
             try:
@@ -246,7 +247,8 @@ def install_ffmpeg_windows() -> bool:
                 with zipfile.ZipFile(temp_file, "r") as zip_ref:
                     zip_ref.extractall(extract_dir)
             except Exception as e:
-                raise Exception(f"Extraction failed: {str(e)}")
+                logger.exception(f"Extraction failed: {e}")
+                return False
 
         logger.info("Configuring system paths...")
         # Add to System Path
@@ -266,13 +268,14 @@ def install_ffmpeg_windows() -> bool:
 
         # Verify installation
         if not check_ffmpeg_installed():
-            raise Exception("FFmpeg installation verification failed")
+            logger.error("FFmpeg installation verification failed")
+            return False
 
         logger.info("FFmpeg installation completed successfully!")
         return True
 
     except Exception as e:
-        logger.error(f"Error installing FFmpeg: {str(e)}")
+        logger.exception(f"Error installing FFmpeg: {e}")
         return False
 
 
@@ -299,12 +302,13 @@ def install_ffmpeg_macos() -> bool:
 
         # Verify installation
         if not check_ffmpeg_installed():
-            raise Exception("FFmpeg installation verification failed")
+            logger.error("FFmpeg installation verification failed")
+            return False
 
         return True
 
     except Exception as e:
-        logger.error(f"Error installing FFmpeg: {str(e)}")
+        logger.exception(f"Error installing FFmpeg: {e}")
         return False
 
 
@@ -330,16 +334,18 @@ def install_ffmpeg_linux() -> bool:
             # Universal snap package
             subprocess.run(["sudo", "snap", "install", "ffmpeg"], check=True, timeout=300)
         else:
-            raise Exception("No supported package manager found")
+            logger.error("No supported package manager found")
+            return False
 
         # Verify installation
         if not check_ffmpeg_installed():
-            raise Exception("FFmpeg installation verification failed")
+            logger.error("FFmpeg installation verification failed")
+            return False
 
         return True
 
     except Exception as e:
-        logger.error(f"Error installing FFmpeg: {str(e)}")
+        logger.exception(f"Error installing FFmpeg: {e}")
         return False
 
 
