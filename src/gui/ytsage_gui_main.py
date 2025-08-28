@@ -55,10 +55,11 @@ except ImportError:
     YT_DLP_AVAILABLE = False
 
 try:
-    from playsound3 import playsound
-    PLAYSOUND_AVAILABLE = True
+    import pyglet
+
+    PYGLET_AVAILABLE = True
 except ImportError:
-    PLAYSOUND_AVAILABLE = False
+    PYGLET_AVAILABLE = False
 
 
 class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from mixins
@@ -71,8 +72,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Log startup warnings for missing dependencies
         if not YT_DLP_AVAILABLE:
             self.logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
-        if not PLAYSOUND_AVAILABLE:
-            self.logger.warning("playsound3 not available, audio notifications disabled")
+        if not PYGLET_AVAILABLE:
+            self.logger.warning("pyglet not available, audio notifications disabled")
 
         # Check for FFmpeg before proceeding
         if not check_ffmpeg():
@@ -304,13 +305,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize UI state based on current mode
         self.handle_mode_change()
 
-        # Initialize playsound3 for sound notifications
+        # Initialize pyglet for sound notifications
         self.init_sound()
 
     def init_sound(self) -> None:
-        """Initialize playsound3 for sound notifications"""
+        """Initialize pyglet for sound notifications"""
         try:
-            if PLAYSOUND_AVAILABLE:
+            if PYGLET_AVAILABLE:
                 self.sound_enabled = True
 
                 # sound_path logic moved to src\utils\ytsage_constants.py
@@ -324,7 +325,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     self.logger.info(f"Notification sound loaded from: {self.notification_sound_path}")
             else:
                 self.sound_enabled = False
-                self.logger.info("Sound notifications disabled - playsound3 not available")
+                self.logger.info("Sound notifications disabled - pyglet not available")
 
         except Exception as e:
             self.logger.error(f"Error initializing sound: {e}")
@@ -337,9 +338,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         def play_sound() -> None:
             try:
-                if PLAYSOUND_AVAILABLE:
-                    # Play the sound using playsound3
-                    playsound(str(self.notification_sound_path))
+                if PYGLET_AVAILABLE:
+                    # Play the sound using pyglet
+                    sound = pyglet.media.load(str(self.notification_sound_path))
+                    sound.play()
 
             except Exception as e:
                 self.logger.error(f"Error playing notification sound: {e}")

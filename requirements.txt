@@ -4,6 +4,6 @@ requests
 pillow
 packaging
 markdown
-playsound3
+pyglet
 loguru
 setuptools
