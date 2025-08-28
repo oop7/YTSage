@@ -71,9 +71,17 @@ ytsage
 
 ### 📦 Pre-built Executables
 
-- 🪟 **Windows:** <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;.exe</code> / <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-ffmpeg.exe</code> (with FFmpeg)
-- 🐧 **Linux:** <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-amd64.deb</code> / <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-x86_64.AppImage</code>
-- 🍎 **macOS:** <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-macOS.zip</code> / <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;.dmg</code>
+- 🪟 **Windows:**
+  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;.exe</code> (Standard installer)
+  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-ffmpeg.exe</code> (With FFmpeg bundled)
+  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-portable</code> (Portable version, no installation required)
+  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-ffmpeg-portable.zip</code> (Portable with FFmpeg, zipped)
+- 🐧 **Linux:**
+  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-amd64.deb</code> (Debian package)
+  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-x86_64.AppImage</code> (AppImage, portable)
+- 🍎 **macOS:**
+  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-macOS.zip</code> (Zipped application)
+  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;.dmg</code> (Disk image installer)
 
 > [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
 
@@ -183,10 +191,12 @@ python main.py
 - **Speed Limiter:** Limit the download speed
 - **Login with Cookies:** Login to YouTube using cookies to access private content  
   How to use it:
-  1. Extract cookies from your browser using an extension like [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file)
-  2. Copy the cookies in Netscape format
-  3. Create a file named `cookies.txt` and paste the cookies into it
-  4. Select the `cookies.txt` file in the app
+  1. **Recommended:** Use the built-in "Extract cookies from browser" option in the app. Select your browser (Chrome, Firefox, etc.) and then select Profile (optional).
+  2. Alternatively, extract cookies manually:
+     a. Extract cookies from your browser using an extension like [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file)
+     b. Copy the cookies in Netscape format
+     c. Create a file named `cookies.txt` and paste the cookies into it
+     d. Select the `cookies.txt` file in the app
 - **Save Download Path:** Save the download path
 - **Update yt-dlp:** Update yt-dlp
 - **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp
@@ -218,10 +228,6 @@ Some antivirus software may flag the `.exe` files as false positives. This is a 
 - ✅ **Use pip installation:** `pip install ytsage` (recommended)
 - ✅ **Build from source**
 - ✅ **Whitelist the application** in your antivirus software
-
-> 📋 **Related Issues:** [#33](https://github.com/oop7/YTSage/issues/33) - This is a known PyInstaller limitation, not a security issue with YTSage itself.
-
----
 
 #### 🍎 macOS: "App is damaged and can’t be opened"
 If you see this error on macOS Sonoma or newer, you need to remove the quarantine attribute.
