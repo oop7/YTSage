@@ -11,7 +11,7 @@ import requests
 from packaging import version
 
 from src.core.ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
-from src.core.ytsage_logging import logger
+from src.utils.ytsage_logger import logger
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import (
     APP_CONFIG_FILE,
@@ -94,7 +94,7 @@ def load_version_cache_from_config() -> None:
             if tool_name in _version_cache:
                 _version_cache[tool_name].update(cache_data)
     except Exception as e:
-        logger.error(f"Error loading version cache: {e}")
+        logger.exception(f"Error loading version cache: {e}")
 
 
 def save_version_cache_to_config() -> None:
@@ -104,7 +104,7 @@ def save_version_cache_to_config() -> None:
         config["cached_versions"] = _version_cache.copy()
         save_config(config)
     except Exception as e:
-        logger.error(f"Error saving version cache: {e}")
+        logger.exception(f"Error saving version cache: {e}")
 
 
 def get_ytdlp_version_cached() -> str:
@@ -126,7 +126,7 @@ def get_ytdlp_version_cached() -> str:
 
         return version_info
     except Exception as e:
-        logger.error(f"Error getting cached yt-dlp version: {e}")
+        logger.exception(f"Error getting cached yt-dlp version: {e}")
         return "Error getting version"
 
 
@@ -150,7 +150,7 @@ def get_ffmpeg_version_cached() -> str:
 
         return version_info
     except Exception as e:
-        logger.error(f"Error getting cached FFmpeg version: {e}")
+        logger.exception(f"Error getting cached FFmpeg version: {e}")
         return "Error getting version"
 
 
@@ -168,7 +168,7 @@ def refresh_version_cache(force=False) -> bool:
 
         return True
     except Exception as e:
-        logger.error(f"Error refreshing version cache: {e}")
+        logger.exception(f"Error refreshing version cache: {e}")
         return False
 
 
@@ -201,7 +201,7 @@ def get_ytdlp_version_direct(yt_dlp_path=None) -> str:
         else:
             return "Error getting version"
     except Exception as e:
-        logger.error(f"Error getting yt-dlp version: {e}")
+        logger.exception(f"Error getting yt-dlp version: {e}")
         return "Error getting version"
 
 
@@ -255,10 +255,10 @@ def get_ffmpeg_version_direct() -> str:
                     return "Unknown version"
             return "Not found"
         except Exception as e:
-            logger.error(f"Error getting FFmpeg version from install path: {e}")
+            logger.exception(f"Error getting FFmpeg version from install path: {e}")
             return "Not found"
     except Exception as e:
-        logger.error(f"Error getting FFmpeg version: {e}")
+        logger.exception(f"Error getting FFmpeg version: {e}")
         return "Error getting version"
 
 
@@ -294,7 +294,7 @@ def load_config() -> dict:
                         config[key] = value
                 return config
     except (json.JSONDecodeError, UnicodeError, Exception) as e:
-        logger.error(f"Error reading config file: {e}")
+        logger.exception(f"Error reading config file: {e}")
         # If config file is corrupted, create a new one with defaults
         save_config(default_config)
 
@@ -308,7 +308,7 @@ def save_config(config) -> bool:
             json.dump(config, f, ensure_ascii=False, indent=2)
         return True
     except Exception as e:
-        logger.error(f"Error saving config: {e}")
+        logger.exception(f"Error saving config: {e}")
         return False
 
 
@@ -328,7 +328,7 @@ def check_ffmpeg() -> bool:
                     os.environ["PATH"] = f"{ffmpeg_path}{os.pathsep}{os.environ.get('PATH', '')}"
                     return True
                 except Exception as e:
-                    logger.error(f"Error updating PATH: {e}")
+                    logger.exception(f"Error updating PATH: {e}")
                     return False
 
         # For macOS, check common paths
@@ -345,13 +345,13 @@ def check_ffmpeg() -> bool:
                         os.environ["PATH"] = f"{ffmpeg_dir}{os.pathsep}{os.environ.get('PATH', '')}"
                         return True
                     except Exception as e:
-                        logger.error(f"Error updating PATH: {e}")
+                        logger.exception(f"Error updating PATH: {e}")
                         continue
 
         return False
 
     except Exception as e:
-        logger.error(f"Error checking FFmpeg: {e}")
+        logger.exception(f"Error checking FFmpeg: {e}")
         return False
 
 
@@ -367,7 +367,7 @@ def load_saved_path(main_window_instance) -> None:
                         main_window_instance.last_path = saved_path
                         return
             except (json.JSONDecodeError, UnicodeError) as e:
-                logger.error(f"Error reading config file: {e}")
+                logger.exception(f"Error reading config file: {e}")
                 # If config file is corrupted, try to remove it
                 try:
                     APP_CONFIG_FILE.unlink(missing_ok=True)
@@ -383,7 +383,7 @@ def load_saved_path(main_window_instance) -> None:
             main_window_instance.last_path = tempfile.gettempdir()
 
     except Exception as e:
-        logger.error(f"Error loading saved settings: {e}")
+        logger.exception(f"Error loading saved settings: {e}")
         main_window_instance.last_path = tempfile.gettempdir()
 
 
@@ -395,7 +395,7 @@ def save_path(main_window_instance, path) -> bool:
             try:
                 Path(path).mkdir(exist_ok=True)
             except Exception as e:
-                logger.error(f"Error creating directory: {e}")
+                logger.exception(f"Error creating directory: {e}")
                 return False
 
         if not os.access(path, os.W_OK):
@@ -409,7 +409,7 @@ def save_path(main_window_instance, path) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"Error saving settings: {e}")
+        logger.exception(f"Error saving settings: {e}")
         return False
 
 
@@ -454,13 +454,13 @@ def update_yt_dlp() -> bool:
                         logger.info("yt-dlp binary successfully updated")
                         return True
                     except Exception as e:
-                        logger.error(f"Error replacing yt-dlp binary: {e}")
+                        logger.exception(f"Error replacing yt-dlp binary: {e}")
                         return False
                 else:
                     logger.info(f"Failed to download latest yt-dlp: HTTP {response.status_code}")
                     return False
             except Exception as e:
-                logger.error(f"Error downloading yt-dlp update: {e}")
+                logger.exception(f"Error downloading yt-dlp update: {e}")
                 return False
         else:
             # We're using a system-installed yt-dlp, use pip to update
@@ -510,9 +510,9 @@ def update_yt_dlp() -> bool:
                 else:
                     logger.info(f"Failed to get latest version info: HTTP {response.status_code}")
             except Exception as e:
-                logger.error(f"Error checking for yt-dlp updates: {e}")
+                logger.exception(f"Error checking for yt-dlp updates: {e}")
     except Exception as e:
-        logger.info(f"Unexpected error during yt-dlp update: {e}")
+        logger.exception(f"Unexpected error during yt-dlp update: {e}")
 
     return False
 
@@ -543,7 +543,7 @@ def should_check_for_auto_update() -> bool:
 
         return False
     except Exception as e:
-        logger.error(f"Error checking auto-update schedule: {e}")
+        logger.exception(f"Error checking auto-update schedule: {e}")
         return False
 
 
@@ -600,11 +600,11 @@ def check_and_update_ytdlp_auto() -> bool:
             logger.info(f"Network error during auto-update check: {e}")
             return False
         except Exception as e:
-            logger.error(f"Error during auto-update check: {e}")
+            logger.exception(f"Error during auto-update check: {e}")
             return False
 
     except Exception as e:
-        logger.info(f"Critical error in auto-update: {e}")
+        logger.critical(f"Critical error in auto-update: {e}", exc_info=True)
         return False
 
 
@@ -627,5 +627,5 @@ def update_auto_update_settings(enabled, frequency) -> bool:
         save_config(config)
         return True
     except Exception as e:
-        logger.error(f"Error updating auto-update settings: {e}")
+        logger.exception(f"Error updating auto-update settings: {e}")
         return False

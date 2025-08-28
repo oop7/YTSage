@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src.core.ytsage_logging import logger
+from src.utils.ytsage_logger import logger
 from src.utils.ytsage_constants import (
     APP_BIN_DIR,
     ICON_PATH,
@@ -390,11 +390,11 @@ class YtdlpSetupDialog(QDialog):
                         self.setup_complete.emit(target_path)
                         self.accept()
                     except Exception as copy_error:
-                        logger.debug(f"Error copying file: {str(copy_error)}")
+                        logger.debug(f"Error copying file: {copy_error}", exc_info=True)
                         error_dialog = QMessageBox(self)
                         error_dialog.setIcon(QMessageBox.Icon.Critical)
                         error_dialog.setWindowTitle("Setup Error")
-                        error_dialog.setText(f"Error copying yt-dlp to app directory: {str(copy_error)}")
+                        error_dialog.setText(f"Error copying yt-dlp to app directory: {copy_error}")
                         error_dialog.setStyleSheet(
                             """
                             QMessageBox {
@@ -448,11 +448,11 @@ class YtdlpSetupDialog(QDialog):
                     )
                     error_dialog.exec()
             except Exception as e:
-                logger.debug(f"Exception during verification: {str(e)}")
+                logger.debug(f"Exception during verification: {e}", exc_info=True)
                 error_dialog = QMessageBox(self)
                 error_dialog.setIcon(QMessageBox.Icon.Critical)
                 error_dialog.setWindowTitle("Error")
-                error_dialog.setText(f"Error verifying yt-dlp executable: {str(e)}")
+                error_dialog.setText(f"Error verifying yt-dlp executable: {e}")
                 error_dialog.setStyleSheet(
                     """
                     QMessageBox {
@@ -492,7 +492,7 @@ def check_ytdlp_binary() -> Optional[Path]:
                 os.chmod(exe_path, 0o755)
                 logger.info(f"Fixed permissions on yt-dlp at {exe_path}")
             except Exception as e:
-                logger.warning(f"Could not set executable permissions on {exe_path}: {e}")
+                logger.warning(f"Could not set executable permissions on {exe_path}: {e}", exc_info=True)
         return exe_path
 
     # If not found in app directory, check if yt-dlp is available in PATH
@@ -517,7 +517,7 @@ def check_ytdlp_binary() -> Optional[Path]:
                 logger.info(f"Found yt-dlp in PATH: {yt_dlp_path}")
                 return Path(yt_dlp_path)
     except Exception as e:
-        logger.error(f"Error checking for yt-dlp in PATH: {e}")
+        logger.exception(f"Error checking for yt-dlp in PATH: {e}")
         # We're only interested in our app-specific installation or system PATH
 
     return None
