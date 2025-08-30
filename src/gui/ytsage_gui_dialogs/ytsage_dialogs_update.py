@@ -7,6 +7,8 @@ import os
 import subprocess
 import sys
 import time
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as get_version
 from pathlib import Path
 
 import requests
@@ -185,16 +187,15 @@ class UpdateThread(QThread):
     def _update_via_pip(self) -> bool:
         """Update yt-dlp via pip."""
         try:
-            import pkg_resources
-
+            # replaced pkg_resources with importlib.metadata.version
             self.update_status.emit("🔍 Checking current pip installation...")
             self.update_progress.emit(30)
 
             # Get current version
             try:
-                current_version = pkg_resources.get_distribution("yt-dlp").version
+                current_version = get_version("yt-dlp")
                 self.update_status.emit(f"📋 Current version: {current_version}")
-            except pkg_resources.DistributionNotFound:
+            except PackageNotFoundError:
                 self.update_status.emit("⚠️ yt-dlp not found via pip, attempting installation...")
                 current_version = "0.0.0"
 
@@ -591,15 +592,14 @@ class AutoUpdateThread(QThread):
     def _update_via_pip(self) -> bool:
         """Update yt-dlp via pip (silent version)."""
         try:
-            import pkg_resources
-
+            # replaced pkg_resources with importlib.metadata.version
             logger.info("AutoUpdateThread: Checking current pip installation...")
 
             # Get current version
             try:
-                current_version = pkg_resources.get_distribution("yt-dlp").version
+                current_version = get_version("yt-dlp")
                 logger.info(f"AutoUpdateThread: Current version: {current_version}")
-            except pkg_resources.DistributionNotFound:
+            except PackageNotFoundError:
                 logger.warning("AutoUpdateThread: yt-dlp not found via pip, attempting installation...")
                 current_version = "0.0.0"
 

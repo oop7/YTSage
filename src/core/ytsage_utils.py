@@ -4,14 +4,14 @@ import subprocess
 import sys
 import tempfile
 import time
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as get_version
 from pathlib import Path
 
-import pkg_resources
 import requests
 from packaging import version
 
 from src.core.ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
-from src.utils.ytsage_logger import logger
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import (
     APP_CONFIG_FILE,
@@ -21,6 +21,7 @@ from src.utils.ytsage_constants import (
     YTDLP_APP_BIN_PATH,
     YTDLP_DOWNLOAD_URL,
 )
+from src.utils.ytsage_logger import logger
 
 # Cache for version information to avoid delays
 _version_cache = {
@@ -468,9 +469,10 @@ def update_yt_dlp() -> bool:
 
             # Get current version
             try:
-                current_version = pkg_resources.get_distribution("yt-dlp").version
+                # replaced pkg_resources with importlib.metadata.version
+                current_version = get_version("yt-dlp")
                 logger.info(f"Current yt-dlp version: {current_version}")
-            except pkg_resources.DistributionNotFound:
+            except PackageNotFoundError:
                 logger.info("yt-dlp not installed via pip, attempting update anyway")
                 current_version = "0.0.0"  # Assume very old version to force update
 
@@ -634,70 +636,96 @@ def update_auto_update_settings(enabled, frequency) -> bool:
 def parse_yt_dlp_error(error_message: str) -> str:
     """
     Parse yt-dlp error messages and return user-friendly error messages.
-    
+
     Args:
         error_message: The raw error message from yt-dlp
-        
+
     Returns:
         str: A user-friendly error message with actionable advice
     """
-    error_str = str(error_message).lower()
-    
+    error_str = error_message.lower()
+
     # Private video errors
-    if any(keyword in error_str for keyword in ['private video', 'login_required', 'sign in if you']):
-        return ("This is a private video. You can download it by logging into your account using cookies.\n"
-                "Go to 'Custom Options' → 'Login with Cookies' → 'Extract cookies from browser' to authenticate.")
-    
+    if any(keyword in error_str for keyword in ["private video", "login_required", "sign in if you"]):
+        return (
+            "This is a private video. You can download it by logging into your account using cookies.\n"
+            "Go to 'Custom Options' → 'Login with Cookies' → 'Extract cookies from browser' to authenticate."
+        )
+
     # Age-restricted content
-    if any(keyword in error_str for keyword in ['age restricted', 'age-restricted', 'confirm your age']):
-        return ("This video is age-restricted. You need to be logged in to access it.\n"
-                "Use 'Custom Options' → 'Login with Cookies' to authenticate with your account.")
-    
+    if any(keyword in error_str for keyword in ["age restricted", "age-restricted", "confirm your age"]):
+        return (
+            "This video is age-restricted. You need to be logged in to access it.\n"
+            "Use 'Custom Options' → 'Login with Cookies' to authenticate with your account."
+        )
+
     # Geo-blocked content
-    if any(keyword in error_str for keyword in ['not available in your country', 'geo-blocked', 'video is not available', 'not made this video available in your country']):
-        return ("This video is not available in your region (geo-blocked).\n"
-                "You may need to use a VPN or the video might be restricted in your country.")
-    
+    if any(
+        keyword in error_str
+        for keyword in [
+            "not available in your country",
+            "geo-blocked",
+            "video is not available",
+            "not made this video available in your country",
+        ]
+    ):
+        return (
+            "This video is not available in your region (geo-blocked).\n"
+            "You may need to use a VPN or the video might be restricted in your country."
+        )
+
     # Removed/deleted videos
-    if any(keyword in error_str for keyword in ['video unavailable', 'this video has been removed', 'video does not exist']):
-        return ("This video has been removed or is no longer available.\n"
-                "The video may have been deleted by the uploader or removed due to policy violations.")
-    
+    if any(keyword in error_str for keyword in ["video unavailable", "this video has been removed", "video does not exist"]):
+        return (
+            "This video has been removed or is no longer available.\n"
+            "The video may have been deleted by the uploader or removed due to policy violations."
+        )
+
     # Live stream errors
-    if any(keyword in error_str for keyword in ['live stream', 'livestream', 'is live']):
-        return ("This is a live stream that cannot be downloaded while active.\n"
-                "Wait for the stream to end, then try downloading the archived version.")
-    
+    if any(keyword in error_str for keyword in ["live stream", "livestream", "is live"]):
+        return (
+            "This is a live stream that cannot be downloaded while active.\n"
+            "Wait for the stream to end, then try downloading the archived version."
+        )
+
     # Playlist errors
-    if any(keyword in error_str for keyword in ['playlist', 'no entries']):
-        return ("Unable to access this playlist. It may be private, deleted, or empty.\n"
-                "Check if the playlist exists and is publicly accessible.")
-    
+    if any(keyword in error_str for keyword in ["playlist", "no entries"]):
+        return (
+            "Unable to access this playlist. It may be private, deleted, or empty.\n"
+            "Check if the playlist exists and is publicly accessible."
+        )
+
     # Network/connection errors
-    if any(keyword in error_str for keyword in ['network error', 'connection', 'timeout', 'unable to download']):
-        return ("Network connection error. Please check your internet connection and try again.\n"
-                "If the problem persists, the video server might be temporarily unavailable.")
-    
+    if any(keyword in error_str for keyword in ["network error", "connection", "timeout", "unable to download"]):
+        return (
+            "Network connection error. Please check your internet connection and try again.\n"
+            "If the problem persists, the video server might be temporarily unavailable."
+        )
+
     # Invalid URL
-    if any(keyword in error_str for keyword in ['invalid url', 'unsupported url', 'no video found']):
-        return ("Invalid or unsupported URL. Please check the link and try again.\n"
-                "Make sure you're using a valid YouTube, Vimeo, or other supported platform URL.")
-    
+    if any(keyword in error_str for keyword in ["invalid url", "unsupported url", "no video found"]):
+        return (
+            "Invalid or unsupported URL. Please check the link and try again.\n"
+            "Make sure you're using a valid YouTube, Vimeo, or other supported platform URL."
+        )
+
     # YouTube premium content
-    if any(keyword in error_str for keyword in ['youtube premium', 'premium', 'members only']):
-        return ("This content requires YouTube Premium or channel membership.\n"
-                "You need to be logged in with an account that has access to this content.")
-    
+    if any(keyword in error_str for keyword in ["youtube premium", "premium", "members only"]):
+        return (
+            "This content requires YouTube Premium or channel membership.\n"
+            "You need to be logged in with an account that has access to this content."
+        )
+
     # Copyright/DMCA
-    if any(keyword in error_str for keyword in ['copyright', 'dmca', 'blocked']):
-        return ("This video is blocked due to copyright claims.\n"
-                "The content owner has restricted access to this video.")
-    
+    if any(keyword in error_str for keyword in ["copyright", "dmca", "blocked"]):
+        return "This video is blocked due to copyright claims.\n" "The content owner has restricted access to this video."
+
     # Extraction errors (could be temporary)
-    if any(keyword in error_str for keyword in ['unable to extract', 'extraction failed']):
-        return ("Failed to extract video information. This might be a temporary issue.\n"
-                "Please try again in a few minutes, or check if the video link is correct.")
-    
+    if any(keyword in error_str for keyword in ["unable to extract", "extraction failed"]):
+        return (
+            "Failed to extract video information. This might be a temporary issue.\n"
+            "Please try again in a few minutes, or check if the video link is correct."
+        )
+
     # Generic fallback with the original error for debugging
-    return (f"Could not extract video information. Please check your link.\n"
-            f"Technical details: {error_message}")
+    return f"Could not extract video information. Please check your link.\n" f"Technical details: {error_message}"
