@@ -1,6 +1,11 @@
+from typing import TYPE_CHECKING, cast
+
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QHeaderView, QSizePolicy, QTableWidget, QTableWidgetItem, QWidget
+
+if TYPE_CHECKING:
+    from src.gui.ytsage_gui_main import YTSageApp
 
 
 class FormatSignals(QObject):
@@ -9,8 +14,9 @@ class FormatSignals(QObject):
 
 class FormatTableMixin:
     def setup_format_table(self) -> QTableWidget:
-        self.format_signals = FormatSignals()
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
 
+        self.format_signals = FormatSignals()
         # Format table with improved styling
         self.format_table = QTableWidget()
         self.format_table.setColumnCount(8)
@@ -124,6 +130,8 @@ class FormatTableMixin:
         return self.format_table
 
     def filter_formats(self) -> None:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         if not hasattr(self, "all_formats"):
             return
 
@@ -165,6 +173,8 @@ class FormatTableMixin:
         self.format_signals.format_update.emit(filtered_formats)
 
     def _update_format_table(self, formats) -> None:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         self.format_table.setRowCount(0)
         self.format_checkboxes.clear()
 
@@ -331,22 +341,30 @@ class FormatTableMixin:
                 self.format_table.setItem(row, 7, notes_item)
 
     def handle_checkbox_click(self, clicked_checkbox) -> None:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         for checkbox in self.format_checkboxes:
             if checkbox != clicked_checkbox:
                 checkbox.setChecked(False)
 
     def get_selected_format(self):
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         for checkbox in self.format_checkboxes:
             if checkbox.isChecked():
                 return checkbox.format_id
         return None
 
     def update_format_table(self, formats) -> None:
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+
         self.all_formats = formats
         self.format_signals.format_update.emit(formats)
 
     def get_quality_label(self, format_info) -> str:
         """Determine quality label based on format information"""
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+        
         if format_info.get("vcodec") == "none":
             # Audio quality
             abr = format_info.get("abr", 0)
@@ -383,17 +401,12 @@ class FormatTableMixin:
 
     def _get_format_notes(self, format_info) -> str:
         """Generate helpful format notes based on format info."""
+        self = cast("YTSageApp", self)  # for autocompletion and type inference.
+        
         notes = []
 
         # Add storage indicator with more granular categories
         file_size = format_info.get("filesize") or format_info.get("filesize_approx", 0)
-        resolution = format_info.get("resolution", "")
-        height = 0
-        if resolution:
-            try:
-                height = int(resolution.split("x")[1])
-            except:
-                pass
 
         # Better file size categories
         if file_size > 50 * 1024 * 1024:  # Over 50MB

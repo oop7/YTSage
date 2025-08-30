@@ -7,6 +7,8 @@ import os
 import subprocess
 import sys
 import time
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as get_version
 from pathlib import Path
 
 import requests
@@ -14,10 +16,10 @@ from packaging import version
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushButton, QVBoxLayout
 
-from src.core.ytsage_logging import logger
 from src.core.ytsage_utils import get_ytdlp_version, load_config, save_config
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH, YTDLP_DOWNLOAD_URL
+from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH
+from src.utils.ytsage_logger import logger
 
 try:
     import yt_dlp
@@ -133,11 +135,11 @@ class UpdateThread(QThread):
                 error_message = "❌ Failed to update yt-dlp. Please try again or check your internet connection."
 
         except requests.RequestException as e:
-            error_message = f"❌ Network error during update: {str(e)}"
+            error_message = f"❌ Network error during update: {e}"
             self.update_status.emit(error_message)
             success = False
         except Exception as e:
-            error_message = f"❌ Update failed: {str(e)}"
+            error_message = f"❌ Update failed: {e}"
             self.update_status.emit(error_message)
             success = False
 
@@ -178,23 +180,22 @@ class UpdateThread(QThread):
             return False
 
         except Exception as e:
-            logger.error(f"UpdateThread: Unexpected error during update: {e}", exc_info=True)
+            logger.exception(f"UpdateThread: Unexpected error during update: {e}")
             self.update_status.emit(f"❌ Unexpected error during update: {e}")
             return False
 
     def _update_via_pip(self) -> bool:
         """Update yt-dlp via pip."""
         try:
-            import pkg_resources
-
+            # replaced pkg_resources with importlib.metadata.version
             self.update_status.emit("🔍 Checking current pip installation...")
             self.update_progress.emit(30)
 
             # Get current version
             try:
-                current_version = pkg_resources.get_distribution("yt-dlp").version
+                current_version = get_version("yt-dlp")
                 self.update_status.emit(f"📋 Current version: {current_version}")
-            except pkg_resources.DistributionNotFound:
+            except PackageNotFoundError:
                 self.update_status.emit("⚠️ yt-dlp not found via pip, attempting installation...")
                 current_version = "0.0.0"
 
@@ -526,10 +527,7 @@ class AutoUpdateThread(QThread):
                 logger.warning(f"AutoUpdateThread: Network error during auto-update check: {e}")
                 self.update_finished.emit(False, f"Network error: {e}")
             except Exception as e:
-                logger.error(
-                    f"AutoUpdateThread: Error during auto-update check: {e}",
-                    exc_info=True,
-                )
+                logger.exception(f"AutoUpdateThread: Error during auto-update check: {e}", exc_info=True)
                 self.update_finished.emit(False, f"Update check error: {e}")
 
         except Exception as e:
@@ -554,7 +552,7 @@ class AutoUpdateThread(QThread):
                 return self._update_via_pip()
 
         except Exception as e:
-            logger.error(f"AutoUpdateThread: Error in _perform_update: {e}", exc_info=True)
+            logger.exception(f"AutoUpdateThread: Error in _perform_update: {e}")
             return False
 
     def _update_binary(self, yt_dlp_path: Path) -> bool:
@@ -588,21 +586,20 @@ class AutoUpdateThread(QThread):
             return False
 
         except Exception as e:
-            logger.error(f"AutoUpdateThread: Unexpected error during update: {e}", exc_info=True)
+            logger.exception(f"AutoUpdateThread: Unexpected error during update: {e}")
             return False
 
     def _update_via_pip(self) -> bool:
         """Update yt-dlp via pip (silent version)."""
         try:
-            import pkg_resources
-
+            # replaced pkg_resources with importlib.metadata.version
             logger.info("AutoUpdateThread: Checking current pip installation...")
 
             # Get current version
             try:
-                current_version = pkg_resources.get_distribution("yt-dlp").version
+                current_version = get_version("yt-dlp")
                 logger.info(f"AutoUpdateThread: Current version: {current_version}")
-            except pkg_resources.DistributionNotFound:
+            except PackageNotFoundError:
                 logger.warning("AutoUpdateThread: yt-dlp not found via pip, attempting installation...")
                 current_version = "0.0.0"
 
@@ -645,5 +642,5 @@ class AutoUpdateThread(QThread):
                 return True
 
         except Exception as e:
-            logger.error(f"AutoUpdateThread: Pip update failed: {e}", exc_info=True)
+            logger.exception(f"AutoUpdateThread: Pip update failed: {e}")
             return False

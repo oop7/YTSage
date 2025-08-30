@@ -25,7 +25,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from src.core.ytsage_logging import logger
+from src.utils.ytsage_logger import logger
 from src.core.ytsage_utils import (
     check_and_update_ytdlp_auto,
     get_auto_update_settings,
@@ -349,7 +349,7 @@ class DownloadSettingsDialog(QDialog):
             msg_box = self._create_styled_message_box(
                 QMessageBox.Icon.Warning,
                 "Update Check",
-                f"Error checking for updates: {str(e)}",
+                f"Error checking for updates: {e}",
             )
             msg_box.exec()
 
@@ -381,7 +381,7 @@ class DownloadSettingsDialog(QDialog):
             else:
                 QMessageBox.warning(self, "Error", "Failed to save auto-update settings.")
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Error saving auto-update settings: {str(e)}")
+            QMessageBox.critical(self, "Error", f"Error saving auto-update settings: {e}")
 
         # Call the parent accept method to close the dialog
         super().accept()
@@ -582,7 +582,7 @@ class AutoUpdateSettingsDialog(QDialog):
             self.on_enable_toggled(settings["enabled"])
 
         except Exception as e:
-            logger.error(f"Error loading auto-update settings: {e}")
+            logger.exception(f"Error loading auto-update settings: {e}")
 
     def update_next_check_label(self) -> None:
         """Update the next check label based on current settings."""
@@ -616,7 +616,7 @@ class AutoUpdateSettingsDialog(QDialog):
 
         except Exception as e:
             self.next_check_label.setText("Next check: Error calculating")
-            logger.error(f"Error calculating next check time: {e}")
+            logger.exception(f"Error calculating next check time: {e}")
 
     def on_enable_toggled(self, enabled) -> None:
         """Handle enable/disable checkbox toggle."""
@@ -650,7 +650,7 @@ class AutoUpdateSettingsDialog(QDialog):
 
                 QTimer.singleShot(0, lambda: self.manual_check_finished(result))
             except Exception as e:
-                logger.error(f"Error during manual check: {e}")
+                logger.exception(f"Error during manual check: {e}")
                 QTimer.singleShot(0, lambda: self.manual_check_finished(False))
 
         # Run in separate thread to avoid blocking UI
@@ -738,6 +738,6 @@ class AutoUpdateSettingsDialog(QDialog):
                 )
                 msg_box.exec()
         except Exception as e:
-            logger.error(f"Error saving auto-update settings: {e}")
-            msg_box = self._create_styled_message_box(QMessageBox.Icon.Critical, "Error", f"❌ Error saving settings: {str(e)}")
+            logger.exception(f"Error saving auto-update settings: {e}")
+            msg_box = self._create_styled_message_box(QMessageBox.Icon.Critical, "Error", f"❌ Error saving settings: {e}")
             msg_box.exec()

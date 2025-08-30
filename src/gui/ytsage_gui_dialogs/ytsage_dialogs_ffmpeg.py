@@ -48,7 +48,7 @@ class FFmpegCheckDialog(QDialog):
             # icon_path logic moved to src\utils\ytsage_constants.py
 
             if ICON_PATH.exists():
-                self.setWindowIcon(QIcon(ICON_PATH.as_posix()))
+                self.setWindowIcon(QIcon(str(ICON_PATH)))
 
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
