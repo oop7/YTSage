@@ -8,7 +8,7 @@ import threading
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, Signal, QObject
+from PySide6.QtCore import Q_ARG, QMetaObject, QObject, Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -44,18 +44,18 @@ if TYPE_CHECKING:
 
 class CommandWorker(QObject):
     """Worker class for running yt-dlp commands in a separate thread"""
-    
+
     # Signals for communicating with the main thread
     output_received = Signal(str)  # For command output lines
     command_finished = Signal(bool, int)  # For completion (success, exit_code)
     error_occurred = Signal(str)  # For errors
-    
+
     def __init__(self, command, url, path):
         super().__init__()
         self.command = command
         self.url = url
         self.path = path
-    
+
     def run_command(self):
         """Run the yt-dlp command and emit signals for output"""
         try:
@@ -65,11 +65,11 @@ class CommandWorker(QObject):
             # Build the full command
             yt_dlp_path = get_yt_dlp_path()
             base_cmd = [yt_dlp_path] + args
-            
+
             # Add download path if specified
             if self.path:
                 base_cmd.extend(["-P", self.path])
-            
+
             # Add URL at the end
             base_cmd.append(self.url)
 
@@ -94,14 +94,14 @@ class CommandWorker(QObject):
 
             ret = proc.wait()
             self.output_received.emit("=" * 50)
-            
+
             if ret != 0:
                 self.output_received.emit(f"❌ Command failed with exit code {ret}")
                 self.command_finished.emit(False, ret)
             else:
                 self.output_received.emit("✅ Command completed successfully!")
                 self.command_finished.emit(True, ret)
-                
+
         except Exception as e:
             self.output_received.emit("=" * 50)
             self.error_occurred.emit(f"❌ Error executing command: {str(e)}")
@@ -160,7 +160,7 @@ class CustomOptionsDialog(QDialog):
             # Convert Path to string properly and validate
             cookie_path_str = str(self._parent.cookie_file_path)
             # Only set if it looks like a valid path (more than just a drive letter)
-            if len(cookie_path_str) > 3 and not cookie_path_str.endswith(':'):
+            if len(cookie_path_str) > 3 and not cookie_path_str.endswith(":"):
                 self.cookie_path_input.setText(cookie_path_str)
         path_layout.addWidget(self.cookie_path_input)
 
@@ -175,9 +175,7 @@ class CustomOptionsDialog(QDialog):
         self.cookie_browser_group = QGroupBox("Browser Selection")
         browser_layout = QVBoxLayout(self.cookie_browser_group)
 
-        browser_help = QLabel(
-            "Select the browser to extract cookies from. Make sure the browser is closed before extraction."
-        )
+        browser_help = QLabel("Select the browser to extract cookies from. Make sure the browser is closed before extraction.")
         browser_help.setWordWrap(True)
         browser_help.setStyleSheet("color: #999999; font-size: 11px;")
         browser_layout.addWidget(browser_help)
@@ -186,16 +184,7 @@ class CustomOptionsDialog(QDialog):
         browser_select_layout.addWidget(QLabel("Browser:"))
 
         self.browser_combo = QComboBox()
-        self.browser_combo.addItems([
-            "chrome",
-            "firefox", 
-            "safari",
-            "edge",
-            "opera",
-            "brave",
-            "chromium",
-            "vivaldi"
-        ])
+        self.browser_combo.addItems(["chrome", "firefox", "safari", "edge", "opera", "brave", "chromium", "vivaldi"])
         browser_select_layout.addWidget(self.browser_combo)
         browser_layout.addLayout(browser_select_layout)
 
@@ -261,10 +250,7 @@ class CustomOptionsDialog(QDialog):
 
         # Command input
         self.command_input = QPlainTextEdit()
-        self.command_input.setPlaceholderText(
-            "Enter yt-dlp arguments here...\n\n"
-            "e.g. --extract-audio --audio-format mp3"
-        )
+        self.command_input.setPlaceholderText("Enter yt-dlp arguments here...\n\n" "e.g. --extract-audio --audio-format mp3")
         self.command_input.setMinimumHeight(80)  # Reduced further from 100
         self.command_input.setStyleSheet(
             """
@@ -288,7 +274,7 @@ class CustomOptionsDialog(QDialog):
         # Button layout
         button_layout = QHBoxLayout()
         button_layout.setSpacing(10)
-        
+
         clear_btn = QPushButton("Clear")
         clear_btn.clicked.connect(lambda: self.command_input.clear())
         clear_btn.setStyleSheet(
@@ -308,15 +294,15 @@ class CustomOptionsDialog(QDialog):
         """
         )
         button_layout.addWidget(clear_btn)
-        
+
         button_layout.addStretch()  # Push run button to the right
-        
+
         # Run command button
         self.run_btn = QPushButton("Run Command")
         self.run_btn.clicked.connect(self.run_custom_command)
         self.run_btn.setDefault(True)
         button_layout.addWidget(self.run_btn)
-        
+
         command_layout.addLayout(button_layout)
 
         # Output label
@@ -469,18 +455,18 @@ class CustomOptionsDialog(QDialog):
         if hasattr(self._parent, "browser_cookies_option") and self._parent.browser_cookies_option:
             # Browser cookies are active
             self.cookie_browser_radio.setChecked(True)
-            browser_parts = self._parent.browser_cookies_option.split(':')
+            browser_parts = self._parent.browser_cookies_option.split(":")
             browser = browser_parts[0]
             profile = browser_parts[1] if len(browser_parts) > 1 else ""
-            
+
             # Set browser selection
             index = self.browser_combo.findText(browser)
             if index >= 0:
                 self.browser_combo.setCurrentIndex(index)
-            
+
             # Set profile if any
             self.profile_input.setText(profile)
-            
+
             self.cookie_status.setText(f"Browser cookies active: {self._parent.browser_cookies_option}")
             self.cookie_status.setStyleSheet("color: #00cc00; font-style: italic;")
         elif hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
@@ -533,7 +519,7 @@ class CustomOptionsDialog(QDialog):
         if self.cookie_browser_radio.isChecked():
             browser = self.browser_combo.currentText()
             profile = self.profile_input.text().strip()
-            
+
             if profile:
                 return f"{browser}:{profile}"
             else:
@@ -571,12 +557,12 @@ class CustomOptionsDialog(QDialog):
         # Create worker and thread
         self.worker = CommandWorker(command, url, path)
         self.worker_thread = threading.Thread(target=self.worker.run_command, daemon=True)
-        
+
         # Connect worker signals to our slots
         self.worker.output_received.connect(self.on_output_received)
         self.worker.command_finished.connect(self.on_command_finished)
         self.worker.error_occurred.connect(self.on_error_occurred)
-        
+
         # Start the thread
         self.worker_thread.start()
 

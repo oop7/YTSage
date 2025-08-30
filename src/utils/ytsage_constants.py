@@ -20,11 +20,14 @@ from pathlib import Path
 
 # Assets Constants
 ICON_PATH: Path = Path("assets/Icon/icon.png")
-SOUND_PATH: Path = Path("assets/sound/notification.mp3")
+SOUND_PATH: Path = Path("assets/sound/notification.wav")
 
 OS_NAME: str = platform.system()  # Windows ; Darwin ; Linux
 
 USER_HOME_DIR: Path = Path.home()
+
+# Documentation URLs
+YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
 # OS Specific Constants
 if OS_NAME == "Windows":
@@ -39,9 +42,6 @@ if OS_NAME == "Windows":
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp.exe"
-    
-    # Documentation URLs
-    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = subprocess.CREATE_NO_WINDOW
 
@@ -57,9 +57,6 @@ elif OS_NAME == "Darwin":  # macOS
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp"
-    
-    # Documentation URLs
-    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = 0
 
@@ -75,9 +72,6 @@ else:  # Linux and other UNIX-like
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp"
-    
-    # Documentation URLs
-    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = 0
 
@@ -89,6 +83,7 @@ FFMPEG_ZIP_DOWNLOAD_URL = "https://github.com/GyanD/codexffmpeg/releases/downloa
 
 if __name__ == "__main__":
     # If this file is run directly, print directory information; if imported, create the necessary directories for the application.
+    # for debug, to check os specific variable which can be different based on os.
     info = {
         "OS_NAME": OS_NAME,
         "OS_FULL_NAME": OS_FULL_NAME,
@@ -100,7 +95,6 @@ if __name__ == "__main__":
         "APP_CONFIG_FILE": str(APP_CONFIG_FILE),
         "YTDLP_DOWNLOAD_URL": YTDLP_DOWNLOAD_URL,
         "YTDLP_APP_BIN_PATH": YTDLP_APP_BIN_PATH,
-        "YTDLP_DOCS_URL": YTDLP_DOCS_URL,
         "SUBPROCESS_CREATIONFLAGS": SUBPROCESS_CREATIONFLAGS,
     }
     for key, value in info.items():
