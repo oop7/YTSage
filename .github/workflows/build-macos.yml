@@ -153,19 +153,30 @@ jobs:
       run: |
         source venv/bin/activate
         python setup_cxfreeze.py bdist_mac
-
-        app_name="YTSage-v${VERSION}.app"
-        app_path="dist/${app_name}"
-        if [ -d "$app_path/Contents/Resources/assets/branding/screenshots" ]; then
-          rm -rf "$app_path/Contents/Resources/assets/branding/screenshots"
-          echo "Removed screenshots folder from .app bundle"
+        # Locate the built .app (cx_Freeze may place it under build/ or dist/)
+        app_path=""
+        for cand in "dist/YTSage-v${VERSION}.app" "build/dist/YTSage-v${VERSION}.app" "build/YTSage-v${VERSION}.app"; do
+          if [ -d "$cand" ]; then app_path="$cand"; break; fi
+        done
+        if [ -z "$app_path" ]; then
+          app_path=$(ls -d dist/*.app build/dist/*.app build/*.app 2>/dev/null | head -n1 || true)
         fi
+        if [ -n "$app_path" ] && [ -d "$app_path/Contents/Resources/assets/branding/screenshots" ]; then
+          rm -rf "$app_path/Contents/Resources/assets/branding/screenshots"
+          echo "Removed screenshots folder from .app bundle at $app_path"
+        fi
+        echo "Post-bdist_mac directory listing:"
+        echo "-- dist --"; ls -lah dist || true
+        echo "-- build --"; ls -lah build || true
 
     - name: Build DMG (bdist_dmg)
       shell: bash
       run: |
         source venv/bin/activate
         python setup_cxfreeze.py bdist_dmg
+        echo "Post-bdist_dmg directory listing:"
+        echo "-- dist --"; ls -lah dist || true
+        echo "-- build --"; ls -lah build || true
 
     - name: Package and prepare release artifacts (.app.zip and .dmg)
       shell: bash
@@ -174,29 +185,43 @@ jobs:
         echo "Preparing artifacts for version: $version"
         mkdir -p artifacts
 
-        app_name="YTSage-v${version}.app"
-        app_path="dist/${app_name}"
-        if [ -d "$app_path" ]; then
-          (cd dist && zip -r "../artifacts/YTSage-v${version}.app.zip" "$app_name")
-          echo "Created: $(pwd)/artifacts/YTSage-v${version}.app.zip"
+        # Find the .app bundle (preferring versioned name)
+        app_path=""
+        for cand in "dist/YTSage-v${version}.app" "build/dist/YTSage-v${version}.app" "build/YTSage-v${version}.app"; do
+          if [ -d "$cand" ]; then app_path="$cand"; break; fi
+        done
+        if [ -z "$app_path" ]; then
+          app_path=$(ls -d dist/*.app build/dist/*.app build/*.app 2>/dev/null | head -n1 || true)
+        fi
+        if [ -n "$app_path" ] && [ -d "$app_path" ]; then
+          app_base="$(basename "$app_path")"
+          app_parent="$(dirname "$app_path")"
+          # Ensure screenshots folder is not shipped
+          if [ -d "$app_path/Contents/Resources/assets/branding/screenshots" ]; then
+            rm -rf "$app_path/Contents/Resources/assets/branding/screenshots"
+            echo "Removed screenshots folder from .app bundle at $app_path"
+          fi
+          (cd "$app_parent" && zip -r "${GITHUB_WORKSPACE}/artifacts/${app_base}.zip" "$app_base")
+          echo "Created: artifacts/${app_base}.zip"
         else
-          echo "Warning: .app bundle not found at $app_path"
+          echo "Warning: .app bundle not found in dist/ or build/"
         fi
 
-        # Try to find the generated DMG in dist
+        # Try to find the generated DMG in dist or build
         dmg_src=""
-        if [ -f "dist/YTSage-v${version}.dmg" ]; then
-          dmg_src="dist/YTSage-v${version}.dmg"
-        else
-          # Fallback: pick first .dmg in dist
-          dmg_src=$(ls dist/*.dmg 2>/dev/null | head -n 1 || true)
+        for cand in "dist/YTSage-v${version}.dmg"; do
+          if [ -f "$cand" ]; then dmg_src="$cand"; break; fi
+        done
+        if [ -z "$dmg_src" ]; then
+          dmg_src=$(ls dist/*.dmg build/*.dmg build/dist/*.dmg 2>/dev/null | head -n1 || true)
         fi
 
         if [ -n "$dmg_src" ] && [ -f "$dmg_src" ]; then
+          # Rename the DMG to a consistent name in artifacts
           cp "$dmg_src" "artifacts/YTSage-v${version}.dmg"
-          echo "Copied DMG to artifacts: artifacts/YTSage-v${version}.dmg"
+          echo "Copied DMG to artifacts from $dmg_src -> artifacts/YTSage-v${version}.dmg"
         else
-          echo "Warning: No DMG found in dist"
+          echo "Warning: No DMG found in dist/ or build/"
         fi
 
         echo "Final artifacts:"
