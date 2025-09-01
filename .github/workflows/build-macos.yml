@@ -1,0 +1,221 @@
+name: Build macOS Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  PYTHON_VERSION: '3.13.6'
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Extract version from tag
+      id: get_version
+      shell: bash
+      run: |
+        tag="${GITHUB_REF_NAME}"
+        version="${tag#v}"
+        echo "Extracted version: $version"
+        echo "VERSION=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          venv
+          ~/.cache/pip
+          ~/Library/Caches/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Create virtual environment and install dependencies
+      shell: bash
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        python -m pip install --upgrade pip
+        pip install --no-cache-dir -r requirements.txt
+        pip install --no-cache-dir cx_Freeze dmgbuild yt-dlp
+
+    - name: Prepare build variables
+      shell: bash
+      run: |
+        version="${{ steps.get_version.outputs.VERSION }}"
+        echo "VERSION=$version" >> "$GITHUB_ENV"
+        echo "Prepared build variables for version: $version"
+
+    - name: Create cx_Freeze setup script
+      shell: bash
+      run: |
+        cat > setup_cxfreeze.py <<'PY'
+        import os
+        from cx_Freeze import setup, Executable
+
+        version = os.environ.get("VERSION", "0.0.0")
+
+        build_exe_options = dict(
+            optimize=2,
+            packages=[
+                "PySide6.QtCore",
+                "PySide6.QtGui",
+                "PySide6.QtWidgets",
+                "requests",
+                "PIL",
+                "packaging",
+                "markdown",
+                "pyglet",
+                "loguru",
+                "setuptools",
+            ],
+            excludes=[
+                "PySide6.QtBluetooth",
+                "PySide6.QtNetwork",
+                "PySide6.QtOpenGL",
+                "PySide6.QtPrintSupport",
+                "PySide6.QtSvg",
+                "PySide6.QtTest",
+                "PySide6.QtXml",
+                "PySide6.QtSql",
+                "PySide6.QtHelp",
+                "PySide6.QtMultimedia",
+                "PySide6.QtQml",
+                "PySide6.QtQuick",
+                "PySide6.QtWebEngineCore",
+                "PIL.ImageDraw",
+                "PIL.ImageFont",
+                "numpy",
+                "scipy",
+                "wx",
+                "pandas",
+                "tkinter",
+                "yt_dlp",
+                "unittest",
+                "test",
+                "tests",
+            ],
+            include_files=[
+                ("src", "src"),
+                ("assets", "assets"),
+            ],
+        )
+
+        executables = [
+            Executable(
+                script="main.py",
+                target_name=f"YTSage-v{version}",
+                icon="assets/branding/icons/icon.icns",
+            )
+        ]
+
+        setup(
+            name="YTSage",
+            version=version,
+            description="YTSage",
+            options={
+                "build_exe": build_exe_options,
+                "bdist_mac": {
+                    "iconfile": "assets/branding/icons/icon.icns",
+                    "bundle_name": f"YTSage-v{version}",
+                },
+                "bdist_dmg": {
+                    "volume_label": f"YTSage v{version}",
+                    "applications_shortcut": True,
+                    # Sensible defaults; can be customized later if desired
+                    "format": "UDZO",
+                    "filesystem": "HFS+",
+                    "default_view": "icon-view",
+                },
+            },
+            executables=executables,
+        )
+        PY
+
+    - name: Build .app bundle (bdist_mac)
+      shell: bash
+      run: |
+        source venv/bin/activate
+        python setup_cxfreeze.py bdist_mac
+
+        app_name="YTSage-v${VERSION}.app"
+        app_path="dist/${app_name}"
+        if [ -d "$app_path/Contents/Resources/assets/branding/screenshots" ]; then
+          rm -rf "$app_path/Contents/Resources/assets/branding/screenshots"
+          echo "Removed screenshots folder from .app bundle"
+        fi
+
+    - name: Build DMG (bdist_dmg)
+      shell: bash
+      run: |
+        source venv/bin/activate
+        python setup_cxfreeze.py bdist_dmg
+
+    - name: Package and prepare release artifacts (.app.zip and .dmg)
+      shell: bash
+      run: |
+        version="${{ steps.get_version.outputs.VERSION }}"
+        echo "Preparing artifacts for version: $version"
+        mkdir -p artifacts
+
+        app_name="YTSage-v${version}.app"
+        app_path="dist/${app_name}"
+        if [ -d "$app_path" ]; then
+          (cd dist && zip -r "../artifacts/YTSage-v${version}.app.zip" "$app_name")
+          echo "Created: $(pwd)/artifacts/YTSage-v${version}.app.zip"
+        else
+          echo "Warning: .app bundle not found at $app_path"
+        fi
+
+        # Try to find the generated DMG in dist
+        dmg_src=""
+        if [ -f "dist/YTSage-v${version}.dmg" ]; then
+          dmg_src="dist/YTSage-v${version}.dmg"
+        else
+          # Fallback: pick first .dmg in dist
+          dmg_src=$(ls dist/*.dmg 2>/dev/null | head -n 1 || true)
+        fi
+
+        if [ -n "$dmg_src" ] && [ -f "$dmg_src" ]; then
+          cp "$dmg_src" "artifacts/YTSage-v${version}.dmg"
+          echo "Copied DMG to artifacts: artifacts/YTSage-v${version}.dmg"
+        else
+          echo "Warning: No DMG found in dist"
+        fi
+
+        echo "Final artifacts:"
+        ls -lh artifacts || true
+
+    - name: Create draft release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: YTSage ${{ github.ref_name }}
+        draft: true
+        prerelease: false
+        body: |
+          # YTSage ${{ github.ref_name }}
+
+          **Release Date**: ${{ github.event.head_commit.timestamp }}
+
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
+        files: |
+          artifacts/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
