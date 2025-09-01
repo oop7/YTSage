@@ -13,7 +13,10 @@ env:
 
 jobs:
   build-macos:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [macos-14, macos-13]
+    runs-on: ${{ matrix.os }}
 
     steps:
     - name: Checkout code
@@ -60,7 +63,14 @@ jobs:
       run: |
         version="${{ steps.get_version.outputs.VERSION }}"
         echo "VERSION=$version" >> "$GITHUB_ENV"
-        echo "Prepared build variables for version: $version"
+        arch="$(uname -m)" # arm64 or x86_64
+        echo "ARCH=$arch" >> "$GITHUB_ENV"
+        if [ "$arch" = "arm64" ]; then
+          echo "ARCH_SUFFIX=arm64" >> "$GITHUB_ENV"
+        else
+          echo "ARCH_SUFFIX=x64" >> "$GITHUB_ENV"
+        fi
+        echo "Prepared build variables for version: $version on $(uname -a)"
 
     - name: Create cx_Freeze setup script
       shell: bash
@@ -201,8 +211,8 @@ jobs:
             rm -rf "$app_path/Contents/Resources/assets/branding/screenshots"
             echo "Removed screenshots folder from .app bundle at $app_path"
           fi
-          (cd "$app_parent" && zip -r "${GITHUB_WORKSPACE}/artifacts/${app_base}.zip" "$app_base")
-          echo "Created: artifacts/${app_base}.zip"
+          (cd "$app_parent" && zip -r "${GITHUB_WORKSPACE}/artifacts/YTSage-v${version}-${ARCH_SUFFIX}.app.zip" "$app_base")
+          echo "Created: artifacts/YTSage-v${version}-${ARCH_SUFFIX}.app.zip"
         else
           echo "Warning: .app bundle not found in dist/ or build/"
         fi
@@ -218,8 +228,8 @@ jobs:
 
         if [ -n "$dmg_src" ] && [ -f "$dmg_src" ]; then
           # Rename the DMG to a consistent name in artifacts
-          cp "$dmg_src" "artifacts/YTSage-v${version}.dmg"
-          echo "Copied DMG to artifacts from $dmg_src -> artifacts/YTSage-v${version}.dmg"
+          cp "$dmg_src" "artifacts/YTSage-v${version}-${ARCH_SUFFIX}.dmg"
+          echo "Copied DMG to artifacts from $dmg_src -> artifacts/YTSage-v${version}-${ARCH_SUFFIX}.dmg"
         else
           echo "Warning: No DMG found in dist/ or build/"
         fi
@@ -227,13 +237,15 @@ jobs:
         echo "Final artifacts:"
         ls -lh artifacts || true
 
-    - name: Create draft release
+    - name: Create/Update draft release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.ref_name }}
         name: YTSage ${{ github.ref_name }}
         draft: true
         prerelease: false
+        append_body: true
+        fail_on_unmatched_files: false
         body: |
           # YTSage ${{ github.ref_name }}
 
