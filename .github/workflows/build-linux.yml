@@ -123,6 +123,8 @@ jobs:
             include_files=[
                 ("src", "src"),
                 ("assets", "assets"),
+                ("ytsage.desktop", "share/applications/ytsage.desktop"),
+                ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
             ],
         )
 
@@ -145,11 +147,10 @@ jobs:
                     # If ends with .AppImage, use verbatim file name
                     "target_name": f"YTSage-v{version}.AppImage",
                 },
-                # RPM packaging metadata + desktop integration
+                # RPM packaging metadata
                 "bdist_rpm": {
                     "release": "1",
                     "group": "Applications/Multimedia",
-                    "install_script": "rpm_install.sh",
                 },
                 # DEB packaging wraps alien to convert RPM
                 "bdist_deb": {},
@@ -158,7 +159,7 @@ jobs:
         )
         PY
 
-    - name: Create desktop entry and RPM install script
+    - name: Create desktop entry
       shell: bash
       run: |
         cat > ytsage.desktop <<'DESKTOP'
@@ -172,14 +173,6 @@ jobs:
         Categories=AudioVideo;Network;Utility;
         StartupWMClass=YTSage
         DESKTOP
-
-        cat > rpm_install.sh <<'SH'
-        #!/bin/sh
-        set -e
-        install -Dm644 ytsage.desktop "$RPM_BUILD_ROOT/usr/share/applications/ytsage.desktop"
-        install -Dm644 assets/branding/icons/icon.png "$RPM_BUILD_ROOT/usr/share/pixmaps/ytsage.png"
-        SH
-        chmod +x rpm_install.sh
 
     - name: Build AppImage, RPM and DEB
       shell: bash
