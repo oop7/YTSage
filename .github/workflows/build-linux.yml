@@ -137,7 +137,7 @@ jobs:
         ]
 
         setup(
-            name="YTSage",
+            name="ytsage",
             version=version,
             description="YTSage",
             options={
@@ -145,7 +145,7 @@ jobs:
                 # AppImage packaging
                 "bdist_appimage": {
                     # If ends with .AppImage, use verbatim file name
-                    "target_name": f"YTSage-v{version}.AppImage",
+                    "target_name": f"ytsage-v{version}.AppImage",
                 },
                 # RPM packaging metadata
                 "bdist_rpm": {
@@ -210,7 +210,7 @@ jobs:
         mkdir -p artifacts
 
         # Copy AppImage
-        appimage_src=$(ls dist/*.AppImage 2>/dev/null | head -n1 || true)
+        appimage_src=$(ls dist/ytsage-v*.AppImage 2>/dev/null | head -n1 || true)
         if [ -n "$appimage_src" ]; then
           cp "$appimage_src" "artifacts/YTSage-v${version}-${ARCH}.AppImage"
           echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}-${ARCH}.AppImage"
@@ -219,7 +219,7 @@ jobs:
         fi
 
         # Copy RPM (normalize name)
-        rpm_src=$(ls dist/*.rpm 2>/dev/null | head -n1 || true)
+        rpm_src=$(ls dist/ytsage-*.rpm 2>/dev/null | head -n1 || true)
         if [ -n "$rpm_src" ]; then
           cp "$rpm_src" "artifacts/YTSage-v${version}-${ARCH}.rpm"
           echo "Copied RPM: $rpm_src -> artifacts/YTSage-v${version}-${ARCH}.rpm"
@@ -228,7 +228,7 @@ jobs:
         fi
 
         # Copy DEB (normalize name)
-        deb_src=$(ls dist/*.deb 2>/dev/null | head -n1 || true)
+        deb_src=$(ls dist/ytsage_*.deb 2>/dev/null | head -n1 || true)
         if [ -n "$deb_src" ]; then
           cp "$deb_src" "artifacts/YTSage-v${version}-${ARCH}.deb"
           echo "Copied DEB: $deb_src -> artifacts/YTSage-v${version}-${ARCH}.deb"
