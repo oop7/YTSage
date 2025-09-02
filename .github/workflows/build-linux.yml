@@ -211,43 +211,85 @@ jobs:
           # Extract the DEB package
           ar x "$GITHUB_WORKSPACE/$deb_file"
           
-          # Extract the data archive
-          mkdir -p data
-          cd data
-          tar xf ../data.tar.xz
+          # List extracted files to see what we have
+          echo "Extracted DEB contents:"
+          ls -la
           
-          # Ensure desktop files are properly placed
-          if [ ! -d "usr/share/applications" ]; then
-            mkdir -p usr/share/applications
+          # Find the data archive (could be data.tar.xz, data.tar.gz, data.tar.zst, etc.)
+          data_archive=""
+          for ext in xz gz zst; do
+            if [ -f "data.tar.$ext" ]; then
+              data_archive="data.tar.$ext"
+              break
+            fi
+          done
+          
+          if [ -z "$data_archive" ]; then
+            echo "Warning: Could not find data archive in DEB package"
+            cd "$GITHUB_WORKSPACE"
+            rm -rf "$temp_deb_dir"
+          else
+            echo "Found data archive: $data_archive"
+            
+            # Extract the data archive
+            mkdir -p data
+            cd data
+            
+            case "$data_archive" in
+              *.tar.xz)
+                tar xf "../$data_archive"
+                ;;
+              *.tar.gz)
+                tar xzf "../$data_archive"
+                ;;
+              *.tar.zst)
+                tar --zstd -xf "../$data_archive"
+                ;;
+            esac
+            
+            # Ensure desktop files are properly placed
+            if [ ! -d "usr/share/applications" ]; then
+              mkdir -p usr/share/applications
+            fi
+            if [ ! -d "usr/share/pixmaps" ]; then
+              mkdir -p usr/share/pixmaps
+            fi
+            
+            # Copy desktop entry if it exists in the package but not in the right place
+            if [ -f "usr/lib/ytsage-${version}/share/applications/ytsage.desktop" ] && [ ! -f "usr/share/applications/ytsage.desktop" ]; then
+              cp "usr/lib/ytsage-${version}/share/applications/ytsage.desktop" "usr/share/applications/"
+              echo "Copied desktop entry to proper location"
+            fi
+            
+            # Copy icon if it exists in the package but not in the right place
+            if [ -f "usr/lib/ytsage-${version}/share/pixmaps/ytsage.png" ] && [ ! -f "usr/share/pixmaps/ytsage.png" ]; then
+              cp "usr/lib/ytsage-${version}/share/pixmaps/ytsage.png" "usr/share/pixmaps/"
+              echo "Copied icon to proper location"
+            fi
+            
+            # Repackage the data archive with the same compression
+            case "$data_archive" in
+              *.tar.xz)
+                tar cJf "../$data_archive" ./*
+                ;;
+              *.tar.gz)
+                tar czf "../$data_archive" ./*
+                ;;
+              *.tar.zst)
+                tar --zstd -cf "../$data_archive" ./*
+                ;;
+            esac
+            cd ..
+            
+            # Create the fixed DEB package
+            ar r "${GITHUB_WORKSPACE}/${deb_file}" debian-binary control.tar.* "$data_archive"
+            
+            # Clean up
+            cd "$GITHUB_WORKSPACE"
+            rm -rf "$temp_deb_dir"
+            
+            echo "DEB package desktop integration fixed"
           fi
-          if [ ! -d "usr/share/pixmaps" ]; then
-            mkdir -p usr/share/pixmaps
-          fi
-          
-          # Copy desktop entry if it exists in the package but not in the right place
-          if [ -f "usr/lib/ytsage-${version}/share/applications/ytsage.desktop" ] && [ ! -f "usr/share/applications/ytsage.desktop" ]; then
-            cp "usr/lib/ytsage-${version}/share/applications/ytsage.desktop" "usr/share/applications/"
-            echo "Copied desktop entry to proper location"
-          fi
-          
-          # Copy icon if it exists in the package but not in the right place
-          if [ -f "usr/lib/ytsage-${version}/share/pixmaps/ytsage.png" ] && [ ! -f "usr/share/pixmaps/ytsage.png" ]; then
-            cp "usr/lib/ytsage-${version}/share/pixmaps/ytsage.png" "usr/share/pixmaps/"
-            echo "Copied icon to proper location"
-          fi
-          
-          # Repackage the data archive
-          tar cJf ../data.tar.xz ./*
-          cd ..
-          
-          # Create the fixed DEB package
-          ar r "${GITHUB_WORKSPACE}/${deb_file}" debian-binary control.tar.xz data.tar.xz
-          
-          # Clean up
-          cd "$GITHUB_WORKSPACE"
-          rm -rf "$temp_deb_dir"
-          
-          echo "DEB package desktop integration fixed"
         fi
 
         echo "Post-build directory listing:"
