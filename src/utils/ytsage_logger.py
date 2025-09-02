@@ -9,7 +9,7 @@ import sys
 
 from loguru import logger
 
-from src.utils.ytsage_constants import APP_LOG_DIR
+from src.utils.ytsage_constants import APP_LOG_DIR, IS_FROZEN
 
 # Separate configs for each handler
 CONSOLE_CONFIG = {
@@ -43,7 +43,8 @@ def init_logger() -> None:
     """Configure loguru logger using separate configs for each handler."""
     logger.remove()  # Remove default loguru handler
 
-    logger.add(**CONSOLE_CONFIG)
+    if not IS_FROZEN:
+        logger.add(**CONSOLE_CONFIG)
     logger.add(**ALL_LOGS_CONFIG)
     logger.add(**ERROR_LOGS_CONFIG)
 

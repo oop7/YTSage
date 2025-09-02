@@ -166,7 +166,7 @@ class DownloadSettingsDialog(QDialog):
         path_group_box = QGroupBox("Download Path")
         path_layout = QVBoxLayout()
 
-        self.path_display = QLabel(self.current_path)
+        self.path_display = QLabel(str(self.current_path))
         self.path_display.setWordWrap(True)
         self.path_display.setStyleSheet(
             "QLabel { color: #ffffff; padding: 5px; border: 1px solid #1b2021; border-radius: 4px; background-color: #1b2021; }"
@@ -248,7 +248,7 @@ class DownloadSettingsDialog(QDialog):
         layout.addWidget(button_box)
 
     def browse_new_path(self) -> None:
-        new_path = QFileDialog.getExistingDirectory(self, "Select Download Directory", self.current_path)
+        new_path = QFileDialog.getExistingDirectory(self, "Select Download Directory", str(self.current_path))
         if new_path:
             self.current_path = new_path
             self.path_display.setText(self.current_path)

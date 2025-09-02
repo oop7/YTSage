@@ -16,6 +16,7 @@ YTSage application constants.
 import os
 import platform
 import subprocess
+import sys
 from pathlib import Path
 
 # Assets Constants
@@ -24,14 +25,18 @@ SOUND_PATH: Path = Path("assets/sound/notification.mp3")
 
 OS_NAME: str = platform.system()  # Windows ; Darwin ; Linux
 
+IS_FROZEN = getattr(sys, "frozen", False)
 USER_HOME_DIR: Path = Path.home()
 
 # OS Specific Constants
 if OS_NAME == "Windows":
     OS_FULL_NAME: str = f"{OS_NAME} {platform.release()}"
 
-    # APP_PATH will be from system environment path or fallback to Path.home()
-    APP_DIR: Path = Path(os.environ.get("LOCALAPPDATA", USER_HOME_DIR / "AppData" / "Local")) / "YTSage"
+    if IS_FROZEN:
+        APP_DIR: Path = Path(sys.executable).parent
+    else:
+        # APP_PATH will be from system environment path or fallback to Path.home()
+        APP_DIR: Path = Path(os.environ.get("LOCALAPPDATA", USER_HOME_DIR / "AppData" / "Local")) / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
     APP_LOG_DIR: Path = APP_DIR / "logs"
@@ -46,7 +51,10 @@ elif OS_NAME == "Darwin":  # macOS
     _mac_version = platform.mac_ver()[0]
     OS_FULL_NAME: str = f"macOS {_mac_version}" if _mac_version else "macOS"
 
-    APP_DIR: Path = USER_HOME_DIR / "Library" / "Application Support" / "YTSage"
+    if IS_FROZEN:
+        APP_DIR: Path = Path(sys.executable).parent
+    else:
+        APP_DIR: Path = USER_HOME_DIR / "Library" / "Application Support" / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
     APP_LOG_DIR: Path = APP_DIR / "logs"
@@ -61,7 +69,10 @@ elif OS_NAME == "Darwin":  # macOS
 else:  # Linux and other UNIX-like
     OS_FULL_NAME: str = f"{OS_NAME} {platform.release()}"
 
-    APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
+    if IS_FROZEN:
+        APP_DIR: Path = Path(sys.executable).parent
+    else:
+        APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
     APP_LOG_DIR: Path = APP_DIR / "logs"
