@@ -129,7 +129,7 @@ jobs:
         executables = [
             Executable(
                 script="main.py",
-                target_name="YTSage",
+                target_name="ytsage",
                 icon="assets/branding/icons/icon.png",
             )
         ]
@@ -144,13 +144,15 @@ jobs:
                 "bdist_appimage": {
                     # If ends with .AppImage, use verbatim file name
                     "target_name": f"YTSage-v{version}.AppImage",
-                    # Use the base executable name internally, version in AppImage filename
+                    # Desktop metadata for menus/icons in AppImage
+                    "app_name": "YTSage",
+                    "categories": "AudioVideo;Network;Utility;",
                 },
-                # RPM packaging metadata (minimal)
+                # RPM packaging metadata + desktop integration
                 "bdist_rpm": {
                     "release": "1",
                     "group": "Applications/Multimedia",
-                    # Optional: icon can be picked from Executable's icon
+                    "install_script": "rpm_install.sh",
                 },
                 # DEB packaging wraps alien to convert RPM
                 "bdist_deb": {},
@@ -158,6 +160,29 @@ jobs:
             executables=executables,
         )
         PY
+
+    - name: Create desktop entry and RPM install script
+      shell: bash
+      run: |
+        cat > ytsage.desktop <<'DESKTOP'
+        [Desktop Entry]
+        Type=Application
+        Name=YTSage
+        Comment=YouTube downloader
+        Exec=ytsage %U
+        Icon=ytsage
+        Terminal=false
+        Categories=AudioVideo;Network;Utility;
+        StartupWMClass=YTSage
+        DESKTOP
+
+        cat > rpm_install.sh <<'SH'
+        #!/bin/sh
+        set -e
+        install -Dm644 ytsage.desktop "$RPM_BUILD_ROOT/usr/share/applications/ytsage.desktop"
+        install -Dm644 assets/branding/icons/icon.png "$RPM_BUILD_ROOT/usr/share/pixmaps/ytsage.png"
+        SH
+        chmod +x rpm_install.sh
 
     - name: Build AppImage, RPM and DEB
       shell: bash
@@ -197,8 +222,8 @@ jobs:
         # Copy AppImage
         appimage_src=$(ls dist/*.AppImage 2>/dev/null | head -n1 || true)
         if [ -n "$appimage_src" ]; then
-          cp "$appimage_src" "artifacts/YTSage-v${version}.AppImage"
-          echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}.AppImage"
+          cp "$appimage_src" "artifacts/YTSage-v${version}-${ARCH}.AppImage"
+          echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}-${ARCH}.AppImage"
         else
           echo "Warning: No .AppImage found in dist/"
         fi
@@ -206,8 +231,8 @@ jobs:
         # Copy RPM (normalize name)
         rpm_src=$(ls dist/*.rpm 2>/dev/null | head -n1 || true)
         if [ -n "$rpm_src" ]; then
-          cp "$rpm_src" "artifacts/YTSage-v${version}.rpm"
-          echo "Copied RPM: $rpm_src -> artifacts/YTSage-v${version}.rpm"
+          cp "$rpm_src" "artifacts/YTSage-v${version}-${ARCH}.rpm"
+          echo "Copied RPM: $rpm_src -> artifacts/YTSage-v${version}-${ARCH}.rpm"
         else
           echo "Warning: No .rpm found in dist/"
         fi
@@ -215,8 +240,8 @@ jobs:
         # Copy DEB (normalize name)
         deb_src=$(ls dist/*.deb 2>/dev/null | head -n1 || true)
         if [ -n "$deb_src" ]; then
-          cp "$deb_src" "artifacts/YTSage-v${version}.deb"
-          echo "Copied DEB: $deb_src -> artifacts/YTSage-v${version}.deb"
+          cp "$deb_src" "artifacts/YTSage-v${version}-${ARCH}.deb"
+          echo "Copied DEB: $deb_src -> artifacts/YTSage-v${version}-${ARCH}.deb"
         else
           echo "Warning: No .deb found in dist/"
         fi
