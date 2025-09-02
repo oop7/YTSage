@@ -3,11 +3,13 @@ Settings-related dialogs for YTSage application.
 Contains dialogs for configuring download settings and auto-update preferences.
 """
 
+import threading
 import time
 from datetime import datetime
 
 import requests
-from PySide6.QtCore import Qt
+from packaging import version as version_parser
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QButtonGroup,
     QCheckBox,
@@ -25,13 +27,13 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from src.utils.ytsage_logger import logger
 from src.core.ytsage_utils import (
     check_and_update_ytdlp_auto,
     get_auto_update_settings,
     get_ytdlp_version,
     update_auto_update_settings,
 )
+from src.utils.ytsage_logger import logger
 
 
 class DownloadSettingsDialog(QDialog):
@@ -328,8 +330,6 @@ class DownloadSettingsDialog(QDialog):
             # Clean up version strings
             current_version = current_version.replace("_", ".")
             latest_version = latest_version.replace("_", ".")
-
-            from packaging import version as version_parser
 
             if version_parser.parse(latest_version) > version_parser.parse(current_version):
                 msg_box = self._create_styled_message_box(
@@ -646,16 +646,12 @@ class AutoUpdateSettingsDialog(QDialog):
                 result = check_and_update_ytdlp_auto()
 
                 # Update UI in main thread
-                from PySide6.QtCore import QTimer
-
                 QTimer.singleShot(0, lambda: self.manual_check_finished(result))
             except Exception as e:
                 logger.exception(f"Error during manual check: {e}")
                 QTimer.singleShot(0, lambda: self.manual_check_finished(False))
 
         # Run in separate thread to avoid blocking UI
-        import threading
-
         threading.Thread(target=check_in_thread, daemon=True).start()
 
     def _create_styled_message_box(self, icon, title, text) -> QMessageBox:

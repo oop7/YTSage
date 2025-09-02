@@ -574,9 +574,7 @@ def check_and_update_ytdlp_auto() -> bool:
             logger.info(f"Latest yt-dlp version: {latest_version}")
 
             # Compare versions
-            from packaging import version as version_parser
-
-            if version_parser.parse(latest_version) > version_parser.parse(current_version):
+            if version.parse(latest_version) > version.parse(current_version):
                 logger.info(f"Auto-updating yt-dlp from {current_version} to {latest_version}...")
 
                 # Perform the update

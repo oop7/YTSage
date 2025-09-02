@@ -4,19 +4,12 @@ import subprocess  # For direct CLI command execution
 import time
 from pathlib import Path
 
+import yt_dlp
 from PySide6.QtCore import QObject, QThread, Signal
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
 from src.utils.ytsage_logger import logger
-
-try:
-    import yt_dlp  # Keep yt_dlp import here - only downloader uses it.
-
-    YT_DLP_AVAILABLE = True
-except ImportError:
-    YT_DLP_AVAILABLE = False
-    logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
 
 
 class SignalManager(QObject):
@@ -150,34 +143,32 @@ class DownloadThread(QThread):
             if self.cookie_file:
                 ydl_opts_check["cookiefile"] = str(self.cookie_file)
             elif self.browser_cookies:
-                ydl_opts_check["cookiesfrombrowser"] = (self.browser_cookies.split(':')[0], 
-                                                       self.browser_cookies.split(':')[1] if ':' in self.browser_cookies else None)
+                ydl_opts_check["cookiesfrombrowser"] = (
+                    self.browser_cookies.split(":")[0],
+                    self.browser_cookies.split(":")[1] if ":" in self.browser_cookies else None,
+                )
 
-            if YT_DLP_AVAILABLE:
-                with yt_dlp.YoutubeDL(ydl_opts_check) as ydl:
-                    info = ydl.extract_info(self.url, download=False)
+            with yt_dlp.YoutubeDL(ydl_opts_check) as ydl:
+                info = ydl.extract_info(self.url, download=False)
 
-                    # Handle cases where info extraction fails silently
-                    if not info:
-                        logger.debug("Failed to extract info during file existence check. Skipping check.")
-                        return False  # Proceed with download attempt
+                # Handle cases where info extraction fails silently
+                if not info:
+                    logger.debug("Failed to extract info during file existence check. Skipping check.")
+                    return False  # Proceed with download attempt
 
-                # Get the title and sanitize it for filename
-                title = info.get("title", "video")
-                # Don't remove colons and other special characters yet
-                logger.debug(f"Original video title: {title}")
+            # Get the title and sanitize it for filename
+            title = info.get("title", "video")
+            # Don't remove colons and other special characters yet
+            logger.debug(f"Original video title: {title}")
 
-                # Get resolution for better matching
-                resolution = ""
-                for format_info in info.get("formats", []):
-                    if format_info.get("format_id") == self.format_id:
-                        resolution = format_info.get("resolution", "")
-                        break
+            # Get resolution for better matching
+            resolution = ""
+            for format_info in info.get("formats", []):
+                if format_info.get("format_id") == self.format_id:
+                    resolution = format_info.get("resolution", "")
+                    break
 
-                logger.debug(f"Resolution: {resolution}")
-            else:
-                logger.debug("yt-dlp not available, skipping file existence check")
-                return False  # Proceed with download attempt
+            logger.debug(f"Resolution: {resolution}")
 
         except Exception as e:
             logger.exception(f"Error checking file existence: {e}")
@@ -198,21 +189,20 @@ class DownloadThread(QThread):
             # Check if this is an audio-only format
             is_audio_format = False
             try:
-                if YT_DLP_AVAILABLE:
-                    ydl_opts = {
-                        "logger": logger,
-                        "quiet": True,
-                        "no_warnings": True,
-                        "skip_download": True,
-                    }
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(self.url, download=False) or {}
-                        for fmt in info.get("formats", []):
-                            if fmt.get("format_id") == clean_format_id:
-                                if fmt.get("vcodec") == "none" or "audio only" in fmt.get("format_note", "").lower():
-                                    is_audio_format = True
-                                    logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
-                                break
+                ydl_opts = {
+                    "logger": logger,
+                    "quiet": True,
+                    "no_warnings": True,
+                    "skip_download": True,
+                }
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(self.url, download=False) or {}
+                    for fmt in info.get("formats", []):
+                        if fmt.get("format_id") == clean_format_id:
+                            if fmt.get("vcodec") == "none" or "audio only" in fmt.get("format_note", "").lower():
+                                is_audio_format = True
+                                logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
+                            break
             except Exception as e:
                 logger.exception(f"Error checking if format is audio-only: {e}")
 
@@ -229,21 +219,21 @@ class DownloadThread(QThread):
                 try:
                     format_ext = None
                     logger.debug(f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
-                    if YT_DLP_AVAILABLE:
-                        ydl_opts = {"quiet": True, "no_warnings": True, "skip_download": True, "logger": logger}
-                        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                            info = ydl.extract_info(self.url, download=False) or {}
-                            # Look for the clean format ID first
+
+                    ydl_opts = {"quiet": True, "no_warnings": True, "skip_download": True, "logger": logger}
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        info = ydl.extract_info(self.url, download=False) or {}
+                        # Look for the clean format ID first
+                        for fmt in info.get("formats", []):
+                            if fmt.get("format_id") == clean_format_id:
+                                format_ext = fmt.get("ext")
+                                break
+                        # If not found, try the original ID as fallback
+                        if not format_ext:
                             for fmt in info.get("formats", []):
-                                if fmt.get("format_id") == clean_format_id:
+                                if fmt.get("format_id") == self.format_id:
                                     format_ext = fmt.get("ext")
                                     break
-                            # If not found, try the original ID as fallback
-                            if not format_ext:
-                                for fmt in info.get("formats", []):
-                                    if fmt.get("format_id") == self.format_id:
-                                        format_ext = fmt.get("ext")
-                                        break
 
                     if format_ext:
                         logger.debug(f"Detected format extension: {format_ext}")
@@ -290,7 +280,7 @@ class DownloadThread(QThread):
                     lang_codes.append(lang_code)
                 except Exception as e:
                     logger.exception(f"Could not parse subtitle selection '{sub_selection}': {e}")
-            
+
             if lang_codes:
                 cmd.extend(["--sub-langs", ",".join(lang_codes)])
                 cmd.append("--write-auto-subs")  # Include auto-generated subtitles
@@ -361,7 +351,7 @@ class DownloadThread(QThread):
                     logger.debug(f"Found {len(self.initial_subtitle_files)} existing subtitle files before download")
                 except Exception as e:
                     logger.exception(f"Error scanning for initial subtitle files: {e}")
-            
+
             if self.use_direct_command:
                 # Use direct CLI command instead of Python API
                 self._run_direct_command()

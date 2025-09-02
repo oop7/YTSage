@@ -12,6 +12,7 @@ from importlib.metadata import version as get_version
 from pathlib import Path
 
 import requests
+import yt_dlp
 from packaging import version
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushButton, QVBoxLayout
@@ -20,13 +21,6 @@ from src.core.ytsage_utils import get_ytdlp_version, load_config, save_config
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH
 from src.utils.ytsage_logger import logger
-
-try:
-    import yt_dlp
-
-    YT_DLP_AVAILABLE = True
-except ImportError:
-    YT_DLP_AVAILABLE = False
 
 
 class VersionCheckThread(QThread):
@@ -53,28 +47,22 @@ class VersionCheckThread(QThread):
                 if result.returncode == 0:
                     current_version = result.stdout.strip()
                 else:  # Try fallback if command failed
-                    if YT_DLP_AVAILABLE:
-                        current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
-                    else:
-                        error_message = "yt-dlp not available."
-                        self.finished.emit(current_version, latest_version, error_message)
-                        return
+                    current_version = yt_dlp.version.__version__ # type: ignore[reportAttributeAccessIssue]
+                    error_message = "yt-dlp not available."
+                    self.finished.emit(current_version, latest_version, error_message)
+                    return
             except subprocess.TimeoutExpired:
                 # Try fallback if timeout
-                if YT_DLP_AVAILABLE:
-                    current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
-                else:
-                    error_message = "yt-dlp version check timed out and package not found."
-                    self.finished.emit(current_version, latest_version, error_message)
-                    return
+                current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
+                error_message = "yt-dlp version check timed out and package not found."
+                self.finished.emit(current_version, latest_version, error_message)
+                return
             except Exception:
                 # Fallback to importing yt_dlp package directly if subprocess fails
-                if YT_DLP_AVAILABLE:
-                    current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
-                else:
-                    error_message = "yt-dlp not found or accessible."
-                    self.finished.emit(current_version, latest_version, error_message)
-                    return
+                current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
+                error_message = "yt-dlp not found or accessible."
+                self.finished.emit(current_version, latest_version, error_message)
+                return
 
             # Get latest version from PyPI
             response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
