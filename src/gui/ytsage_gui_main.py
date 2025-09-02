@@ -5,11 +5,11 @@ import webbrowser
 from pathlib import Path
 
 import markdown
+import pyglet
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QUrl
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt
 from PySide6.QtGui import QIcon
-from PySide6.QtMultimedia import QSoundEffect
 from PySide6.QtWidgets import (
     QApplication,
     QButtonGroup,
@@ -29,7 +29,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
-from src.core.ytsage_utils import check_ffmpeg, load_saved_path, save_path, should_check_for_auto_update, parse_yt_dlp_error
+from src.core.ytsage_utils import check_ffmpeg, load_saved_path, parse_yt_dlp_error, save_path, should_check_for_auto_update
 from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     AboutDialog,
@@ -48,7 +48,7 @@ from src.utils.ytsage_logger import logger
 
 try:
     import yt_dlp
-    from yt_dlp.utils import ExtractorError, DownloadError
+    from yt_dlp.utils import DownloadError, ExtractorError
 
     YT_DLP_AVAILABLE = True
 except ImportError:
@@ -108,8 +108,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.video_url = ""
         self.selected_subtitles = []  # Initialize selected subtitles list
         # Initialize cookie settings - ensure they start clean
-        self.cookie_file_path = None  
-        self.browser_cookies_option = None  
+        self.cookie_file_path = None
+        self.browser_cookies_option = None
         self.speed_limit_value = None  # Store speed limit value
         self.speed_limit_unit_index = 0  # Store speed limit unit index (0: KB/s, 1: MB/s)
         self.download_section = None
@@ -293,38 +293,21 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize UI state based on current mode
         self.handle_mode_change()
 
-        # Initialize sound notifications
-        self.init_sound()
-
-    def init_sound(self) -> None:
-        """Initialize QSoundEffect for sound notifications"""
-        try:
-            if not SOUND_PATH.exists():
-                logger.warning(f"Notification sound file not found at: {SOUND_PATH}")
-                self.sound_enabled = False
-                return
-
-            self.sound = QSoundEffect(self)
-            self.sound.setSource(QUrl.fromLocalFile(str(SOUND_PATH)))
-            self.sound.setVolume(1.0)  # Adjust volume (0.0 to 1.0)
-
-            self.sound_enabled = True
-            logger.info(f"Notification sound loaded from: {SOUND_PATH}")
-
-        except Exception as e:
-            logger.exception(f"Error initializing sound: {e}")
-            self.sound_enabled = False
+    # Init_sound method is removed, serve no purpose.
 
     def play_notification_sound(self) -> None:
-        """Play notification sound using QSoundEffect"""
-        if not self.sound_enabled:
-            return
-
+        """Play notification sound asynchronously (non-blocking)."""
         try:
-            # Play the sound (non-blocking, handled by Qt event loop)
-            self.sound.play()
-            logger.debug("Notification sound played")
+            # Check if the notification sound file exists
+            if not SOUND_PATH.exists():
+                logger.warning(f"Notification sound file not found at: {SOUND_PATH}")
+                return
 
+            # Play the sound using pyglet
+            # no need for the thread, as .play() is async
+            sound = pyglet.media.load(str(SOUND_PATH), streaming=False)
+            sound.play()
+            logger.debug("Notification sound played")
         except Exception as e:
             logger.exception(f"Error playing notification sound: {e}")
 
@@ -711,7 +694,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 "no_warnings": True,  # <-- Suppress warnings for initial check
                 "extract_flat": True,
                 "force_generic_extractor": False,
-                "ignoreerrors": False, # Set to False to catch errors properly
+                "ignoreerrors": False,  # Set to False to catch errors properly
                 "no_color": True,
                 "verbose": True,
                 "cookiefile": None,
@@ -721,8 +704,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             if self.cookie_file_path:
                 ydl_opts["cookiefile"] = str(self.cookie_file_path)
             elif self.browser_cookies_option:
-                ydl_opts["cookiesfrombrowser"] = (self.browser_cookies_option.split(':')[0], 
-                                                 self.browser_cookies_option.split(':')[1] if ':' in self.browser_cookies_option else None)
+                ydl_opts["cookiesfrombrowser"] = (
+                    self.browser_cookies_option.split(":")[0],
+                    self.browser_cookies_option.split(":")[1] if ":" in self.browser_cookies_option else None,
+                )
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 try:
@@ -765,8 +750,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             if self.cookie_file_path:
                 ydl_opts_detail["cookiefile"] = str(self.cookie_file_path)
             elif self.browser_cookies_option:
-                ydl_opts_detail["cookiesfrombrowser"] = (self.browser_cookies_option.split(':')[0], 
-                                                        self.browser_cookies_option.split(':')[1] if ':' in self.browser_cookies_option else None)
+                ydl_opts_detail["cookiesfrombrowser"] = (
+                    self.browser_cookies_option.split(":")[0],
+                    self.browser_cookies_option.split(":")[1] if ":" in self.browser_cookies_option else None,
+                )
 
             # Use a separate options dict for the detailed extraction
             with yt_dlp.YoutubeDL(ydl_opts_detail) as ydl_detail:
@@ -898,7 +885,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     user_friendly_error = parse_yt_dlp_error(str(e))
                     self.signals.update_status.emit(user_friendly_error)
                     return
-
 
         except Exception as e:
             logger.exception(f"Error in analysis: {e}")
@@ -1395,11 +1381,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # Handle cookies
             cookie_path = dialog.get_cookie_file_path()
             browser_cookies = dialog.get_browser_cookies_option()
-            
+
             # Clear both first to avoid conflicts
             self.cookie_file_path = None
             self.browser_cookies_option = None
-            
+
             if cookie_path:
                 self.cookie_file_path = cookie_path
                 logger.info(f"Selected cookie file: {self.cookie_file_path}")
@@ -1597,7 +1583,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # Handle cookies
             cookie_path = dialog.get_cookie_file_path()
             browser_cookies = dialog.get_browser_cookies_option()
-            
+
             if cookie_path:
                 self.cookie_file_path = cookie_path
                 self.browser_cookies_option = None  # Clear browser cookies if file is used

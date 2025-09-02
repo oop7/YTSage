@@ -20,14 +20,11 @@ from pathlib import Path
 
 # Assets Constants
 ICON_PATH: Path = Path("assets/Icon/icon.png")
-SOUND_PATH: Path = Path("assets/sound/notification.wav")
+SOUND_PATH: Path = Path("assets/sound/notification.mp3")
 
 OS_NAME: str = platform.system()  # Windows ; Darwin ; Linux
 
 USER_HOME_DIR: Path = Path.home()
-
-# Documentation URLs
-YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
 # OS Specific Constants
 if OS_NAME == "Windows":
@@ -75,6 +72,8 @@ else:  # Linux and other UNIX-like
 
     SUBPROCESS_CREATIONFLAGS: int = 0
 
+# Documentation URLs
+YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
 # ffmpeg download links
 FFMPEG_7Z_DOWNLOAD_URL = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.7z"
