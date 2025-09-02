@@ -144,9 +144,6 @@ jobs:
                 "bdist_appimage": {
                     # If ends with .AppImage, use verbatim file name
                     "target_name": f"YTSage-v{version}.AppImage",
-                    # Desktop metadata for menus/icons in AppImage
-                    "app_name": "YTSage",
-                    "categories": "AudioVideo;Network;Utility;",
                 },
                 # RPM packaging metadata + desktop integration
                 "bdist_rpm": {
