@@ -129,7 +129,7 @@ jobs:
         executables = [
             Executable(
                 script="main.py",
-                target_name=f"YTSage-v{version}",
+                target_name="YTSage",
                 icon="assets/branding/icons/icon.png",
             )
         ]
@@ -144,7 +144,7 @@ jobs:
                 "bdist_appimage": {
                     # If ends with .AppImage, use verbatim file name
                     "target_name": f"YTSage-v{version}.AppImage",
-                    # appimagetool will be auto-downloaded if not present
+                    # Use the base executable name internally, version in AppImage filename
                 },
                 # RPM packaging metadata (minimal)
                 "bdist_rpm": {
