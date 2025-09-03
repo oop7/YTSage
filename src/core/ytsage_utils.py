@@ -6,7 +6,21 @@ import tempfile
 import time
 from pathlib import Path
 
-import pkg_resources
+try:
+    from importlib.metadata import version as importlib_version
+    from importlib.metadata import PackageNotFoundError as ImportlibPackageNotFoundError
+    
+    def get_version(package_name: str) -> str:
+        return importlib_version(package_name)
+    
+    PackageNotFoundError = ImportlibPackageNotFoundError
+except ImportError:
+    # Fallback for older Python versions
+    import pkg_resources
+    def get_version(package_name: str) -> str:
+        return pkg_resources.get_distribution(package_name).version
+    PackageNotFoundError = pkg_resources.DistributionNotFound
+
 import requests
 from packaging import version
 
@@ -422,7 +436,23 @@ def update_yt_dlp() -> bool:
         # Extra logic moved to src\utils\ytsage_constants.py
 
         # For binaries downloaded with our app, use direct binary update approach
-        if yt_dlp_path.samefile(YTDLP_APP_BIN_PATH):
+        # Check if this is an app-managed binary by comparing paths safely
+        is_app_managed = False
+        try:
+            # Only compare if both files exist
+            if yt_dlp_path.exists() and YTDLP_APP_BIN_PATH.exists():
+                is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
+            elif str(yt_dlp_path) == str(YTDLP_APP_BIN_PATH):
+                # If paths are identical as strings, consider it app-managed
+                is_app_managed = True
+            else:
+                # If app binary doesn't exist, this is definitely not app-managed
+                is_app_managed = False
+        except (OSError, IOError) as e:
+            logger.debug(f"Error comparing paths in update_yt_dlp: {e}")
+            is_app_managed = False
+
+        if is_app_managed:
             # We're using a binary installed by our app, update directly
             logger.info(f"Updating yt-dlp binary at {yt_dlp_path}")
 
@@ -468,9 +498,9 @@ def update_yt_dlp() -> bool:
 
             # Get current version
             try:
-                current_version = pkg_resources.get_distribution("yt-dlp").version
+                current_version = get_version("yt-dlp")
                 logger.info(f"Current yt-dlp version: {current_version}")
-            except pkg_resources.DistributionNotFound:
+            except PackageNotFoundError:
                 logger.info("yt-dlp not installed via pip, attempting update anyway")
                 current_version = "0.0.0"  # Assume very old version to force update
 
