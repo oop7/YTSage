@@ -71,17 +71,31 @@ ytsage
 
 ### 📦 Pre-built Executables
 
-- 🪟 **Windows:**
-  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;.exe</code> (Standard installer)
-  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-ffmpeg.exe</code> (With FFmpeg bundled)
-  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-portable</code> (Portable version, no installation required)
-  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-ffmpeg-portable.zip</code> (Portable with FFmpeg, zipped)
-- 🐧 **Linux:**
-  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-amd64.deb</code> (Debian package)
-  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-x86_64.AppImage</code> (AppImage, portable)
-- 🍎 **macOS:**
-  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;-macOS.zip</code> (Zipped application)
-  - <code style="background-color: #333842; color: #C9D1D9; padding: 3px 6px; border-radius: 6px; font-family: monospace;">YTSage-v&lt;version&gt;.dmg</code> (Disk image installer)
+#### 🪟 Windows
+
+| Format | Description |
+|--------|-------------|
+| `YTSage-v<version>.exe` | Standard installer |
+| `YTSage-v<version>-ffmpeg.exe` | With FFmpeg bundled |
+| `YTSage-v<version>-portable` | Portable version, no installation required |
+| `YTSage-v<version>-ffmpeg-portable.zip` | Portable with FFmpeg, zipped |
+
+#### 🐧 Linux
+
+| Format | Description |
+|--------|-------------|
+| `YTSage-v<version>-amd64.deb` | Debian package |
+| `YTSage-v<version>-x86_64.AppImage` | AppImage, portable |
+| `YTSage-v<version>-x86_64.rpm` | RPM package |
+
+#### 🍎 macOS
+
+| Format | Description |
+|--------|-------------|
+| `YTSage-v<version>-arm64.app.zip` | Zipped application for ARM64 |
+| `YTSage-v<version>-arm64.dmg` | Disk image installer for ARM64 |
+| `YTSage-v<version>-x64.app.zip` | Zipped application for x64 |
+| `YTSage-v<version>-x64.dmg` | Disk image installer for x64 |
 
 > [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
 
@@ -212,6 +226,16 @@ python main.py
 
 - **Format table not displaying:** Update yt-dlp to the latest version.
 - **Download fails:** Check your internet connection and ensure the video is available.
+- **Specific download errors:**
+  - **Private videos:** Use cookie authentication to access private content.
+  - **Age-restricted content:** Login to YouTube account to view age-restricted videos.
+  - **Geo-blocked videos:** Consider using a VPN to bypass regional restrictions.
+  - **Removed/deleted videos:** Video is no longer available on YouTube.
+  - **Live streams:** Live streams cannot be downloaded; wait for the stream to end.
+  - **Network errors:** Check your internet connection and try again.
+  - **Invalid URLs:** Ensure the URL is correct and from a supported platform.
+  - **Premium content:** Requires YouTube Premium membership.
+  - **Copyright blocks:** Content is blocked due to copyright restrictions.
 - **Separate video and audio files after download:** This happens when FFmpeg is missing or not detected. YTSage requires FFmpeg to merge high-quality video and audio streams.
   - **Solution:** Ensure FFmpeg is installed and accessible in your system's PATH. For Windows users, the easiest option is to download the `YTSage-v<version>-ffmpeg.exe` file, which comes bundled with FFmpeg.
 
@@ -226,7 +250,7 @@ Some antivirus software may flag the `.exe` files as false positives. This is a 
 
 **Safe alternatives:**
 - ✅ **Use pip installation:** `pip install ytsage` (recommended)
-- ✅ **Build from source**
+- ✅ **Build from source**: by following this [guide](.github/CI_CD_README.md)
 - ✅ **Whitelist the application** in your antivirus software
 
 #### 🍎 macOS: "App is damaged and can’t be opened"
@@ -280,45 +304,61 @@ This document describes the organized folder structure of YTSage.
 ### 📁 Project Structure
 
 ```
-YTSage-main/
-├── 📁 assets/                    # Static assets and resources
-│   ├── 📁 Icon/                  # Application icons
+YTSage/
+├── 📁 .github/                   # GitHub configuration
+│   ├── 📄 CI_CD_README.md         # CI/CD documentation
+│   ├── 📁 ISSUE_TEMPLATE/         # Issue templates
+│   │   └── 🐛-bug-report.md       # Bug report template
+│   └── 📁 workflows/              # GitHub Actions workflows
+│       ├── build-linux.yml        # Linux build workflow
+│       ├── build-macos.yml        # macOS build workflow
+│       └── build-windows.yml      # Windows build workflow
+├──  .gitignore                 # Git ignore rules
+├──  📁 assets/                    # Static assets and resources
+│   ├── 📁 branding/              # Branding assets
+│   │   ├── 📁 icons/             # Application icons
+│   │   │   ├── icon.icns         # macOS icon
+│   │   │   ├── icon.png          # PNG icon
+│   │   │   └── YTSage.ico        # Windows icon
+│   │   └── 📁 screenshots/       # Screenshots for documentation
+│   │       ├── audio_format.png
+│   │       ├── main.png
+│   │       ├── playlist.png
+│   │       └── subtitle_options.png
+│   ├── 📁 Icon/                  # Legacy icon directory
 │   │   └── icon.png
 │   └── 📁 sound/                 # Audio files
 │       └── notification.mp3
-│
-├── 📁 src/                       # Source code
-│   ├── 📁 core/                  # Core business logic
-│   │   ├── __init__.py           # Core package init
-│   │   ├── ytsage_downloader.py  # Download functionality
-│   │   ├── ytsage_ffmpeg.py      # FFmpeg integration
-│   │   ├── ytsage_style.py       # UI styling
-│   │   ├── ytsage_utils.py       # Utility functions
-│   │   └── ytsage_yt_dlp.py      # yt-dlp integration
-│   │
-│   ├── 📁 gui/                   # User interface components
-│   │   ├── 📁 dialogs/           # Dialog classes
-│   │   │   ├── __init__.py       # Dialogs package init (re-exports all)
-│   │   │   ├── ytsage_dialogs_base.py     # Basic dialogs (Log, About)
-│   │   │   ├── ytsage_dialogs_custom.py   # Custom functionality dialogs
-│   │   │   ├── ytsage_dialogs_ffmpeg.py   # FFmpeg-related dialogs
-│   │   │   ├── ytsage_dialogs_selection.py # Selection dialogs
-│   │   │   ├── ytsage_dialogs_settings.py  # Settings dialogs
-│   │   │   └── ytsage_dialogs_update.py    # Update dialogs
-│   │   │
-│   │   ├── __init__.py           # GUI package init
-│   │   ├── ytsage_gui_dialogs.py # Dialog aggregator (backward compatibility)
-│   │   ├── ytsage_gui_format_table.py # Format table functionality
-│   │   ├── ytsage_gui_main.py    # Main application window
-│   │   └── ytsage_gui_video_info.py # Video information display
-│   │
-│   └── __init__.py               # Main package init
-│
-├── 📄 main.py                    # Application entry point
-├── 📄 requirements.txt           # Python dependencies
-├── 📄 README.md                  # Project documentation
 ├── 📄 LICENSE                    # License file
-└── 📄 .gitignore                 # Git ignore rules
+├── 📄 main.py                    # Application entry point
+├── 📄 README.md                  # Project documentation
+├── 📄 requirements.txt           # Python dependencies
+└── 📁 src/                       # Source code
+    ├── 📄 __init__.py            # Main package init
+    ├── 📁 core/                  # Core business logic
+    │   ├── 📄 __init__.py        # Core package init
+    │   ├── 📄 ytsage_downloader.py # Download functionality
+    │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
+    │   ├── 📄 ytsage_logging.py  # Logging utilities
+    │   ├── 📄 ytsage_style.py    # UI styling
+    │   ├── 📄 ytsage_utils.py    # Utility functions
+    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
+    ├── 📁 gui/                   # User interface components
+    │   ├── 📄 __init__.py        # GUI package init
+    │   ├── 📄 ytsage_gui_format_table.py # Format table functionality
+    │   ├── 📄 ytsage_gui_main.py # Main application window
+    │   ├── 📄 ytsage_gui_video_info.py # Video information display
+    │   └── 📁 ytsage_gui_dialogs/ # Dialog classes
+    │       ├── 📄 __init__.py    # Dialogs package init
+    │       ├── 📄 ytsage_dialogs_base.py     # Basic dialogs
+    │       ├── 📄 ytsage_dialogs_custom.py   # Custom functionality dialogs
+    │       ├── 📄 ytsage_dialogs_ffmpeg.py   # FFmpeg-related dialogs
+    │       ├── 📄 ytsage_dialogs_selection.py # Selection dialogs
+    │       ├── 📄 ytsage_dialogs_settings.py  # Settings dialogs
+    │       └── 📄 ytsage_dialogs_update.py    # Update dialogs
+    └── 📁 utils/                 # Utility modules
+        ├── 📄 __init__.py        # Utils package init
+        └── 📄 ytsage_constants.py # Application constants
 ```
 
 </details>
@@ -327,11 +367,14 @@ YTSage-main/
 
 <div align="center">
 
-<a href="https://next.ossinsight.io/widgets/official/analyze-repo-stars-history?repo_id=896163475" target="_blank" style="display: block" align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://next.ossinsight.io/widgets/official/analyze-repo-stars-history/thumbnail.png?repo_id=896163475&image_size=auto&color_scheme=dark" width="721" height="auto">
-    <img alt="Star History of oop7/YTSage" src="https://next.ossinsight.io/widgets/official/analyze-repo-stars-history/thumbnail.png?repo_id=896163475&image_size=auto&color_scheme=light" width="721" height="auto">
-  </picture>
+## Star History
+
+<a href="https://www.star-history.com/#oop7/YTSage&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
+ </picture>
 </a>
 
 </div>
