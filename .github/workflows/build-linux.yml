@@ -287,35 +287,35 @@ jobs:
         mv "$deb_out" artifacts/
         echo "Built native DEB: artifacts/$deb_out"
 
-        - name: Package and prepare release artifacts (.AppImage, .rpm, .deb)
-          shell: bash
-          run: |
-            version="${{ steps.get_version.outputs.VERSION }}"
-            mkdir -p artifacts
+    - name: Package and prepare release artifacts (.AppImage, .rpm, .deb)
+      shell: bash
+      run: |
+        version="${{ steps.get_version.outputs.VERSION }}"
+        mkdir -p artifacts
 
-            # Copy AppImage
-            appimage_src=$(ls dist/ytsage-v*.AppImage 2>/dev/null | head -n1 || true)
-            if [ -n "$appimage_src" ]; then
-              cp "$appimage_src" "artifacts/YTSage-v${version}-${ARCH}.AppImage"
-              echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}-${ARCH}.AppImage"
-            else
-              echo "Warning: No .AppImage found in dist/"
-            fi
+        # Copy AppImage
+        appimage_src=$(ls dist/ytsage-v*.AppImage 2>/dev/null | head -n1 || true)
+        if [ -n "$appimage_src" ]; then
+          cp "$appimage_src" "artifacts/YTSage-v${version}-${ARCH}.AppImage"
+          echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}-${ARCH}.AppImage"
+        else
+          echo "Warning: No .AppImage found in dist/"
+        fi
 
-            # Copy RPM (normalize name)
-            rpm_src=$(ls dist/ytsage-*.rpm 2>/dev/null | head -n1 || true)
-            if [ -n "$rpm_src" ]; then
-              cp "$rpm_src" "artifacts/YTSage-v${version}-${ARCH}.rpm"
-              echo "Copied RPM: $rpm_src -> artifacts/YTSage-v${version}-${ARCH}.rpm"
-            else
-              echo "Warning: No .rpm found in dist/"
-            fi
+        # Copy RPM (normalize name)
+        rpm_src=$(ls dist/ytsage-*.rpm 2>/dev/null | head -n1 || true)
+        if [ -n "$rpm_src" ]; then
+          cp "$rpm_src" "artifacts/YTSage-v${version}-${ARCH}.rpm"
+          echo "Copied RPM: $rpm_src -> artifacts/YTSage-v${version}-${ARCH}.rpm"
+        else
+          echo "Warning: No .rpm found in dist/"
+        fi
 
-            # DEB is already staged in artifacts by the native packaging step
-            ls -1 artifacts/*.deb 2>/dev/null || echo "Warning: No .deb found in artifacts/"
+        # DEB is already staged in artifacts by the native packaging step
+        ls -1 artifacts/*.deb 2>/dev/null || echo "Warning: No .deb found in artifacts/"
 
-            echo "Final artifacts:"
-            ls -lh artifacts || true
+        echo "Final artifacts:"
+        ls -lh artifacts || true
 
     - name: Create/Update draft release
       uses: softprops/action-gh-release@v1
