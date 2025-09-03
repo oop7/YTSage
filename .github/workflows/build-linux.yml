@@ -167,14 +167,14 @@ jobs:
         Type=Application
         Name=YTSage
         Comment=YouTube downloader
-        Exec=ytsage %U
+        Exec=/usr/bin/ytsage %U
         Icon=ytsage
         Terminal=false
         Categories=AudioVideo;Network;Utility;
         StartupWMClass=YTSage
         DESKTOP
 
-    - name: Build AppImage, RPM and DEB
+    - name: Build AppImage and RPM
       shell: bash
       run: |
         set -e
@@ -196,48 +196,126 @@ jobs:
         # Build RPM
         python setup_cxfreeze.py bdist_rpm
 
-        # Build DEB (via alien from RPM)
-        python setup_cxfreeze.py bdist_deb || echo "bdist_deb completed with warnings (alien)"
-
         echo "Post-build directory listing:"
         echo "-- dist --"; ls -lah dist || true
         echo "-- build --"; ls -lah build || true
 
-    - name: Package and prepare release artifacts (.AppImage, .rpm, .deb)
+    - name: Build native DEB package
       shell: bash
       run: |
+        set -e
         version="${{ steps.get_version.outputs.VERSION }}"
+        arch_uname="${ARCH}"
+        # Map uname -m to Debian arch names
+        case "$arch_uname" in
+          x86_64) deb_arch=amd64 ;;
+          aarch64) deb_arch=arm64 ;;
+          *) deb_arch="$arch_uname" ;;
+        esac
+
+        # Locate build output
+        build_dir=$(ls -d build/exe.* 2>/dev/null | head -n1)
+        if [ -z "$build_dir" ]; then
+          echo "Error: build/exe.* directory not found" >&2
+          exit 1
+        fi
+
+        # Staging root
+        pkgroot=deb_pkg
+        rm -rf "$pkgroot"
+        mkdir -p "$pkgroot/DEBIAN" \
+                 "$pkgroot/usr/bin" \
+                 "$pkgroot/usr/share/applications" \
+                 "$pkgroot/usr/share/pixmaps" \
+                 "$pkgroot/opt/ytsage"
+
+        # Install application payload under /opt/ytsage
+        cp -a "$build_dir"/* "$pkgroot/opt/ytsage/"
+
+        # Wrapper to ensure correct working directory
+        cat > "$pkgroot/usr/bin/ytsage" <<'WRAP'
+        #!/usr/bin/env bash
+        set -euo pipefail
+        APPDIR="/opt/ytsage"
+        cd "$APPDIR"
+        exec "$APPDIR/ytsage" "$@"
+        WRAP
+        chmod 0755 "$pkgroot/usr/bin/ytsage"
+
+        # Desktop file and icon
+        install -m 0644 ytsage.desktop "$pkgroot/usr/share/applications/ytsage.desktop"
+        install -m 0644 assets/branding/icons/icon.png "$pkgroot/usr/share/pixmaps/ytsage.png"
+
+        # Control file
+        cat > "$pkgroot/DEBIAN/control" <<CONTROL
+        Package: ytsage
+        Version: ${version}
+        Section: utils
+        Priority: optional
+        Architecture: ${deb_arch}
+        Maintainer: YTSage Maintainers <noreply@example.com>
+        Homepage: https://github.com/oop7/YTSage
+        Description: YTSage - A modern YouTube downloader with a PySide6 interface
+         Download videos, extract audio, fetch subtitles, and more.
+        CONTROL
+
+        # Post-install script to refresh desktop/menu caches (best-effort)
+        cat > "$pkgroot/DEBIAN/postinst" <<'POSTINST'
+        #!/bin/sh
+        set -e
+        if command -v update-desktop-database >/dev/null 2>&1; then
+          update-desktop-database -q || true
+        fi
+        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+          gtk-update-icon-cache -q /usr/share/icons/hicolor || true
+        fi
+        exit 0
+        POSTINST
+        chmod 0755 "$pkgroot/DEBIAN/postinst"
+
+        # Triggers so Debian updates caches
+        cat > "$pkgroot/DEBIAN/triggers" <<'TRIGGERS'
+        interest-noawait /usr/share/applications
+        interest-noawait /usr/share/icons/hicolor
+        TRIGGERS
+
+        # Build the deb
+        deb_out="YTSage-v${version}-${deb_arch}.deb"
+        dpkg-deb --build "$pkgroot" "$deb_out"
+
         mkdir -p artifacts
+        mv "$deb_out" artifacts/
+        echo "Built native DEB: artifacts/$deb_out"
 
-        # Copy AppImage
-        appimage_src=$(ls dist/ytsage-v*.AppImage 2>/dev/null | head -n1 || true)
-        if [ -n "$appimage_src" ]; then
-          cp "$appimage_src" "artifacts/YTSage-v${version}-${ARCH}.AppImage"
-          echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}-${ARCH}.AppImage"
-        else
-          echo "Warning: No .AppImage found in dist/"
-        fi
+        - name: Package and prepare release artifacts (.AppImage, .rpm, .deb)
+          shell: bash
+          run: |
+            version="${{ steps.get_version.outputs.VERSION }}"
+            mkdir -p artifacts
 
-        # Copy RPM (normalize name)
-        rpm_src=$(ls dist/ytsage-*.rpm 2>/dev/null | head -n1 || true)
-        if [ -n "$rpm_src" ]; then
-          cp "$rpm_src" "artifacts/YTSage-v${version}-${ARCH}.rpm"
-          echo "Copied RPM: $rpm_src -> artifacts/YTSage-v${version}-${ARCH}.rpm"
-        else
-          echo "Warning: No .rpm found in dist/"
-        fi
+            # Copy AppImage
+            appimage_src=$(ls dist/ytsage-v*.AppImage 2>/dev/null | head -n1 || true)
+            if [ -n "$appimage_src" ]; then
+              cp "$appimage_src" "artifacts/YTSage-v${version}-${ARCH}.AppImage"
+              echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}-${ARCH}.AppImage"
+            else
+              echo "Warning: No .AppImage found in dist/"
+            fi
 
-        # Copy DEB (normalize name)
-        deb_src=$(ls dist/ytsage_*.deb 2>/dev/null | head -n1 || true)
-        if [ -n "$deb_src" ]; then
-          cp "$deb_src" "artifacts/YTSage-v${version}-${ARCH}.deb"
-          echo "Copied DEB: $deb_src -> artifacts/YTSage-v${version}-${ARCH}.deb"
-        else
-          echo "Warning: No .deb found in dist/"
-        fi
+            # Copy RPM (normalize name)
+            rpm_src=$(ls dist/ytsage-*.rpm 2>/dev/null | head -n1 || true)
+            if [ -n "$rpm_src" ]; then
+              cp "$rpm_src" "artifacts/YTSage-v${version}-${ARCH}.rpm"
+              echo "Copied RPM: $rpm_src -> artifacts/YTSage-v${version}-${ARCH}.rpm"
+            else
+              echo "Warning: No .rpm found in dist/"
+            fi
 
-        echo "Final artifacts:"
-        ls -lh artifacts || true
+            # DEB is already staged in artifacts by the native packaging step
+            ls -1 artifacts/*.deb 2>/dev/null || echo "Warning: No .deb found in artifacts/"
+
+            echo "Final artifacts:"
+            ls -lh artifacts || true
 
     - name: Create/Update draft release
       uses: softprops/action-gh-release@v1
