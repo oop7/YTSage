@@ -125,6 +125,7 @@ jobs:
                 ("assets", "assets"),
                 ("ytsage.desktop", "share/applications/ytsage.desktop"),
                 ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
+                ("debian/postinst", "DEBIAN/postinst"),  # Added for desktop icon
             ],
         )
 
@@ -173,6 +174,32 @@ jobs:
         Categories=AudioVideo;Network;Utility;
         StartupWMClass=YTSage
         DESKTOP
+
+    - name: Create postinst script for desktop icon
+      shell: bash
+      run: |
+        mkdir -p debian
+        cat > debian/postinst <<'POSTINST'
+        #!/bin/sh
+        set -e
+        # Copy .desktop file to user's desktop for icon
+        if [ -n "$SUDO_USER" ]; then
+          DESKTOP_DIR="/home/$SUDO_USER/Desktop"
+          if [ -d "$DESKTOP_DIR" ]; then
+            cp /usr/share/applications/ytsage.desktop "$DESKTOP_DIR/"
+            chmod +x "$DESKTOP_DIR/ytsage.desktop"
+            chown $SUDO_USER:$SUDO_USER "$DESKTOP_DIR/ytsage.desktop"
+            echo "Placed ytsage.desktop on $SUDO_USER's desktop"
+          else
+            echo "Warning: Desktop directory $DESKTOP_DIR not found, skipping desktop icon placement"
+          fi
+        else
+          echo "Warning: SUDO_USER not set, skipping desktop icon placement"
+        fi
+        # Update icon cache
+        gtk-update-icon-cache -f /usr/share/icons/hicolor/ 2>/dev/null || true
+        POSTINST
+        chmod +x debian/postinst
 
     - name: Build AppImage, RPM and DEB
       shell: bash
