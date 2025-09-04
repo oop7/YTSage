@@ -17,10 +17,32 @@ from packaging import version
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushButton, QVBoxLayout
 
+from src.utils.ytsage_logger import logger
 from src.core.ytsage_utils import get_ytdlp_version, load_config, save_config
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH
-from src.utils.ytsage_logger import logger
+from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH, YTDLP_DOWNLOAD_URL
+
+try:
+    from importlib.metadata import version as importlib_version
+    from importlib.metadata import PackageNotFoundError as ImportlibPackageNotFoundError
+    
+    def get_version(package_name: str) -> str:
+        return importlib_version(package_name)
+    
+    PackageNotFoundError = ImportlibPackageNotFoundError
+except ImportError:
+    # Fallback for older Python versions
+    import pkg_resources
+    def get_version(package_name: str) -> str:
+        return pkg_resources.get_distribution(package_name).version
+    PackageNotFoundError = pkg_resources.DistributionNotFound
+
+try:
+    import yt_dlp
+
+    YT_DLP_AVAILABLE = True
+except ImportError:
+    YT_DLP_AVAILABLE = False
 
 
 class VersionCheckThread(QThread):
@@ -107,7 +129,21 @@ class UpdateThread(QThread):
             self.update_progress.emit(20)
 
             # Extra logic moved to src\utils\ytsage_constants.py
-            is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
+            # Check if this is an app-managed binary by comparing paths safely
+            is_app_managed = False
+            try:
+                # Only compare if both files exist
+                if yt_dlp_path.exists() and YTDLP_APP_BIN_PATH.exists():
+                    is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
+                elif str(yt_dlp_path) == str(YTDLP_APP_BIN_PATH):
+                    # If paths are identical as strings, consider it app-managed
+                    is_app_managed = True
+                else:
+                    # If app binary doesn't exist, this is definitely not app-managed
+                    is_app_managed = False
+            except (OSError, IOError) as e:
+                logger.debug(f"Error comparing paths: {e}")
+                is_app_managed = False
 
             if is_app_managed:
                 self.update_status.emit("📦 Updating app-managed yt-dlp binary...")
@@ -175,7 +211,6 @@ class UpdateThread(QThread):
     def _update_via_pip(self) -> bool:
         """Update yt-dlp via pip."""
         try:
-            # replaced pkg_resources with importlib.metadata.version
             self.update_status.emit("🔍 Checking current pip installation...")
             self.update_progress.emit(30)
 
@@ -530,7 +565,21 @@ class AutoUpdateThread(QThread):
 
             # Extra logic moved to src\utils\ytsage_constants.py
 
-            is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
+            # Check if this is an app-managed binary by comparing paths safely
+            is_app_managed = False
+            try:
+                # Only compare if both files exist
+                if yt_dlp_path.exists() and YTDLP_APP_BIN_PATH.exists():
+                    is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
+                elif str(yt_dlp_path) == str(YTDLP_APP_BIN_PATH):
+                    # If paths are identical as strings, consider it app-managed
+                    is_app_managed = True
+                else:
+                    # If app binary doesn't exist, this is definitely not app-managed
+                    is_app_managed = False
+            except (OSError, IOError) as e:
+                logger.debug(f"AutoUpdateThread: Error comparing paths: {e}")
+                is_app_managed = False
 
             if is_app_managed:
                 logger.info("AutoUpdateThread: Updating app-managed yt-dlp binary...")
@@ -580,7 +629,6 @@ class AutoUpdateThread(QThread):
     def _update_via_pip(self) -> bool:
         """Update yt-dlp via pip (silent version)."""
         try:
-            # replaced pkg_resources with importlib.metadata.version
             logger.info("AutoUpdateThread: Checking current pip installation...")
 
             # Get current version

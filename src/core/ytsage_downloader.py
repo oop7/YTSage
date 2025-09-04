@@ -1,3 +1,4 @@
+import os
 import re
 import shlex  # For safely parsing command arguments
 import subprocess  # For direct CLI command execution
@@ -249,7 +250,7 @@ class DownloadThread(QThread):
             cmd.extend(["-S", f"res:{res_value}"])
 
         # Output template with resolution in filename
-        output_template = Path.joinpath(self.path, "%(title)s_%(resolution)s.%(ext)s")
+        output_template = self.path.joinpath("%(title)s_%(resolution)s.%(ext)s")
 
         # Handle playlist directory creation if needed
         if self.is_playlist:
@@ -512,21 +513,32 @@ class DownloadThread(QThread):
         # Detect subtitle file creation
         # Look for lines like "[info] Writing video subtitles to: filename.xx.vtt"
         subtitle_match = re.search(
-            r"(?:Writing|Downloading) (?:video )?subtitles.*?(?:to|:)\s*(.*\.(?:vtt|srt))",
+            r"(?:Writing|Downloading) (?:video )?subtitles.*?(?:to|:)\s*(.+\.(?:vtt|srt))(?:\s|$)",
             line,
             re.IGNORECASE,
         )
         if subtitle_match:
             subtitle_file = subtitle_match.group(1).strip()
+            
+            # Clean up the path - remove any duplicated directory paths
+            # Sometimes yt-dlp output contains malformed paths like "dir: dir/file"
+            if ":" in subtitle_file and os.name == 'nt':  # Windows paths
+                # Look for pattern like "C:\path: C:\path\file" and extract the latter
+                colon_parts = subtitle_file.split(": ")
+                if len(colon_parts) > 1:
+                    # Take the last part which should be the actual file path
+                    subtitle_file = colon_parts[-1].strip()
+            
             # Show subtitle download message
             self.status_signal.emit(f"⏬ Downloading subtitle...")
             # Store the subtitle file path for later deletion if merging is enabled
             if self.merge_subs:
-                if not Path(subtitle_file).is_absolute():
+                subtitle_path = Path(subtitle_file)
+                if not subtitle_path.is_absolute():
                     # If it's a relative path, make it absolute based on current path
-                    subtitle_file = Path.joinpath(self.path, subtitle_file)
-                self.subtitle_files.append(subtitle_file)
-                logger.debug(f"Tracking subtitle file for later cleanup: {subtitle_file}")
+                    subtitle_path = self.path.joinpath(subtitle_file)
+                self.subtitle_files.append(str(subtitle_path))
+                logger.debug(f"Tracking subtitle file for later cleanup: {subtitle_path}")
             return
 
         # Send status updates based on output line content

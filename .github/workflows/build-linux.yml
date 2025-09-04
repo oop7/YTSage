@@ -1,0 +1,338 @@
+name: Build Linux Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  PYTHON_VERSION: '3.13.6'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Extract version from tag
+      id: get_version
+      shell: bash
+      run: |
+        tag="${GITHUB_REF_NAME}"
+        version="${tag#v}"
+        echo "Extracted version: $version"
+        echo "VERSION=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          venv
+          ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install system dependencies
+      shell: bash
+      run: |
+        sudo apt-get update -y
+        # Tools commonly required by cx_Freeze on Linux packaging
+        sudo apt-get install -y --no-install-recommends \
+          rpm alien fakeroot patchelf desktop-file-utils file xz-utils zsync
+
+    - name: Create virtual environment and install dependencies
+      shell: bash
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        python -m pip install --upgrade pip
+        pip install --no-cache-dir -r requirements.txt
+        pip install --no-cache-dir cx_Freeze yt-dlp
+
+    - name: Prepare build variables
+      shell: bash
+      run: |
+        version="${{ steps.get_version.outputs.VERSION }}"
+        echo "VERSION=$version" >> "$GITHUB_ENV"
+        arch="$(uname -m)" # x86_64 or aarch64
+        echo "ARCH=$arch" >> "$GITHUB_ENV"
+        echo "Prepared build variables for version: $version on $(uname -a)"
+
+    - name: Create cx_Freeze setup script (Linux)
+      shell: bash
+      run: |
+        cat > setup_cxfreeze.py <<'PY'
+        import os
+        from cx_Freeze import setup, Executable
+
+        version = os.environ.get("VERSION", "0.0.0")
+
+        build_exe_options = dict(
+            optimize=2,
+            packages=[
+                "PySide6.QtCore",
+                "PySide6.QtGui",
+                "PySide6.QtWidgets",
+                "requests",
+                "PIL",
+                "packaging",
+                "markdown",
+                "pyglet",
+                "loguru",
+                "setuptools",
+            ],
+            excludes=[
+                "PySide6.QtBluetooth",
+                "PySide6.QtNetwork",
+                "PySide6.QtOpenGL",
+                "PySide6.QtPrintSupport",
+                "PySide6.QtSvg",
+                "PySide6.QtTest",
+                "PySide6.QtXml",
+                "PySide6.QtSql",
+                "PySide6.QtHelp",
+                "PySide6.QtMultimedia",
+                "PySide6.QtQml",
+                "PySide6.QtQuick",
+                "PySide6.QtWebEngineCore",
+                "PIL.ImageDraw",
+                "PIL.ImageFont",
+                "numpy",
+                "scipy",
+                "wx",
+                "pandas",
+                "tkinter",
+                "yt_dlp",
+                "unittest",
+                "test",
+                "tests",
+            ],
+            include_files=[
+                ("src", "src"),
+                ("assets", "assets"),
+                ("ytsage.desktop", "share/applications/ytsage.desktop"),
+                ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
+            ],
+        )
+
+        executables = [
+            Executable(
+                script="main.py",
+                target_name="ytsage",
+                icon="assets/branding/icons/icon.png",
+            )
+        ]
+
+        setup(
+            name="ytsage",
+            version=version,
+            description="YTSage",
+            options={
+                "build_exe": build_exe_options,
+                # AppImage packaging
+                "bdist_appimage": {
+                    # If ends with .AppImage, use verbatim file name
+                    "target_name": f"ytsage-v{version}.AppImage",
+                },
+                # RPM packaging metadata
+                "bdist_rpm": {
+                    "release": "1",
+                    "group": "Applications/Multimedia",
+                },
+                # DEB packaging wraps alien to convert RPM
+                "bdist_deb": {},
+            },
+            executables=executables,
+        )
+        PY
+
+    - name: Create desktop entry
+      shell: bash
+      run: |
+        cat > ytsage.desktop <<'DESKTOP'
+        [Desktop Entry]
+        Type=Application
+        Name=YTSage
+        Comment=YouTube downloader
+        Exec=/usr/bin/ytsage %U
+        Icon=ytsage
+        Terminal=false
+        Categories=AudioVideo;Network;Utility;
+        StartupWMClass=YTSage
+        DESKTOP
+
+    - name: Build AppImage and RPM
+      shell: bash
+      run: |
+        set -e
+        source venv/bin/activate
+
+        # Ensure a clean build and build_exe first
+        python setup_cxfreeze.py build_exe
+
+        # Remove screenshots to reduce size before packaging
+        build_dir=$(ls -d build/exe.* 2>/dev/null | head -n1 || true)
+        if [ -n "$build_dir" ] && [ -d "$build_dir/assets/branding/screenshots" ]; then
+          rm -rf "$build_dir/assets/branding/screenshots"
+          echo "Removed screenshots folder from $build_dir"
+        fi
+
+        # Build AppImage
+        python setup_cxfreeze.py bdist_appimage
+
+        # Build RPM
+        python setup_cxfreeze.py bdist_rpm
+
+        echo "Post-build directory listing:"
+        echo "-- dist --"; ls -lah dist || true
+        echo "-- build --"; ls -lah build || true
+
+    - name: Build native DEB package
+      shell: bash
+      run: |
+        set -e
+        version="${{ steps.get_version.outputs.VERSION }}"
+        arch_uname="${ARCH}"
+        # Map uname -m to Debian arch names
+        case "$arch_uname" in
+          x86_64) deb_arch=amd64 ;;
+          aarch64) deb_arch=arm64 ;;
+          *) deb_arch="$arch_uname" ;;
+        esac
+
+        # Locate build output
+        build_dir=$(ls -d build/exe.* 2>/dev/null | head -n1)
+        if [ -z "$build_dir" ]; then
+          echo "Error: build/exe.* directory not found" >&2
+          exit 1
+        fi
+
+        # Staging root
+        pkgroot=deb_pkg
+        rm -rf "$pkgroot"
+        mkdir -p "$pkgroot/DEBIAN" \
+                 "$pkgroot/usr/bin" \
+                 "$pkgroot/usr/share/applications" \
+                 "$pkgroot/usr/share/pixmaps" \
+                 "$pkgroot/opt/ytsage"
+
+        # Install application payload under /opt/ytsage
+        cp -a "$build_dir"/* "$pkgroot/opt/ytsage/"
+
+        # Wrapper to ensure correct working directory
+        cat > "$pkgroot/usr/bin/ytsage" <<'WRAP'
+        #!/usr/bin/env bash
+        set -euo pipefail
+        APPDIR="/opt/ytsage"
+        cd "$APPDIR"
+        exec "$APPDIR/ytsage" "$@"
+        WRAP
+        chmod 0755 "$pkgroot/usr/bin/ytsage"
+
+        # Desktop file and icon
+        install -m 0644 ytsage.desktop "$pkgroot/usr/share/applications/ytsage.desktop"
+        install -m 0644 assets/branding/icons/icon.png "$pkgroot/usr/share/pixmaps/ytsage.png"
+
+        # Control file
+        cat > "$pkgroot/DEBIAN/control" <<CONTROL
+        Package: ytsage
+        Version: ${version}
+        Section: utils
+        Priority: optional
+        Architecture: ${deb_arch}
+        Maintainer: YTSage Maintainers <noreply@example.com>
+        Homepage: https://github.com/oop7/YTSage
+        Description: YTSage - A modern YouTube downloader with a PySide6 interface
+         Download videos, extract audio, fetch subtitles, and more.
+        CONTROL
+
+        # Post-install script to refresh desktop/menu caches (best-effort)
+        cat > "$pkgroot/DEBIAN/postinst" <<'POSTINST'
+        #!/bin/sh
+        set -e
+        if command -v update-desktop-database >/dev/null 2>&1; then
+          update-desktop-database -q || true
+        fi
+        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+          gtk-update-icon-cache -q /usr/share/icons/hicolor || true
+        fi
+        exit 0
+        POSTINST
+        chmod 0755 "$pkgroot/DEBIAN/postinst"
+
+        # Triggers so Debian updates caches
+        cat > "$pkgroot/DEBIAN/triggers" <<'TRIGGERS'
+        interest-noawait /usr/share/applications
+        interest-noawait /usr/share/icons/hicolor
+        TRIGGERS
+
+        # Build the deb
+        deb_out="YTSage-v${version}-${deb_arch}.deb"
+        dpkg-deb --build "$pkgroot" "$deb_out"
+
+        mkdir -p artifacts
+        mv "$deb_out" artifacts/
+        echo "Built native DEB: artifacts/$deb_out"
+
+    - name: Package and prepare release artifacts (.AppImage, .rpm, .deb)
+      shell: bash
+      run: |
+        version="${{ steps.get_version.outputs.VERSION }}"
+        mkdir -p artifacts
+
+        # Copy AppImage
+        appimage_src=$(ls dist/ytsage-v*.AppImage 2>/dev/null | head -n1 || true)
+        if [ -n "$appimage_src" ]; then
+          cp "$appimage_src" "artifacts/YTSage-v${version}-${ARCH}.AppImage"
+          echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}-${ARCH}.AppImage"
+        else
+          echo "Warning: No .AppImage found in dist/"
+        fi
+
+        # Copy RPM (normalize name)
+        rpm_src=$(ls dist/ytsage-*.rpm 2>/dev/null | head -n1 || true)
+        if [ -n "$rpm_src" ]; then
+          cp "$rpm_src" "artifacts/YTSage-v${version}-${ARCH}.rpm"
+          echo "Copied RPM: $rpm_src -> artifacts/YTSage-v${version}-${ARCH}.rpm"
+        else
+          echo "Warning: No .rpm found in dist/"
+        fi
+
+        # DEB is already staged in artifacts by the native packaging step
+        ls -1 artifacts/*.deb 2>/dev/null || echo "Warning: No .deb found in artifacts/"
+
+        echo "Final artifacts:"
+        ls -lh artifacts || true
+
+    - name: Create/Update draft release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: YTSage ${{ github.ref_name }}
+        draft: true
+        prerelease: false
+        append_body: true
+        fail_on_unmatched_files: false
+        body: |
+          # YTSage ${{ github.ref_name }}
+
+          **Release Date**: ${{ github.event.head_commit.timestamp }}
+
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
+        files: |
+          artifacts/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

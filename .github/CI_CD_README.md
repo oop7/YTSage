@@ -1,6 +1,6 @@
 # YTSage CI/CD Workflow
 
-This repository uses GitHub Actions to automatically build and release YTSage for Windows when version tags are pushed.
+This repository uses GitHub Actions to automatically build and release YTSage for multiple platforms when version tags are pushed.
 
 ## How It Works
 
@@ -8,9 +8,9 @@ This repository uses GitHub Actions to automatically build and release YTSage fo
 The workflow is triggered when you push a git tag that starts with `v` (e.g., `v4.8.0`, `v4.9.1`).
 
 ### Build Process
-1. **Setup**: Uses Python 3.12.10 on Windows
-2. **Builds**: Creates both Standard and FFmpeg versions
-3. **Packages**: Generates ZIP portable versions only (no MSI)
+1. **Setup**: Uses Python 3.13.6 on all platforms
+2. **Builds**: Creates platform-specific executables using cx_Freeze
+3. **Packages**: Generates native package formats for each platform
 4. **Release**: Creates a draft GitHub release with all artifacts
 
 ## Usage
@@ -36,16 +36,31 @@ The workflow is triggered when you push a git tag that starts with `v` (e.g., `v
 
 ### Release Artifacts
 
-The workflow creates the following files:
+The workflow creates the following files based on the platform:
 
-- `YTSage-v<version>.zip` - Standard portable version
-- `YTSage-v<version>-ffmpeg.zip` - FFmpeg bundle portable
+#### Windows
+- `YTSage-v{version}-portable.zip` - Standard portable version
+- `YTSage-v{version}-ffmpeg-portable.zip` - FFmpeg bundle portable
+
+#### Linux
+- `YTSage-v{version}-{arch}.AppImage` - AppImage portable
+- `YTSage-v{version}-{arch}.rpm` - RPM package
+- `YTSage-v{version}-{arch}.deb` - Debian package
+
+#### macOS
+- `YTSage-v{version}-{arch}.app.zip` - Zipped application bundle
+- `YTSage-v{version}-{arch}.dmg` - Disk image installer
 
 ## Workflow Features
 
+### Multi-Platform Support
+- **Windows**: Uses PowerShell scripts with cx_Freeze
+- **Linux**: Uses Bash scripts with cx_Freeze, creates AppImage, RPM, and DEB
+- **macOS**: Matrix build for both Intel (x64) and Apple Silicon (arm64)
+
 ### Automatic Version Detection
 - Extracts version from git tag (removes 'v' prefix)
-- Names all artifacts consistently (ZIPs)
+- Names all artifacts consistently across platforms
 
 ### Caching
 - Python dependencies are cached to speed up builds
@@ -79,27 +94,33 @@ If the workflow fails:
 ## Configuration
 
 ### Modifying the Workflow
-The workflow file is located at `.github/workflows/build-windows.yml`.
+The workflow files are located in `.github/workflows/`:
+- `build-windows.yml` - Windows builds
+- `build-linux.yml` - Linux builds
+- `build-macos.yml` - macOS builds
 
-Key configuration options:
-- `PYTHON_VERSION`: Python version to use
+### Key Configuration Options
+- `PYTHON_VERSION`: Python version (currently 3.13.6)
 - Artifact naming patterns
 - Release note templates
+- Build optimization settings
 
 ### Adding New Build Types
-To add new platform packages (e.g., .dmg for macOS, .deb for Linux):
-1. Add separate jobs in `.github/workflows/build-windows.yml` (or a new workflow) targeting the OS (macos-latest, ubuntu-latest).
-2. Build the executable with cx_Freeze or PyInstaller for that platform.
-3. Package the build output (e.g., create DMG on macOS, DEB on Ubuntu) using platform tools.
-4. Upload the artifacts and include them in the release.
+To add new platform packages:
+1. Create or modify workflow files in `.github/workflows/`
+2. Target the appropriate OS runner (windows-latest, ubuntu-latest, macos-latest)
+3. Use cx_Freeze or PyInstaller for packaging
+4. Package the build output in platform-native formats
+5. Upload the artifacts and include them in the release
 
 
 ## Notes
 
-- The workflow only runs on Windows
 - All builds use cx_Freeze for packaging
-- FFmpeg binaries are expected in standard locations
+- FFmpeg binaries are bundled where needed
+- Screenshots are removed from builds to reduce size
 - Draft releases allow for review before publication
+- macOS builds run on both Intel and Apple Silicon runners
 
 ## Example Tag Commands
 
