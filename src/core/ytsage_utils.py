@@ -5,23 +5,7 @@ import sys
 import tempfile
 import time
 from importlib.metadata import PackageNotFoundError
-from importlib.metadata import version as get_version
 from pathlib import Path
-
-try:
-    from importlib.metadata import version as importlib_version
-    from importlib.metadata import PackageNotFoundError as ImportlibPackageNotFoundError
-    
-    def get_version(package_name: str) -> str:
-        return importlib_version(package_name)
-    
-    PackageNotFoundError = ImportlibPackageNotFoundError
-except ImportError:
-    # Fallback for older Python versions
-    import pkg_resources
-    def get_version(package_name: str) -> str:
-        return pkg_resources.get_distribution(package_name).version
-    PackageNotFoundError = pkg_resources.DistributionNotFound
 
 import requests
 from packaging import version
@@ -37,6 +21,24 @@ from src.utils.ytsage_constants import (
     YTDLP_DOWNLOAD_URL,
 )
 from src.utils.ytsage_logger import logger
+
+try:
+    from importlib.metadata import PackageNotFoundError as ImportlibPackageNotFoundError
+    from importlib.metadata import version as importlib_version
+
+    def get_version(package_name: str) -> str:
+        return importlib_version(package_name)
+
+    PackageNotFoundError = ImportlibPackageNotFoundError
+except ImportError:
+    # Fallback for older Python versions
+    import pkg_resources
+
+    def get_version(package_name: str) -> str:
+        return pkg_resources.get_distribution(package_name).version
+
+    PackageNotFoundError = pkg_resources.DistributionNotFound
+
 
 # Cache for version information to avoid delays
 _version_cache = {

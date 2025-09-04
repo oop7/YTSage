@@ -7,7 +7,6 @@ from pathlib import Path
 import markdown
 import pyglet
 import requests
-import yt_dlp
 from packaging import version
 from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer
 from PySide6.QtGui import QIcon
@@ -28,7 +27,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from yt_dlp.utils import DownloadError, ExtractorError
 
 from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
 from src.core.ytsage_utils import check_ffmpeg, load_saved_path, parse_yt_dlp_error, save_path, should_check_for_auto_update
@@ -48,10 +46,22 @@ from src.gui.ytsage_gui_video_info import VideoInfoMixin
 from src.utils.ytsage_constants import ICON_PATH, SOUND_PATH, SUBPROCESS_CREATIONFLAGS
 from src.utils.ytsage_logger import logger
 
+try:
+    import yt_dlp
+    from yt_dlp.utils import DownloadError, ExtractorError
+
+    YT_DLP_AVAILABLE = True
+except ImportError:
+    YT_DLP_AVAILABLE = False
+
 
 class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from mixins
     def __init__(self) -> None:
         super().__init__()
+
+        # Log startup warnings for missing dependencies
+        if not YT_DLP_AVAILABLE:
+            logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
 
         # Check for FFmpeg before proceeding
         if not check_ffmpeg():
@@ -671,11 +681,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 playlist_id = url.split("list=")[1].split("&")[0]
                 url = f"https://www.youtube.com/playlist?list={playlist_id}"
 
-            # # Check if yt-dlp Python module is available
-            # if not YT_DLP_AVAILABLE:
-            #     # Use subprocess to call yt-dlp executable
-            #     self._analyze_url_with_subprocess(url)
-            #     return
+            # Check if yt-dlp Python module is available
+            if not YT_DLP_AVAILABLE:
+                # Use subprocess to call yt-dlp executable
+                self._analyze_url_with_subprocess(url)
+                return
 
             # Initial extraction with basic options - suppress warnings here too
             ydl_opts = {

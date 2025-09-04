@@ -8,8 +8,7 @@ import requests
 from PIL import Image
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
-from yt_dlp import YoutubeDL
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     SponsorBlockCategoryDialog,
@@ -385,6 +384,9 @@ class VideoInfoMixin:
             return False
 
         try:
+            # Import yt_dlp locally to avoid import errors when yt-dlp is not installed
+            from yt_dlp import YoutubeDL
+
             logger.debug(f"Attempting to save thumbnail for URL: {video_url}")
 
             ydl_opts = {
