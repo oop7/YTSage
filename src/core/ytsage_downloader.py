@@ -9,15 +9,8 @@ from PySide6.QtCore import QObject, QThread, Signal
 
 from src.core.ytsage_logging import logger
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
+from src.core.ytdlp_manager import get_ytdlp_manager
 from src.utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
-
-try:
-    import yt_dlp  # Keep yt_dlp import here - only downloader uses it.
-
-    YT_DLP_AVAILABLE = True
-except ImportError:
-    YT_DLP_AVAILABLE = False
-    logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
 
 
 class SignalManager(QObject):
@@ -80,7 +73,6 @@ class DownloadThread(QThread):
         self.paused = False
         self.cancelled = False
         self.process = None
-        self.use_direct_command = True  # Flag to use direct CLI command instead of Python API
         self.last_output_time = time.time()
         self.timeout_timer = None
         self.current_filename = None  # Initialize filename storage
@@ -136,209 +128,73 @@ class DownloadThread(QThread):
         """Check if the file already exists before downloading"""
         try:
             logger.debug("Starting file existence check")
-            # Use yt-dlp to get the filename without downloading, suppressing warnings
-            ydl_opts_check = {
-                "quiet": True,
-                "skip_download": True,
-                "no_warnings": True,  # <-- Suppress warnings during check
-                "ignoreerrors": True,  # Also ignore other potential errors during this check
-                "outtmpl": {"default": self.path.joinpath("%(title)s.%(ext)s")},
-                "format": (self.format_id if self.format_id else "best"),  # Use selected format or best
-            }
-            if self.cookie_file:
-                ydl_opts_check["cookiefile"] = str(self.cookie_file)
-            elif self.browser_cookies:
-                ydl_opts_check["cookiesfrombrowser"] = (self.browser_cookies.split(':')[0], 
-                                                       self.browser_cookies.split(':')[1] if ':' in self.browser_cookies else None)
+            
+            # Use YTDLPManager for info extraction
+            ytdlp_manager = get_ytdlp_manager(get_yt_dlp_path())
+            info = ytdlp_manager.extract_info(self.url)
 
-            if YT_DLP_AVAILABLE:
-                with yt_dlp.YoutubeDL(ydl_opts_check) as ydl:
-                    info = ydl.extract_info(self.url, download=False)
-
-                    # Handle cases where info extraction fails silently
-                    if not info:
-                        logger.debug("Failed to extract info during file existence check. Skipping check.")
-                        return False  # Proceed with download attempt
-
-                # Get the title and sanitize it for filename
-                title = info.get("title", "video")
-                # Don't remove colons and other special characters yet
-                logger.debug(f"Original video title: {title}")
-
-                # Get resolution for better matching
-                resolution = ""
-                for format_info in info.get("formats", []):
-                    if format_info.get("format_id") == self.format_id:
-                        resolution = format_info.get("resolution", "")
-                        break
-
-                logger.debug(f"Resolution: {resolution}")
-            else:
-                logger.debug("yt-dlp not available, skipping file existence check")
+            # Handle cases where info extraction fails silently
+            if not info:
+                logger.debug("Failed to extract info during file existence check. Skipping check.")
                 return False  # Proceed with download attempt
+
+            # Get the title and sanitize it for filename
+            title = info.get("title", "video")
+            logger.debug(f"Original video title: {title}")
+
+            # Get resolution for better matching
+            resolution = ""
+            for format_info in info.get("formats", []):
+                if format_info.get("format_id") == self.format_id:
+                    resolution = format_info.get("resolution", "")
+                    break
+
+            logger.debug(f"Resolution: {resolution}")
+            
+            # Continue with file existence logic...
+            # For now, return False to proceed with download
+            return False
 
         except Exception as e:
             logger.debug(f"Error checking file existence: {str(e)}")
             import traceback
-
             traceback.print_exc()
             return None
 
     def _build_yt_dlp_command(self) -> list:
         """Build the yt-dlp command line with all options for direct execution."""
-        # Use the new yt-dlp path function from ytsage_yt_dlp module
-        yt_dlp_path = get_yt_dlp_path()
-        cmd: list = [yt_dlp_path]
-        logger.debug(f"Using yt-dlp from: {yt_dlp_path}")
-
-        # Format selection strategy - use format ID if provided or fallback to resolution
+        # Use the new YTDLPManager to build the command
+        ytdlp_manager = get_ytdlp_manager(get_yt_dlp_path())
+        
+        # Prepare options for the manager
+        options = {
+            'output_path': self.path,
+            'is_playlist': self.is_playlist,
+            'playlist_items': self.playlist_items if self.is_playlist else None,
+            'subtitle_langs': self.subtitle_langs,
+            'merge_subs': self.merge_subs,
+            'enable_sponsorblock': self.enable_sponsorblock,
+            'sponsorblock_categories': self.sponsorblock_categories,
+            'save_description': self.save_description,
+            'embed_chapters': self.embed_chapters,
+            'cookie_file': self.cookie_file,
+            'browser_cookies': self.browser_cookies,
+            'rate_limit': self.rate_limit,
+            'download_section': self.download_section,
+            'force_keyframes': self.force_keyframes
+        }
+        
+        # Add format selection
         if self.format_id:
-            # Strip the -drc suffix if present to fix issues with certain audio formats
-            clean_format_id = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
-
-            # Check if this is an audio-only format
-            is_audio_format = False
-            try:
-                if YT_DLP_AVAILABLE:
-                    ydl_opts = {
-                        "quiet": True,
-                        "no_warnings": True,
-                        "skip_download": True,
-                    }
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(self.url, download=False) or {}
-                        for fmt in info.get("formats", []):
-                            if fmt.get("format_id") == clean_format_id:
-                                if fmt.get("vcodec") == "none" or "audio only" in fmt.get("format_note", "").lower():
-                                    is_audio_format = True
-                                    logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
-                                break
-            except Exception as e:
-                logger.debug(f"Error checking if format is audio-only: {e}")
-
-            # For audio-only formats, don't try to merge with video
-            if is_audio_format:
-                cmd.extend(["-f", clean_format_id])
-                logger.debug(f"Using audio-only format selection: {clean_format_id}")
-            else:
-                cmd.extend(["-f", f"{clean_format_id}+bestaudio/best"])
-                logger.debug(f"Using video format selection with audio: {clean_format_id}+bestaudio/best")
-
-            # Determine output format based on the selected format ID - only for video formats
-            if not is_audio_format:
-                try:
-                    format_ext = None
-                    logger.debug(f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
-                    if YT_DLP_AVAILABLE:
-                        ydl_opts = {
-                            "quiet": True,
-                            "no_warnings": True,
-                            "skip_download": True,
-                        }
-                        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                            info = ydl.extract_info(self.url, download=False) or {}
-                            # Look for the clean format ID first
-                            for fmt in info.get("formats", []):
-                                if fmt.get("format_id") == clean_format_id:
-                                    format_ext = fmt.get("ext")
-                                    break
-                            # If not found, try the original ID as fallback
-                            if not format_ext:
-                                for fmt in info.get("formats", []):
-                                    if fmt.get("format_id") == self.format_id:
-                                        format_ext = fmt.get("ext")
-                                        break
-
-                    if format_ext:
-                        logger.debug(f"Detected format extension: {format_ext}")
-                        # Ensure output matches the selected format - only for video formats
-                        cmd.extend(["--merge-output-format", format_ext])
-                except Exception as e:
-                    logger.debug(f"Error detecting format extension: {e}")
-                    # If we can't determine the format, don't specify merge-output-format
-                    pass
+            options['format_id'] = self.format_id
+        elif self.resolution:
+            options['resolution'] = self.resolution
         else:
-            # If no specific format ID, use resolution-based sorting (-S)
-            res_value = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified
-            cmd.extend(["-S", f"res:{res_value}"])
-
-        # Output template with resolution in filename
-        output_template = self.path.joinpath("%(title)s_%(resolution)s.%(ext)s")
-
-        # Handle playlist directory creation if needed
-        if self.is_playlist:
-            # Create output template with playlist subfolder
-            output_template = self.path.joinpath("%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s")
-
-        cmd.extend(["-o", output_template.as_posix()])
-
-        # Add common options
-        cmd.append("--force-overwrites")
-
-        # Add playlist items if specified
-        if self.is_playlist and self.playlist_items:
-            cmd.extend(["--playlist-items", self.playlist_items])
-
-        # Add subtitle options if subtitles are selected
-        if self.subtitle_langs:
-            # Subtitles work with both audio-only and video formats
-            # For audio-only formats, subtitles will be downloaded as separate files
-            cmd.append("--write-subs")
-
-            # Get language codes from subtitle selections
-            lang_codes = []
-            for sub_selection in self.subtitle_langs:
-                try:
-                    # Extract just the language code (e.g., 'en' from 'en - Manual')
-                    lang_code = sub_selection.split(" - ")[0]
-                    lang_codes.append(lang_code)
-                except Exception as e:
-                    logger.warning(f"Could not parse subtitle selection '{sub_selection}': {e}")
-
-            if lang_codes:
-                cmd.extend(["--sub-langs", ",".join(lang_codes)])
-                cmd.append("--write-auto-subs")  # Include auto-generated subtitles
-
-                # Only embed subtitles if merge is enabled
-                if self.merge_subs:
-                    cmd.append("--embed-subs")
-
-        # Add SponsorBlock if enabled
-        if self.enable_sponsorblock and self.sponsorblock_categories:
-            cmd.append("--sponsorblock-remove")
-            cmd.append(",".join(self.sponsorblock_categories))
-
-        # Add description saving if enabled
-        if self.save_description:
-            cmd.append("--write-description")
-
-        # Add chapters embedding if enabled
-        if self.embed_chapters:
-            cmd.append("--embed-chapters")
-
-        # Add cookies if specified
-        if self.cookie_file:
-            cmd.extend(["--cookies", str(self.cookie_file)])
-        elif self.browser_cookies:
-            cmd.extend(["--cookies-from-browser", self.browser_cookies])
-
-        # Add rate limit if specified
-        if self.rate_limit:
-            cmd.extend(["-r", self.rate_limit])
-
-        # Add download section if specified
-        if self.download_section:
-            cmd.extend(["--download-sections", self.download_section])
-
-            # Add force keyframes option if enabled
-            if self.force_keyframes:
-                cmd.append("--force-keyframes-at-cuts")
-
-            logger.debug(f"Added download section: {self.download_section}, Force keyframes: {self.force_keyframes}")
-
-        # Add the URL as the final argument
-        cmd.append(self.url)
-
+            options['resolution'] = "720"  # Default
+        
+        # Build and return the command
+        cmd = ytdlp_manager.build_download_command(self.url, **options)
+        logger.debug(f"Built command: {' '.join(cmd)}")
         return cmd
 
     def run(self) -> None:
@@ -366,12 +222,8 @@ class DownloadThread(QThread):
                 except Exception as e:
                     logger.warning(f"Error scanning for initial subtitle files: {e}")
 
-            if self.use_direct_command:
-                # Use direct CLI command instead of Python API
-                self._run_direct_command()
-            else:
-                # Original method using Python API - code left for reference
-                self._run_python_api()
+            # Use direct CLI command (External-Only approach)
+            self._run_direct_command()
 
         except Exception as e:
             # Catch errors during setup
@@ -661,11 +513,6 @@ class DownloadThread(QThread):
                 self.status_signal.emit("✅ Download completed!")
 
             self.update_details.emit("")  # Clear details label on completion
-
-    def _run_python_api(self) -> None:
-        """Original download method using Python API - kept for reference."""
-        # The existing run method code using yt_dlp.YoutubeDL starts here
-        # This method is no longer used by default
 
     def pause(self) -> None:
         self.paused = True

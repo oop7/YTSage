@@ -31,13 +31,6 @@ from PySide6.QtWidgets import (
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import YTDLP_DOCS_URL
 
-try:
-    import yt_dlp
-
-    YT_DLP_AVAILABLE = True
-except ImportError:
-    YT_DLP_AVAILABLE = False
-
 if TYPE_CHECKING:
     from src.gui.ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
 

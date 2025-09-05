@@ -480,9 +480,9 @@ class YtdlpSetupDialog(QDialog):
 
 def check_ytdlp_binary() -> Optional[Path]:
     """
-    Check if yt-dlp binary exists in the expected location.
+    Check if yt-dlp binary exists in the application-specific location only.
     Returns:
-        Path or None: Path to yt-dlp binary if found, None otherwise
+        Path or None: Path to yt-dlp binary if found in app directory, None otherwise
     """
     exe_path = YTDLP_APP_BIN_PATH
     if exe_path.exists():
@@ -493,33 +493,10 @@ def check_ytdlp_binary() -> Optional[Path]:
                 logger.info(f"Fixed permissions on yt-dlp at {exe_path}")
             except Exception as e:
                 logger.warning(f"Could not set executable permissions on {exe_path}: {e}")
+        logger.info(f"Found yt-dlp in app directory: {exe_path}")
         return exe_path
 
-    # If not found in app directory, check if yt-dlp is available in PATH
-    try:
-        # Use subprocess to check if yt-dlp is available
-        if OS_NAME == "Windows":
-            # On Windows, use 'where' command and hide console window
-            # Extra logic moved to src\utils\ytsage_constants.py
-
-            result = subprocess.run(
-                ["where", "yt-dlp"], capture_output=True, text=True, check=False, creationflags=SUBPROCESS_CREATIONFLAGS
-            )
-            if result.returncode == 0 and result.stdout.strip():
-                yt_dlp_path = result.stdout.strip().split("\n")[0]
-                logger.info(f"Found yt-dlp in PATH: {yt_dlp_path}")
-                return Path(yt_dlp_path)
-        else:
-            # On Unix systems, use 'which' command
-            result = subprocess.run(["which", "yt-dlp"], capture_output=True, text=True, check=False)
-            if result.returncode == 0 and result.stdout.strip():
-                yt_dlp_path = result.stdout.strip()
-                logger.info(f"Found yt-dlp in PATH: {yt_dlp_path}")
-                return Path(yt_dlp_path)
-    except Exception as e:
-        logger.error(f"Error checking for yt-dlp in PATH: {e}")
-        # We're only interested in our app-specific installation or system PATH
-
+    logger.debug(f"yt-dlp not found in app directory: {exe_path}")
     return None
 
 
@@ -548,20 +525,20 @@ def check_ytdlp_installed() -> bool:
 
 def get_yt_dlp_path() -> Path:
     """
-    Get the yt-dlp path, either from the app's bin directory or system PATH.
-    This replaces the function in ytsage_utils.py.
+    Get the yt-dlp path from the app's bin directory only.
+    This function now only checks the application-specific directory.
     Returns:
-        str: Path to yt-dlp binary
+        Path: Path to yt-dlp binary if found, or the expected path for setup
     """
-    # First check if we have yt-dlp in our app's bin directory or system PATH
+    # Check if we have yt-dlp in our app's bin directory
     ytdlp_path = check_ytdlp_binary()
     if ytdlp_path:
-        logger.info(f"Using yt-dlp from: {ytdlp_path}")
+        logger.info(f"Using yt-dlp from app directory: {ytdlp_path}")
         return ytdlp_path
 
-    # If not found anywhere, fall back to the command name as a last resort
-    logger.info("yt-dlp not found in app directory or PATH, falling back to command name")
-    return "yt-dlp"  # type: ignore[return-value]
+    # If not found, return the expected path (this will trigger setup dialog)
+    logger.info(f"yt-dlp not found in app directory, returning expected path: {YTDLP_APP_BIN_PATH}")
+    return YTDLP_APP_BIN_PATH
 
 
 def setup_ytdlp(parent_widget=None):
@@ -602,21 +579,13 @@ def setup_ytdlp(parent_widget=None):
             logger.debug(f"yt-dlp successfully found at expected path: {expected_path}")
             return expected_path
         else:
-            logger.debug(f"Expected path does not exist, trying alternate detection")
-            # Try to use the get_yt_dlp_path function to find yt-dlp elsewhere
-            yt_dlp_path = get_yt_dlp_path()
-            logger.debug(f"Alternate detection result: {yt_dlp_path}")
-            if yt_dlp_path != "yt-dlp" and Path.exists(yt_dlp_path):
-                logger.debug(f"yt-dlp found at alternate location: {yt_dlp_path}")
-                return yt_dlp_path
-
-            # Something went wrong, show an error message
-            logger.debug(f"Setup failed, showing error dialog")
+            logger.debug(f"Expected path does not exist: {expected_path}")
+            # Show an error message since we only check app directory now
             if parent_widget:
                 error_dialog = QMessageBox(parent_widget)
                 error_dialog.setIcon(QMessageBox.Icon.Warning)
                 error_dialog.setWindowTitle("Setup Failed")
-                error_dialog.setText("Failed to set up yt-dlp. Some features may not work correctly.")
+                error_dialog.setText("Failed to set up yt-dlp in the application directory. Some features may not work correctly.")
                 # Set the window icon to match the parent
                 error_dialog.setWindowIcon(parent_widget.windowIcon())
                 error_dialog.setStyleSheet(
@@ -646,6 +615,6 @@ def setup_ytdlp(parent_widget=None):
     else:
         logger.debug("User cancelled the setup dialog")
 
-    # User cancelled or setup failed, return the fallback command
-    logger.debug("Returning fallback command 'yt-dlp'")
-    return "yt-dlp"
+    # User cancelled or setup failed, return the expected path anyway
+    logger.debug(f"Returning expected path: {YTDLP_APP_BIN_PATH}")
+    return YTDLP_APP_BIN_PATH

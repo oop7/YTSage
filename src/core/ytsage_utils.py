@@ -428,121 +428,49 @@ def save_path(main_window_instance, path) -> bool:
 
 
 def update_yt_dlp() -> bool:
-    """Check for yt-dlp updates and update if a newer version is available."""
+    """Update yt-dlp binary in the application directory."""
     try:
-        # Get the yt-dlp path
+        # Get the yt-dlp path (now always returns app directory path)
         yt_dlp_path = get_yt_dlp_path()
+        
+        logger.info(f"Updating yt-dlp binary at {yt_dlp_path}")
 
-        # Extra logic moved to src\utils\ytsage_constants.py
-
-        # For binaries downloaded with our app, use direct binary update approach
-        # Check if this is an app-managed binary by comparing paths safely
-        is_app_managed = False
+        # Download the latest version from GitHub releases
         try:
-            # Only compare if both files exist
-            if yt_dlp_path.exists() and YTDLP_APP_BIN_PATH.exists():
-                is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
-            elif str(yt_dlp_path) == str(YTDLP_APP_BIN_PATH):
-                # If paths are identical as strings, consider it app-managed
-                is_app_managed = True
-            else:
-                # If app binary doesn't exist, this is definitely not app-managed
-                is_app_managed = False
-        except (OSError, IOError) as e:
-            logger.debug(f"Error comparing paths in update_yt_dlp: {e}")
-            is_app_managed = False
+            response = requests.get(YTDLP_DOWNLOAD_URL, stream=True)
+            if response.status_code == 200:
+                # Create a temporary file
+                temp_file = f"{yt_dlp_path}.new"
 
-        if is_app_managed:
-            # We're using a binary installed by our app, update directly
-            logger.info(f"Updating yt-dlp binary at {yt_dlp_path}")
+                with open(temp_file, "wb") as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        f.write(chunk)
 
-            # Determine the URL based on OS
-            # Extra logic moved to src\utils\ytsage_constants.py
+                # Make executable on Unix systems
+                if OS_NAME != "Windows":
+                    os.chmod(temp_file, 0o755)
 
-            # Download the latest version
-            try:
-                response = requests.get(YTDLP_DOWNLOAD_URL, stream=True)
-                if response.status_code == 200:
-                    # Create a temporary file
-                    temp_file = f"{yt_dlp_path}.new"
+                # Replace the old file with the new one
+                try:
+                    # On Windows, we need to remove the old file first
+                    if OS_NAME == "Windows" and yt_dlp_path.exists():
+                        yt_dlp_path.unlink(missing_ok=True)
 
-                    with open(temp_file, "wb") as f:
-                        for chunk in response.iter_content(chunk_size=8192):
-                            f.write(chunk)
-
-                    # Make executable on Unix systems
-                    if OS_NAME != "Windows":
-                        os.chmod(temp_file, 0o755)
-
-                    # Replace the old file with the new one
-                    try:
-                        # On Windows, we need to remove the old file first
-                        if OS_NAME == "Windows" and yt_dlp_path.exists():
-                            yt_dlp_path.unlink(missing_ok=True)
-
-                        Path(temp_file).rename(yt_dlp_path)
-                        logger.info("yt-dlp binary successfully updated")
-                        return True
-                    except Exception as e:
-                        logger.error(f"Error replacing yt-dlp binary: {e}")
-                        return False
-                else:
-                    logger.info(f"Failed to download latest yt-dlp: HTTP {response.status_code}")
+                    Path(temp_file).rename(yt_dlp_path)
+                    logger.info("yt-dlp binary successfully updated")
+                    return True
+                except Exception as e:
+                    logger.error(f"Error replacing yt-dlp binary: {e}")
                     return False
-            except Exception as e:
-                logger.error(f"Error downloading yt-dlp update: {e}")
+            else:
+                logger.error(f"Failed to download latest yt-dlp: HTTP {response.status_code}")
                 return False
-        else:
-            # We're using a system-installed yt-dlp, use pip to update
-            logger.info("Using pip to update yt-dlp")
-
-            # Get current version
-            try:
-                current_version = get_version("yt-dlp")
-                logger.info(f"Current yt-dlp version: {current_version}")
-            except PackageNotFoundError:
-                logger.info("yt-dlp not installed via pip, attempting update anyway")
-                current_version = "0.0.0"  # Assume very old version to force update
-
-            # Get the latest version from PyPI JSON API
-            try:
-                response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
-                if response.status_code == 200:
-                    data = response.json()
-                    latest_version = data["info"]["version"]
-                    logger.info(f"Latest available yt-dlp version: {latest_version}")
-
-                    # Compare versions and update if needed
-                    if version.parse(latest_version) > version.parse(current_version):
-                        logger.info(f"Updating yt-dlp from {current_version} to {latest_version}...")
-                        update_result = subprocess.run(
-                            [
-                                sys.executable,
-                                "-m",
-                                "pip",
-                                "install",
-                                "--upgrade",
-                                "yt-dlp",
-                            ],
-                            capture_output=True,
-                            text=True,
-                            check=False,
-                            creationflags=SUBPROCESS_CREATIONFLAGS,
-                        )
-                        if update_result.returncode == 0:
-                            logger.info("yt-dlp successfully updated")
-                            return True
-                        else:
-                            logger.error(f"Error updating yt-dlp: {update_result.stderr}")
-                    else:
-                        logger.info("yt-dlp is already up to date")
-                        return True
-                else:
-                    logger.info(f"Failed to get latest version info: HTTP {response.status_code}")
-            except Exception as e:
-                logger.error(f"Error checking for yt-dlp updates: {e}")
+        except Exception as e:
+            logger.error(f"Error downloading yt-dlp update: {e}")
+            return False
+            
     except Exception as e:
-        logger.info(f"Unexpected error during yt-dlp update: {e}")
+        logger.error(f"Unexpected error during yt-dlp update: {e}")
 
     return False
 

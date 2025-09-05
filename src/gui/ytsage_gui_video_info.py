@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 import requests
 from PIL import Image
@@ -15,8 +16,34 @@ from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__
     SubtitleSelectionDialog,
 )
 
+if TYPE_CHECKING:
+    # Type annotations for attributes that should be available in the class using this mixin
+    from typing import Union
+
 
 class VideoInfoMixin:
+    """
+    Mixin class for video information display functionality.
+    
+    This mixin expects the following attributes to be available in the class using it:
+    - is_playlist: bool
+    - playlist_info: Optional[Dict[str, Any]]
+    - playlist_entries: List[Dict[str, Any]]
+    - url_input: QLineEdit (or similar widget with .text() method)
+    - save_thumbnail: bool
+    - signals: object with update_status signal
+    - audio_button: QPushButton (or similar widget with .isChecked() method)
+    """
+    
+    # Type annotations for expected attributes (will be available in the implementing class)
+    if TYPE_CHECKING:
+        is_playlist: bool
+        playlist_info: Optional[Dict[str, Any]]
+        playlist_entries: List[Dict[str, Any]]
+        url_input: Any  # QLineEdit or similar
+        save_thumbnail: bool
+        signals: Any  # Signals object
+        audio_button: Any  # QPushButton or similar
     def setup_video_info_section(self) -> QHBoxLayout:
         # Create a horizontal layout for thumbnail and video info
         media_info_layout = QHBoxLayout()
@@ -207,7 +234,10 @@ class VideoInfoMixin:
     def update_video_info(self, info) -> None:
         if hasattr(self, "is_playlist") and self.is_playlist:
             # Playlist Mode: Show playlist title and video count
-            self.title_label.setText(self.playlist_info.get("title", "Unknown Playlist"))
+            playlist_title = "Unknown Playlist"
+            if hasattr(self, "playlist_info") and self.playlist_info:
+                playlist_title = self.playlist_info.get("title", "Unknown Playlist")
+            self.title_label.setText(playlist_title)
 
             num_videos = len(getattr(self, "playlist_entries", []))
             self.duration_label.setText(f"Total Videos: {num_videos}")
@@ -367,60 +397,57 @@ class VideoInfoMixin:
             logger.error(f"Error loading thumbnail: {str(e)}")
 
     def download_thumbnail_file(self, video_url, path) -> bool:
-        if not self.save_thumbnail:
+        if not hasattr(self, "save_thumbnail") or not self.save_thumbnail:
             return False
 
         try:
-            # Import yt_dlp locally to avoid import errors when yt-dlp is not installed
-            from yt_dlp import YoutubeDL
+            # Use YTDLPManager for thumbnail download
+            from src.core.ytdlp_manager import get_ytdlp_manager
+            from src.core.ytsage_yt_dlp import get_yt_dlp_path
             
             logger.debug(f"Attempting to save thumbnail for URL: {video_url}")
 
-            ydl_opts = {
-                "quiet": True,
-                "skip_download": True,
-                "force_generic_extractor": False,
-                "no_warnings": True,
-                "extract_flat": False,
-            }
+            ytdlp_manager = get_ytdlp_manager(get_yt_dlp_path())
+            thumbnail_info = ytdlp_manager.get_thumbnail_info(video_url)
 
-            with YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(video_url, download=False)
-                thumbnails = info.get("thumbnails", [])
+            if not thumbnail_info:
+                raise ValueError("No thumbnails available")
 
-                if not thumbnails:
-                    raise ValueError("No thumbnails available")
+            thumbnail_url = max(
+                thumbnail_info,
+                key=lambda t: (t.get("height", 0) or 0) * (t.get("width", 0) or 0),
+            ).get("url")
 
-                thumbnail_url = max(
-                    thumbnails,
-                    key=lambda t: (t.get("height", 0) or 0) * (t.get("width", 0) or 0),
-                ).get("url")
+            if not thumbnail_url:
+                raise ValueError("Failed to extract thumbnail URL")
 
-                if not thumbnail_url:
-                    raise ValueError("Failed to extract thumbnail URL")
+            # Download using requests
+            response = requests.get(thumbnail_url)
+            response.raise_for_status()
 
-                # Download using requests
-                response = requests.get(thumbnail_url)
-                response.raise_for_status()
+            # Save the thumbnail
+            thumb_dir = Path(path).joinpath("Thumbnails")
+            thumb_dir.mkdir(exist_ok=True)
 
-                # Save the thumbnail
-                thumb_dir = Path(path).joinpath("Thumbnails")
-                thumb_dir.mkdir(exist_ok=True)
+            # Get a safe filename - we need to get the actual video info for the title
+            video_info = ytdlp_manager.extract_info(video_url)
+            title = video_info.get("title", "video") if video_info else "video"
+            filename = f"{self.sanitize_filename(title)}.jpg"
+            thumbnail_path = thumb_dir.joinpath(filename)
 
-                filename = f"{self.sanitize_filename(info['title'])}.jpg"
-                thumbnail_path = thumb_dir.joinpath(filename)
+            with open(thumbnail_path, "wb") as f:
+                f.write(response.content)
 
-                with open(thumbnail_path, "wb") as f:
-                    f.write(response.content)
-
-                logger.info(f"Thumbnail saved to: {thumbnail_path}")
+            logger.info(f"Thumbnail saved to: {thumbnail_path}")
+            if hasattr(self, "signals") and self.signals:
                 self.signals.update_status.emit(f"✅ Thumbnail saved: {filename}")
-                return True
+            return True
 
         except Exception as e:
             error_msg = f"❌ Thumbnail error: {str(e)}"
             logger.error(f"Thumbnail Save Error: {str(e)}")
-            self.signals.update_status.emit(error_msg)
+            if hasattr(self, "signals") and self.signals:
+                self.signals.update_status.emit(error_msg)
             return False
 
     def sanitize_filename(self, name) -> str:
