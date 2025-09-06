@@ -74,27 +74,27 @@ ytsage
 
 | Format | Description |
 |--------|-------------|
-| `YTSage-v<version>.exe` | Standard installer |
-| `YTSage-v<version>-ffmpeg.exe` | With FFmpeg bundled |
-| `YTSage-v<version>-portable` | Portable version, no installation required |
-| `YTSage-v<version>-ffmpeg-portable.zip` | Portable with FFmpeg, zipped |
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Standard installer |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | With FFmpeg bundled |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portable version, no installation required |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portable with FFmpeg, zipped |
 
 #### 🐧 Linux
 
 | Format | Description |
 |--------|-------------|
-| `YTSage-v<version>-amd64.deb` | Debian package |
-| `YTSage-v<version>-x86_64.AppImage` | AppImage, portable |
-| `YTSage-v<version>-x86_64.rpm` | RPM package |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian package |
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, portable |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM package |
 
 #### 🍎 macOS
 
 | Format | Description |
 |--------|-------------|
-| `YTSage-v<version>-arm64.app.zip` | Zipped application for ARM64 |
-| `YTSage-v<version>-arm64.dmg` | Disk image installer for ARM64 |
-| `YTSage-v<version>-x64.app.zip` | Zipped application for x64 |
-| `YTSage-v<version>-x64.dmg` | Disk image installer for x64 |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Zipped application for ARM64 |
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Disk image installer for ARM64 |
+| ![macOS x64 APP](https://img.shields.io/badge/macOS-x64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Zipped application for x64 |
+| ![macOS x64 DMG](https://img.shields.io/badge/macOS-x64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Disk image installer for x64 |
 
 > [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
 
