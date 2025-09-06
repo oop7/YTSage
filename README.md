@@ -324,6 +324,8 @@ YTSage/
 │   │       ├── main.png
 │   │       ├── playlist.png
 │   │       └── subtitle_options.png
+│   │   └── 📁 svg/               # SVG assets
+│   │       └── ytsage-wordmark.svg
 │   ├── 📁 Icon/                  # Legacy icon directory
 │   │   └── icon.png
 │   └── 📁 sound/                 # Audio files
