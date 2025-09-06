@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets\branding\svg\ytsage-wordmark.svg" width="400" alt="Description">
+<img src="assets\branding\svg\ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="assets\branding\screenshots\main.png" width="800" alt="YTSage Interface"/>
 
 [![PyPI version](https://img.shields.io/pypi/v/ytsage?color=dc2626&style=for-the-badge&logo=pypi&logoColor=white)](https://badge.fury.io/py/ytsage)
