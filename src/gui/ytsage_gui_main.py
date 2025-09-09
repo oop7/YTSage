@@ -86,7 +86,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         else:
             self.logger.info(f"Using yt-dlp from: {ytdlp_path}")
 
-        self.version = "4.8.1"
+        self.version = "4.8.2"
         self.check_for_updates()
 
         # Check for auto-updates if enabled

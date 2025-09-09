@@ -130,8 +130,8 @@ git tag v4.8.0
 git push origin v4.8.0
 
 # For a patch release
-git tag v4.8.1
-git push origin v4.8.1
+git tag v4.8.2
+git push origin v4.8.2
 
 # To delete a tag (if needed)
 git tag -d v4.8.0
