@@ -142,7 +142,7 @@ class DownloadThread(QThread):
                 "skip_download": True,
                 "no_warnings": True,  # <-- Suppress warnings during check
                 "ignoreerrors": True,  # Also ignore other potential errors during this check
-                "outtmpl": {"default": self.path.joinpath("%(title)s.%(ext)s")},
+                "outtmpl": {"default": f"{self.path.as_posix()}/%(title)s.%(ext)s"},
                 "format": (self.format_id if self.format_id else "best"),  # Use selected format or best
             }
             if self.cookie_file:
@@ -263,14 +263,16 @@ class DownloadThread(QThread):
             cmd.extend(["-S", f"res:{res_value}"])
 
         # Output template with resolution in filename
-        output_template = self.path.joinpath("%(title)s_%(resolution)s.%(ext)s")
-
-        # Handle playlist directory creation if needed
+        # Use string concatenation instead of Path.joinpath to avoid Path object issues
+        base_path = self.path.as_posix()
+        
         if self.is_playlist:
             # Create output template with playlist subfolder
-            output_template = self.path.joinpath("%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s")
+            output_template = f"{base_path}/%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s"
+        else:
+            output_template = f"{base_path}/%(title)s_%(resolution)s.%(ext)s"
 
-        cmd.extend(["-o", output_template.as_posix()])
+        cmd.extend(["-o", output_template])
 
         # Add common options
         cmd.append("--force-overwrites")
