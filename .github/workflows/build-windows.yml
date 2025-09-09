@@ -84,7 +84,8 @@ jobs:
           --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,pyglet,loguru,setuptools" `
           --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
           --include-files "src" `
-          --include-files "assets=lib/assets"
+          # Use colon for source:destination mapping ( '=' is treated as literal path by cx_Freeze CLI )
+          --include-files "assets:lib/assets"
         
         # Remove screenshots folder to reduce build size
         if (Test-Path "dist\YTSage\lib\assets\branding\screenshots") {
@@ -163,7 +164,8 @@ jobs:
           --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,pyglet,loguru,setuptools" `
           --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
           --include-files "src" `
-          --include-files "assets=lib/assets"
+          # Use colon for source:destination mapping
+          --include-files "assets:lib/assets"
 
         # Remove screenshots folder to reduce build size
         if (Test-Path "dist\YTSage-FFmpeg\lib\assets\branding\screenshots") {
