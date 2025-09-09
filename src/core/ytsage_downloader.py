@@ -263,12 +263,14 @@ class DownloadThread(QThread):
             cmd.extend(["-S", f"res:{res_value}"])
 
         # Output template with resolution in filename
-        output_template = self.path.joinpath("%(title)s_%(resolution)s.%(ext)s")
-
-        # Handle playlist directory creation if needed
+        # Use string concatenation instead of Path.joinpath to avoid Path object issues
+        base_path = self.path.as_posix()
+        
         if self.is_playlist:
             # Create output template with playlist subfolder
-            output_template = self.path.joinpath("%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s")
+            output_template = f"{base_path}/%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s"
+        else:
+            output_template = f"{base_path}/%(title)s_%(resolution)s.%(ext)s"
 
         cmd.extend(["-o", str(output_template)])
 

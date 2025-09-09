@@ -163,7 +163,7 @@ class AboutDialog(QDialog):
         layout.addWidget(version_label)
 
         # Description - more compact
-        description_label = QLabel("A simple GUI frontend for the powerful yt-dlp video downloader.")
+        description_label = QLabel("Modern YouTube downloader with a clean PySide6 interface.")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         description_label.setStyleSheet("color: #ffffff; font-size: 11px; margin: 6px 0;")

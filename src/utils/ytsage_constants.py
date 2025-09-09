@@ -19,9 +19,43 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Handle resource paths for both development and installed package
+def get_asset_path(asset_relative_path: str) -> Path:
+    """
+    Get the absolute path to an asset file, works both in development and installed package.
+    
+    Args:
+        asset_relative_path: Relative path to the asset (e.g., "assets/Icon/icon.png")
+    
+    Returns:
+        Path: Absolute path to the asset file
+    """
+    try:
+        # Use importlib.resources (standard in Python 3.9+)
+        import importlib.resources as resources
+        try:
+            # Navigate to the package root and then to the asset
+            package_path = resources.files('ytsage')
+            asset_path = package_path / asset_relative_path
+            if asset_path.is_file():
+                return Path(str(asset_path))
+        except (ImportError, AttributeError, FileNotFoundError):
+            pass
+            
+    except Exception:
+        pass
+    
+    # Fallback to relative path (for development environment)
+    current_file = Path(__file__)
+    # Go up from src/utils to ytsage root, then to asset
+    ytsage_root = current_file.parent.parent.parent
+    asset_path = ytsage_root / asset_relative_path
+    
+    return asset_path
+
 # Assets Constants
-ICON_PATH: Path = Path("assets/Icon/icon.png")
-SOUND_PATH: Path = Path("assets/sound/notification.mp3")
+ICON_PATH: Path = get_asset_path("assets/Icon/icon.png")
+SOUND_PATH: Path = get_asset_path("assets/sound/notification.mp3")
 
 OS_NAME: str = platform.system()  # Windows ; Darwin ; Linux
 
