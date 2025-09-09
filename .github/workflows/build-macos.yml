@@ -123,7 +123,7 @@ jobs:
             ],
             include_files=[
                 ("src", "src"),
-                ("assets", "assets"),
+                ("assets", "lib/assets"),
             ],
         )
 
@@ -171,8 +171,8 @@ jobs:
         if [ -z "$app_path" ]; then
           app_path=$(ls -d dist/*.app build/dist/*.app build/*.app 2>/dev/null | head -n1 || true)
         fi
-        if [ -n "$app_path" ] && [ -d "$app_path/Contents/Resources/assets/branding/screenshots" ]; then
-          rm -rf "$app_path/Contents/Resources/assets/branding/screenshots"
+        if [ -n "$app_path" ] && [ -d "$app_path/Contents/Resources/lib/assets/branding/screenshots" ]; then
+          rm -rf "$app_path/Contents/Resources/lib/assets/branding/screenshots"
           echo "Removed screenshots folder from .app bundle at $app_path"
         fi
         echo "Post-bdist_mac directory listing:"
@@ -207,8 +207,8 @@ jobs:
           app_base="$(basename "$app_path")"
           app_parent="$(dirname "$app_path")"
           # Ensure screenshots folder is not shipped
-          if [ -d "$app_path/Contents/Resources/assets/branding/screenshots" ]; then
-            rm -rf "$app_path/Contents/Resources/assets/branding/screenshots"
+          if [ -d "$app_path/Contents/Resources/lib/assets/branding/screenshots" ]; then
+            rm -rf "$app_path/Contents/Resources/lib/assets/branding/screenshots"
             echo "Removed screenshots folder from .app bundle at $app_path"
           fi
           (cd "$app_parent" && zip -r "${GITHUB_WORKSPACE}/artifacts/YTSage-v${version}-${ARCH_SUFFIX}.app.zip" "$app_base")
