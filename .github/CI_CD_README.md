@@ -126,14 +126,14 @@ To add new platform packages:
 
 ```bash
 # For a new release
-git tag v4.8.0
-git push origin v4.8.0
+git tag v4.8.1
+git push origin v4.8.1
 
 # For a patch release
 git tag v4.8.1
 git push origin v4.8.1
 
 # To delete a tag (if needed)
-git tag -d v4.8.0
-git push origin :refs/tags/v4.8.0
+git tag -d v4.8.1
+git push origin :refs/tags/v4.8.1
 ```

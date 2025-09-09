@@ -3,6 +3,8 @@ Base dialogs for YTSage application.
 Contains basic utility dialogs like LogWindow and AboutDialog.
 """
 
+from datetime import datetime
+
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import (
     QDialog,
@@ -155,7 +157,7 @@ class AboutDialog(QDialog):
         layout.addWidget(title_label)
 
         version_label = QLabel(
-            f"<span style='color: #cccccc; font-size: 13px; font-weight: normal;'>Version {getattr(self._parent, 'version', '4.8.0b')}</span>"
+            f"<span style='color: #cccccc; font-size: 13px; font-weight: normal;'>Version {getattr(self._parent, 'version', '4.8.3')}</span>"
         )
         version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(version_label)
@@ -392,8 +394,6 @@ class AboutDialog(QDialog):
         last_check = ytdlp_cache.get("last_check", 0)
         cache_status = ""
         if last_check > 0:
-            from datetime import datetime
-
             cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
             cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
 
@@ -426,8 +426,6 @@ class AboutDialog(QDialog):
         last_check = ffmpeg_cache.get("last_check", 0)
         cache_status = ""
         if last_check > 0 and ffmpeg_found:
-            from datetime import datetime
-
             cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
             cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
 

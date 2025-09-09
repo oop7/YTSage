@@ -3,11 +3,13 @@ Settings-related dialogs for YTSage application.
 Contains dialogs for configuring download settings and auto-update preferences.
 """
 
+import threading
 import time
 from datetime import datetime
 
 import requests
-from PySide6.QtCore import Qt
+from packaging import version as version_parser
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QButtonGroup,
     QCheckBox,
@@ -25,13 +27,13 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from src.core.ytsage_logging import logger
 from src.core.ytsage_utils import (
     check_and_update_ytdlp_auto,
     get_auto_update_settings,
     get_ytdlp_version,
     update_auto_update_settings,
 )
+from src.utils.ytsage_logger import logger
 
 
 class DownloadSettingsDialog(QDialog):
@@ -164,7 +166,7 @@ class DownloadSettingsDialog(QDialog):
         path_group_box = QGroupBox("Download Path")
         path_layout = QVBoxLayout()
 
-        self.path_display = QLabel(self.current_path)
+        self.path_display = QLabel(str(self.current_path))
         self.path_display.setWordWrap(True)
         self.path_display.setStyleSheet(
             "QLabel { color: #ffffff; padding: 5px; border: 1px solid #1b2021; border-radius: 4px; background-color: #1b2021; }"
@@ -246,7 +248,7 @@ class DownloadSettingsDialog(QDialog):
         layout.addWidget(button_box)
 
     def browse_new_path(self) -> None:
-        new_path = QFileDialog.getExistingDirectory(self, "Select Download Directory", self.current_path)
+        new_path = QFileDialog.getExistingDirectory(self, "Select Download Directory", str(self.current_path))
         if new_path:
             self.current_path = new_path
             self.path_display.setText(self.current_path)
@@ -329,8 +331,6 @@ class DownloadSettingsDialog(QDialog):
             current_version = current_version.replace("_", ".")
             latest_version = latest_version.replace("_", ".")
 
-            from packaging import version as version_parser
-
             if version_parser.parse(latest_version) > version_parser.parse(current_version):
                 msg_box = self._create_styled_message_box(
                     QMessageBox.Icon.Information,
@@ -349,7 +349,7 @@ class DownloadSettingsDialog(QDialog):
             msg_box = self._create_styled_message_box(
                 QMessageBox.Icon.Warning,
                 "Update Check",
-                f"Error checking for updates: {str(e)}",
+                f"Error checking for updates: {e}",
             )
             msg_box.exec()
 
@@ -381,7 +381,7 @@ class DownloadSettingsDialog(QDialog):
             else:
                 QMessageBox.warning(self, "Error", "Failed to save auto-update settings.")
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Error saving auto-update settings: {str(e)}")
+            QMessageBox.critical(self, "Error", f"Error saving auto-update settings: {e}")
 
         # Call the parent accept method to close the dialog
         super().accept()
@@ -582,7 +582,7 @@ class AutoUpdateSettingsDialog(QDialog):
             self.on_enable_toggled(settings["enabled"])
 
         except Exception as e:
-            logger.error(f"Error loading auto-update settings: {e}")
+            logger.exception(f"Error loading auto-update settings: {e}")
 
     def update_next_check_label(self) -> None:
         """Update the next check label based on current settings."""
@@ -616,7 +616,7 @@ class AutoUpdateSettingsDialog(QDialog):
 
         except Exception as e:
             self.next_check_label.setText("Next check: Error calculating")
-            logger.error(f"Error calculating next check time: {e}")
+            logger.exception(f"Error calculating next check time: {e}")
 
     def on_enable_toggled(self, enabled) -> None:
         """Handle enable/disable checkbox toggle."""
@@ -646,16 +646,12 @@ class AutoUpdateSettingsDialog(QDialog):
                 result = check_and_update_ytdlp_auto()
 
                 # Update UI in main thread
-                from PySide6.QtCore import QTimer
-
                 QTimer.singleShot(0, lambda: self.manual_check_finished(result))
             except Exception as e:
-                logger.error(f"Error during manual check: {e}")
+                logger.exception(f"Error during manual check: {e}")
                 QTimer.singleShot(0, lambda: self.manual_check_finished(False))
 
         # Run in separate thread to avoid blocking UI
-        import threading
-
         threading.Thread(target=check_in_thread, daemon=True).start()
 
     def _create_styled_message_box(self, icon, title, text) -> QMessageBox:
@@ -738,6 +734,6 @@ class AutoUpdateSettingsDialog(QDialog):
                 )
                 msg_box.exec()
         except Exception as e:
-            logger.error(f"Error saving auto-update settings: {e}")
-            msg_box = self._create_styled_message_box(QMessageBox.Icon.Critical, "Error", f"❌ Error saving settings: {str(e)}")
+            logger.exception(f"Error saving auto-update settings: {e}")
+            msg_box = self._create_styled_message_box(QMessageBox.Icon.Critical, "Error", f"❌ Error saving settings: {e}")
             msg_box.exec()

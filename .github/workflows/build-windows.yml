@@ -62,6 +62,79 @@ jobs:
         echo "VERSION=$version" >> $env:GITHUB_ENV
         Write-Host "Prepared build variables for version: $version"
     
+    - name: Create cx_Freeze setup script
+      shell: powershell
+      run: |
+        # Create setup script for cx_Freeze
+        New-Item -Path "setup_cxfreeze.py" -ItemType File -Force
+        Add-Content -Path "setup_cxfreeze.py" -Value "import os"
+        Add-Content -Path "setup_cxfreeze.py" -Value "from cx_Freeze import setup, Executable"
+        Add-Content -Path "setup_cxfreeze.py" -Value ""
+        Add-Content -Path "setup_cxfreeze.py" -Value 'version = os.environ.get("VERSION", "0.0.0")'
+        Add-Content -Path "setup_cxfreeze.py" -Value ""
+        Add-Content -Path "setup_cxfreeze.py" -Value "build_exe_options = dict("
+        Add-Content -Path "setup_cxfreeze.py" -Value "    optimize=2,"
+        Add-Content -Path "setup_cxfreeze.py" -Value "    packages=["
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtCore",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtGui",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtWidgets",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "requests",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PIL",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "packaging",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "markdown",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "pyglet",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "loguru",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "setuptools",'
+        Add-Content -Path "setup_cxfreeze.py" -Value "    ],"
+        Add-Content -Path "setup_cxfreeze.py" -Value "    excludes=["
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtBluetooth",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtNetwork",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtOpenGL",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtPrintSupport",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtSvg",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtTest",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtXml",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtSql",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtHelp",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtMultimedia",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtQml",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtQuick",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtWebEngineCore",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PIL.ImageDraw",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "PIL.ImageFont",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "numpy",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "scipy",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "wx",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "pandas",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "tkinter",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "yt_dlp",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "unittest",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "test",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "tests",'
+        Add-Content -Path "setup_cxfreeze.py" -Value "    ],"
+        Add-Content -Path "setup_cxfreeze.py" -Value "    include_files=["
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("src", "src"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("assets", "lib/assets"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value "    ],"
+        Add-Content -Path "setup_cxfreeze.py" -Value ")"
+        Add-Content -Path "setup_cxfreeze.py" -Value ""
+        Add-Content -Path "setup_cxfreeze.py" -Value "executables = ["
+        Add-Content -Path "setup_cxfreeze.py" -Value "    Executable("
+        Add-Content -Path "setup_cxfreeze.py" -Value '        script="main.py",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        target_name=f"YTSage-v{version}.exe",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        base="Win32GUI",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        icon="assets/branding/icons/YTSage.ico",'
+        Add-Content -Path "setup_cxfreeze.py" -Value "    )"
+        Add-Content -Path "setup_cxfreeze.py" -Value "]"
+        Add-Content -Path "setup_cxfreeze.py" -Value ""
+        Add-Content -Path "setup_cxfreeze.py" -Value "setup("
+        Add-Content -Path "setup_cxfreeze.py" -Value '    name="YTSage",'
+        Add-Content -Path "setup_cxfreeze.py" -Value "    version=version,"
+        Add-Content -Path "setup_cxfreeze.py" -Value '    description="YTSage",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '    options={"build_exe": build_exe_options},'
+        Add-Content -Path "setup_cxfreeze.py" -Value "    executables=executables,"
+        Add-Content -Path "setup_cxfreeze.py" -Value ")"
+
     - name: Build Standard Version (ZIP)
       shell: powershell
       run: |
@@ -74,21 +147,12 @@ jobs:
         if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
         if (Test-Path "dist") { Remove-Item "dist" -Recurse -Force }
         
-        # Build executable using cx_Freeze CLI (use python -m to ensure proper base handling)
-        python -m cx_Freeze main.py `
-          --target-dir "dist\YTSage" `
-          --base-name Win32GUI `
-          --icon "assets\branding\icons\YTSage.ico" `
-          --target-name "YTSage-v$version.exe" `
-          --optimize 2 `
-          --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,pyglet,loguru,setuptools" `
-          --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
-          --include-files "src" `
-          --include-files "assets"
+        # Build executable using setup script
+        python setup_cxfreeze.py build_exe --build-exe "dist\YTSage"
         
         # Remove screenshots folder to reduce build size
-        if (Test-Path "dist\YTSage\assets\branding\screenshots") {
-          Remove-Item "dist\YTSage\assets\branding\screenshots" -Recurse -Force
+        if (Test-Path "dist\YTSage\lib\assets\branding\screenshots") {
+          Remove-Item "dist\YTSage\lib\assets\branding\screenshots" -Recurse -Force
           Write-Host "Removed screenshots folder from standard build"
         }
     
@@ -153,21 +217,15 @@ jobs:
         if (Test-Path "build\exe.*") { Remove-Item "build\exe.*" -Recurse -Force }
         if (Test-Path "build\bdist.*") { Remove-Item "build\bdist.*" -Recurse -Force }
         
-        # Build executable with FFmpeg using cx_Freeze CLI (use python -m to ensure proper base handling)
-        python -m cx_Freeze main.py `
-          --target-dir "dist\YTSage-FFmpeg" `
-          --base-name Win32GUI `
-          --icon "assets\branding\icons\YTSage.ico" `
-          --target-name "YTSage-v$version-ffmpeg.exe" `
-          --optimize 2 `
-          --packages "PySide6.QtCore,PySide6.QtGui,PySide6.QtWidgets,requests,PIL,packaging,markdown,pyglet,loguru,setuptools" `
-          --excludes "PySide6.QtBluetooth,PySide6.QtNetwork,PySide6.QtOpenGL,PySide6.QtPrintSupport,PySide6.QtSvg,PySide6.QtTest,PySide6.QtXml,PySide6.QtSql,PySide6.QtHelp,PySide6.QtMultimedia,PySide6.QtQml,PySide6.QtQuick,PySide6.QtWebEngineCore,PIL.ImageDraw,PIL.ImageFont,numpy,scipy,wx,pandas,tkinter,yt_dlp,unittest,test,tests" `
-          --include-files "src" `
-          --include-files "assets"
+        # Create modified setup script for FFmpeg version
+        (Get-Content "setup_cxfreeze.py") -replace 'YTSage-v\{version\}\.exe', 'YTSage-v{version}-ffmpeg.exe' | Set-Content "setup_cxfreeze_ffmpeg.py"
+        
+        # Build executable with FFmpeg using setup script
+        python setup_cxfreeze_ffmpeg.py build_exe --build-exe "dist\YTSage-FFmpeg"
 
         # Remove screenshots folder to reduce build size
-        if (Test-Path "dist\YTSage-FFmpeg\assets\branding\screenshots") {
-          Remove-Item "dist\YTSage-FFmpeg\assets\branding\screenshots" -Recurse -Force
+        if (Test-Path "dist\YTSage-FFmpeg\lib\assets\branding\screenshots") {
+          Remove-Item "dist\YTSage-FFmpeg\lib\assets\branding\screenshots" -Recurse -Force
           Write-Host "Removed screenshots folder from FFmpeg build"
         }
 

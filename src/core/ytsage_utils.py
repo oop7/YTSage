@@ -4,28 +4,13 @@ import subprocess
 import sys
 import tempfile
 import time
+from importlib.metadata import PackageNotFoundError
 from pathlib import Path
-
-try:
-    from importlib.metadata import version as importlib_version
-    from importlib.metadata import PackageNotFoundError as ImportlibPackageNotFoundError
-    
-    def get_version(package_name: str) -> str:
-        return importlib_version(package_name)
-    
-    PackageNotFoundError = ImportlibPackageNotFoundError
-except ImportError:
-    # Fallback for older Python versions
-    import pkg_resources
-    def get_version(package_name: str) -> str:
-        return pkg_resources.get_distribution(package_name).version
-    PackageNotFoundError = pkg_resources.DistributionNotFound
 
 import requests
 from packaging import version
 
 from src.core.ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
-from src.core.ytsage_logging import logger
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import (
     APP_CONFIG_FILE,
@@ -35,6 +20,25 @@ from src.utils.ytsage_constants import (
     YTDLP_APP_BIN_PATH,
     YTDLP_DOWNLOAD_URL,
 )
+from src.utils.ytsage_logger import logger
+
+try:
+    from importlib.metadata import PackageNotFoundError as ImportlibPackageNotFoundError
+    from importlib.metadata import version as importlib_version
+
+    def get_version(package_name: str) -> str:
+        return importlib_version(package_name)
+
+    PackageNotFoundError = ImportlibPackageNotFoundError
+except ImportError:
+    # Fallback for older Python versions
+    import pkg_resources
+
+    def get_version(package_name: str) -> str:
+        return pkg_resources.get_distribution(package_name).version
+
+    PackageNotFoundError = pkg_resources.DistributionNotFound
+
 
 # Cache for version information to avoid delays
 _version_cache = {
@@ -108,7 +112,7 @@ def load_version_cache_from_config() -> None:
             if tool_name in _version_cache:
                 _version_cache[tool_name].update(cache_data)
     except Exception as e:
-        logger.error(f"Error loading version cache: {e}")
+        logger.exception(f"Error loading version cache: {e}")
 
 
 def save_version_cache_to_config() -> None:
@@ -118,7 +122,7 @@ def save_version_cache_to_config() -> None:
         config["cached_versions"] = _version_cache.copy()
         save_config(config)
     except Exception as e:
-        logger.error(f"Error saving version cache: {e}")
+        logger.exception(f"Error saving version cache: {e}")
 
 
 def get_ytdlp_version_cached() -> str:
@@ -140,7 +144,7 @@ def get_ytdlp_version_cached() -> str:
 
         return version_info
     except Exception as e:
-        logger.error(f"Error getting cached yt-dlp version: {e}")
+        logger.exception(f"Error getting cached yt-dlp version: {e}")
         return "Error getting version"
 
 
@@ -164,7 +168,7 @@ def get_ffmpeg_version_cached() -> str:
 
         return version_info
     except Exception as e:
-        logger.error(f"Error getting cached FFmpeg version: {e}")
+        logger.exception(f"Error getting cached FFmpeg version: {e}")
         return "Error getting version"
 
 
@@ -182,7 +186,7 @@ def refresh_version_cache(force=False) -> bool:
 
         return True
     except Exception as e:
-        logger.error(f"Error refreshing version cache: {e}")
+        logger.exception(f"Error refreshing version cache: {e}")
         return False
 
 
@@ -215,7 +219,7 @@ def get_ytdlp_version_direct(yt_dlp_path=None) -> str:
         else:
             return "Error getting version"
     except Exception as e:
-        logger.error(f"Error getting yt-dlp version: {e}")
+        logger.exception(f"Error getting yt-dlp version: {e}")
         return "Error getting version"
 
 
@@ -269,10 +273,10 @@ def get_ffmpeg_version_direct() -> str:
                     return "Unknown version"
             return "Not found"
         except Exception as e:
-            logger.error(f"Error getting FFmpeg version from install path: {e}")
+            logger.exception(f"Error getting FFmpeg version from install path: {e}")
             return "Not found"
     except Exception as e:
-        logger.error(f"Error getting FFmpeg version: {e}")
+        logger.exception(f"Error getting FFmpeg version: {e}")
         return "Error getting version"
 
 
@@ -308,7 +312,7 @@ def load_config() -> dict:
                         config[key] = value
                 return config
     except (json.JSONDecodeError, UnicodeError, Exception) as e:
-        logger.error(f"Error reading config file: {e}")
+        logger.exception(f"Error reading config file: {e}")
         # If config file is corrupted, create a new one with defaults
         save_config(default_config)
 
@@ -322,7 +326,7 @@ def save_config(config) -> bool:
             json.dump(config, f, ensure_ascii=False, indent=2)
         return True
     except Exception as e:
-        logger.error(f"Error saving config: {e}")
+        logger.exception(f"Error saving config: {e}")
         return False
 
 
@@ -342,7 +346,7 @@ def check_ffmpeg() -> bool:
                     os.environ["PATH"] = f"{ffmpeg_path}{os.pathsep}{os.environ.get('PATH', '')}"
                     return True
                 except Exception as e:
-                    logger.error(f"Error updating PATH: {e}")
+                    logger.exception(f"Error updating PATH: {e}")
                     return False
 
         # For macOS, check common paths
@@ -359,13 +363,13 @@ def check_ffmpeg() -> bool:
                         os.environ["PATH"] = f"{ffmpeg_dir}{os.pathsep}{os.environ.get('PATH', '')}"
                         return True
                     except Exception as e:
-                        logger.error(f"Error updating PATH: {e}")
+                        logger.exception(f"Error updating PATH: {e}")
                         continue
 
         return False
 
     except Exception as e:
-        logger.error(f"Error checking FFmpeg: {e}")
+        logger.exception(f"Error checking FFmpeg: {e}")
         return False
 
 
@@ -381,7 +385,7 @@ def load_saved_path(main_window_instance) -> None:
                         main_window_instance.last_path = saved_path
                         return
             except (json.JSONDecodeError, UnicodeError) as e:
-                logger.error(f"Error reading config file: {e}")
+                logger.exception(f"Error reading config file: {e}")
                 # If config file is corrupted, try to remove it
                 try:
                     APP_CONFIG_FILE.unlink(missing_ok=True)
@@ -397,7 +401,7 @@ def load_saved_path(main_window_instance) -> None:
             main_window_instance.last_path = tempfile.gettempdir()
 
     except Exception as e:
-        logger.error(f"Error loading saved settings: {e}")
+        logger.exception(f"Error loading saved settings: {e}")
         main_window_instance.last_path = tempfile.gettempdir()
 
 
@@ -409,7 +413,7 @@ def save_path(main_window_instance, path) -> bool:
             try:
                 Path(path).mkdir(exist_ok=True)
             except Exception as e:
-                logger.error(f"Error creating directory: {e}")
+                logger.exception(f"Error creating directory: {e}")
                 return False
 
         if not os.access(path, os.W_OK):
@@ -423,7 +427,7 @@ def save_path(main_window_instance, path) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f"Error saving settings: {e}")
+        logger.exception(f"Error saving settings: {e}")
         return False
 
 
@@ -484,13 +488,13 @@ def update_yt_dlp() -> bool:
                         logger.info("yt-dlp binary successfully updated")
                         return True
                     except Exception as e:
-                        logger.error(f"Error replacing yt-dlp binary: {e}")
+                        logger.exception(f"Error replacing yt-dlp binary: {e}")
                         return False
                 else:
                     logger.info(f"Failed to download latest yt-dlp: HTTP {response.status_code}")
                     return False
             except Exception as e:
-                logger.error(f"Error downloading yt-dlp update: {e}")
+                logger.exception(f"Error downloading yt-dlp update: {e}")
                 return False
         else:
             # We're using a system-installed yt-dlp, use pip to update
@@ -540,9 +544,9 @@ def update_yt_dlp() -> bool:
                 else:
                     logger.info(f"Failed to get latest version info: HTTP {response.status_code}")
             except Exception as e:
-                logger.error(f"Error checking for yt-dlp updates: {e}")
+                logger.exception(f"Error checking for yt-dlp updates: {e}")
     except Exception as e:
-        logger.info(f"Unexpected error during yt-dlp update: {e}")
+        logger.exception(f"Unexpected error during yt-dlp update: {e}")
 
     return False
 
@@ -573,7 +577,7 @@ def should_check_for_auto_update() -> bool:
 
         return False
     except Exception as e:
-        logger.error(f"Error checking auto-update schedule: {e}")
+        logger.exception(f"Error checking auto-update schedule: {e}")
         return False
 
 
@@ -602,9 +606,7 @@ def check_and_update_ytdlp_auto() -> bool:
             logger.info(f"Latest yt-dlp version: {latest_version}")
 
             # Compare versions
-            from packaging import version as version_parser
-
-            if version_parser.parse(latest_version) > version_parser.parse(current_version):
+            if version.parse(latest_version) > version.parse(current_version):
                 logger.info(f"Auto-updating yt-dlp from {current_version} to {latest_version}...")
 
                 # Perform the update
@@ -630,11 +632,11 @@ def check_and_update_ytdlp_auto() -> bool:
             logger.info(f"Network error during auto-update check: {e}")
             return False
         except Exception as e:
-            logger.error(f"Error during auto-update check: {e}")
+            logger.exception(f"Error during auto-update check: {e}")
             return False
 
     except Exception as e:
-        logger.info(f"Critical error in auto-update: {e}")
+        logger.critical(f"Critical error in auto-update: {e}", exc_info=True)
         return False
 
 
@@ -657,77 +659,103 @@ def update_auto_update_settings(enabled, frequency) -> bool:
         save_config(config)
         return True
     except Exception as e:
-        logger.error(f"Error updating auto-update settings: {e}")
+        logger.exception(f"Error updating auto-update settings: {e}")
         return False
 
 
 def parse_yt_dlp_error(error_message: str) -> str:
     """
     Parse yt-dlp error messages and return user-friendly error messages.
-    
+
     Args:
         error_message: The raw error message from yt-dlp
-        
+
     Returns:
         str: A user-friendly error message with actionable advice
     """
-    error_str = str(error_message).lower()
-    
+    error_str = error_message.lower()
+
     # Private video errors
-    if any(keyword in error_str for keyword in ['private video', 'login_required', 'sign in if you']):
-        return ("This is a private video. You can download it by logging into your account using cookies.\n"
-                "Go to 'Custom Options' → 'Login with Cookies' → 'Extract cookies from browser' to authenticate.")
-    
+    if any(keyword in error_str for keyword in ["private video", "login_required", "sign in if you"]):
+        return (
+            "This is a private video. You can download it by logging into your account using cookies.\n"
+            "Go to 'Custom Options' → 'Login with Cookies' → 'Extract cookies from browser' to authenticate."
+        )
+
     # Age-restricted content
-    if any(keyword in error_str for keyword in ['age restricted', 'age-restricted', 'confirm your age']):
-        return ("This video is age-restricted. You need to be logged in to access it.\n"
-                "Use 'Custom Options' → 'Login with Cookies' to authenticate with your account.")
-    
+    if any(keyword in error_str for keyword in ["age restricted", "age-restricted", "confirm your age"]):
+        return (
+            "This video is age-restricted. You need to be logged in to access it.\n"
+            "Use 'Custom Options' → 'Login with Cookies' to authenticate with your account."
+        )
+
     # Geo-blocked content
-    if any(keyword in error_str for keyword in ['not available in your country', 'geo-blocked', 'video is not available', 'not made this video available in your country']):
-        return ("This video is not available in your region (geo-blocked).\n"
-                "You may need to use a VPN or the video might be restricted in your country.")
-    
+    if any(
+        keyword in error_str
+        for keyword in [
+            "not available in your country",
+            "geo-blocked",
+            "video is not available",
+            "not made this video available in your country",
+        ]
+    ):
+        return (
+            "This video is not available in your region (geo-blocked).\n"
+            "You may need to use a VPN or the video might be restricted in your country."
+        )
+
     # Removed/deleted videos
-    if any(keyword in error_str for keyword in ['video unavailable', 'this video has been removed', 'video does not exist']):
-        return ("This video has been removed or is no longer available.\n"
-                "The video may have been deleted by the uploader or removed due to policy violations.")
-    
+    if any(keyword in error_str for keyword in ["video unavailable", "this video has been removed", "video does not exist"]):
+        return (
+            "This video has been removed or is no longer available.\n"
+            "The video may have been deleted by the uploader or removed due to policy violations."
+        )
+
     # Live stream errors
-    if any(keyword in error_str for keyword in ['live stream', 'livestream', 'is live']):
-        return ("This is a live stream that cannot be downloaded while active.\n"
-                "Wait for the stream to end, then try downloading the archived version.")
-    
+    if any(keyword in error_str for keyword in ["live stream", "livestream", "is live"]):
+        return (
+            "This is a live stream that cannot be downloaded while active.\n"
+            "Wait for the stream to end, then try downloading the archived version."
+        )
+
     # Playlist errors
-    if any(keyword in error_str for keyword in ['playlist', 'no entries']):
-        return ("Unable to access this playlist. It may be private, deleted, or empty.\n"
-                "Check if the playlist exists and is publicly accessible.")
-    
+    if any(keyword in error_str for keyword in ["playlist", "no entries"]):
+        return (
+            "Unable to access this playlist. It may be private, deleted, or empty.\n"
+            "Check if the playlist exists and is publicly accessible."
+        )
+
     # Network/connection errors
-    if any(keyword in error_str for keyword in ['network error', 'connection', 'timeout', 'unable to download']):
-        return ("Network connection error. Please check your internet connection and try again.\n"
-                "If the problem persists, the video server might be temporarily unavailable.")
-    
+    if any(keyword in error_str for keyword in ["network error", "connection", "timeout", "unable to download"]):
+        return (
+            "Network connection error. Please check your internet connection and try again.\n"
+            "If the problem persists, the video server might be temporarily unavailable."
+        )
+
     # Invalid URL
-    if any(keyword in error_str for keyword in ['invalid url', 'unsupported url', 'no video found']):
-        return ("Invalid or unsupported URL. Please check the link and try again.\n"
-                "Make sure you're using a valid YouTube, Vimeo, or other supported platform URL.")
-    
+    if any(keyword in error_str for keyword in ["invalid url", "unsupported url", "no video found"]):
+        return (
+            "Invalid or unsupported URL. Please check the link and try again.\n"
+            "Make sure you're using a valid YouTube, Vimeo, or other supported platform URL."
+        )
+
     # YouTube premium content
-    if any(keyword in error_str for keyword in ['youtube premium', 'premium', 'members only']):
-        return ("This content requires YouTube Premium or channel membership.\n"
-                "You need to be logged in with an account that has access to this content.")
-    
+    if any(keyword in error_str for keyword in ["youtube premium", "premium", "members only"]):
+        return (
+            "This content requires YouTube Premium or channel membership.\n"
+            "You need to be logged in with an account that has access to this content."
+        )
+
     # Copyright/DMCA
-    if any(keyword in error_str for keyword in ['copyright', 'dmca', 'blocked']):
-        return ("This video is blocked due to copyright claims.\n"
-                "The content owner has restricted access to this video.")
-    
+    if any(keyword in error_str for keyword in ["copyright", "dmca", "blocked"]):
+        return "This video is blocked due to copyright claims.\n" "The content owner has restricted access to this video."
+
     # Extraction errors (could be temporary)
-    if any(keyword in error_str for keyword in ['unable to extract', 'extraction failed']):
-        return ("Failed to extract video information. This might be a temporary issue.\n"
-                "Please try again in a few minutes, or check if the video link is correct.")
-    
+    if any(keyword in error_str for keyword in ["unable to extract", "extraction failed"]):
+        return (
+            "Failed to extract video information. This might be a temporary issue.\n"
+            "Please try again in a few minutes, or check if the video link is correct."
+        )
+
     # Generic fallback with the original error for debugging
-    return (f"Could not extract video information. Please check your link.\n"
-            f"Technical details: {error_message}")
+    return f"Could not extract video information. Please check your link.\n" f"Technical details: {error_message}"
