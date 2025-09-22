@@ -110,6 +110,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize cookie settings - ensure they start clean
         self.cookie_file_path = None
         self.browser_cookies_option = None
+        # Initialize proxy settings
+        self.proxy_url = None
+        self.geo_proxy_url = None
         self.speed_limit_value = None  # Store speed limit value
         self.speed_limit_unit_index = 0  # Store speed limit unit index (0: KB/s, 1: MB/s)
         self.download_section = None
@@ -1023,6 +1026,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             rate_limit=rate_limit,  # Pass the calculated rate limit
             download_section=self.download_section,  # Pass the download section
             force_keyframes=self.force_keyframes,  # Pass the force keyframes setting
+            proxy_url=self.proxy_url,  # Pass the proxy URL
+            geo_proxy_url=self.geo_proxy_url,  # Pass the geo-verification proxy URL
         )
 
         # Connect signals
@@ -1402,6 +1407,32 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 )
             # If neither is selected, both remain None (cleared above)
 
+            # Handle proxy options
+            proxy_url = dialog.get_proxy_url()
+            geo_proxy_url = dialog.get_geo_proxy_url()
+
+            # Clear existing proxy settings
+            self.proxy_url = None
+            self.geo_proxy_url = None
+
+            if proxy_url:
+                self.proxy_url = proxy_url
+                logger.info(f"Main proxy set: {self.proxy_url}")
+                QMessageBox.information(
+                    self,
+                    "Proxy Set",
+                    f"Main proxy set: {proxy_url}",
+                )
+
+            if geo_proxy_url:
+                self.geo_proxy_url = geo_proxy_url
+                logger.info(f"Geo-verification proxy set: {self.geo_proxy_url}")
+                QMessageBox.information(
+                    self,
+                    "Geo Proxy Set",
+                    f"Geo-verification proxy set: {geo_proxy_url}",
+                )
+
     def show_about_dialog(self) -> None:  # ADDED METHOD HERE
         dialog = AboutDialog(self)
         dialog.exec()
@@ -1707,6 +1738,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 cmd.extend(["--cookies", str(self.cookie_file_path)])
             elif self.browser_cookies_option:
                 cmd.extend(["--cookies-from-browser", self.browser_cookies_option])
+
+            # Add proxy settings if available
+            if self.proxy_url:
+                cmd.extend(["--proxy", self.proxy_url])
+            
+            if self.geo_proxy_url:
+                cmd.extend(["--geo-verification-proxy", self.geo_proxy_url])
 
             # Execute command with hidden console window on Windows
             # Extra logic moved to src\utils\ytsage_constants.py

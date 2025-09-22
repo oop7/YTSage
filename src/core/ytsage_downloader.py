@@ -59,6 +59,8 @@ class DownloadThread(QThread):
         rate_limit=None,
         download_section=None,
         force_keyframes=False,
+        proxy_url=None,
+        geo_proxy_url=None,
     ) -> None:
         super().__init__()
         self.url = url
@@ -78,6 +80,8 @@ class DownloadThread(QThread):
         self.rate_limit = rate_limit
         self.download_section = download_section
         self.force_keyframes = force_keyframes
+        self.proxy_url = proxy_url
+        self.geo_proxy_url = geo_proxy_url
         self.paused = False
         self.cancelled = False
         self.process = None
@@ -155,6 +159,13 @@ class DownloadThread(QThread):
                     self.browser_cookies.split(":")[0],
                     self.browser_cookies.split(":")[1] if ":" in self.browser_cookies else None,
                 )
+
+            # Add proxy settings if specified
+            if self.proxy_url:
+                ydl_opts_check["proxy"] = self.proxy_url
+            
+            if self.geo_proxy_url:
+                ydl_opts_check["geo_verification_proxy"] = self.geo_proxy_url
 
             if YT_DLP_AVAILABLE:
                 with yt_dlp.YoutubeDL(ydl_opts_check) as ydl:
@@ -323,6 +334,13 @@ class DownloadThread(QThread):
             cmd.extend(["--cookies", str(self.cookie_file)])
         elif self.browser_cookies:
             cmd.extend(["--cookies-from-browser", self.browser_cookies])
+
+        # Add proxy settings if specified
+        if self.proxy_url:
+            cmd.extend(["--proxy", self.proxy_url])
+        
+        if self.geo_proxy_url:
+            cmd.extend(["--geo-verification-proxy", self.geo_proxy_url])
 
         # Add rate limit if specified
         if self.rate_limit:

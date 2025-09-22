@@ -326,9 +326,121 @@ class CustomOptionsDialog(QDialog):
         )
         command_layout.addWidget(self.log_output)
 
+        # === Proxy Tab ===
+        proxy_tab = QWidget()
+        proxy_layout = QVBoxLayout(proxy_tab)
+
+        # Help text
+        proxy_help_text = QLabel(
+            "Configure proxy settings for network connections and geo-verification.\n"
+            "Proxy can help bypass regional restrictions and improve download performance."
+        )
+        proxy_help_text.setWordWrap(True)
+        proxy_help_text.setStyleSheet("color: #999999; padding: 10px;")
+        proxy_layout.addWidget(proxy_help_text)
+
+        # Main Proxy section
+        main_proxy_group = QGroupBox("Main Proxy")
+        main_proxy_layout = QVBoxLayout(main_proxy_group)
+
+        main_proxy_help = QLabel("Use the specified HTTP/HTTPS/SOCKS proxy for all connections.")
+        main_proxy_help.setWordWrap(True)
+        main_proxy_help.setStyleSheet("color: #999999; font-size: 11px;")
+        main_proxy_layout.addWidget(main_proxy_help)
+
+        # Main proxy input
+        main_proxy_input_layout = QHBoxLayout()
+        main_proxy_input_layout.addWidget(QLabel("Proxy URL:"))
+        self.proxy_url_input = QLineEdit()
+        self.proxy_url_input.setPlaceholderText("e.g., http://proxy.example.com:8080 or socks5://user:pass@127.0.0.1:1080")
+        self.proxy_url_input.textChanged.connect(self.validate_proxy_inputs)
+        main_proxy_input_layout.addWidget(self.proxy_url_input)
+        main_proxy_layout.addLayout(main_proxy_input_layout)
+
+        # Example text
+        example_label = QLabel("Examples: http://proxy.com:8080, https://proxy.com:8080, socks5://127.0.0.1:1080")
+        example_label.setStyleSheet("color: #888888; font-size: 10px; font-style: italic;")
+        main_proxy_layout.addWidget(example_label)
+
+        proxy_layout.addWidget(main_proxy_group)
+
+        # Geo-verification Proxy section
+        geo_proxy_group = QGroupBox("Geo-verification Proxy")
+        geo_proxy_layout = QVBoxLayout(geo_proxy_group)
+
+        geo_proxy_help = QLabel(
+            "Use this proxy to verify IP address for geo-restricted sites. "
+            "The main proxy (if set) is used for actual downloading."
+        )
+        geo_proxy_help.setWordWrap(True)
+        geo_proxy_help.setStyleSheet("color: #999999; font-size: 11px;")
+        geo_proxy_layout.addWidget(geo_proxy_help)
+
+        # Geo proxy input
+        geo_proxy_input_layout = QHBoxLayout()
+        geo_proxy_input_layout.addWidget(QLabel("Geo Proxy URL:"))
+        self.geo_proxy_url_input = QLineEdit()
+        self.geo_proxy_url_input.setPlaceholderText("e.g., http://us-proxy.example.com:8080")
+        self.geo_proxy_url_input.textChanged.connect(self.validate_proxy_inputs)
+        geo_proxy_input_layout.addWidget(self.geo_proxy_url_input)
+        geo_proxy_layout.addLayout(geo_proxy_input_layout)
+
+        proxy_layout.addWidget(geo_proxy_group)
+
+        # Proxy status indicator
+        self.proxy_status = QLabel("")
+        self.proxy_status.setStyleSheet("color: #999999; font-style: italic;")
+        proxy_layout.addWidget(self.proxy_status)
+
+        # Clear buttons
+        clear_layout = QHBoxLayout()
+        clear_main_proxy_btn = QPushButton("Clear Main Proxy")
+        clear_main_proxy_btn.clicked.connect(lambda: self.proxy_url_input.clear())
+        clear_main_proxy_btn.setStyleSheet(
+            """
+            QPushButton {
+                padding: 6px 12px;
+                background-color: #444444;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #555555;
+            }
+        """
+        )
+        clear_layout.addWidget(clear_main_proxy_btn)
+
+        clear_geo_proxy_btn = QPushButton("Clear Geo Proxy")
+        clear_geo_proxy_btn.clicked.connect(lambda: self.geo_proxy_url_input.clear())
+        clear_geo_proxy_btn.setStyleSheet(
+            """
+            QPushButton {
+                padding: 6px 12px;
+                background-color: #444444;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #555555;
+            }
+        """
+        )
+        clear_layout.addWidget(clear_geo_proxy_btn)
+
+        clear_layout.addStretch()
+        proxy_layout.addLayout(clear_layout)
+
+        proxy_layout.addStretch()
+
         # Add tabs to the tab widget
         self.tab_widget.addTab(cookies_tab, "Login with Cookies")
         self.tab_widget.addTab(command_tab, "Custom Command")
+        self.tab_widget.addTab(proxy_tab, "Proxy")
 
         # Dialog buttons
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
@@ -522,6 +634,78 @@ class CustomOptionsDialog(QDialog):
     def is_using_browser_cookies(self) -> bool:
         """Returns True if browser cookies mode is selected"""
         return self.cookie_browser_radio.isChecked()
+
+    def get_proxy_url(self) -> str | None:
+        """Returns the main proxy URL if specified"""
+        proxy_url = self.proxy_url_input.text().strip()
+        return proxy_url if proxy_url else None
+
+    def get_geo_proxy_url(self) -> str | None:
+        """Returns the geo-verification proxy URL if specified"""
+        geo_proxy_url = self.geo_proxy_url_input.text().strip()
+        return geo_proxy_url if geo_proxy_url else None
+
+    def validate_proxy_url(self, url: str) -> bool:
+        """Basic validation for proxy URL format"""
+        if not url:
+            return True  # Empty is OK
+        
+        # Check if it starts with a valid scheme
+        valid_schemes = ['http://', 'https://', 'socks5://', 'socks4://']
+        if not any(url.lower().startswith(scheme) for scheme in valid_schemes):
+            return False
+        
+        # Basic URL format check (contains at least host:port)
+        try:
+            # Remove the scheme to check host:port part
+            for scheme in valid_schemes:
+                if url.lower().startswith(scheme):
+                    host_port = url[len(scheme):]
+                    break
+            
+            # Skip user:pass@ part if present
+            if '@' in host_port:
+                host_port = host_port.split('@')[1]
+            
+            # Should have at least host:port
+            if ':' in host_port:
+                host, port = host_port.split(':', 1)
+                if host and port.isdigit():
+                    return True
+            
+            return False
+        except:
+            return False
+
+    def validate_proxy_inputs(self) -> None:
+        """Validate proxy inputs and update status"""
+        main_proxy = self.proxy_url_input.text().strip()
+        geo_proxy = self.geo_proxy_url_input.text().strip()
+        
+        if not main_proxy and not geo_proxy:
+            self.proxy_status.setText("")
+            return
+            
+        issues = []
+        
+        if main_proxy and not self.validate_proxy_url(main_proxy):
+            issues.append("Invalid main proxy URL format")
+            
+        if geo_proxy and not self.validate_proxy_url(geo_proxy):
+            issues.append("Invalid geo proxy URL format")
+        
+        if issues:
+            self.proxy_status.setText(" | ".join(issues))
+            self.proxy_status.setStyleSheet("color: #ff6666; font-style: italic;")
+        else:
+            status_parts = []
+            if main_proxy:
+                status_parts.append("Main proxy configured")
+            if geo_proxy:
+                status_parts.append("Geo proxy configured")
+            
+            self.proxy_status.setText(" | ".join(status_parts))
+            self.proxy_status.setStyleSheet("color: #00cc00; font-style: italic;")
 
     def run_custom_command(self) -> None:
         url = self._parent.url_input.text().strip()
