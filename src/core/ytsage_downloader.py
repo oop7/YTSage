@@ -99,13 +99,31 @@ class DownloadThread(QThread):
             pattern = re.compile(r"\.f\d+\.")  # Pattern to match format codes like .f243.
             for file_path in self.path.iterdir():
                 if file_path.suffix == ".part" or pattern.search(file_path.name):
-                    try:
-                        file_path.unlink(missing_ok=True)
-                    except Exception as e:
-                        logger.exception(f"Error deleting {file_path.name}: {e}")
+                    self._safe_delete_with_retry(file_path)
         except Exception as e:
             logger.exception(f"Error cleaning partial files: {e}")
-            self.error_signal.emit(f"Error cleaning partial files: {e}")
+            # Don't emit error signal for cleanup issues to avoid crashing the thread
+            logger.error(f"Error cleaning partial files: {e}")
+
+    def _safe_delete_with_retry(self, file_path: Path, max_retries: int = 3, delay: float = 1.0) -> None:
+        """Safely delete a file with retry mechanism for Windows file locking issues"""
+        for attempt in range(max_retries):
+            try:
+                if file_path.exists():
+                    file_path.unlink(missing_ok=True)
+                    logger.info(f"Successfully deleted {file_path.name}")
+                return
+            except PermissionError as e:
+                if "being used by another process" in str(e) and attempt < max_retries - 1:
+                    logger.warning(f"File {file_path.name} is locked, retrying in {delay} seconds... (attempt {attempt + 1}/{max_retries})")
+                    time.sleep(delay)
+                    delay *= 1.5  # Exponential backoff
+                else:
+                    logger.error(f"Failed to delete {file_path.name} after {max_retries} attempts: {e}")
+                    return
+            except Exception as e:
+                logger.error(f"Error deleting {file_path.name}: {e}")
+                return
 
     def cleanup_subtitle_files(self) -> None:
         """Delete subtitle files after they have been merged into the video file"""
@@ -425,6 +443,16 @@ class DownloadThread(QThread):
             for line in iter(self.process.stdout.readline, ""):  # type: ignore
                 if self.cancelled:
                     self.process.terminate()
+                    # Wait for process to actually terminate before cleaning up files
+                    try:
+                        self.process.wait(timeout=5)  # Wait up to 5 seconds
+                    except subprocess.TimeoutExpired:
+                        logger.warning("Process didn't terminate gracefully, forcing kill")
+                        self.process.kill()
+                        self.process.wait()
+                    
+                    # Add delay before cleanup to allow file handles to be released
+                    time.sleep(1)
                     self.cleanup_partial_files()
                     self.status_signal.emit("Download cancelled")
                     return
@@ -473,11 +501,16 @@ class DownloadThread(QThread):
                         )
                     else:
                         self.error_signal.emit(f"Download failed with return code {return_code}")
+                    
+                    # Add delay before cleanup to allow file handles to be released
+                    time.sleep(1)
                     self.cleanup_partial_files()
 
         except Exception as e:
             logger.exception(f"Error in direct command: {e}")
             self.error_signal.emit(f"Error in direct command: {e}")
+            # Add delay before cleanup to allow file handles to be released
+            time.sleep(1)
             self.cleanup_partial_files()
 
     def _parse_output_line(self, line) -> None:
