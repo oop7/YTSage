@@ -47,7 +47,7 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 | ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp Detection         |
 | 📋 Playlist Support              |  🖼️ Save thumbnail                       | ⚙️ Custom Commands                 |
 | 🖼️ Playlist Selector             | 🚀 Speed Limiter                        | 🍪 Login with Cookies              |
-| 📑 Embed Chapters                | ✂️ Trim Video Sections                   |                                    |
+| 📑 Embed Chapters                | ✂️ Trim Video Sections                  | 🌐 Proxy Support                   |
 
 </div>
 
