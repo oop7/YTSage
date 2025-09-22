@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import YTDLP_DOCS_URL
+from src.utils.ytsage_config_manager import ConfigManager
 
 if TYPE_CHECKING:
     from src.gui.ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
@@ -554,6 +555,7 @@ class CustomOptionsDialog(QDialog):
 
         # Initialize dialog with current settings (after all widgets and styles are set)
         self._initialize_cookie_settings()
+        self._initialize_proxy_settings()
 
     def _initialize_cookie_settings(self) -> None:
         """Initialize the dialog with current cookie settings from parent"""
@@ -582,6 +584,22 @@ class CustomOptionsDialog(QDialog):
         else:
             # No cookies configured - ensure file radio is selected by default
             self.cookie_file_radio.setChecked(True)
+
+    def _initialize_proxy_settings(self) -> None:
+        """Initialize the dialog with current proxy settings from config"""
+        # Load proxy settings from config
+        proxy_url = ConfigManager.get("proxy_url")
+        geo_proxy_url = ConfigManager.get("geo_proxy_url")
+        
+        # Set proxy field values if they exist
+        if proxy_url:
+            self.proxy_url_input.setText(proxy_url)
+        
+        if geo_proxy_url:
+            self.geo_proxy_url_input.setText(geo_proxy_url)
+            
+        # Update validation status
+        self.validate_proxy_inputs()
 
     def on_cookie_source_changed(self) -> None:
         """Handle cookie source radio button changes"""
@@ -683,7 +701,20 @@ class CustomOptionsDialog(QDialog):
         geo_proxy = self.geo_proxy_url_input.text().strip()
         
         if not main_proxy and not geo_proxy:
-            self.proxy_status.setText("")
+            # Check if there are saved settings
+            saved_main = ConfigManager.get("proxy_url")
+            saved_geo = ConfigManager.get("geo_proxy_url")
+            
+            if saved_main or saved_geo:
+                status_parts = []
+                if saved_main:
+                    status_parts.append(f"Saved main proxy: {saved_main}")
+                if saved_geo:
+                    status_parts.append(f"Saved geo proxy: {saved_geo}")
+                self.proxy_status.setText(" | ".join(status_parts))
+                self.proxy_status.setStyleSheet("color: #888888; font-style: italic;")
+            else:
+                self.proxy_status.setText("")
             return
             
         issues = []

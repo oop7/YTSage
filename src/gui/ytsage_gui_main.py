@@ -45,6 +45,7 @@ from src.gui.ytsage_gui_format_table import FormatTableMixin
 from src.gui.ytsage_gui_video_info import VideoInfoMixin
 from src.utils.ytsage_constants import ICON_PATH, SOUND_PATH, SUBPROCESS_CREATIONFLAGS
 from src.utils.ytsage_logger import logger
+from src.utils.ytsage_config_manager import ConfigManager
 
 try:
     import yt_dlp
@@ -110,9 +111,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize cookie settings - ensure they start clean
         self.cookie_file_path = None
         self.browser_cookies_option = None
-        # Initialize proxy settings
-        self.proxy_url = None
-        self.geo_proxy_url = None
+        # Initialize proxy settings from config
+        self.proxy_url = ConfigManager.get("proxy_url")
+        self.geo_proxy_url = ConfigManager.get("geo_proxy_url")
         self.speed_limit_value = None  # Store speed limit value
         self.speed_limit_unit_index = 0  # Store speed limit unit index (0: KB/s, 1: MB/s)
         self.download_section = None
@@ -1411,26 +1412,37 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             proxy_url = dialog.get_proxy_url()
             geo_proxy_url = dialog.get_geo_proxy_url()
 
-            # Clear existing proxy settings
-            self.proxy_url = None
-            self.geo_proxy_url = None
+            # Update instance variables
+            self.proxy_url = proxy_url
+            self.geo_proxy_url = geo_proxy_url
 
+            # Save proxy settings to config
+            ConfigManager.set("proxy_url", proxy_url)
+            ConfigManager.set("geo_proxy_url", geo_proxy_url)
+
+            # Show confirmation messages
             if proxy_url:
-                self.proxy_url = proxy_url
                 logger.info(f"Main proxy set: {self.proxy_url}")
                 QMessageBox.information(
                     self,
                     "Proxy Set",
-                    f"Main proxy set: {proxy_url}",
+                    f"Main proxy set and saved: {proxy_url}",
                 )
 
             if geo_proxy_url:
-                self.geo_proxy_url = geo_proxy_url
                 logger.info(f"Geo-verification proxy set: {self.geo_proxy_url}")
                 QMessageBox.information(
                     self,
                     "Geo Proxy Set",
-                    f"Geo-verification proxy set: {geo_proxy_url}",
+                    f"Geo-verification proxy set and saved: {geo_proxy_url}",
+                )
+
+            # Show a combined message if both are cleared
+            if not proxy_url and not geo_proxy_url and (ConfigManager.get("proxy_url") or ConfigManager.get("geo_proxy_url")):
+                QMessageBox.information(
+                    self,
+                    "Proxy Settings Cleared",
+                    "All proxy settings have been cleared and saved.",
                 )
 
     def show_about_dialog(self) -> None:  # ADDED METHOD HERE

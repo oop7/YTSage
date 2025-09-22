@@ -74,6 +74,8 @@ class ConfigManager:
         "speed_limit_unit_index": 0,
         "cookie_file_path": None,
         "last_used_cookie_file": None,
+        "proxy_url": None,
+        "geo_proxy_url": None,
         "auto_update_ytdlp": True,
         "auto_update_frequency": "daily",
         "last_update_check": 0,
