@@ -14,6 +14,7 @@
     "hindi": "हिन्दी (Hindi)",
     "indonesian": "Bahasa Indonesia (Indonesian)",
     "turkish": "Türkçe (Turkish)",
+    "polish": "Polski (Polish)",
     "help_text": "Select your preferred language for the interface.",
     "restart_notice": "Language change will take effect after restarting the application."
   },

@@ -89,7 +89,8 @@ class LocalizationManager:
             "french": "Français (French)",
             "hindi": "हिन्दी (Hindi)",
             "indonesian": "Bahasa Indonesia (Indonesian)",
-            "turkish": "Türkçe (Turkish)"
+            "turkish": "Türkçe (Turkish)",
+            "polish": "Polski (Polish)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",
