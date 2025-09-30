@@ -7,6 +7,7 @@
     "english": "English",
     "spanish": "Español (Spanish)",
     "portuguese": "Português (Portuguese)",
+    "russian": "Русский (Russian)",
     "help_text": "Select your preferred language for the interface.",
     "restart_notice": "Language change will take effect after restarting the application."
   },
