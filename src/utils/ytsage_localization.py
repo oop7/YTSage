@@ -81,7 +81,8 @@ class LocalizationManager:
             "current_language": "Current language: {language}",
             "restart_required": "Language changes will take effect after restarting the application.",
             "english": "English",
-            "spanish": "Español (Spanish)"
+            "spanish": "Español (Spanish)",
+            "portuguese": "Português (Portuguese)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",
