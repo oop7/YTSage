@@ -12,6 +12,7 @@
     "german": "Deutsch (German)",
     "french": "Français (French)",
     "hindi": "हिन्दी (Hindi)",
+    "indonesian": "Bahasa Indonesia (Indonesian)",
     "help_text": "Select your preferred language for the interface.",
     "restart_notice": "Language change will take effect after restarting the application."
   },

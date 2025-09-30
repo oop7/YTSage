@@ -87,7 +87,8 @@ class LocalizationManager:
             "chinese": "中文 (简体) (Chinese Simplified)",
             "german": "Deutsch (German)",
             "french": "Français (French)",
-            "hindi": "हिन्दी (Hindi)"
+            "hindi": "हिन्दी (Hindi)",
+            "indonesian": "Bahasa Indonesia (Indonesian)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",
