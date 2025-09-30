@@ -90,7 +90,8 @@ class LocalizationManager:
             "hindi": "हिन्दी (Hindi)",
             "indonesian": "Bahasa Indonesia (Indonesian)",
             "turkish": "Türkçe (Turkish)",
-            "polish": "Polski (Polish)"
+            "polish": "Polski (Polish)",
+            "italian": "Italiano (Italian)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",
