@@ -8,6 +8,7 @@
     "spanish": "Espanhol",
     "portuguese": "Português",
     "russian": "Русский (Russian)",
+    "chinese": "中文 (简体) (Chinese Simplified)",
     "help_text": "Selecione seu idioma preferido para a interface.",
     "restart_notice": "A alteração de idioma terá efeito após reiniciar a aplicação."
   },
