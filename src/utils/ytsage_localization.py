@@ -86,7 +86,8 @@ class LocalizationManager:
             "russian": "Русский (Russian)",
             "chinese": "中文 (简体) (Chinese Simplified)",
             "german": "Deutsch (German)",
-            "french": "Français (French)"
+            "french": "Français (French)",
+            "hindi": "हिन्दी (Hindi)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",

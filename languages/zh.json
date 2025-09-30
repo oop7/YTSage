@@ -11,6 +11,7 @@
     "chinese": "中文",
     "german": "德语",
     "french": "法语",
+    "hindi": "印地语",
     "help_text": "选择您喜欢的界面语言。",
     "restart_notice": "语言更改将在重启应用程序后生效。"
   },
