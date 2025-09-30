@@ -1,4 +1,15 @@
 {
+  "language": {
+    "display_name": "English",
+    "select_language": "Select language:",
+    "current_language": "Current language: {language}",
+    "restart_required": "Language changes will take effect after restarting the application.",
+    "english": "English",
+    "spanish": "Español (Spanish)",
+    "portuguese": "Português (Portuguese)",
+    "help_text": "Select your preferred language for the interface.",
+    "restart_notice": "Language change will take effect after restarting the application."
+  },
   "app": {
     "title": "YTSage",
     "version": "v{version}",
@@ -134,11 +145,7 @@
     "main_configured": "Main proxy configured",
     "geo_configured": "Geo proxy configured"
   },
-  "language": {
-    "help_text": "Select your preferred language for the interface.",
-    "current_language": "Current Language:",
-    "restart_notice": "Language change will take effect after restarting the application."
-  },
+
   "download": {
     "preparing": "Preparing download...",
     "please_enter_url": "Please enter a URL first.",
@@ -179,25 +186,30 @@
   },
   "about": {
     "title": "About YTSage",
-    "version": "Version: {version}",
-    "description": "A modern YouTube downloader with advanced features",
-    "author": "Created with ❤️",
-    "license": "License: MIT",
+    "version": "Version {version}",
+    "description": "Modern YouTube downloader with clean PySide6 interface.",
+    "author": "By: {author}",
+    "github": "GitHub: {repo}",
     "system_info": "System Information",
-    "python_version": "Python Version: {version}",
-    "pyside_version": "PySide6 Version: {version}",
-    "ytdlp_version": "yt-dlp Version: {version}",
-    "ffmpeg_status": "FFmpeg Status: {status}",
-    "ffmpeg_available": "Available",
-    "ffmpeg_not_available": "Not Available",
-    "error_getting_info": "Error getting system information: {error}"
+    "loading": "🔄 Loading system information...",
+    "refresh": "🔄",
+    "refreshing": "🔄 Refreshing...",
+    "refresh_failed": "Refresh Failed",
+    "refresh_failed_message": "Could not refresh version information.",
+    "detected": "✓ Detected",
+    "missing": "✗ Missing",
+    "not_available": "Not Available"
   },
   "time_range": {
     "title": "Trim Video",
+    "time_range_group": "Time Range",
     "start_time": "Start Time (HH:MM:SS)",
     "end_time": "End Time (HH:MM:SS)",
     "start_placeholder": "00:00:00",
     "end_placeholder": "00:00:00",
+    "start_time_placeholder": "Start time (HH:MM:SS)",
+    "end_time_placeholder": "End time (HH:MM:SS)",
+    "force_keyframes": "Force keyframes at cut points",
     "help_text": "Set the start and end times to trim the video.\nLeave empty to download the full video.",
     "invalid_format": "Invalid time format. Use HH:MM:SS format.",
     "start_after_end": "Start time cannot be after end time."

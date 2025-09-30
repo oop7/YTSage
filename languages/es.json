@@ -5,7 +5,8 @@
     "current_language": "Idioma actual: {language}",
     "restart_required": "Los cambios de idioma tendrán efecto después de reiniciar la aplicación.",
     "english": "Inglés",
-    "spanish": "Español (Spanish)"
+    "spanish": "Español (Spanish)",
+    "portuguese": "Português (Portuguese)"
   },
   "app": {
     "title": "YTSage",
