@@ -18,6 +18,7 @@ from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushB
 from src.core.ytsage_utils import get_ytdlp_version, load_config, save_config
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH, YTDLP_DOWNLOAD_URL
+from src.utils.ytsage_localization import _
 from src.utils.ytsage_logger import logger
 
 try:
@@ -118,15 +119,15 @@ class UpdateThread(QThread):
         error_message = ""
         success = False
         try:
-            self.update_status.emit("🔍 Checking current installation...")
+            self.update_status.emit(_('update.checking_current'))
             self.update_progress.emit(10)
 
             # Get the yt-dlp path
             try:
                 yt_dlp_path = get_yt_dlp_path()
-                self.update_status.emit(f"📍 Found yt-dlp at: {yt_dlp_path}")
+                self.update_status.emit(_('update.found_at', path=yt_dlp_path))
             except Exception as e:
-                self.update_status.emit(f"❌ Error getting yt-dlp path: {e}")
+                self.update_status.emit(_('update.error_getting_path', error=e))
                 self.update_finished.emit(False, f"❌ Error getting yt-dlp path: {e}")
                 return
 
@@ -152,17 +153,17 @@ class UpdateThread(QThread):
                 is_app_managed = False
 
             if is_app_managed:
-                self.update_status.emit("📦 Updating app-managed yt-dlp binary...")
+                self.update_status.emit(_('update.updating_binary'))
                 success = self._update_binary(yt_dlp_path)
             else:
-                self.update_status.emit("🐍 Updating system yt-dlp via pip...")
+                self.update_status.emit(_('update.updating_pip'))
                 success = self._update_via_pip()
 
             if success:
                 self.update_progress.emit(100)
                 error_message = "✅ yt-dlp has been successfully updated!"
             else:
-                error_message = "❌ Failed to update yt-dlp. Please try again or check your internet connection."
+                error_message = _('update.update_failed')
 
         except requests.RequestException as e:
             error_message = f"❌ Network error during update: {e}"
@@ -196,61 +197,61 @@ class UpdateThread(QThread):
                 logger.info("UpdateThread: yt-dlp update completed successfully.")
                 if result.stdout:
                     logger.debug(f"yt-dlp output: {result.stdout.strip()}")
-                self.update_status.emit("✅ Binary successfully updated!")
+                self.update_status.emit(_('update.binary_updated'))
                 self.update_progress.emit(95)
                 return True
             else:
                 logger.error(f"UpdateThread: yt-dlp update failed. {result.stderr.strip()}")
-                self.update_status.emit(f"❌ yt-dlp update failed: {result.stderr.strip()}")
+                self.update_status.emit(_('update.update_failed_stderr', error=result.stderr.strip()))
                 return False
 
         except subprocess.TimeoutExpired:
             logger.error("UpdateThread: yt-dlp update timed out.")
-            self.update_status.emit("❌ yt-dlp update timed out.")
+            self.update_status.emit(_('update.update_timeout'))
             return False
 
         except Exception as e:
             logger.exception(f"UpdateThread: Unexpected error during update: {e}")
-            self.update_status.emit(f"❌ Unexpected error during update: {e}")
+            self.update_status.emit(_('update.unexpected_error', error=e))
             return False
 
     def _update_via_pip(self) -> bool:
         """Update yt-dlp via pip."""
         try:
-            self.update_status.emit("🔍 Checking current pip installation...")
+            self.update_status.emit(_('update.checking_pip'))
             self.update_progress.emit(30)
 
             # Get current version
             try:
                 current_version = get_version("yt-dlp")
-                self.update_status.emit(f"📋 Current version: {current_version}")
+                self.update_status.emit(_('update.current_version', version=current_version))
             except PackageNotFoundError:
-                self.update_status.emit("⚠️ yt-dlp not found via pip, attempting installation...")
+                self.update_status.emit(_('update.not_found_pip'))
                 current_version = "0.0.0"
 
             self.update_progress.emit(40)
 
             # Get the latest version from PyPI
-            self.update_status.emit("🌐 Checking for latest version...")
+            self.update_status.emit(_('update.checking_latest'))
             response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
 
             if response.status_code != 200:
-                self.update_status.emit("❌ Failed to check for updates")
+                self.update_status.emit(_('update.failed_check_updates'))
                 return False
 
             data = response.json()
             latest_version = data["info"]["version"]
-            self.update_status.emit(f"🆕 Latest version: {latest_version}")
+            self.update_status.emit(_('update.latest_version', version=latest_version))
             self.update_progress.emit(50)
 
             # Compare versions
             if version.parse(latest_version) > version.parse(current_version):
-                self.update_status.emit(f"⬆️ Updating from {current_version} to {latest_version}...")
+                self.update_status.emit(_('update.updating_from_to', current=current_version, latest=latest_version))
                 self.update_progress.emit(60)
 
                 try:
                     # Run pip update with timeout
-                    self.update_status.emit("📦 Running pip install --upgrade...")
+                    self.update_status.emit(_('update.running_pip_install'))
                     update_result = subprocess.run(
                         [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
                         capture_output=True,
@@ -263,11 +264,11 @@ class UpdateThread(QThread):
                     self.update_progress.emit(85)
 
                     if update_result.returncode == 0:
-                        self.update_status.emit("✅ Pip update completed successfully!")
+                        self.update_status.emit(_('update.pip_completed'))
                         self.update_progress.emit(95)
                         return True
                     else:
-                        self.update_status.emit(f"❌ Pip update failed: {update_result.stderr}")
+                        self.update_status.emit(_('update.pip_failed', error=update_result.stderr))
                         return False
 
                 except subprocess.TimeoutExpired:
@@ -289,7 +290,7 @@ class UpdateThread(QThread):
 class YTDLPUpdateDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Update yt-dlp")
+        self.setWindowTitle(_('update.title'))
         self.setMinimumWidth(450)
         self.setMinimumHeight(200)
         self._closing = False  # Flag to track if dialog is closing
@@ -297,7 +298,7 @@ class YTDLPUpdateDialog(QDialog):
         layout = QVBoxLayout(self)
 
         # Status label
-        self.status_label = QLabel("Checking for updates...")
+        self.status_label = QLabel(_('update.checking'))
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setWordWrap(True)
         self.status_label.setMinimumHeight(60)
@@ -310,11 +311,11 @@ class YTDLPUpdateDialog(QDialog):
 
         # Buttons
         button_layout = QHBoxLayout()
-        self.update_btn = QPushButton("Update")
+        self.update_btn = QPushButton(_('buttons.update'))
         self.update_btn.clicked.connect(self.perform_update)
         self.update_btn.setEnabled(False)
 
-        self.close_btn = QPushButton("Close")
+        self.close_btn = QPushButton(_('buttons.close'))
         self.close_btn.clicked.connect(self.close)
 
         button_layout.addWidget(self.update_btn)
@@ -370,7 +371,7 @@ class YTDLPUpdateDialog(QDialog):
         self.check_version()
 
     def check_version(self) -> None:
-        self.status_label.setText("Checking for updates...")
+        self.status_label.setText(_('update.checking'))
         self.update_btn.setEnabled(False)
         self.version_check_thread = VersionCheckThread()
         self.version_check_thread.finished.connect(self.on_version_check_finished)
@@ -387,7 +388,7 @@ class YTDLPUpdateDialog(QDialog):
             return
 
         if not current_version or not latest_version:
-            self.status_label.setText("Could not determine versions.")
+            self.status_label.setText(_('update.could_not_determine'))
             self.update_btn.setEnabled(False)
             return
 
@@ -398,7 +399,7 @@ class YTDLPUpdateDialog(QDialog):
 
             if current_ver < latest_ver:
                 self.status_label.setText(
-                    f"Update available!\nCurrent version: {current_version}\nLatest version: {latest_version}"
+                    _('update.update_available', current=current_version, latest=latest_version)
                 )
                 self.update_btn.setEnabled(True)
             else:
@@ -408,22 +409,22 @@ class YTDLPUpdateDialog(QDialog):
             # If version parsing fails, do a simple string comparison
             if current_version != latest_version:
                 self.status_label.setText(
-                    f"Update available! (Comparison failed)\nCurrent: {current_version}\nLatest: {latest_version}"
+                    _('update.update_available_failed', current=current_version, latest=latest_version)
                 )
                 self.update_btn.setEnabled(True)
             else:
-                self.status_label.setText(f"yt-dlp is up to date (version {current_version})")
+                self.status_label.setText(_('update.up_to_date', version=current_version))
                 self.update_btn.setEnabled(False)
         except Exception as e:
-            self.status_label.setText(f"Error comparing versions: {e}")
+            self.status_label.setText(_('update.error_comparing', error=e))
             self.update_btn.setEnabled(False)
 
     def perform_update(self) -> None:
         # Immediate visual feedback
         self.update_btn.setEnabled(False)
         self.close_btn.setEnabled(False)
-        self.update_btn.setText("Updating...")
-        self.status_label.setText("🚀 Initializing update process...")
+        self.update_btn.setText(_('update.updating'))
+        self.status_label.setText(_('update.initializing'))
 
         # Show progress bar immediately
         self.progress_bar.setRange(0, 100)
@@ -461,7 +462,7 @@ class YTDLPUpdateDialog(QDialog):
         self.progress_bar.setValue(100)
         self.status_label.setText(message)
         self.close_btn.setEnabled(True)
-        self.update_btn.setText("Update")  # Reset button text
+        self.update_btn.setText(_('buttons.update'))  # Reset button text
 
         if success:
             # Show success briefly then auto-check version

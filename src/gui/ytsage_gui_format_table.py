@@ -4,6 +4,8 @@ from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QHeaderView, QSizePolicy, QTableWidget, QTableWidgetItem, QWidget
 
+from src.utils.ytsage_localization import _
+
 if TYPE_CHECKING:
     from src.gui.ytsage_gui_main import YTSageApp
 
@@ -22,14 +24,14 @@ class FormatTableMixin:
         self.format_table.setColumnCount(8)
         self.format_table.setHorizontalHeaderLabels(
             [
-                "Select",
-                "Quality",
-                "Extension",
-                "Resolution",
-                "File Size",
-                "Codec",
-                "Audio",
-                "Notes",
+                _("formats.select"),
+                _("formats.quality"),
+                _("formats.extension"),
+                _("formats.resolution"),
+                _("formats.file_size"),
+                _("formats.codec"),
+                _("formats.audio"),
+                _("formats.notes"),
             ]
         )
 
@@ -183,7 +185,7 @@ class FormatTableMixin:
         # Configure columns based on mode
         if is_playlist_mode:
             self.format_table.setColumnCount(5)
-            self.format_table.setHorizontalHeaderLabels(["Select", "Quality", "Resolution", "Notes", "Audio"])
+            self.format_table.setHorizontalHeaderLabels([_("formats.select"), _("formats.quality"), _("formats.resolution"), _("formats.notes"), _("formats.audio")])
 
             # Configure column visibility and resizing for playlist mode
             self.format_table.setColumnHidden(5, True)
@@ -202,14 +204,14 @@ class FormatTableMixin:
             self.format_table.setColumnCount(8)
             self.format_table.setHorizontalHeaderLabels(
                 [
-                    "Select",
-                    "Quality",
-                    "Extension",
-                    "Resolution",
-                    "File Size",
-                    "Codec",
-                    "Audio",
-                    "Notes",
+                    _("formats.select"),
+                    _("formats.quality"),
+                    _("formats.extension"),
+                    _("formats.resolution"),
+                    _("formats.file_size"),
+                    _("formats.codec"),
+                    _("formats.audio"),
+                    _("formats.notes"),
                 ]
             )
             # Ensure all columns are visible
@@ -262,14 +264,14 @@ class FormatTableMixin:
             # Column 1: Quality (Always shown)
             quality_text = self.get_quality_label(f)
             quality_item = QTableWidgetItem(quality_text)
-            # Set color based on quality
-            if "Best" in quality_text:
+            # Set color based on quality (check both English and Spanish terms)
+            if any(term in quality_text for term in ["Best", "Óptima", "Mejor"]):
                 quality_item.setForeground(QColor("#00ff00"))  # Green for best quality
-            elif "High" in quality_text:
+            elif any(term in quality_text for term in ["High", "Alta", "Alto"]):
                 quality_item.setForeground(QColor("#00cc00"))  # Light green for high quality
-            elif "Medium" in quality_text:
+            elif any(term in quality_text for term in ["Medium", "Media", "Medio"]):
                 quality_item.setForeground(QColor("#ffaa00"))  # Orange for medium quality
-            elif "Low" in quality_text:
+            elif any(term in quality_text for term in ["Low", "Baja", "Bajo"]):
                 quality_item.setForeground(QColor("#ff5555"))  # Red for low quality
             self.format_table.setItem(row, 1, quality_item)
 
@@ -278,7 +280,7 @@ class FormatTableMixin:
             # Column 2: Resolution (Always shown)
             resolution = f.get("resolution", "N/A")
             if f.get("vcodec") == "none":
-                resolution = "Audio only"
+                resolution = _("formats.audio_only_resolution")
             self.format_table.setItem(row, 2, QTableWidgetItem(resolution))
 
             # Column 3: Notes for playlist mode, Extension for normal mode
@@ -299,11 +301,11 @@ class FormatTableMixin:
 
             # Column 4 in playlist mode, Column 6 in normal mode: Audio Status
             needs_audio = f.get("acodec") == "none" and f.get("vcodec") != "none"  # Only mark video-only as needing merge
-            audio_status = "Will merge audio" if needs_audio else ("✓ Has Audio" if f.get("vcodec") != "none" else "Audio Only")
+            audio_status = _("formats.will_merge_audio") if needs_audio else (_("formats.has_audio") if f.get("vcodec") != "none" else _("formats.audio_only"))
             audio_item = QTableWidgetItem(audio_status)
             if needs_audio:
                 audio_item.setForeground(QColor("#ffa500"))
-            elif audio_status == "Audio Only":
+            elif audio_status == _("formats.audio_only"):
                 audio_item.setForeground(QColor("#cccccc"))  # Neutral color for audio only
             else:  # Has Audio (Video+Audio)
                 audio_item.setForeground(QColor("#00cc00"))  # Green for included audio
@@ -369,13 +371,13 @@ class FormatTableMixin:
             # Audio quality
             abr = format_info.get("abr", 0)
             if abr >= 256:
-                return "Best Audio"
+                return _("formats.best_audio")
             elif abr >= 192:
-                return "High Audio"
+                return _("formats.high_audio")
             elif abr >= 128:
-                return "Medium Audio"
+                return _("formats.medium_audio")
             else:
-                return "Low Audio"
+                return _("formats.low_audio")
         else:
             # Video quality
             height = 0
@@ -387,17 +389,17 @@ class FormatTableMixin:
                     pass
 
             if height >= 2160:
-                return "Best (4K)"
+                return _("formats.best_4k")
             elif height >= 1440:
-                return "Best (2K)"
+                return _("formats.best_2k")
             elif height >= 1080:
-                return "High (1080p)"
+                return _("formats.high_1080p")
             elif height >= 720:
-                return "High (720p)"
+                return _("formats.high_720p")
             elif height >= 480:
-                return "Medium (480p)"
+                return _("formats.medium_480p")
             else:
-                return "Low Quality"
+                return _("formats.low_quality")
 
     def _get_format_notes(self, format_info) -> str:
         """Generate helpful format notes based on format info."""
@@ -410,11 +412,11 @@ class FormatTableMixin:
 
         # Better file size categories
         if file_size > 50 * 1024 * 1024:  # Over 50MB
-            notes.append("Large size")
+            notes.append(_("formats.large_size"))
         elif file_size > 15 * 1024 * 1024:  # 15-50MB
-            notes.append("Medium size")
+            notes.append(_("formats.medium_size"))
         elif file_size > 5 * 1024 * 1024:  # 5-15MB
-            notes.append("Standard size")
+            notes.append(_("formats.standard_size"))
         else:  # Under 5MB
             notes.append("Small size")
 
@@ -422,11 +424,11 @@ class FormatTableMixin:
         vcodec = format_info.get("vcodec", "")
         if vcodec != "none":
             if "avc1" in vcodec:  # H.264
-                notes.append("Compatible")
+                notes.append(_("formats.compatible"))
             elif "av01" in vcodec:  # AV1
-                notes.append("Efficient")
+                notes.append(_("formats.efficient"))
             elif "vp9" in vcodec:  # VP9
-                notes.append("High quality")
+                notes.append(_("formats.high_quality"))
 
         # Add quick mobile compatibility check
         if "avc1" in vcodec and file_size < 8 * 1024 * 1024:

@@ -79,6 +79,7 @@ class ConfigManager:
         "auto_update_ytdlp": True,
         "auto_update_frequency": "daily",
         "last_update_check": 0,
+        "language": "en",
         "cached_versions": {
             "ytdlp": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
             "ffmpeg": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},

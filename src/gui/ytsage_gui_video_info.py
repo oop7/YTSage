@@ -14,6 +14,7 @@ from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__
     SponsorBlockCategoryDialog,
     SubtitleSelectionDialog,
 )
+from src.utils.ytsage_localization import _
 from src.utils.ytsage_logger import logger
 
 if TYPE_CHECKING:
@@ -95,7 +96,7 @@ class VideoInfoMixin:
         subtitle_layout.setSpacing(10)
 
         # Subtitle selection button
-        self.subtitle_select_btn = QPushButton("Select Subtitles...")  # Renamed & changed text
+        self.subtitle_select_btn = QPushButton(_("main_ui.select_subtitles"))  # Renamed & changed text
         self.subtitle_select_btn.setFixedHeight(30)
         # self.subtitle_select_btn.setFixedWidth(150) # Let it size naturally or adjust as needed
         self.subtitle_select_btn.clicked.connect(self.open_subtitle_dialog)
@@ -124,7 +125,7 @@ class VideoInfoMixin:
         subtitle_layout.addWidget(self.subtitle_select_btn)
 
         # Label to show number of selected subtitles
-        self.selected_subs_label = QLabel("0 selected")
+        self.selected_subs_label = QLabel(_("selection.none_selected"))
         self.selected_subs_label.setStyleSheet("color: #cccccc; padding-left: 5px;")
         subtitle_layout.addWidget(self.selected_subs_label)
 
@@ -138,7 +139,7 @@ class VideoInfoMixin:
         # --- SponsorBlock Section ---
         sponsorblock_layout = QHBoxLayout()
 
-        self.sponsorblock_select_btn = QPushButton("SponsorBlock Categories...")
+        self.sponsorblock_select_btn = QPushButton(_("main_ui.sponsorblock_categories"))
         self.sponsorblock_select_btn.setFixedHeight(30)
         self.sponsorblock_select_btn.clicked.connect(self.open_sponsorblock_dialog)
         self.sponsorblock_select_btn.setStyleSheet(
@@ -167,7 +168,7 @@ class VideoInfoMixin:
         sponsorblock_layout.addWidget(self.sponsorblock_select_btn)
 
         # Label to show selection count
-        self.selected_sponsorblock_label = QLabel("0 selected")
+        self.selected_sponsorblock_label = QLabel(_("selection.none_selected"))
         self.selected_sponsorblock_label.setStyleSheet("color: #cccccc; padding-left: 5px;")
         sponsorblock_layout.addWidget(self.selected_sponsorblock_label)
 
@@ -253,7 +254,7 @@ class VideoInfoMixin:
                 date_obj = datetime.strptime(upload_date, "%Y%m%d")
                 formatted_date = date_obj.strftime("%B %d, %Y")
             else:
-                formatted_date = "Unknown date"
+                formatted_date = _("video_info.unknown_date")
 
             # Format duration
             duration = info.get("duration", 0)
@@ -261,13 +262,13 @@ class VideoInfoMixin:
             seconds = duration % 60
             duration_str = f"{minutes}:{seconds:02d}"
 
-            # Update labels
-            self.title_label.setText(info.get("title", "Unknown title"))
-            self.channel_label.setText(f"Channel: {info.get('uploader', 'Unknown channel')}")
-            self.views_label.setText(f"Views: {formatted_views}")
-            self.like_count_label.setText(f"Likes: {formatted_likes}")
-            self.date_label.setText(f"Upload date: {formatted_date}")
-            self.duration_label.setText(f"Duration: {duration_str}")
+            # Update labels with localized text
+            self.title_label.setText(info.get("title", _("video_info.unknown_title")))
+            self.channel_label.setText(f"{_("video_info.channel")}: {info.get('uploader', _("video_info.unknown_channel"))}")
+            self.views_label.setText(f"{_("video_info.views")}: {formatted_views}")
+            self.like_count_label.setText(f"{_("video_info.likes")}: {formatted_likes}")
+            self.date_label.setText(f"{_("video_info.upload_date")}: {formatted_date}")
+            self.duration_label.setText(f"{_("video_info.duration")}: {duration_str}")
 
     def open_subtitle_dialog(self) -> None:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
@@ -341,11 +342,11 @@ class VideoInfoMixin:
 
         # Update label text
         if count == 0:
-            self.selected_sponsorblock_label.setText("0 selected")
+            self.selected_sponsorblock_label.setText(_("selection.none_selected"))
         elif count == 1:
-            self.selected_sponsorblock_label.setText("1 category selected")
+            self.selected_sponsorblock_label.setText(_("selection.one_selected"))
         else:
-            self.selected_sponsorblock_label.setText(f"{count} categories selected")
+            self.selected_sponsorblock_label.setText(_("selection.count_selected", count=count))
 
         # Update button property for styling
         self.sponsorblock_select_btn.setProperty("sponsorBlockSelected", count > 0)

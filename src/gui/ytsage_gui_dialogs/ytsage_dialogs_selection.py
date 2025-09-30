@@ -17,11 +17,13 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from src.utils.ytsage_localization import _
+
 
 class SubtitleSelectionDialog(QDialog):
     def __init__(self, available_manual, available_auto, previously_selected, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Select Subtitles")
+        self.setWindowTitle(_("dialogs.select_subtitles"))
         self.setMinimumWidth(400)
         self.setMinimumHeight(300)
 
@@ -35,7 +37,7 @@ class SubtitleSelectionDialog(QDialog):
 
         # Filter input
         self.filter_input = QLineEdit()
-        self.filter_input.setPlaceholderText("Filter languages (e.g., en, es)...")
+        self.filter_input.setPlaceholderText(_("dialogs.filter_languages_placeholder"))
         self.filter_input.textChanged.connect(self.filter_list)
         self.filter_input.setStyleSheet(
             """
@@ -72,7 +74,9 @@ class SubtitleSelectionDialog(QDialog):
         self.populate_list()
 
         # OK and Cancel buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox()
+        ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_button = button_box.addButton(_("buttons.cancel"), QDialogButtonBox.ButtonRole.RejectRole)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 
@@ -128,7 +132,8 @@ class SubtitleSelectionDialog(QDialog):
                     combined_subs[lang_code] = f"{lang_code} - Auto-generated"
 
         if not combined_subs:
-            no_subs_label = QLabel("No subtitles available" + (f" matching '{filter_text}'" if filter_text else ""))
+            matching_text = _("dialogs.matching") if filter_text else ""
+            no_subs_label = QLabel(_("dialogs.no_subtitles_available") + (f" {matching_text} '{filter_text}'" if filter_text else ""))
             no_subs_label.setStyleSheet("color: #aaaaaa; padding: 10px;")
             self.list_layout.addWidget(no_subs_label)
             return
@@ -205,8 +210,8 @@ class PlaylistSelectionDialog(QDialog):
 
         # Top buttons (Select/Deselect All)
         button_layout = QHBoxLayout()
-        select_all_btn = QPushButton("Select All")
-        deselect_all_btn = QPushButton("Deselect All")
+        select_all_btn = QPushButton(_("buttons.select_all"))
+        deselect_all_btn = QPushButton(_("buttons.deselect_all"))
         select_all_btn.clicked.connect(self._select_all)
         deselect_all_btn.clicked.connect(self._deselect_all)
         # Style the buttons to match the subtitle dialog
@@ -250,7 +255,9 @@ class PlaylistSelectionDialog(QDialog):
         self._populate_list(previously_selected_string)
 
         # Dialog buttons (OK/Cancel)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox()
+        ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_button = button_box.addButton(_("buttons.cancel"), QDialogButtonBox.ButtonRole.RejectRole)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 
@@ -428,50 +435,50 @@ class SponsorBlockCategoryDialog(QDialog):
     # Default SponsorBlock categories with descriptions
     SPONSORBLOCK_CATEGORIES = {
         "sponsor": {
-            "name": "Sponsor",
-            "description": "Paid promotion, paid referrals and direct advertisements",
+            "name_key": "sponsorblock.sponsor",
+            "description_key": "sponsorblock.sponsor_desc",
             "default": True,
         },
         "selfpromo": {
-            "name": "Unpaid/Self Promotion",
-            "description": "Unpaid promotion of creators' own content",
+            "name_key": "sponsorblock.selfpromo",
+            "description_key": "sponsorblock.selfpromo_desc",
             "default": True,
         },
         "interaction": {
-            "name": "Interaction Reminder",
-            "description": "Asking viewers to like, subscribe, or follow social media",
+            "name_key": "sponsorblock.interaction",
+            "description_key": "sponsorblock.interaction_desc",
             "default": True,
         },
         "intro": {
-            "name": "Intro",
-            "description": "Video introduction that can be skipped",
+            "name_key": "sponsorblock.intro",
+            "description_key": "sponsorblock.intro_desc",
             "default": False,
         },
         "outro": {
-            "name": "Outro/End Cards",
-            "description": "Credits or when the video ends",
+            "name_key": "sponsorblock.outro",
+            "description_key": "sponsorblock.outro_desc",
             "default": False,
         },
         "preview": {
-            "name": "Preview/Recap",
-            "description": "Quick recap of previous videos or preview of what's coming up",
+            "name_key": "sponsorblock.preview",
+            "description_key": "sponsorblock.preview_desc",
             "default": False,
         },
         "music_offtopic": {
-            "name": "Non-Music Section",
-            "description": "Only for music videos. Marks non-music sections",
+            "name_key": "sponsorblock.music_offtopic",
+            "description_key": "sponsorblock.music_offtopic_desc",
             "default": False,
         },
         "filler": {
-            "name": "Filler Tangent",
-            "description": "Tangential scenes added only for filler or humor",
+            "name_key": "sponsorblock.filler",
+            "description_key": "sponsorblock.filler_desc",
             "default": False,
         },
     }
 
     def __init__(self, previously_selected=None, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("SponsorBlock Categories")
+        self.setWindowTitle(_("dialogs.sponsorblock_categories"))
         self.setMinimumWidth(500)
         self.setMinimumHeight(400)
 
@@ -489,15 +496,12 @@ class SponsorBlockCategoryDialog(QDialog):
         layout = QVBoxLayout(self)
 
         # Title and description
-        title_label = QLabel("SponsorBlock Categories")
+        title_label = QLabel(_("dialogs.sponsorblock_categories"))
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff; margin: 10px;")
         layout.addWidget(title_label)
 
-        desc_label = QLabel(
-            "Select which types of video segments to automatically remove during download.\n"
-            "SponsorBlock uses community-submitted data to identify these segments."
-        )
+        desc_label = QLabel(_("dialogs.sponsorblock_description"))
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         desc_label.setStyleSheet("color: #cccccc; margin: 10px; font-size: 11px;")
@@ -521,8 +525,8 @@ class SponsorBlockCategoryDialog(QDialog):
             category_layout.setContentsMargins(0, 0, 0, 0)
             category_layout.setSpacing(2)
 
-            # Create checkbox with just the name
-            checkbox = QCheckBox(category_info["name"])
+            # Create checkbox with localized name
+            checkbox = QCheckBox(_(category_info["name_key"]))
             checkbox.setProperty("category_id", category_id)
 
             # Determine if this category should be checked
@@ -559,8 +563,8 @@ class SponsorBlockCategoryDialog(QDialog):
             """
             )
 
-            # Create description label
-            desc_label = QLabel(category_info["description"])
+            # Create description label with localized text
+            desc_label = QLabel(_(category_info["description_key"]))
             desc_label.setStyleSheet("color: #aaaaaa; font-size: 11px; margin-left: 28px; margin-bottom: 8px;")
             desc_label.setWordWrap(True)
 
@@ -577,15 +581,15 @@ class SponsorBlockCategoryDialog(QDialog):
         # Quick selection buttons
         button_layout = QHBoxLayout()
 
-        select_defaults_btn = QPushButton("Select Defaults")
+        select_defaults_btn = QPushButton(_("buttons.select_defaults"))
         select_defaults_btn.clicked.connect(self.select_defaults)
         select_defaults_btn.setStyleSheet(self._get_button_style())
 
-        select_all_btn = QPushButton("Select All")
+        select_all_btn = QPushButton(_("buttons.select_all"))
         select_all_btn.clicked.connect(self.select_all)
         select_all_btn.setStyleSheet(self._get_button_style())
 
-        deselect_all_btn = QPushButton("Deselect All")
+        deselect_all_btn = QPushButton(_("buttons.deselect_all"))
         deselect_all_btn.clicked.connect(self.deselect_all)
         deselect_all_btn.setStyleSheet(self._get_button_style())
 
@@ -597,7 +601,9 @@ class SponsorBlockCategoryDialog(QDialog):
         layout.addLayout(button_layout)
 
         # Dialog buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox()
+        ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_button = button_box.addButton(_("buttons.cancel"), QDialogButtonBox.ButtonRole.RejectRole)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 

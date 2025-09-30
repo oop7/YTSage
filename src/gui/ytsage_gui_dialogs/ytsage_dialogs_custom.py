@@ -31,6 +31,8 @@ from PySide6.QtWidgets import (
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import YTDLP_DOCS_URL
 from src.utils.ytsage_config_manager import ConfigManager
+from src.utils.ytsage_localization import LocalizationManager, _
+from src.utils.ytsage_logger import logger
 
 if TYPE_CHECKING:
     from src.gui.ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
@@ -68,7 +70,7 @@ class CommandWorker(QObject):
             base_cmd.append(self.url)
 
             # Emit the full command
-            self.output_received.emit(f"🔧 Full command: {' '.join(str(cmd) for cmd in base_cmd)}")
+            self.output_received.emit(_('custom_command.full_command', command=' '.join(str(cmd) for cmd in base_cmd)))
             self.output_received.emit("=" * 50)
 
             # Run the command
@@ -90,22 +92,22 @@ class CommandWorker(QObject):
             self.output_received.emit("=" * 50)
 
             if ret != 0:
-                self.output_received.emit(f"❌ Command failed with exit code {ret}")
+                self.output_received.emit(_('custom_command.command_failed', code=ret))
                 self.command_finished.emit(False, ret)
             else:
-                self.output_received.emit("✅ Command completed successfully!")
+                self.output_received.emit(_('custom_command.command_success'))
                 self.command_finished.emit(True, ret)
 
         except Exception as e:
             self.output_received.emit("=" * 50)
-            self.error_occurred.emit(f"❌ Error executing command: {str(e)}")
+            self.error_occurred.emit(_('custom_command.command_error', error=str(e)))
 
 
 class CustomOptionsDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._parent: YTSageApp = cast("YTSageApp", self.parent())  # cast will help with auto complete and type hint checking.
-        self.setWindowTitle("Custom Options")
+        self.setWindowTitle(_("dialogs.custom_options"))
         self.setMinimumSize(550, 400)  # Made even shorter
         layout = QVBoxLayout(self)
 
@@ -118,38 +120,35 @@ class CustomOptionsDialog(QDialog):
         cookies_layout = QVBoxLayout(cookies_tab)
 
         # Help text
-        help_text = QLabel(
-            "Choose how to provide cookies for logging in.\n"
-            "This allows downloading of private videos and premium quality audio."
-        )
+        help_text = QLabel(_('cookies.help_text'))
         help_text.setWordWrap(True)
         help_text.setStyleSheet("color: #999999; padding: 10px;")
         cookies_layout.addWidget(help_text)
 
         # Cookie source selection
-        cookie_source_group = QGroupBox("Cookie Source")
+        cookie_source_group = QGroupBox(_('cookies.cookie_source'))
         cookie_source_layout = QVBoxLayout(cookie_source_group)
 
         # Radio buttons for cookie source
-        self.cookie_file_radio = QRadioButton("Use cookie file (Netscape format)")
+        self.cookie_file_radio = QRadioButton(_('cookies.use_cookie_file'))
         self.cookie_file_radio.setChecked(True)
         self.cookie_file_radio.toggled.connect(self.on_cookie_source_changed)
         cookie_source_layout.addWidget(self.cookie_file_radio)
 
-        self.cookie_browser_radio = QRadioButton("Extract cookies from browser")
+        self.cookie_browser_radio = QRadioButton(_('cookies.extract_from_browser'))
         self.cookie_browser_radio.toggled.connect(self.on_cookie_source_changed)
         cookie_source_layout.addWidget(self.cookie_browser_radio)
 
         cookies_layout.addWidget(cookie_source_group)
 
         # Cookie file section
-        self.cookie_file_group = QGroupBox("Cookie File")
+        self.cookie_file_group = QGroupBox(_('cookies.cookie_file'))
         file_layout = QVBoxLayout(self.cookie_file_group)
 
         # File path input and browse button
         path_layout = QHBoxLayout()
         self.cookie_path_input = QLineEdit()
-        self.cookie_path_input.setPlaceholderText("Path to cookies file (Netscape format)")
+        self.cookie_path_input.setPlaceholderText(_('cookies.cookie_file_placeholder'))
         if hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
             # Convert Path to string properly and validate
             cookie_path_str = str(self._parent.cookie_file_path)
@@ -158,7 +157,7 @@ class CustomOptionsDialog(QDialog):
                 self.cookie_path_input.setText(cookie_path_str)
         path_layout.addWidget(self.cookie_path_input)
 
-        self.browse_button = QPushButton("Browse")
+        self.browse_button = QPushButton(_('buttons.browse'))
         self.browse_button.clicked.connect(self.browse_cookie_file)
         path_layout.addWidget(self.browse_button)
         file_layout.addLayout(path_layout)
@@ -166,16 +165,16 @@ class CustomOptionsDialog(QDialog):
         cookies_layout.addWidget(self.cookie_file_group)
 
         # Browser selection section
-        self.cookie_browser_group = QGroupBox("Browser Selection")
+        self.cookie_browser_group = QGroupBox(_('cookies.browser_selection'))
         browser_layout = QVBoxLayout(self.cookie_browser_group)
 
-        browser_help = QLabel("Select the browser to extract cookies from. Make sure the browser is closed before extraction.")
+        browser_help = QLabel(_('cookies.browser_help'))
         browser_help.setWordWrap(True)
         browser_help.setStyleSheet("color: #999999; font-size: 11px;")
         browser_layout.addWidget(browser_help)
 
         browser_select_layout = QHBoxLayout()
-        browser_select_layout.addWidget(QLabel("Browser:"))
+        browser_select_layout.addWidget(QLabel(_('cookies.browser_label')))
 
         self.browser_combo = QComboBox()
         self.browser_combo.addItems(["chrome", "firefox", "safari", "edge", "opera", "brave", "chromium", "vivaldi"])
@@ -184,9 +183,9 @@ class CustomOptionsDialog(QDialog):
 
         # Optional profile field
         profile_layout = QHBoxLayout()
-        profile_layout.addWidget(QLabel("Profile (optional):"))
+        profile_layout.addWidget(QLabel(_('cookies.profile_label')))
         self.profile_input = QLineEdit()
-        self.profile_input.setPlaceholderText("Profile name or path (leave empty for default)")
+        self.profile_input.setPlaceholderText(_('cookies.profile_placeholder'))
         profile_layout.addWidget(self.profile_input)
         browser_layout.addLayout(profile_layout)
 
@@ -207,12 +206,7 @@ class CustomOptionsDialog(QDialog):
         command_layout = QVBoxLayout(command_tab)
 
         # Improved help text
-        cmd_help_text = QLabel(
-            "Enter your custom yt-dlp command below. The current URL will be automatically appended.<br><br>"
-            "For complete list of options and usage examples, "
-            f'<a href="{YTDLP_DOCS_URL}">click here to view the official yt-dlp documentation</a>.<br><br>'
-            "Note: Download path and output filename template will be automatically handled."
-        )
+        cmd_help_text = QLabel(_('custom_command.help_text', docs_url=YTDLP_DOCS_URL))
         cmd_help_text.setWordWrap(True)
         cmd_help_text.setOpenExternalLinks(True)  # Enable clicking links
         cmd_help_text.setTextFormat(Qt.TextFormat.RichText)  # Enable HTML rendering
@@ -238,13 +232,13 @@ class CustomOptionsDialog(QDialog):
         command_layout.addWidget(cmd_help_text)
 
         # Command input label
-        input_label = QLabel("yt-dlp Arguments:")
+        input_label = QLabel(_('custom_command.input_label'))
         input_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #ffffff; margin-top: 10px;")
         command_layout.addWidget(input_label)
 
         # Command input
         self.command_input = QPlainTextEdit()
-        self.command_input.setPlaceholderText("Enter yt-dlp arguments here...\n\n" "e.g. --extract-audio --audio-format mp3")
+        self.command_input.setPlaceholderText(_('custom_command.input_placeholder'))
         self.command_input.setMinimumHeight(80)  # Reduced further from 100
         self.command_input.setStyleSheet(
             """
@@ -269,7 +263,7 @@ class CustomOptionsDialog(QDialog):
         button_layout = QHBoxLayout()
         button_layout.setSpacing(10)
 
-        clear_btn = QPushButton("Clear")
+        clear_btn = QPushButton(_('buttons.clear'))
         clear_btn.clicked.connect(lambda: self.command_input.clear())
         clear_btn.setStyleSheet(
             """
@@ -292,7 +286,7 @@ class CustomOptionsDialog(QDialog):
         button_layout.addStretch()  # Push run button to the right
 
         # Run command button
-        self.run_btn = QPushButton("Run Command")
+        self.run_btn = QPushButton(_('buttons.run_command'))
         self.run_btn.clicked.connect(self.run_custom_command)
         self.run_btn.setDefault(True)
         button_layout.addWidget(self.run_btn)
@@ -300,14 +294,14 @@ class CustomOptionsDialog(QDialog):
         command_layout.addLayout(button_layout)
 
         # Output label
-        output_label = QLabel("Command Output:")
+        output_label = QLabel(_('custom_command.output_label'))
         output_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #ffffff; margin-top: 15px;")
         command_layout.addWidget(output_label)
 
         # Log output
         self.log_output = QTextEdit()
         self.log_output.setReadOnly(True)
-        self.log_output.setPlaceholderText("Command output will appear here...")
+        self.log_output.setPlaceholderText(_('custom_command.output_placeholder'))
         self.log_output.setMinimumHeight(100)  # Reduced further from 120
         self.log_output.setStyleSheet(
             """
@@ -332,56 +326,50 @@ class CustomOptionsDialog(QDialog):
         proxy_layout = QVBoxLayout(proxy_tab)
 
         # Help text
-        proxy_help_text = QLabel(
-            "Configure proxy settings for network connections and geo-verification.\n"
-            "Proxy can help bypass regional restrictions and improve download performance."
-        )
+        proxy_help_text = QLabel(_('proxy.help_text'))
         proxy_help_text.setWordWrap(True)
         proxy_help_text.setStyleSheet("color: #999999; padding: 10px;")
         proxy_layout.addWidget(proxy_help_text)
 
         # Main Proxy section
-        main_proxy_group = QGroupBox("Main Proxy")
+        main_proxy_group = QGroupBox(_('proxy.main_proxy'))
         main_proxy_layout = QVBoxLayout(main_proxy_group)
 
-        main_proxy_help = QLabel("Use the specified HTTP/HTTPS/SOCKS proxy for all connections.")
+        main_proxy_help = QLabel(_('proxy.main_proxy_help'))
         main_proxy_help.setWordWrap(True)
         main_proxy_help.setStyleSheet("color: #999999; font-size: 11px;")
         main_proxy_layout.addWidget(main_proxy_help)
 
         # Main proxy input
         main_proxy_input_layout = QHBoxLayout()
-        main_proxy_input_layout.addWidget(QLabel("Proxy URL:"))
+        main_proxy_input_layout.addWidget(QLabel(_('proxy.proxy_url_label')))
         self.proxy_url_input = QLineEdit()
-        self.proxy_url_input.setPlaceholderText("e.g., http://proxy.example.com:8080 or socks5://user:pass@127.0.0.1:1080")
+        self.proxy_url_input.setPlaceholderText(_('proxy.proxy_url_placeholder'))
         self.proxy_url_input.textChanged.connect(self.validate_proxy_inputs)
         main_proxy_input_layout.addWidget(self.proxy_url_input)
         main_proxy_layout.addLayout(main_proxy_input_layout)
 
         # Example text
-        example_label = QLabel("Examples: http://proxy.com:8080, https://proxy.com:8080, socks5://127.0.0.1:1080")
+        example_label = QLabel(_('proxy.proxy_examples'))
         example_label.setStyleSheet("color: #888888; font-size: 10px; font-style: italic;")
         main_proxy_layout.addWidget(example_label)
 
         proxy_layout.addWidget(main_proxy_group)
 
         # Geo-verification Proxy section
-        geo_proxy_group = QGroupBox("Geo-verification Proxy")
+        geo_proxy_group = QGroupBox(_('proxy.geo_proxy'))
         geo_proxy_layout = QVBoxLayout(geo_proxy_group)
 
-        geo_proxy_help = QLabel(
-            "Use this proxy to verify IP address for geo-restricted sites. "
-            "The main proxy (if set) is used for actual downloading."
-        )
+        geo_proxy_help = QLabel(_('proxy.geo_proxy_help'))
         geo_proxy_help.setWordWrap(True)
         geo_proxy_help.setStyleSheet("color: #999999; font-size: 11px;")
         geo_proxy_layout.addWidget(geo_proxy_help)
 
         # Geo proxy input
         geo_proxy_input_layout = QHBoxLayout()
-        geo_proxy_input_layout.addWidget(QLabel("Geo Proxy URL:"))
+        geo_proxy_input_layout.addWidget(QLabel(_('proxy.geo_proxy_url_label')))
         self.geo_proxy_url_input = QLineEdit()
-        self.geo_proxy_url_input.setPlaceholderText("e.g., http://us-proxy.example.com:8080")
+        self.geo_proxy_url_input.setPlaceholderText(_('proxy.geo_proxy_url_placeholder'))
         self.geo_proxy_url_input.textChanged.connect(self.validate_proxy_inputs)
         geo_proxy_input_layout.addWidget(self.geo_proxy_url_input)
         geo_proxy_layout.addLayout(geo_proxy_input_layout)
@@ -395,7 +383,7 @@ class CustomOptionsDialog(QDialog):
 
         # Clear buttons
         clear_layout = QHBoxLayout()
-        clear_main_proxy_btn = QPushButton("Clear Main Proxy")
+        clear_main_proxy_btn = QPushButton(_('proxy.clear_main_proxy'))
         clear_main_proxy_btn.clicked.connect(lambda: self.proxy_url_input.clear())
         clear_main_proxy_btn.setStyleSheet(
             """
@@ -414,7 +402,7 @@ class CustomOptionsDialog(QDialog):
         )
         clear_layout.addWidget(clear_main_proxy_btn)
 
-        clear_geo_proxy_btn = QPushButton("Clear Geo Proxy")
+        clear_geo_proxy_btn = QPushButton(_('proxy.clear_geo_proxy'))
         clear_geo_proxy_btn.clicked.connect(lambda: self.geo_proxy_url_input.clear())
         clear_geo_proxy_btn.setStyleSheet(
             """
@@ -438,13 +426,75 @@ class CustomOptionsDialog(QDialog):
 
         proxy_layout.addStretch()
 
+        # === Language Tab ===
+        language_tab = QWidget()
+        language_layout = QVBoxLayout(language_tab)
+
+        # Help text
+        language_help_text = QLabel(_("language.select_language"))
+        language_help_text.setWordWrap(True)
+        language_help_text.setStyleSheet("color: #ffffff; font-size: 14px; font-weight: bold; padding: 10px;")
+        language_layout.addWidget(language_help_text)
+
+        # Current language info
+        current_lang = ConfigManager.get("language") or "en"
+        available_languages = LocalizationManager.get_available_languages()
+        current_lang_display = available_languages.get(current_lang, current_lang.upper())
+        
+        current_lang_label = QLabel(_("language.current_language", language=current_lang_display))
+        current_lang_label.setWordWrap(True)
+        current_lang_label.setStyleSheet("color: #999999; padding: 10px;")
+        language_layout.addWidget(current_lang_label)
+
+        # Language selection group
+        language_group = QGroupBox(_("language.select_language"))
+        language_group_layout = QVBoxLayout(language_group)
+
+        # Language selection combo box
+        language_select_layout = QHBoxLayout()
+        language_select_layout.addWidget(QLabel(_("language.select_language") + ":"))
+
+        self.language_combo = QComboBox()
+        
+        # Populate language combo with available languages
+        for lang_code, display_name in available_languages.items():
+            self.language_combo.addItem(display_name, lang_code)
+        
+        # Set current selection
+        current_index = self.language_combo.findData(current_lang)
+        if current_index >= 0:
+            self.language_combo.setCurrentIndex(current_index)
+
+        # Connect language change event
+        self.language_combo.currentIndexChanged.connect(self.on_language_changed)
+        
+        language_select_layout.addWidget(self.language_combo)
+        language_group_layout.addLayout(language_select_layout)
+
+        language_layout.addWidget(language_group)
+
+        # Restart notice
+        self.restart_notice = QLabel(_("language.restart_required"))
+        self.restart_notice.setWordWrap(True)
+        self.restart_notice.setStyleSheet(
+            "color: #ffaa00; font-style: italic; padding: 10px; "
+            "background-color: #2a2d36; border-radius: 6px; margin: 10px;"
+        )
+        self.restart_notice.setVisible(False)  # Initially hidden
+        language_layout.addWidget(self.restart_notice)
+
+        language_layout.addStretch()
+
         # Add tabs to the tab widget
-        self.tab_widget.addTab(cookies_tab, "Login with Cookies")
-        self.tab_widget.addTab(command_tab, "Custom Command")
-        self.tab_widget.addTab(proxy_tab, "Proxy")
+        self.tab_widget.addTab(cookies_tab, _("tabs.cookies"))
+        self.tab_widget.addTab(command_tab, _("tabs.custom_command"))
+        self.tab_widget.addTab(proxy_tab, _("tabs.proxy"))
+        self.tab_widget.addTab(language_tab, _("tabs.language"))
 
         # Dialog buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox()
+        ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_button = button_box.addButton(_("buttons.cancel"), QDialogButtonBox.ButtonRole.RejectRole)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
@@ -524,7 +574,6 @@ class CustomOptionsDialog(QDialog):
                 border: none;
                 width: 12px;
                 height: 12px;
-                background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMgNEw2IDdMOSA0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
             }
             QComboBox QAbstractItemView {
                 background-color: #1d1e22;
@@ -610,18 +659,18 @@ class CustomOptionsDialog(QDialog):
         else:
             self.cookie_file_group.setVisible(False)
             self.cookie_browser_group.setVisible(True)
-            self.cookie_status.setText("Browser cookies will be extracted when applied")
+            self.cookie_status.setText(_("cookies.browser_extract_message"))
             self.cookie_status.setStyleSheet("color: #ffaa00; font-style: italic;")
 
     def browse_cookie_file(self) -> None:
         # Open file dialog to select cookie file
-        selected_files, _ = QFileDialog.getOpenFileName(self, "Select Cookie File", "", "Cookies files (*.txt *.lwp)")
+        selected_files, _ = QFileDialog.getOpenFileName(self, _("cookies.select_file_title"), "", _("cookies.file_filter"))
 
         if selected_files:
             # Ensure we have a valid full path
             cookie_path = Path(selected_files).resolve()
             self.cookie_path_input.setText(str(cookie_path))
-            self.cookie_status.setText("Cookie file selected - Click OK to apply")
+            self.cookie_status.setText(_("cookies.file_selected_message"))
             self.cookie_status.setStyleSheet("color: #00cc00; font-style: italic;")
 
     def get_cookie_file_path(self) -> Path | None:
@@ -760,7 +809,7 @@ class CustomOptionsDialog(QDialog):
             self.log_output.append(f"📁 Download path: {path}")
         self.log_output.append("=" * 50)
         self.run_btn.setEnabled(False)
-        self.run_btn.setText("Running...")
+        self.run_btn.setText(_("command.running"))
 
         # Create worker and thread
         self.worker = CommandWorker(command, url, path)
@@ -781,49 +830,63 @@ class CustomOptionsDialog(QDialog):
     def on_command_finished(self, success: bool, exit_code: int):
         """Slot for when command finishes"""
         self.run_btn.setEnabled(True)
-        self.run_btn.setText("Run Command")
+        self.run_btn.setText(_("command.run_command"))
 
     def on_error_occurred(self, error_msg: str):
         """Slot for handling errors"""
         self.log_output.append(error_msg)
         self.run_btn.setEnabled(True)
-        self.run_btn.setText("Run Command")
+        self.run_btn.setText(_("buttons.run_command"))
+
+    def on_language_changed(self) -> None:
+        """Handle language selection change"""
+        selected_lang_code = self.language_combo.currentData()
+        if selected_lang_code:
+            current_lang = ConfigManager.get("language") or "en"
+            if selected_lang_code != current_lang:
+                # Save the new language preference
+                ConfigManager.set("language", selected_lang_code)
+                
+                # Update LocalizationManager
+                LocalizationManager.set_language(selected_lang_code)
+                
+                # Show restart notice
+                self.restart_notice.setVisible(True)
+                
+                logger.info(f"Language changed to: {selected_lang_code}")
 
 
 class TimeRangeDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Download Video Section")
+        self.setWindowTitle(_('time_range.title'))
         self.setMinimumWidth(400)
 
         layout = QVBoxLayout(self)
 
         # Help text explaining the feature
-        help_text = QLabel(
-            "Download only specific parts of a video by specifying time ranges.\n"
-            "Use HH:MM:SS format or seconds. Leave start or end empty to download from beginning or to end."
-        )
+        help_text = QLabel(_('time_range.help_text'))
         help_text.setWordWrap(True)
         help_text.setStyleSheet("color: #999999; padding: 10px;")
         layout.addWidget(help_text)
 
         # Time range section
-        time_group = QGroupBox("Time Range")
+        time_group = QGroupBox(_('time_range.time_range_group'))
         time_layout = QVBoxLayout()
 
         # Start time row
         start_layout = QHBoxLayout()
-        start_layout.addWidget(QLabel("Start Time:"))
+        start_layout.addWidget(QLabel(_('time_range.start_time')))
         self.start_time_input = QLineEdit()
-        self.start_time_input.setPlaceholderText("00:00:00 (or leave empty for start)")
+        self.start_time_input.setPlaceholderText(_('time_range.start_time_placeholder'))
         start_layout.addWidget(self.start_time_input)
         time_layout.addLayout(start_layout)
 
         # End time row
         end_layout = QHBoxLayout()
-        end_layout.addWidget(QLabel("End Time:"))
+        end_layout.addWidget(QLabel(_('time_range.end_time')))
         self.end_time_input = QLineEdit()
-        self.end_time_input.setPlaceholderText("00:10:00 (or leave empty for end)")
+        self.end_time_input.setPlaceholderText(_('time_range.end_time_placeholder'))
         end_layout.addWidget(self.end_time_input)
         time_layout.addLayout(end_layout)
 
@@ -831,7 +894,7 @@ class TimeRangeDialog(QDialog):
         layout.addWidget(time_group)
 
         # Force keyframes option
-        self.force_keyframes = QCheckBox("Force keyframes at cuts (better accuracy, slower)")
+        self.force_keyframes = QCheckBox(_('time_range.force_keyframes'))
         self.force_keyframes.setChecked(True)
         self.force_keyframes.setStyleSheet(
             """
@@ -859,7 +922,9 @@ class TimeRangeDialog(QDialog):
         layout.addWidget(self.force_keyframes)
 
         # Buttons
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox()
+        ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_button = button_box.addButton(_("buttons.cancel"), QDialogButtonBox.ButtonRole.RejectRole)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
