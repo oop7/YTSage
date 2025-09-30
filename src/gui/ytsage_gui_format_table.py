@@ -264,14 +264,14 @@ class FormatTableMixin:
             # Column 1: Quality (Always shown)
             quality_text = self.get_quality_label(f)
             quality_item = QTableWidgetItem(quality_text)
-            # Set color based on quality (check both English and Spanish terms)
-            if any(term in quality_text for term in ["Best", "Óptima", "Mejor"]):
+            # Set color based on quality (check English, Spanish, Portuguese, and Russian terms)
+            if any(term in quality_text for term in ["Best", "Óptima", "Mejor", "Melhor", "Лучшее"]):
                 quality_item.setForeground(QColor("#00ff00"))  # Green for best quality
-            elif any(term in quality_text for term in ["High", "Alta", "Alto"]):
+            elif any(term in quality_text for term in ["High", "Alta", "Alto", "Áudio Alto", "Audio Alto", "Высокое"]):
                 quality_item.setForeground(QColor("#00cc00"))  # Light green for high quality
-            elif any(term in quality_text for term in ["Medium", "Media", "Medio"]):
+            elif any(term in quality_text for term in ["Medium", "Media", "Medio", "Média", "Áudio Médio", "Audio Medio", "Среднее"]):
                 quality_item.setForeground(QColor("#ffaa00"))  # Orange for medium quality
-            elif any(term in quality_text for term in ["Low", "Baja", "Bajo"]):
+            elif any(term in quality_text for term in ["Low", "Baja", "Bajo", "Baixa", "Áudio Baixo", "Audio Bajo", "Низкое"]):
                 quality_item.setForeground(QColor("#ff5555"))  # Red for low quality
             self.format_table.setItem(row, 1, quality_item)
 
