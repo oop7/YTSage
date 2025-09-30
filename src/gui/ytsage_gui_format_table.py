@@ -264,14 +264,15 @@ class FormatTableMixin:
             # Column 1: Quality (Always shown)
             quality_text = self.get_quality_label(f)
             quality_item = QTableWidgetItem(quality_text)
-            # Set color based on quality (check English, Spanish, Portuguese, Russian, and Chinese terms)
-            if any(term in quality_text for term in ["Best", "Óptima", "Mejor", "Melhor", "Лучшее", "最佳", "Beste"]):
+            # Set color based on quality (check English, Spanish, Portuguese, Russian, Chinese, German, and French terms)
+            quality_lower = quality_text.lower()  # Make comparison case-insensitive
+            if any(term.lower() in quality_lower for term in ["Best", "Óptima", "Mejor", "Melhor", "Лучшее", "最佳", "Beste", "Meilleure"]):
                 quality_item.setForeground(QColor("#00ff00"))  # Green for best quality
-            elif any(term in quality_text for term in ["High", "Alta", "Alto", "Áudio Alto", "Audio Alto", "Высокое", "高清", "高质量", "Hoch"]):
+            elif any(term.lower() in quality_lower for term in ["High", "Alta", "Alto", "Áudio Alto", "Audio Alto", "Высокое", "高清", "高质量", "Hoch", "Haute", "Élevé", "Audio élevé"]):
                 quality_item.setForeground(QColor("#00cc00"))  # Light green for high quality
-            elif any(term in quality_text for term in ["Medium", "Media", "Medio", "Média", "Áudio Médio", "Audio Medio", "Среднее", "中等", "Mittel"]):
+            elif any(term.lower() in quality_lower for term in ["Medium", "Media", "Medio", "Média", "Áudio Médio", "Audio Medio", "Среднее", "中等", "Mittel", "Moyenne", "Audio moyen"]):
                 quality_item.setForeground(QColor("#ffaa00"))  # Orange for medium quality
-            elif any(term in quality_text for term in ["Low", "Baja", "Bajo", "Baixa", "Áudio Baixo", "Audio Bajo", "Низкое", "低质量", "Niedrig", "Niedriges Audio"]):
+            elif any(term.lower() in quality_lower for term in ["Low", "Baja", "Bajo", "Baixa", "Áudio Baixo", "Audio Bajo", "Низкое", "低质量", "Niedrig", "Niedriges Audio", "Faible", "Audio faible", "Qualité faible"]):
                 quality_item.setForeground(QColor("#ff5555"))  # Red for low quality
             self.format_table.setItem(row, 1, quality_item)
 

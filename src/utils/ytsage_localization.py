@@ -85,7 +85,8 @@ class LocalizationManager:
             "portuguese": "Português (Portuguese)",
             "russian": "Русский (Russian)",
             "chinese": "中文 (简体) (Chinese Simplified)",
-            "german": "Deutsch (German)"
+            "german": "Deutsch (German)",
+            "french": "Français (French)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",

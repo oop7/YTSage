@@ -10,6 +10,7 @@
     "russian": "Russisch",
     "chinese": "Chinesisch",
     "german": "Deutsch",
+    "french": "Französisch",
     "help_text": "Wählen Sie Ihre bevorzugte Sprache für die Benutzeroberfläche.",
     "restart_notice": "Die Sprachänderung wird nach dem Neustart der Anwendung wirksam."
   },
