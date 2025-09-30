@@ -82,7 +82,8 @@ class LocalizationManager:
             "restart_required": "Language changes will take effect after restarting the application.",
             "english": "English",
             "spanish": "Español (Spanish)",
-            "portuguese": "Português (Portuguese)"
+            "portuguese": "Português (Portuguese)",
+            "russian": "Русский (Russian)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",
