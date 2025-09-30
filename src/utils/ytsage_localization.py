@@ -84,7 +84,8 @@ class LocalizationManager:
             "spanish": "Español (Spanish)",
             "portuguese": "Português (Portuguese)",
             "russian": "Русский (Russian)",
-            "chinese": "中文 (简体) (Chinese Simplified)"
+            "chinese": "中文 (简体) (Chinese Simplified)",
+            "german": "Deutsch (German)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",
