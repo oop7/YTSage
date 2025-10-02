@@ -31,7 +31,7 @@ class FormatTableMixin:
                 _("formats.file_size"),
                 _("formats.codec"),
                 _("formats.audio"),
-                _("formats.notes"),
+                _("formats.fps"),
             ]
         )
 
@@ -40,27 +40,28 @@ class FormatTableMixin:
 
         # Set specific column widths and resize modes
         self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)  # Select
-        self.format_table.setColumnWidth(0, 80)  # Select column width (increased for longer translations)
+        self.format_table.setColumnWidth(0, 70)  # Select column width (slightly reduced)
 
         self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)  # Quality
-        self.format_table.setColumnWidth(1, 100)  # Quality width
+        self.format_table.setColumnWidth(1, 110)  # Quality width (increased for better visibility)
 
         self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)  # Extension
-        self.format_table.setColumnWidth(2, 80)  # Extension width
+        self.format_table.setColumnWidth(2, 85)  # Extension width (slightly increased)
 
         self.format_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)  # Resolution
-        self.format_table.setColumnWidth(3, 100)  # Resolution width
+        self.format_table.setColumnWidth(3, 110)  # Resolution width (increased for better visibility)
 
         self.format_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)  # File Size
-        self.format_table.setColumnWidth(4, 100)  # File Size width
+        self.format_table.setColumnWidth(4, 110)  # File Size width (increased for better readability)
 
         self.format_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)  # Codec
-        self.format_table.setColumnWidth(5, 150)  # Codec width
+        self.format_table.setColumnWidth(5, 160)  # Codec width (increased for codec names)
 
         self.format_table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)  # Audio
-        self.format_table.setColumnWidth(6, 120)  # Audio width
+        self.format_table.setColumnWidth(6, 140)  # Audio width (increased for better text visibility)
 
-        self.format_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)  # Notes (will stretch)
+        self.format_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)  # FPS column stretches to fill
+        # FPS column will stretch to fill remaining space
 
         # Set vertical header (row numbers) visible to false
         self.format_table.verticalHeader().setVisible(False)
@@ -185,7 +186,7 @@ class FormatTableMixin:
         # Configure columns based on mode
         if is_playlist_mode:
             self.format_table.setColumnCount(5)
-            self.format_table.setHorizontalHeaderLabels([_("formats.select"), _("formats.quality"), _("formats.resolution"), _("formats.notes"), _("formats.audio")])
+            self.format_table.setHorizontalHeaderLabels([_("formats.select"), _("formats.quality"), _("formats.resolution"), _("formats.fps"), _("formats.audio")])
 
             # Configure column visibility and resizing for playlist mode
             self.format_table.setColumnHidden(5, True)
@@ -211,37 +212,32 @@ class FormatTableMixin:
                     _("formats.file_size"),
                     _("formats.codec"),
                     _("formats.audio"),
-                    _("formats.notes"),
+                    _("formats.fps"),
                 ]
             )
             # Ensure all columns are visible
             for i in range(2, 8):
                 self.format_table.setColumnHidden(i, False)
 
-            # Reapply resize modes for non-playlist mode if needed (optional, might be okay without)
+            # Reapply optimized resize modes for non-playlist mode
             self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(0, 80)  # Match the width set in setup_format_table
+            self.format_table.setColumnWidth(0, 70)  # Match the optimized width
             self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(1, 100)
+            self.format_table.setColumnWidth(1, 110)
             self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(2, 80)
+            self.format_table.setColumnWidth(2, 85)
             self.format_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(3, 100)
+            self.format_table.setColumnWidth(3, 110)
             self.format_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(4, 100)
+            self.format_table.setColumnWidth(4, 110)
             self.format_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(5, 150)
+            self.format_table.setColumnWidth(5, 160)
             self.format_table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(6, 120)
+            self.format_table.setColumnWidth(6, 140)
             self.format_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)
+            # FPS column stretches to fill remaining space
 
-        # Find best quality format for recommendations (only needed for non-playlist mode notes)
-        best_video_size = 0
-        if not is_playlist_mode:
-            best_video_size = max(
-                (f.get("filesize", 0) for f in formats if f.get("vcodec") != "none"),
-                default=0,
-            )
+
 
         for f in formats:
             row = self.format_table.rowCount()
@@ -284,18 +280,30 @@ class FormatTableMixin:
                 resolution = _("formats.audio_only_resolution")
             self.format_table.setItem(row, 2, QTableWidgetItem(resolution))
 
-            # Column 3: Notes for playlist mode, Extension for normal mode
+            # Column 3: FPS for playlist mode, Extension for normal mode
             if is_playlist_mode:
-                # Get notes for playlist mode
-                notes = self._get_format_notes(f)
-                notes_item = QTableWidgetItem(notes)
-                if "✨ Recommended" in notes:
-                    notes_item.setForeground(QColor("#00ff00"))  # Green for recommended
-                elif "💾 Storage friendly" in notes:
-                    notes_item.setForeground(QColor("#00ccff"))  # Blue for storage friendly
-                elif "📱 Mobile friendly" in notes:
-                    notes_item.setForeground(QColor("#ff9900"))  # Orange for mobile
-                self.format_table.setItem(row, 3, notes_item)
+                # Get FPS for playlist mode
+                fps_value = f.get("fps")
+                if fps_value is not None:
+                    # Format FPS value appropriately
+                    if fps_value >= 1:
+                        fps_text = f"{fps_value:.0f}fps"
+                    else:
+                        fps_text = "N/A"  # Very low fps like storyboards
+                else:
+                    fps_text = "N/A"
+                
+                fps_item = QTableWidgetItem(fps_text)
+                # Color code based on FPS value
+                if fps_value and fps_value >= 60:
+                    fps_item.setForeground(QColor("#00ff00"))  # Green for 60+ fps
+                elif fps_value and fps_value >= 30:
+                    fps_item.setForeground(QColor("#ffaa00"))  # Orange for 30+ fps
+                elif fps_value and fps_value >= 1:
+                    fps_item.setForeground(QColor("#ff5555"))  # Red for low fps
+                else:
+                    fps_item.setForeground(QColor("#888888"))  # Gray for N/A
+                self.format_table.setItem(row, 3, fps_item)
             else:
                 # Extension for normal mode (column 2)
                 self.format_table.setItem(row, 2, QTableWidgetItem(f.get("ext", "").upper()))
@@ -332,16 +340,28 @@ class FormatTableMixin:
                         codec += f" / {f.get('acodec', 'N/A')}"
                 self.format_table.setItem(row, 5, QTableWidgetItem(codec))
 
-                # Column 7: Notes
-                notes = self._get_format_notes(f)
-                notes_item = QTableWidgetItem(notes)
-                if "✨ Recommended" in notes:
-                    notes_item.setForeground(QColor("#00ff00"))  # Green for recommended
-                elif "💾 Storage friendly" in notes:
-                    notes_item.setForeground(QColor("#00ccff"))  # Blue for storage friendly
-                elif "📱 Mobile friendly" in notes:
-                    notes_item.setForeground(QColor("#ff9900"))  # Orange for mobile
-                self.format_table.setItem(row, 7, notes_item)
+                # Column 7: FPS (Frame Rate)
+                fps_value = f.get("fps")
+                if fps_value is not None:
+                    # Format FPS value appropriately
+                    if fps_value >= 1:
+                        fps_text = f"{fps_value:.0f}fps"
+                    else:
+                        fps_text = "N/A"  # Very low fps like storyboards
+                else:
+                    fps_text = "N/A"
+                
+                fps_item = QTableWidgetItem(fps_text)
+                # Color code based on FPS value
+                if fps_value and fps_value >= 60:
+                    fps_item.setForeground(QColor("#00ff00"))  # Green for 60+ fps
+                elif fps_value and fps_value >= 30:
+                    fps_item.setForeground(QColor("#ffaa00"))  # Orange for 30+ fps
+                elif fps_value and fps_value >= 1:
+                    fps_item.setForeground(QColor("#ff5555"))  # Red for low fps
+                else:
+                    fps_item.setForeground(QColor("#888888"))  # Gray for N/A
+                self.format_table.setItem(row, 7, fps_item)
 
     def handle_checkbox_click(self, clicked_checkbox) -> None:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
@@ -402,38 +422,4 @@ class FormatTableMixin:
             else:
                 return _("formats.low_quality")
 
-    def _get_format_notes(self, format_info) -> str:
-        """Generate helpful format notes based on format info."""
-        self = cast("YTSageApp", self)  # for autocompletion and type inference.
-        
-        notes = []
 
-        # Add storage indicator with more granular categories
-        file_size = format_info.get("filesize") or format_info.get("filesize_approx", 0)
-
-        # Better file size categories
-        if file_size > 50 * 1024 * 1024:  # Over 50MB
-            notes.append(_("formats.large_size"))
-        elif file_size > 15 * 1024 * 1024:  # 15-50MB
-            notes.append(_("formats.medium_size"))
-        elif file_size > 5 * 1024 * 1024:  # 5-15MB
-            notes.append(_("formats.standard_size"))
-        else:  # Under 5MB
-            notes.append("Small size")
-
-        # Add codec quality indicator
-        vcodec = format_info.get("vcodec", "")
-        if vcodec != "none":
-            if "avc1" in vcodec:  # H.264
-                notes.append(_("formats.compatible"))
-            elif "av01" in vcodec:  # AV1
-                notes.append(_("formats.efficient"))
-            elif "vp9" in vcodec:  # VP9
-                notes.append(_("formats.high_quality"))
-
-        # Add quick mobile compatibility check
-        if "avc1" in vcodec and file_size < 8 * 1024 * 1024:
-            notes.append("Mobile")
-
-        # Return simple string
-        return " • ".join(notes)
