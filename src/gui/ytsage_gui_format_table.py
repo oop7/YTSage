@@ -40,7 +40,7 @@ class FormatTableMixin:
 
         # Set specific column widths and resize modes
         self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)  # Select
-        self.format_table.setColumnWidth(0, 50)  # Select column width
+        self.format_table.setColumnWidth(0, 80)  # Select column width (increased for longer translations)
 
         self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)  # Quality
         self.format_table.setColumnWidth(1, 100)  # Quality width
@@ -194,7 +194,7 @@ class FormatTableMixin:
 
             # Set specific resize modes for playlist columns
             self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(0, 50)
+            self.format_table.setColumnWidth(0, 80)  # Match the width set in setup_format_table
             self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
             self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
             self.format_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
@@ -220,7 +220,7 @@ class FormatTableMixin:
 
             # Reapply resize modes for non-playlist mode if needed (optional, might be okay without)
             self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(0, 50)
+            self.format_table.setColumnWidth(0, 80)  # Match the width set in setup_format_table
             self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
             self.format_table.setColumnWidth(1, 100)
             self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
