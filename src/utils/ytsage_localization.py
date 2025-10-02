@@ -92,7 +92,8 @@ class LocalizationManager:
             "turkish": "Türkçe (Turkish)",
             "polish": "Polski (Polish)",
             "italian": "Italiano (Italian)",
-            "arabic": "العربية (Arabic)"
+            "arabic": "العربية (Arabic)",
+            "japanese": "日本語 (Japanese)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",

@@ -17,6 +17,7 @@
     "polish": "Polski (Polish)",
     "italian": "Italiano (Italian)",
     "arabic": "العربية (Arabic)",
+    "japanese": "日本語 (Japanese)",
     "help_text": "Select your preferred language for the interface.",
     "restart_notice": "Language change will take effect after restarting the application."
   },
