@@ -162,10 +162,13 @@ class FormatTableMixin:
         # Sort formats by quality
         def get_quality(f):
             if f.get("vcodec") != "none":
-                res = f.get("resolution", "0x0").split("x")[-1]
+                resolution = f.get("resolution", "0x0")
+                if resolution is None or not isinstance(resolution, str):
+                    return 0
                 try:
+                    res = resolution.split("x")[-1]
                     return int(res)
-                except ValueError:
+                except (ValueError, IndexError):
                     return 0
             else:
                 return f.get("abr", 0)
