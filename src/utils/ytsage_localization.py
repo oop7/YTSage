@@ -91,7 +91,8 @@ class LocalizationManager:
             "indonesian": "Bahasa Indonesia (Indonesian)",
             "turkish": "Türkçe (Turkish)",
             "polish": "Polski (Polish)",
-            "italian": "Italiano (Italian)"
+            "italian": "Italiano (Italian)",
+            "arabic": "العربية (Arabic)"
         },
         "download": {
             "preparing": "🚀 Preparing your download...",

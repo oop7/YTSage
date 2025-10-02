@@ -16,6 +16,7 @@
     "turkish": "Türkçe (Turkish)",
     "polish": "Polski (Polish)",
     "italian": "Italiano (Italian)",
+    "arabic": "العربية (Arabic)",
     "help_text": "Select your preferred language for the interface.",
     "restart_notice": "Language change will take effect after restarting the application."
   },
