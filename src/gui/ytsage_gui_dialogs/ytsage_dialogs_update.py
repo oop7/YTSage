@@ -18,6 +18,10 @@ from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushB
 from src.core.ytsage_utils import get_ytdlp_version, load_config, save_config
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH, YTDLP_DOWNLOAD_URL
+from src.utils.ytsage_localization import LocalizationManager
+
+# Shorthand for localization
+_ = LocalizationManager.get_text
 from src.utils.ytsage_localization import _
 from src.utils.ytsage_logger import logger
 
@@ -278,7 +282,7 @@ class UpdateThread(QThread):
                     self.update_status.emit(f"❌ Error during pip update: {e}")
                     return False
             else:
-                self.update_status.emit("✅ yt-dlp is already up to date!")
+                self.update_status.emit(_("update.already_up_to_date"))
                 self.update_progress.emit(95)
                 return True
 

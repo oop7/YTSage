@@ -9,7 +9,11 @@ from PySide6.QtCore import QObject, QThread, Signal
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
+from src.utils.ytsage_localization import LocalizationManager
 from src.utils.ytsage_logger import logger
+
+# Shorthand for localization
+_ = LocalizationManager.get_text
 
 try:
     import yt_dlp  # Keep yt_dlp import here - only downloader uses it.
@@ -423,7 +427,7 @@ class DownloadThread(QThread):
             cmd_str = " ".join(shlex.quote(str(arg)) for arg in cmd)
             logger.debug(f"Executing command: {cmd_str}")
 
-            self.status_signal.emit("🚀 Starting download...")
+            self.status_signal.emit(_("download.starting"))
             self.progress_signal.emit(0)
 
             # Start the process
@@ -454,7 +458,7 @@ class DownloadThread(QThread):
                     # Add delay before cleanup to allow file handles to be released
                     time.sleep(1)
                     self.cleanup_partial_files()
-                    self.status_signal.emit("Download cancelled")
+                    self.status_signal.emit(_("download.cancelled"))
                     return
 
                 # Wait if paused
@@ -471,20 +475,20 @@ class DownloadThread(QThread):
             # return code 127 typically means command not found
             if return_code == 127:
                 self.error_signal.emit(
-                    "Error: yt-dlp executable not found. This could be due to improper installation or a PATH issue."
+                    _("errors.ytdlp_not_found_path")
                 )
                 return
 
             if return_code == 0:
                 self.progress_signal.emit(100)
-                self.status_signal.emit("✅ Download completed!")
+                self.status_signal.emit(_("download.completed"))
 
                 # Clean up subtitle files if they were merged, with a small delay
                 # to ensure the embedding process has completed
                 if self.merge_subs:
                     # Add a significant delay to ensure ffmpeg has released all file handles
                     # and any post-processing is complete
-                    self.status_signal.emit("✅ Download completed! Cleaning up...")
+                    self.status_signal.emit(_("download.completed_cleaning"))
                     time.sleep(3)  # Increased delay to 3 seconds
                     self.cleanup_subtitle_files()
 
@@ -492,7 +496,7 @@ class DownloadThread(QThread):
             else:
                 # Check if it was cancelled
                 if self.cancelled:
-                    self.status_signal.emit("Download cancelled")
+                    self.status_signal.emit(_("download.cancelled"))
                 else:
                     # Provide more descriptive error message for possible yt-dlp conflicts
                     if return_code == 1:
@@ -549,19 +553,19 @@ class DownloadThread(QThread):
 
                 # Check if this is explicitly an audio stream download
                 if is_audio_download or "Downloading audio" in line:
-                    self.status_signal.emit(f"⏬ Downloading audio...")
+                    self.status_signal.emit(_("download.downloading_audio"))
                 # Video file extensions with likely video content
                 elif ext in [".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"]:
-                    self.status_signal.emit(f"⏬ Downloading video...")
+                    self.status_signal.emit(_("download.downloading_video"))
                 # Audio file extensions
                 elif ext in [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"]:
-                    self.status_signal.emit(f"⏬ Downloading audio...")
+                    self.status_signal.emit(_("download.downloading_audio"))
                 # Subtitle file extensions
                 elif ext in [".vtt", ".srt", ".ass", ".ssa"]:
-                    self.status_signal.emit(f"⏬ Downloading subtitle...")
+                    self.status_signal.emit(_("download.downloading_subtitle"))
                 # Default case
                 else:
-                    self.status_signal.emit(f"⏬ Downloading...")
+                    self.status_signal.emit(_("download.downloading"))
             except Exception as e:
                 logger.exception(f"Error extracting filename from line '{line}': {e}")
                 self.status_signal.emit("⚡ Downloading...")  # Fallback status
@@ -569,11 +573,11 @@ class DownloadThread(QThread):
 
         # Check for specific download types in the output
         if "Downloading video" in line:
-            self.status_signal.emit(f"⏬ Downloading video...")
+            self.status_signal.emit(_("download.downloading_video"))
             return
 
         elif "Downloading audio" in line:
-            self.status_signal.emit(f"⏬ Downloading audio...")
+            self.status_signal.emit(_("download.downloading_audio"))
             return
 
         # Detect subtitle file creation
@@ -596,7 +600,7 @@ class DownloadThread(QThread):
                     subtitle_file = colon_parts[-1].strip()
 
             # Show subtitle download message
-            self.status_signal.emit(f"⏬ Downloading subtitle...")
+            self.status_signal.emit(_("download.downloading_subtitle"))
             # Store the subtitle file path for later deletion if merging is enabled
             if self.merge_subs:
                 subtitle_path = Path(subtitle_file)
@@ -609,24 +613,24 @@ class DownloadThread(QThread):
 
         # Send status updates based on output line content
         if "Downloading webpage" in line or "Extracting URL" in line:
-            self.status_signal.emit("🔍 Fetching video information...")
+            self.status_signal.emit(_("download.fetching_info"))
             self.progress_signal.emit(0)
         elif "Downloading API JSON" in line:
-            self.status_signal.emit("📋 Processing playlist data...")
+            self.status_signal.emit(_("download.processing_playlist"))
             self.progress_signal.emit(0)
         elif "Downloading m3u8 information" in line:
-            self.status_signal.emit("🎯 Preparing video streams...")
+            self.status_signal.emit(_("download.preparing_streams"))
             self.progress_signal.emit(0)
         elif "[download] Downloading video " in line:
-            self.status_signal.emit("⏬ Downloading video...")
+            self.status_signal.emit(_("download.downloading_video"))
         elif "[download] Downloading audio " in line:
-            self.status_signal.emit("⏬ Downloading audio...")
+            self.status_signal.emit(_("download.downloading_audio"))
         elif "Downloading format" in line:
             # Try to detect if it's audio or video format
             if " - audio only" in line:
-                self.status_signal.emit("⏬ Downloading audio...")
+                self.status_signal.emit(_("download.downloading_audio"))
             elif " - video only" in line:
-                self.status_signal.emit("⏬ Downloading video...")
+                self.status_signal.emit(_("download.downloading_video"))
             else:
                 # Don't emit generic message - format is unclear
                 pass
@@ -699,18 +703,18 @@ class DownloadThread(QThread):
 
                 # Video file extensions
                 if ext in [".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"]:
-                    self.status_signal.emit(f"✅ Video download completed!")
+                    self.status_signal.emit(_("download.video_completed"))
                 # Audio file extensions
                 elif ext in [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"]:
-                    self.status_signal.emit(f"✅ Audio download completed!")
+                    self.status_signal.emit(_("download.audio_completed"))
                 # Subtitle file extensions
                 elif ext in [".vtt", ".srt", ".ass", ".ssa"]:
-                    self.status_signal.emit(f"✅ Subtitle download completed!")
+                    self.status_signal.emit(_("download.subtitle_completed"))
                 # Default case
                 else:
-                    self.status_signal.emit("✅ Download completed!")
+                    self.status_signal.emit(_("download.completed"))
             else:
-                self.status_signal.emit("✅ Download completed!")
+                self.status_signal.emit(_("download.completed"))
 
             self.update_details.emit("")  # Clear details label on completion
 

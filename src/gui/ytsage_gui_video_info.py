@@ -218,10 +218,10 @@ class VideoInfoMixin:
 
         if hasattr(self, "is_playlist") and self.is_playlist:
             # Playlist Mode: Show playlist title and video count
-            self.title_label.setText(self.playlist_info.get("title", "Unknown Playlist"))
+            self.title_label.setText(self.playlist_info.get("title", _("playlist.unknown")))
 
             num_videos = len(getattr(self, "playlist_entries", []))
-            self.duration_label.setText(f"Total Videos: {num_videos}")
+            self.duration_label.setText(_("playlist.total_videos", count=num_videos))
 
             # Hide video-specific info
             self.channel_label.setText("")
@@ -295,7 +295,7 @@ class VideoInfoMixin:
             logger.info(f"Selected subtitles: {self.selected_subtitles}")
             # Update UI to reflect selection
             count = len(self.selected_subtitles)
-            self.selected_subs_label.setText(f"{count} selected")
+            self.selected_subs_label.setText(_("subtitle_selection.count_selected", count=count))
             self.subtitle_select_btn.setProperty("subtitlesSelected", count > 0)
 
             # Enable/disable the merge checkbox in the parent window

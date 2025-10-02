@@ -777,7 +777,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         # Ensure there are entries before proceeding
                         if not self.playlist_entries:
                             logger.error("Playlist contains no valid videos.")
-                            self.signals.update_status.emit("Error: Playlist contains no valid videos.")
+                            self.signals.update_status.emit(_("errors.playlist_no_videos"))
                             self.signals.playlist_info_label_visible.emit(False)
                             self.signals.playlist_select_btn_visible.emit(False)
                             return
@@ -786,7 +786,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                         first_video_url = self.playlist_entries[0].get("url")
                         if not first_video_url:
                             logger.error("Could not get URL for the first playlist video.")
-                            self.signals.update_status.emit("Error: Could not get URL for the first playlist video.")
+                            self.signals.update_status.emit(_("errors.playlist_no_url"))
                             self.signals.playlist_info_label_visible.emit(False)
                             self.signals.playlist_select_btn_visible.emit(False)
                             return
@@ -801,9 +801,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                             self.signals.update_status.emit(user_friendly_error)
                             return
                         # Update playlist info label text (remains the same)
-                        playlist_text = (
-                            f"Playlist: {basic_info.get('title', 'Unknown Playlist')} | " f"{len(self.playlist_entries)} videos"
-                        )  # Simplified label
+                        playlist_text = _("playlist.display_format", 
+                                         title=basic_info.get('title', _('playlist.unknown')), 
+                                         count=len(self.playlist_entries))
 
                         # update signal method from QMetaObject.invokeMethod to signals
                         self.signals.playlist_info_label_text.emit(playlist_text)
@@ -897,7 +897,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         except Exception as e:
             logger.exception(f"Error in analysis: {e}")
-            self.signals.update_status.emit(f"Error: {e}")
+            self.signals.update_status.emit(_("errors.generic_error", error=str(e)))
             # Ensure playlist UI is hidden on error too
             # update signal method from QMetaObject.invokeMethod to signals
             self.signals.playlist_info_label_visible.emit(False)
@@ -999,7 +999,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     rate_limit = f"{int(limit_value * 1024 * 1024)}"
             except ValueError:
                 # Use a signal to show error in status bar, similar to URL/Path errors
-                self.signals.update_status.emit("❌ Error: Invalid speed limit value set in settings.")
+                self.signals.update_status.emit(_("errors.invalid_speed_limit"))
                 return
         # --- End speed limit update ---
 
@@ -1089,7 +1089,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.toggle_download_controls(True)
         self.pause_btn.setVisible(False)
         self.cancel_btn.setVisible(False)
-        self.status_label.setText(f"Error: {error_message}")
+        self.status_label.setText(_("errors.generic_error", error=error_message))
         self.download_details_label.setText("")  # Clear details label on error
 
     def update_progress_bar(self, value) -> None:
@@ -1104,11 +1104,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         if self.current_download:
             self.current_download.paused = not self.current_download.paused
             if self.current_download.paused:
-                self.pause_btn.setText("Resume")
-                self.signals.update_status.emit("Download paused")
+                self.pause_btn.setText(_("buttons.resume"))
+                self.signals.update_status.emit(_("download.paused"))
             else:
                 self.pause_btn.setText(_("buttons.pause"))
-                self.signals.update_status.emit("Download resumed")
+                self.signals.update_status.emit(_("download.resumed"))
 
     def check_for_updates(self) -> None:
         try:
@@ -1131,7 +1131,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
     def show_update_dialog(self, latest_version, release_url, changelog) -> None:  # Added changelog parameter
         msg = QDialog(self)
-        msg.setWindowTitle("Update Available")
+        msg.setWindowTitle(_("update_dialog.title"))
         msg.setMinimumWidth(600)  # Increased width for better layout
         msg.setMinimumHeight(450)  # Increased height for better spacing
 
@@ -1160,7 +1160,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         header_layout.addWidget(icon_label)
 
         # Title
-        title_label = QLabel("<h2 style='color: #c90000; margin: 0;'>Update Available</h2>")
+        title_label = QLabel(f"<h2 style='color: #c90000; margin: 0;'>{_('update_dialog.title')}</h2>")
         header_layout.addWidget(title_label)
         header_layout.addStretch()
 
@@ -1466,16 +1466,16 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         # Video file extensions
         if ext in [".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"]:
-            self.status_label.setText(f"⚠️ Video file already exists")
+            self.status_label.setText(_("status.video_file_exists"))
         # Audio file extensions
         elif ext in [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"]:
-            self.status_label.setText(f"⚠️ Audio file already exists")
+            self.status_label.setText(_("status.audio_file_exists"))
         # Subtitle file extensions
         elif ext in [".vtt", ".srt", ".ass", ".ssa"]:
-            self.status_label.setText(f"⚠️ Subtitle file already exists")
+            self.status_label.setText(_("status.subtitle_file_exists"))
         # Default case
         else:
-            self.status_label.setText("⚠️ File already exists")
+            self.status_label.setText(_("status.file_exists"))
 
         # Show a simple message dialog
         msg_box = QMessageBox()
@@ -1579,7 +1579,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Clear progress/status when controls are re-enabled
         if enabled:
             self.progress_bar.setValue(0)
-            self.status_label.setText("Ready")
+            self.status_label.setText(_("status.ready"))
             self.download_details_label.setText("")  # Clear details label
 
     def handle_format_selection(self, button) -> None:
@@ -1655,7 +1655,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
     def cancel_download(self) -> None:
         if self.current_download:
             self.current_download.cancelled = True
-            self.status_label.setText("Cancelling download...")  # Set status directly
+            self.status_label.setText(_("status.cancelling"))  # Set status directly
             self.download_details_label.setText("")  # Clear details label on cancellation
 
     def show_ffmpeg_dialog(self) -> None:
@@ -1735,7 +1735,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             yt_dlp_path = get_yt_dlp_path()
             if not yt_dlp_path:
                 logger.error("yt-dlp executable not found. Please install yt-dlp first.")
-                self.signals.update_status.emit("Error: yt-dlp executable not found. Please install yt-dlp first.")
+                self.signals.update_status.emit(_("errors.ytdlp_not_found"))
                 self.signals.playlist_info_label_visible.emit(False)
                 self.signals.playlist_select_btn_visible.emit(False)
                 return
@@ -1769,7 +1769,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             if result.returncode != 0:
                 logger.error(f"yt-dlp failed: {result.stderr}")
-                self.signals.update_status.emit(f"Error: yt-dlp failed: {result.stderr}")
+                self.signals.update_status.emit(_("errors.ytdlp_failed", error=result.stderr))
                 self.signals.playlist_info_label_visible.emit(False)
                 self.signals.playlist_select_btn_visible.emit(False)
                 return
@@ -1778,7 +1778,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             if not json_lines:
                 logger.error("No data returned from yt-dlp")
-                self.signals.update_status.emit("Error: No data returned from yt-dlp")
+                self.signals.update_status.emit(_("errors.no_data_returned"))
                 self.signals.playlist_info_label_visible.emit(False)
                 self.signals.playlist_select_btn_visible.emit(False)
                 return
@@ -1787,7 +1787,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 first_info = json.loads(json_lines[0])
             except json.JSONDecodeError as e:
                 logger.error(f"Failed to parse yt-dlp output: {e}")
-                self.signals.update_status.emit(f"Error: Failed to parse yt-dlp output: {e}")
+                self.signals.update_status.emit(_("errors.parse_failed", error=str(e)))
                 self.signals.playlist_info_label_visible.emit(False)
                 self.signals.playlist_select_btn_visible.emit(False)
                 return
@@ -1812,7 +1812,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
                 if not self.playlist_entries:
                     logger.error("Playlist contains no valid videos.")
-                    self.signals.update_status.emit("Error: Playlist contains no valid videos.")
+                    self.signals.update_status.emit(_("errors.playlist_no_videos"))
                     self.signals.playlist_info_label_visible.emit(False)
                     self.signals.playlist_select_btn_visible.emit(False)
                     return
@@ -1821,9 +1821,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 self.video_info = self.playlist_entries[0]
 
                 # Update playlist info label
-                playlist_text = (
-                    f"Playlist: {first_info.get('title', 'Unknown Playlist')} | " f"{len(self.playlist_entries)} videos"
-                )
+                playlist_text = _("playlist.display_format",
+                                 title=first_info.get('title', _('playlist.unknown')),
+                                 count=len(self.playlist_entries))
                 # update signal method from QMetaObject.invokeMethod to signals
                 self.signals.playlist_info_label_text.emit(playlist_text)
                 self.signals.playlist_info_label_visible.emit(True)
@@ -1852,7 +1852,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # Verify we have format information
             if not self.video_info or "formats" not in self.video_info:
                 logger.error("No format information available")
-                self.signals.update_status.emit("Error: No format information available.")
+                self.signals.update_status.emit(_("errors.no_format_info"))
                 self.signals.playlist_info_label_visible.emit(False)
                 self.signals.playlist_select_btn_visible.emit(False)
                 return
@@ -1895,7 +1895,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         except subprocess.TimeoutExpired:
             logger.error("Analysis timed out. Please try again.")
-            self.signals.update_status.emit("Error: Analysis timed out. Please try again.")
+            self.signals.update_status.emit(_("errors.analysis_timeout"))
             self.signals.playlist_info_label_visible.emit(False)
             self.signals.playlist_select_btn_visible.emit(False)
         except json.JSONDecodeError as e:
@@ -1905,6 +1905,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.signals.playlist_select_btn_visible.emit(False)
         except Exception as e:
             logger.error(f"Analysis failed: {e}")
-            self.signals.update_status.emit(f"Error: Analysis failed: {e}")
+            self.signals.update_status.emit(_("errors.analysis_failed", error=str(e)))
             self.signals.playlist_info_label_visible.emit(False)
             self.signals.playlist_select_btn_visible.emit(False)

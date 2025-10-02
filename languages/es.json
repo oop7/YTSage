@@ -113,15 +113,27 @@
     "geo_configured": "Geo proxy configurado"
   },
   "download": {
-    "preparing": "🚀 Preparando tu descarga...",
+    "preparing": "Preparando descarga...",
+    "starting": "🚀 Iniciando descarga...",
+    "fetching_info": "🔍 Obteniendo información del video...",
+    "preparing_streams": "🎯 Preparando flujos de video...",
+    "downloading_audio": "⏬ Descargando audio...",
+    "downloading_video": "⏬ Descargando video...",
+    "downloading_subtitle": "⏬ Descargando subtítulos...",
+    "downloading": "⏬ Descargando...",
     "completed": "✅ ¡Descarga completada!",
     "video_completed": "✅ ¡Descarga de video completada!",
     "audio_completed": "✅ ¡Descarga de audio completada!",
     "subtitle_completed": "✅ ¡Descarga de subtítulos completada!",
-    "please_set_path": "Por favor establece una ruta de descarga usando 'Cambiar Ruta'",
-    "please_enter_url": "Por favor ingresa una URL",
-    "please_enter_url_and_path": "Por favor ingresa URL y establece ruta de descarga",
-    "please_select_format": "Por favor selecciona un formato"
+    "completed_cleaning": "✅ ¡Descarga completada! Limpiando...",
+    "cancelled": "Descarga cancelada",
+    "processing_playlist": "📋 Procesando datos de lista de reproducción...",
+    "paused": "Descarga pausada",
+    "resumed": "Descarga reanudada",
+    "please_enter_url": "Por favor ingresa una URL primero.",
+    "please_set_path": "Por favor establece una ruta de descarga primero.",
+    "please_enter_url_and_path": "Por favor ingresa URL y establece ruta de descarga.",
+    "please_select_format": "Por favor selecciona un formato primero."
   },
   "formats": {
     "show_formats": "Mostrar formatos:",
@@ -180,6 +192,7 @@
     "checking": "Verificando actualizaciones...",
     "update_available": "¡Actualización disponible!\nVersión actual: {current}\nÚltima versión: {latest}",
     "up_to_date": "yt-dlp está actualizado (versión {version})",
+    "already_up_to_date": "✅ ¡yt-dlp ya está actualizado!",
     "could_not_determine": "No se pudieron determinar las versiones.",
     "error_comparing": "Error al comparar versiones: {error}",
     "update_available_failed": "¡Actualización disponible! (Comparación fallida)\nActual: {current}\nÚltima: {latest}",
@@ -315,6 +328,34 @@
   "status": {
     "ready": "Listo",
     "file_exists": "⚠️ El archivo ya existe",
+    "video_file_exists": "⚠️ El archivo de video ya existe",
+    "audio_file_exists": "⚠️ El archivo de audio ya existe",
+    "subtitle_file_exists": "⚠️ El archivo de subtítulos ya existe",
     "cancelling": "Cancelando descarga..."
+  },
+  "errors": {
+    "playlist_no_videos": "Error: La lista de reproducción no contiene videos válidos.",
+    "playlist_no_url": "Error: No se pudo obtener la URL del primer video de la lista.",
+    "ytdlp_not_found": "Error: Ejecutable de yt-dlp no encontrado. Por favor instala yt-dlp primero.",
+    "ytdlp_not_found_path": "Error: Ejecutable de yt-dlp no encontrado. Esto podría deberse a una instalación incorrecta o un problema de PATH.",
+    "no_data_returned": "Error: yt-dlp no devolvió datos",
+    "no_format_info": "Error: No hay información de formato disponible.",
+    "analysis_timeout": "Error: Se agotó el tiempo de análisis. Por favor inténtalo de nuevo.",
+    "invalid_speed_limit": "❌ Error: Valor de límite de velocidad inválido en configuración.",
+    "ytdlp_failed": "Error: yt-dlp falló: {error}",
+    "parse_failed": "Error: Falló al analizar salida de yt-dlp: {error}",
+    "analysis_failed": "Error: Análisis falló: {error}",
+    "generic_error": "Error: {error}"
+  },
+  "update_dialog": {
+    "title": "Actualización disponible"
+  },
+  "playlist": {
+    "unknown": "Lista de reproducción desconocida",
+    "total_videos": "Total de Videos: {count}",
+    "display_format": "Lista de reproducción: {title} | {count} videos"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count} seleccionados"
   }
 }

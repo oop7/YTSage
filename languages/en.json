@@ -154,6 +154,22 @@
 
   "download": {
     "preparing": "Preparing download...",
+    "starting": "🚀 Starting download...",
+    "fetching_info": "🔍 Fetching video information...",
+    "preparing_streams": "🎯 Preparing video streams...",
+    "downloading_audio": "⏬ Downloading audio...",
+    "downloading_video": "⏬ Downloading video...",
+    "downloading_subtitle": "⏬ Downloading subtitle...",
+    "downloading": "⏬ Downloading...",
+    "completed": "✅ Download completed!",
+    "video_completed": "✅ Video download completed!",
+    "audio_completed": "✅ Audio download completed!",
+    "subtitle_completed": "✅ Subtitle download completed!",
+    "completed_cleaning": "✅ Download completed! Cleaning up...",
+    "cancelled": "Download cancelled",
+    "processing_playlist": "📋 Processing playlist data...",
+    "paused": "Download paused",
+    "resumed": "Download resumed",
     "please_enter_url": "Please enter a URL first.",
     "please_set_path": "Please set a download path first.",
     "please_enter_url_and_path": "Please enter a URL and set download path.",
@@ -164,6 +180,7 @@
     "checking": "Checking for updates...",
     "update_available": "Update available!\nCurrent version: {current}\nLatest version: {latest}",
     "up_to_date": "yt-dlp is up to date (version {version})",
+    "already_up_to_date": "✅ yt-dlp is already up to date!",
     "could_not_determine": "Could not determine versions.",
     "error_comparing": "Error comparing versions: {error}",
     "update_available_failed": "Update available! (Comparison failed)\nCurrent: {current}\nLatest: {latest}",
@@ -329,6 +346,34 @@
   "status": {
     "ready": "Ready",
     "file_exists": "⚠️ File already exists",
+    "video_file_exists": "⚠️ Video file already exists",
+    "audio_file_exists": "⚠️ Audio file already exists", 
+    "subtitle_file_exists": "⚠️ Subtitle file already exists",
     "cancelling": "Cancelling download..."
+  },
+  "errors": {
+    "playlist_no_videos": "Error: Playlist contains no valid videos.",
+    "playlist_no_url": "Error: Could not get URL for the first playlist video.",
+    "ytdlp_not_found": "Error: yt-dlp executable not found. Please install yt-dlp first.",
+    "ytdlp_not_found_path": "Error: yt-dlp executable not found. This could be due to improper installation or a PATH issue.",
+    "no_data_returned": "Error: No data returned from yt-dlp",
+    "no_format_info": "Error: No format information available.",
+    "analysis_timeout": "Error: Analysis timed out. Please try again.",
+    "invalid_speed_limit": "❌ Error: Invalid speed limit value set in settings.",
+    "ytdlp_failed": "Error: yt-dlp failed: {error}",
+    "parse_failed": "Error: Failed to parse yt-dlp output: {error}",
+    "analysis_failed": "Error: Analysis failed: {error}",
+    "generic_error": "Error: {error}"
+  },
+  "update_dialog": {
+    "title": "Update Available"
+  },
+  "playlist": {
+    "unknown": "Unknown Playlist",
+    "total_videos": "Total Videos: {count}",
+    "display_format": "Playlist: {title} | {count} videos"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count} selected"
   }
 }
