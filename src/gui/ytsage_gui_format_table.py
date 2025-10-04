@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, cast
 
 from PySide6.QtCore import QObject, Qt, Signal
-from PySide6.QtGui import QColor
+from PySide6.QtGui import QColor, QFontMetrics
 from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QHeaderView, QSizePolicy, QTableWidget, QTableWidgetItem, QWidget
 
 from src.utils.ytsage_localization import _
@@ -15,6 +15,56 @@ class FormatSignals(QObject):
 
 
 class FormatTableMixin:
+    def _calculate_column_width(self, label: str, min_width: int, padding: int) -> int:
+        """Calculate responsive column width based on header text length."""
+        self = cast("YTSageApp", self)
+        font_metrics = QFontMetrics(self.format_table.horizontalHeader().font())
+        text_width = font_metrics.horizontalAdvance(label)
+        return max(text_width + padding, min_width)
+
+    def _apply_column_widths(self, header_labels: list[str], is_playlist_mode: bool = False) -> None:
+        """Apply responsive column widths to format table."""
+        self = cast("YTSageApp", self)
+        
+        if is_playlist_mode:
+            # Playlist mode: 5 columns
+            configs = [
+                {"min_width": 70, "padding": 40},   # Select
+                {"min_width": 100, "padding": 30},  # Quality
+                {"min_width": 100, "padding": 30},  # Resolution
+                {"min_width": 60, "padding": 30},   # FPS
+                {"min_width": 100, "padding": 30},  # Audio
+            ]
+            
+            self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            calculated_width = self._calculate_column_width(header_labels[0], configs[0]["min_width"], configs[0]["padding"])
+            self.format_table.setColumnWidth(0, calculated_width)
+            
+            # Remaining columns stretch
+            for i in range(1, 5):
+                self.format_table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+        else:
+            # Normal mode: 8 columns
+            configs = [
+                {"min_width": 70, "padding": 40},   # Select - needs space for checkbox
+                {"min_width": 100, "padding": 30},  # Quality
+                {"min_width": 85, "padding": 30},   # Extension
+                {"min_width": 100, "padding": 30},  # Resolution
+                {"min_width": 90, "padding": 30},   # File Size
+                {"min_width": 100, "padding": 30},  # Codec
+                {"min_width": 100, "padding": 30},  # Audio
+                {"min_width": 60, "padding": 30},   # FPS
+            ]
+            
+            for col_index, (label, config) in enumerate(zip(header_labels, configs)):
+                calculated_width = self._calculate_column_width(label, config["min_width"], config["padding"])
+                
+                if col_index < 7:  # All columns except the last one are fixed
+                    self.format_table.horizontalHeader().setSectionResizeMode(col_index, QHeaderView.ResizeMode.Fixed)
+                    self.format_table.setColumnWidth(col_index, calculated_width)
+                else:  # FPS column stretches to fill remaining space
+                    self.format_table.horizontalHeader().setSectionResizeMode(col_index, QHeaderView.ResizeMode.Stretch)
+
     def setup_format_table(self) -> QTableWidget:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
 
@@ -22,46 +72,25 @@ class FormatTableMixin:
         # Format table with improved styling
         self.format_table = QTableWidget()
         self.format_table.setColumnCount(8)
-        self.format_table.setHorizontalHeaderLabels(
-            [
-                _("formats.select"),
-                _("formats.quality"),
-                _("formats.extension"),
-                _("formats.resolution"),
-                _("formats.file_size"),
-                _("formats.codec"),
-                _("formats.audio"),
-                _("formats.fps"),
-            ]
-        )
+        
+        # Get translated header labels
+        header_labels = [
+            _("formats.select"),
+            _("formats.quality"),
+            _("formats.extension"),
+            _("formats.resolution"),
+            _("formats.file_size"),
+            _("formats.codec"),
+            _("formats.audio"),
+            _("formats.fps"),
+        ]
+        self.format_table.setHorizontalHeaderLabels(header_labels)
 
         # Enable alternating row colors
         self.format_table.setAlternatingRowColors(True)
 
-        # Set specific column widths and resize modes
-        self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)  # Select
-        self.format_table.setColumnWidth(0, 70)  # Select column width (slightly reduced)
-
-        self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)  # Quality
-        self.format_table.setColumnWidth(1, 110)  # Quality width (increased for better visibility)
-
-        self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)  # Extension
-        self.format_table.setColumnWidth(2, 85)  # Extension width (slightly increased)
-
-        self.format_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)  # Resolution
-        self.format_table.setColumnWidth(3, 110)  # Resolution width (increased for better visibility)
-
-        self.format_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)  # File Size
-        self.format_table.setColumnWidth(4, 110)  # File Size width (increased for better readability)
-
-        self.format_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)  # Codec
-        self.format_table.setColumnWidth(5, 160)  # Codec width (increased for codec names)
-
-        self.format_table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)  # Audio
-        self.format_table.setColumnWidth(6, 140)  # Audio width (increased for better text visibility)
-
-        self.format_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)  # FPS column stretches to fill
-        # FPS column will stretch to fill remaining space
+        # Apply responsive column widths
+        self._apply_column_widths(header_labels, is_playlist_mode=False)
 
         # Set vertical header (row numbers) visible to false
         self.format_table.verticalHeader().setVisible(False)
@@ -189,57 +218,37 @@ class FormatTableMixin:
         # Configure columns based on mode
         if is_playlist_mode:
             self.format_table.setColumnCount(5)
-            self.format_table.setHorizontalHeaderLabels([_("formats.select"), _("formats.quality"), _("formats.resolution"), _("formats.fps"), _("formats.audio")])
+            header_labels = [_("formats.select"), _("formats.quality"), _("formats.resolution"), _("formats.fps"), _("formats.audio")]
+            self.format_table.setHorizontalHeaderLabels(header_labels)
 
             # Configure column visibility and resizing for playlist mode
             self.format_table.setColumnHidden(5, True)
             self.format_table.setColumnHidden(6, True)
             self.format_table.setColumnHidden(7, True)
 
-            # Set specific resize modes for playlist columns
-            self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(0, 80)  # Match the width set in setup_format_table
-            self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-            self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-            self.format_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
-            self.format_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
+            # Apply responsive column widths for playlist mode
+            self._apply_column_widths(header_labels, is_playlist_mode=True)
 
         else:
             self.format_table.setColumnCount(8)
-            self.format_table.setHorizontalHeaderLabels(
-                [
-                    _("formats.select"),
-                    _("formats.quality"),
-                    _("formats.extension"),
-                    _("formats.resolution"),
-                    _("formats.file_size"),
-                    _("formats.codec"),
-                    _("formats.audio"),
-                    _("formats.fps"),
-                ]
-            )
+            header_labels = [
+                _("formats.select"),
+                _("formats.quality"),
+                _("formats.extension"),
+                _("formats.resolution"),
+                _("formats.file_size"),
+                _("formats.codec"),
+                _("formats.audio"),
+                _("formats.fps"),
+            ]
+            self.format_table.setHorizontalHeaderLabels(header_labels)
+            
             # Ensure all columns are visible
             for i in range(2, 8):
                 self.format_table.setColumnHidden(i, False)
 
-            # Reapply optimized resize modes for non-playlist mode
-            self.format_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(0, 70)  # Match the optimized width
-            self.format_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(1, 110)
-            self.format_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(2, 85)
-            self.format_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(3, 110)
-            self.format_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(4, 110)
-            self.format_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(5, 160)
-            self.format_table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
-            self.format_table.setColumnWidth(6, 140)
-            self.format_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)
-            # FPS column stretches to fill remaining space
-
+            # Apply responsive column widths for normal mode
+            self._apply_column_widths(header_labels, is_playlist_mode=False)
 
 
         for f in formats:
