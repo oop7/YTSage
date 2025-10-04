@@ -153,6 +153,22 @@
   },
   "download": {
     "preparing": "Mempersiapkan unduhan...",
+    "starting": "🚀 Memulai unduhan...",
+    "fetching_info": "🔍 Mengambil informasi video...",
+    "preparing_streams": "🎯 Mempersiapkan aliran video...",
+    "downloading_audio": "⏬ Mengunduh audio...",
+    "downloading_video": "⏬ Mengunduh video...",
+    "downloading_subtitle": "⏬ Mengunduh subtitle...",
+    "downloading": "⏬ Mengunduh...",
+    "completed": "✅ Unduhan selesai!",
+    "video_completed": "✅ Unduhan video selesai!",
+    "audio_completed": "✅ Unduhan audio selesai!",
+    "subtitle_completed": "✅ Unduhan subtitle selesai!",
+    "completed_cleaning": "✅ Unduhan selesai! Membersihkan...",
+    "cancelled": "Unduhan dibatalkan",
+    "processing_playlist": "📋 Memproses data playlist...",
+    "paused": "Unduhan dijeda",
+    "resumed": "Unduhan dilanjutkan",
     "please_enter_url": "Silakan masukkan URL terlebih dahulu.",
     "please_set_path": "Silakan atur jalur unduhan terlebih dahulu.",
     "please_enter_url_and_path": "Silakan masukkan URL dan atur jalur unduhan.",
@@ -187,7 +203,8 @@
     "updating_from_to": "⬆️ Memperbarui dari {current} ke {latest}...",
     "running_pip_install": "📦 Menjalankan pip install --upgrade...",
     "pip_completed": "✅ Pembaruan pip berhasil diselesaikan!",
-    "pip_failed": "❌ Pembaruan pip gagal: {error}"
+    "pip_failed": "❌ Pembaruan pip gagal: {error}",
+    "already_up_to_date": "✅ yt-dlp sudah terbaru!"
   },
   "about": {
     "title": "Tentang YTSage",
@@ -328,6 +345,34 @@
   "status": {
     "ready": "Siap",
     "file_exists": "⚠️ File sudah ada",
+    "video_file_exists": "⚠️ File video sudah ada",
+    "audio_file_exists": "⚠️ File audio sudah ada",
+    "subtitle_file_exists": "⚠️ File subtitle sudah ada",
     "cancelling": "Membatalkan unduhan..."
+  },
+  "errors": {
+    "playlist_no_videos": "Kesalahan: Playlist tidak berisi video yang valid.",
+    "playlist_no_url": "Kesalahan: Tidak dapat mendapatkan URL untuk video playlist pertama.",
+    "ytdlp_not_found": "Kesalahan: Executable yt-dlp tidak ditemukan. Silakan instal yt-dlp terlebih dahulu.",
+    "ytdlp_not_found_path": "Kesalahan: Executable yt-dlp tidak ditemukan. Ini bisa karena instalasi yang tidak tepat atau masalah PATH.",
+    "no_data_returned": "Kesalahan: Tidak ada data yang dikembalikan dari yt-dlp",
+    "no_format_info": "Kesalahan: Tidak ada informasi format yang tersedia.",
+    "analysis_timeout": "Kesalahan: Analisis timeout. Silakan coba lagi.",
+    "invalid_speed_limit": "❌ Kesalahan: Nilai batas kecepatan tidak valid yang diatur dalam pengaturan.",
+    "ytdlp_failed": "Kesalahan: yt-dlp gagal: {error}",
+    "parse_failed": "Kesalahan: Gagal mengurai output yt-dlp: {error}",
+    "analysis_failed": "Kesalahan: Analisis gagal: {error}",
+    "generic_error": "Kesalahan: {error}"
+  },
+  "update_dialog": {
+    "title": "Pembaruan Tersedia"
+  },
+  "playlist": {
+    "unknown": "Playlist Tidak Dikenal",
+    "total_videos": "Total Video: {count}",
+    "display_format": "Playlist: {title} | {count} video"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count} dipilih"
   }
 }

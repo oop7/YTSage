@@ -153,6 +153,22 @@
   },
   "download": {
     "preparing": "Download wird vorbereitet...",
+    "starting": "🚀 Download wird gestartet...",
+    "fetching_info": "🔍 Video-Informationen werden abgerufen...",
+    "preparing_streams": "🎯 Video-Streams werden vorbereitet...",
+    "downloading_audio": "⏬ Audio wird heruntergeladen...",
+    "downloading_video": "⏬ Video wird heruntergeladen...",
+    "downloading_subtitle": "⏬ Untertitel werden heruntergeladen...",
+    "downloading": "⏬ Wird heruntergeladen...",
+    "completed": "✅ Download abgeschlossen!",
+    "video_completed": "✅ Video-Download abgeschlossen!",
+    "audio_completed": "✅ Audio-Download abgeschlossen!",
+    "subtitle_completed": "✅ Untertitel-Download abgeschlossen!",
+    "completed_cleaning": "✅ Download abgeschlossen! Wird aufgeräumt...",
+    "cancelled": "Download abgebrochen",
+    "processing_playlist": "📋 Playlist-Daten werden verarbeitet...",
+    "paused": "Download pausiert",
+    "resumed": "Download fortgesetzt",
     "please_enter_url": "Bitte geben Sie zuerst eine URL ein.",
     "please_set_path": "Bitte setzen Sie zuerst einen Download-Pfad.",
     "please_enter_url_and_path": "Bitte geben Sie eine URL ein und setzen Sie einen Download-Pfad.",
@@ -187,7 +203,8 @@
     "updating_from_to": "⬆️ Update von {current} auf {latest}...",
     "running_pip_install": "📦 pip install --upgrade wird ausgeführt...",
     "pip_completed": "✅ Pip-Update erfolgreich abgeschlossen!",
-    "pip_failed": "❌ Pip-Update fehlgeschlagen: {error}"
+    "pip_failed": "❌ Pip-Update fehlgeschlagen: {error}",
+    "already_up_to_date": "✅ yt-dlp ist bereits auf dem neuesten Stand!"
   },
   "about": {
     "title": "Über YTSage",
@@ -328,6 +345,34 @@
   "status": {
     "ready": "Bereit",
     "file_exists": "⚠️ Datei existiert bereits",
+    "video_file_exists": "⚠️ Video-Datei existiert bereits",
+    "audio_file_exists": "⚠️ Audio-Datei existiert bereits",
+    "subtitle_file_exists": "⚠️ Untertitel-Datei existiert bereits",
     "cancelling": "Download wird abgebrochen..."
+  },
+  "errors": {
+    "playlist_no_videos": "Fehler: Playlist enthält keine gültigen Videos.",
+    "playlist_no_url": "Fehler: URL für das erste Playlist-Video konnte nicht abgerufen werden.",
+    "ytdlp_not_found": "Fehler: yt-dlp-Ausführbare Datei nicht gefunden. Bitte installieren Sie zuerst yt-dlp.",
+    "ytdlp_not_found_path": "Fehler: yt-dlp-Ausführbare Datei nicht gefunden. Dies könnte auf eine fehlerhafte Installation oder ein PATH-Problem zurückzuführen sein.",
+    "no_data_returned": "Fehler: Keine Daten von yt-dlp zurückgegeben",
+    "no_format_info": "Fehler: Keine Formatinformationen verfügbar.",
+    "analysis_timeout": "Fehler: Analyse-Zeitüberschreitung. Bitte versuchen Sie es erneut.",
+    "invalid_speed_limit": "❌ Fehler: Ungültiger Geschwindigkeitsbegrenzungswert in den Einstellungen.",
+    "ytdlp_failed": "Fehler: yt-dlp fehlgeschlagen: {error}",
+    "parse_failed": "Fehler: Fehler beim Parsen der yt-dlp-Ausgabe: {error}",
+    "analysis_failed": "Fehler: Analyse fehlgeschlagen: {error}",
+    "generic_error": "Fehler: {error}"
+  },
+  "update_dialog": {
+    "title": "Update verfügbar"
+  },
+  "playlist": {
+    "unknown": "Unbekannte Playlist",
+    "total_videos": "Gesamtanzahl Videos: {count}",
+    "display_format": "Playlist: {title} | {count} Videos"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count} ausgewählt"
   }
 }

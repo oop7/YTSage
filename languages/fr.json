@@ -153,6 +153,22 @@
   },
   "download": {
     "preparing": "Préparation du téléchargement...",
+    "starting": "🚀 Démarrage du téléchargement...",
+    "fetching_info": "🔍 Récupération des informations vidéo...",
+    "preparing_streams": "🎯 Préparation des flux vidéo...",
+    "downloading_audio": "⏬ Téléchargement audio...",
+    "downloading_video": "⏬ Téléchargement vidéo...",
+    "downloading_subtitle": "⏬ Téléchargement des sous-titres...",
+    "downloading": "⏬ Téléchargement...",
+    "completed": "✅ Téléchargement terminé !",
+    "video_completed": "✅ Téléchargement vidéo terminé !",
+    "audio_completed": "✅ Téléchargement audio terminé !",
+    "subtitle_completed": "✅ Téléchargement des sous-titres terminé !",
+    "completed_cleaning": "✅ Téléchargement terminé ! Nettoyage...",
+    "cancelled": "Téléchargement annulé",
+    "processing_playlist": "📋 Traitement des données de la playlist...",
+    "paused": "Téléchargement en pause",
+    "resumed": "Téléchargement repris",
     "please_enter_url": "Veuillez d'abord entrer une URL.",
     "please_set_path": "Veuillez d'abord définir un chemin de téléchargement.",
     "please_enter_url_and_path": "Veuillez entrer une URL et définir un chemin de téléchargement.",
@@ -187,7 +203,8 @@
     "updating_from_to": "⬆️ Mise à jour de {current} vers {latest}...",
     "running_pip_install": "📦 Exécution de pip install --upgrade...",
     "pip_completed": "✅ Mise à jour pip terminée avec succès !",
-    "pip_failed": "❌ Échec de la mise à jour pip : {error}"
+    "pip_failed": "❌ Échec de la mise à jour pip : {error}",
+    "already_up_to_date": "✅ yt-dlp est déjà à jour !"
   },
   "about": {
     "title": "À propos de YTSage",
@@ -328,6 +345,34 @@
   "status": {
     "ready": "Prêt",
     "file_exists": "⚠️ Le fichier existe déjà",
+    "video_file_exists": "⚠️ Le fichier vidéo existe déjà",
+    "audio_file_exists": "⚠️ Le fichier audio existe déjà",
+    "subtitle_file_exists": "⚠️ Le fichier de sous-titres existe déjà",
     "cancelling": "Annulation du téléchargement..."
+  },
+  "errors": {
+    "playlist_no_videos": "Erreur : La playlist ne contient aucune vidéo valide.",
+    "playlist_no_url": "Erreur : Impossible d'obtenir l'URL de la première vidéo de la playlist.",
+    "ytdlp_not_found": "Erreur : Exécutable yt-dlp introuvable. Veuillez d'abord installer yt-dlp.",
+    "ytdlp_not_found_path": "Erreur : Exécutable yt-dlp introuvable. Cela pourrait être dû à une installation incorrecte ou à un problème de PATH.",
+    "no_data_returned": "Erreur : Aucune donnée renvoyée par yt-dlp",
+    "no_format_info": "Erreur : Aucune information de format disponible.",
+    "analysis_timeout": "Erreur : Délai d'analyse dépassé. Veuillez réessayer.",
+    "invalid_speed_limit": "❌ Erreur : Valeur de limite de vitesse invalide définie dans les paramètres.",
+    "ytdlp_failed": "Erreur : yt-dlp a échoué : {error}",
+    "parse_failed": "Erreur : Échec de l'analyse de la sortie yt-dlp : {error}",
+    "analysis_failed": "Erreur : Échec de l'analyse : {error}",
+    "generic_error": "Erreur : {error}"
+  },
+  "update_dialog": {
+    "title": "Mise à jour disponible"
+  },
+  "playlist": {
+    "unknown": "Playlist inconnue",
+    "total_videos": "Total des vidéos : {count}",
+    "display_format": "Playlist : {title} | {count} vidéos"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count} sélectionné(s)"
   }
 }

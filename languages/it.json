@@ -153,6 +153,22 @@
   },
   "download": {
     "preparing": "Preparazione download...",
+    "starting": "🚀 Avvio download...",
+    "fetching_info": "🔍 Recupero informazioni video...",
+    "preparing_streams": "🎯 Preparazione stream video...",
+    "downloading_audio": "⏬ Download audio...",
+    "downloading_video": "⏬ Download video...",
+    "downloading_subtitle": "⏬ Download sottotitoli...",
+    "downloading": "⏬ Download...",
+    "completed": "✅ Download completato!",
+    "video_completed": "✅ Download video completato!",
+    "audio_completed": "✅ Download audio completato!",
+    "subtitle_completed": "✅ Download sottotitoli completato!",
+    "completed_cleaning": "✅ Download completato! Pulizia in corso...",
+    "cancelled": "Download annullato",
+    "processing_playlist": "📋 Elaborazione dati playlist...",
+    "paused": "Download in pausa",
+    "resumed": "Download ripreso",
     "please_enter_url": "Inserisci prima un URL.",
     "please_set_path": "Imposta prima un percorso di download.",
     "please_enter_url_and_path": "Inserisci un URL e imposta un percorso di download.",
@@ -187,7 +203,8 @@
     "updating_from_to": "⬆️ Aggiornamento da {current} a {latest}...",
     "running_pip_install": "📦 Esecuzione pip install --upgrade...",
     "pip_completed": "✅ Aggiornamento pip completato con successo!",
-    "pip_failed": "❌ Aggiornamento pip fallito: {error}"
+    "pip_failed": "❌ Aggiornamento pip fallito: {error}",
+    "already_up_to_date": "✅ yt-dlp è già aggiornato!"
   },
   "about": {
     "title": "Informazioni su YTSage",
@@ -328,6 +345,34 @@
   "status": {
     "ready": "Pronto",
     "file_exists": "⚠️ File già esistente",
+    "video_file_exists": "⚠️ File video già esistente",
+    "audio_file_exists": "⚠️ File audio già esistente",
+    "subtitle_file_exists": "⚠️ File sottotitoli già esistente",
     "cancelling": "Annullamento download..."
+  },
+  "errors": {
+    "playlist_no_videos": "Errore: La playlist non contiene video validi.",
+    "playlist_no_url": "Errore: Impossibile ottenere l'URL del primo video della playlist.",
+    "ytdlp_not_found": "Errore: Eseguibile yt-dlp non trovato. Installare prima yt-dlp.",
+    "ytdlp_not_found_path": "Errore: Eseguibile yt-dlp non trovato. Ciò potrebbe essere dovuto a un'installazione errata o a un problema di PATH.",
+    "no_data_returned": "Errore: Nessun dato restituito da yt-dlp",
+    "no_format_info": "Errore: Nessuna informazione formato disponibile.",
+    "analysis_timeout": "Errore: Timeout analisi. Riprovare.",
+    "invalid_speed_limit": "❌ Errore: Valore limite velocità non valido impostato nelle impostazioni.",
+    "ytdlp_failed": "Errore: yt-dlp fallito: {error}",
+    "parse_failed": "Errore: Impossibile analizzare l'output di yt-dlp: {error}",
+    "analysis_failed": "Errore: Analisi fallita: {error}",
+    "generic_error": "Errore: {error}"
+  },
+  "update_dialog": {
+    "title": "Aggiornamento disponibile"
+  },
+  "playlist": {
+    "unknown": "Playlist sconosciuta",
+    "total_videos": "Video totali: {count}",
+    "display_format": "Playlist: {title} | {count} video"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count} selezionati"
   }
 }

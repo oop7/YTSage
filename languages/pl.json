@@ -153,6 +153,22 @@
   },
   "download": {
     "preparing": "Przygotowywanie pobierania...",
+    "starting": "🚀 Rozpoczynanie pobierania...",
+    "fetching_info": "🔍 Pobieranie informacji o wideo...",
+    "preparing_streams": "🎯 Przygotowywanie strumieni wideo...",
+    "downloading_audio": "⏬ Pobieranie dźwięku...",
+    "downloading_video": "⏬ Pobieranie wideo...",
+    "downloading_subtitle": "⏬ Pobieranie napisów...",
+    "downloading": "⏬ Pobieranie...",
+    "completed": "✅ Pobieranie zakończone!",
+    "video_completed": "✅ Pobieranie wideo zakończone!",
+    "audio_completed": "✅ Pobieranie dźwięku zakończone!",
+    "subtitle_completed": "✅ Pobieranie napisów zakończone!",
+    "completed_cleaning": "✅ Pobieranie zakończone! Czyszczenie...",
+    "cancelled": "Pobieranie anulowane",
+    "processing_playlist": "📋 Przetwarzanie danych playlisty...",
+    "paused": "Pobieranie wstrzymane",
+    "resumed": "Pobieranie wznowione",
     "please_enter_url": "Proszę najpierw wprowadzić URL.",
     "please_set_path": "Proszę najpierw ustawić ścieżkę pobierania.",
     "please_enter_url_and_path": "Proszę wprowadzić URL i ustawić ścieżkę pobierania.",
@@ -187,7 +203,8 @@
     "updating_from_to": "⬆️ Aktualizacja z {current} do {latest}...",
     "running_pip_install": "📦 Uruchamianie pip install --upgrade...",
     "pip_completed": "✅ Aktualizacja pip zakończona pomyślnie!",
-    "pip_failed": "❌ Aktualizacja pip nie powiodła się: {error}"
+    "pip_failed": "❌ Aktualizacja pip nie powiodła się: {error}",
+    "already_up_to_date": "✅ yt-dlp jest już aktualny!"
   },
   "about": {
     "title": "O YTSage",
@@ -328,6 +345,34 @@
   "status": {
     "ready": "Gotowy",
     "file_exists": "⚠️ Plik już istnieje",
+    "video_file_exists": "⚠️ Plik wideo już istnieje",
+    "audio_file_exists": "⚠️ Plik audio już istnieje",
+    "subtitle_file_exists": "⚠️ Plik napisów już istnieje",
     "cancelling": "Anulowanie pobierania..."
+  },
+  "errors": {
+    "playlist_no_videos": "Błąd: Playlista nie zawiera prawidłowych wideo.",
+    "playlist_no_url": "Błąd: Nie można pobrać URL pierwszego wideo z playlisty.",
+    "ytdlp_not_found": "Błąd: Plik wykonywalny yt-dlp nie został znaleziony. Proszę najpierw zainstalować yt-dlp.",
+    "ytdlp_not_found_path": "Błąd: Plik wykonywalny yt-dlp nie został znaleziony. Może to być spowodowane niepoprawną instalacją lub problemem z PATH.",
+    "no_data_returned": "Błąd: Brak danych zwróconych z yt-dlp",
+    "no_format_info": "Błąd: Brak dostępnych informacji o formacie.",
+    "analysis_timeout": "Błąd: Limit czasu analizy. Spróbuj ponownie.",
+    "invalid_speed_limit": "❌ Błąd: Nieprawidłowa wartość limitu prędkości ustawiona w ustawieniach.",
+    "ytdlp_failed": "Błąd: yt-dlp nie powiodło się: {error}",
+    "parse_failed": "Błąd: Nie udało się przeanalizować wyjścia yt-dlp: {error}",
+    "analysis_failed": "Błąd: Analiza nie powiodła się: {error}",
+    "generic_error": "Błąd: {error}"
+  },
+  "update_dialog": {
+    "title": "Dostępna aktualizacja"
+  },
+  "playlist": {
+    "unknown": "Nieznana playlista",
+    "total_videos": "Wszystkich wideo: {count}",
+    "display_format": "Playlista: {title} | {count} wideo"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count} wybrano"
   }
 }
