@@ -40,6 +40,7 @@
     "codec": "编解码器",
     "audio": "音频",
     "fps": "帧率",
+    "hdr": "HDR",
     "will_merge_audio": "将合并音频",
     "has_audio": "✓ 有音频",
     "audio_only": "仅音频",

@@ -40,6 +40,7 @@
     "codec": "Kodek",
     "audio": "Dźwięk",
     "fps": "KL/S",
+    "hdr": "HDR",
     "will_merge_audio": "Dźwięk zostanie połączony",
     "has_audio": "✓ Zawiera dźwięk",
     "audio_only": "Tylko dźwięk",

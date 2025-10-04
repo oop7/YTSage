@@ -27,12 +27,13 @@ class FormatTableMixin:
         self = cast("YTSageApp", self)
         
         if is_playlist_mode:
-            # Playlist mode: 5 columns
+            # Playlist mode: 6 columns
             configs = [
                 {"min_width": 70, "padding": 40},   # Select
                 {"min_width": 100, "padding": 30},  # Quality
                 {"min_width": 100, "padding": 30},  # Resolution
                 {"min_width": 60, "padding": 30},   # FPS
+                {"min_width": 60, "padding": 30},   # HDR
                 {"min_width": 100, "padding": 30},  # Audio
             ]
             
@@ -41,10 +42,10 @@ class FormatTableMixin:
             self.format_table.setColumnWidth(0, calculated_width)
             
             # Remaining columns stretch
-            for i in range(1, 5):
+            for i in range(1, 6):
                 self.format_table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
         else:
-            # Normal mode: 8 columns
+            # Normal mode: 9 columns
             configs = [
                 {"min_width": 70, "padding": 40},   # Select - needs space for checkbox
                 {"min_width": 100, "padding": 30},  # Quality
@@ -54,15 +55,16 @@ class FormatTableMixin:
                 {"min_width": 100, "padding": 30},  # Codec
                 {"min_width": 100, "padding": 30},  # Audio
                 {"min_width": 60, "padding": 30},   # FPS
+                {"min_width": 60, "padding": 30},   # HDR
             ]
             
             for col_index, (label, config) in enumerate(zip(header_labels, configs)):
                 calculated_width = self._calculate_column_width(label, config["min_width"], config["padding"])
                 
-                if col_index < 7:  # All columns except the last one are fixed
+                if col_index < 8:  # All columns except the last one are fixed
                     self.format_table.horizontalHeader().setSectionResizeMode(col_index, QHeaderView.ResizeMode.Fixed)
                     self.format_table.setColumnWidth(col_index, calculated_width)
-                else:  # FPS column stretches to fill remaining space
+                else:  # HDR column stretches to fill remaining space
                     self.format_table.horizontalHeader().setSectionResizeMode(col_index, QHeaderView.ResizeMode.Stretch)
 
     def setup_format_table(self) -> QTableWidget:
@@ -71,7 +73,7 @@ class FormatTableMixin:
         self.format_signals = FormatSignals()
         # Format table with improved styling
         self.format_table = QTableWidget()
-        self.format_table.setColumnCount(8)
+        self.format_table.setColumnCount(9)
         
         # Get translated header labels
         header_labels = [
@@ -83,6 +85,7 @@ class FormatTableMixin:
             _("formats.codec"),
             _("formats.audio"),
             _("formats.fps"),
+            _("formats.hdr"),
         ]
         self.format_table.setHorizontalHeaderLabels(header_labels)
 
@@ -217,20 +220,20 @@ class FormatTableMixin:
 
         # Configure columns based on mode
         if is_playlist_mode:
-            self.format_table.setColumnCount(5)
-            header_labels = [_("formats.select"), _("formats.quality"), _("formats.resolution"), _("formats.fps"), _("formats.audio")]
+            self.format_table.setColumnCount(6)
+            header_labels = [_("formats.select"), _("formats.quality"), _("formats.resolution"), _("formats.fps"), _("formats.hdr"), _("formats.audio")]
             self.format_table.setHorizontalHeaderLabels(header_labels)
 
             # Configure column visibility and resizing for playlist mode
-            self.format_table.setColumnHidden(5, True)
             self.format_table.setColumnHidden(6, True)
             self.format_table.setColumnHidden(7, True)
+            self.format_table.setColumnHidden(8, True)
 
             # Apply responsive column widths for playlist mode
             self._apply_column_widths(header_labels, is_playlist_mode=True)
 
         else:
-            self.format_table.setColumnCount(8)
+            self.format_table.setColumnCount(9)
             header_labels = [
                 _("formats.select"),
                 _("formats.quality"),
@@ -240,11 +243,12 @@ class FormatTableMixin:
                 _("formats.codec"),
                 _("formats.audio"),
                 _("formats.fps"),
+                _("formats.hdr"),
             ]
             self.format_table.setHorizontalHeaderLabels(header_labels)
             
             # Ensure all columns are visible
-            for i in range(2, 8):
+            for i in range(2, 9):
                 self.format_table.setColumnHidden(i, False)
 
             # Apply responsive column widths for normal mode
@@ -316,6 +320,24 @@ class FormatTableMixin:
                 else:
                     fps_item.setForeground(QColor("#888888"))  # Gray for N/A
                 self.format_table.setItem(row, 3, fps_item)
+                
+                # Column 4: HDR for playlist mode
+                if f.get("vcodec") == "none":
+                    # Audio-only formats don't have HDR
+                    hdr_text = "N/A"
+                    hdr_item = QTableWidgetItem(hdr_text)
+                    hdr_item.setForeground(QColor("#888888"))  # Gray for N/A
+                else:
+                    hdr_value = f.get("dynamic_range")
+                    if hdr_value and hdr_value != "SDR":
+                        hdr_text = hdr_value
+                        hdr_item = QTableWidgetItem(hdr_text)
+                        hdr_item.setForeground(QColor("#00ffff"))  # Cyan for HDR
+                    else:
+                        hdr_text = "SDR"
+                        hdr_item = QTableWidgetItem(hdr_text)
+                        hdr_item.setForeground(QColor("#888888"))  # Gray for SDR
+                self.format_table.setItem(row, 4, hdr_item)
             else:
                 # Extension for normal mode (column 2)
                 self.format_table.setItem(row, 2, QTableWidgetItem(f.get("ext", "").upper()))
@@ -331,7 +353,7 @@ class FormatTableMixin:
             else:  # Has Audio (Video+Audio)
                 audio_item.setForeground(QColor("#00cc00"))  # Green for included audio
             # Set item for correct column based on mode
-            audio_column_index = 4 if is_playlist_mode else 6
+            audio_column_index = 5 if is_playlist_mode else 6
             self.format_table.setItem(row, audio_column_index, audio_item)
 
             # --- Populate columns only shown in non-playlist mode ---
@@ -374,6 +396,24 @@ class FormatTableMixin:
                 else:
                     fps_item.setForeground(QColor("#888888"))  # Gray for N/A
                 self.format_table.setItem(row, 7, fps_item)
+                
+                # Column 8: HDR (Dynamic Range)
+                if f.get("vcodec") == "none":
+                    # Audio-only formats don't have HDR
+                    hdr_text = "N/A"
+                    hdr_item = QTableWidgetItem(hdr_text)
+                    hdr_item.setForeground(QColor("#888888"))  # Gray for N/A
+                else:
+                    hdr_value = f.get("dynamic_range")
+                    if hdr_value and hdr_value != "SDR":
+                        hdr_text = hdr_value
+                        hdr_item = QTableWidgetItem(hdr_text)
+                        hdr_item.setForeground(QColor("#00ffff"))  # Cyan for HDR
+                    else:
+                        hdr_text = "SDR"
+                        hdr_item = QTableWidgetItem(hdr_text)
+                        hdr_item.setForeground(QColor("#888888"))  # Gray for SDR
+                self.format_table.setItem(row, 8, hdr_item)
 
     def handle_checkbox_click(self, clicked_checkbox) -> None:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.

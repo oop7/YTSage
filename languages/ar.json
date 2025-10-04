@@ -40,6 +40,7 @@
     "codec": "الترميز",
     "audio": "الصوت",
     "fps": "إطار/ث",
+    "hdr": "HDR",
     "will_merge_audio": "سيتم دمج الصوت",
     "has_audio": "✓ يحتوي على صوت",
     "audio_only": "صوت فقط",

@@ -40,6 +40,7 @@
     "codec": "Кодек",
     "audio": "Аудио",
     "fps": "Кадр/с",
+    "hdr": "HDR",
     "will_merge_audio": "Объединит аудио",
     "has_audio": "✓ Есть аудио",
     "audio_only": "Только аудио",

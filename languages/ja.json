@@ -40,6 +40,7 @@
     "codec": "コーデック",
     "audio": "音声",
     "fps": "FPS",
+    "hdr": "HDR",
     "will_merge_audio": "音声が結合されます",
     "has_audio": "✓ 音声あり",
     "audio_only": "音声のみ",
