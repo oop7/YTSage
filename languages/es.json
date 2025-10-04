@@ -130,6 +130,8 @@
     "processing_playlist": "📋 Procesando datos de lista de reproducción...",
     "paused": "Descarga pausada",
     "resumed": "Descarga reanudada",
+    "speed": "Velocidad",
+    "eta": "Tiempo restante",
     "please_enter_url": "Por favor ingresa una URL primero.",
     "please_set_path": "Por favor establece una ruta de descarga primero.",
     "please_enter_url_and_path": "Por favor ingresa URL y establece ruta de descarga.",

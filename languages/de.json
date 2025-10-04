@@ -43,7 +43,6 @@
     "will_merge_audio": "Audio wird zusammengeführt",
     "has_audio": "✓ Hat Audio",
     "audio_only": "Nur Audio",
-
     "best_4k": "Beste (4K)",
     "best_2k": "Beste (2K)",
     "high_1080p": "Hoch (1080p)",
@@ -59,7 +58,7 @@
   "buttons": {
     "download": "Herunterladen",
     "pause": "Pausieren",
-    "resume": "Fortsetzen", 
+    "resume": "Fortsetzen",
     "cancel": "Abbrechen",
     "browse": "Durchsuchen",
     "clear": "Löschen",
@@ -96,7 +95,7 @@
   "tabs": {
     "cookies": "Mit Cookies anmelden",
     "custom_command": "Benutzerdefinierter Befehl",
-    "proxy": "Proxy", 
+    "proxy": "Proxy",
     "language": "Sprache"
   },
   "cookies": {
@@ -169,6 +168,8 @@
     "processing_playlist": "📋 Playlist-Daten werden verarbeitet...",
     "paused": "Download pausiert",
     "resumed": "Download fortgesetzt",
+    "speed": "Geschwindigkeit",
+    "eta": "Verbleibende Zeit",
     "please_enter_url": "Bitte geben Sie zuerst eine URL ein.",
     "please_set_path": "Bitte setzen Sie zuerst einen Download-Pfad.",
     "please_enter_url_and_path": "Bitte geben Sie eine URL ein und setzen Sie einen Download-Pfad.",

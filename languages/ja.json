@@ -169,6 +169,8 @@
     "processing_playlist": "📋 再生リストデータを処理中...",
     "paused": "ダウンロードが一時停止されました",
     "resumed": "ダウンロードが再開されました",
+    "speed": "速度",
+    "eta": "予想時間",
     "please_enter_url": "最初にURLを入力してください。",
     "please_set_path": "最初にダウンロードパスを設定してください。",
     "please_enter_url_and_path": "URLを入力し、ダウンロードパスを設定してください。",

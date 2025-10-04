@@ -169,6 +169,8 @@
     "processing_playlist": "📋 Oynatma listesi verileri işleniyor...",
     "paused": "İndirme duraklatıldı",
     "resumed": "İndirme devam ettirildi",
+    "speed": "Hız",
+    "eta": "Kalan süre",
     "please_enter_url": "Lütfen önce bir URL girin.",
     "please_set_path": "Lütfen önce indirme yolunu ayarlayın.",
     "please_enter_url_and_path": "Lütfen bir URL girin ve indirme yolunu ayarlayın.",

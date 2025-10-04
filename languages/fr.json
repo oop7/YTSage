@@ -169,6 +169,8 @@
     "processing_playlist": "📋 Traitement des données de la playlist...",
     "paused": "Téléchargement en pause",
     "resumed": "Téléchargement repris",
+    "speed": "Vitesse",
+    "eta": "Temps restant",
     "please_enter_url": "Veuillez d'abord entrer une URL.",
     "please_set_path": "Veuillez d'abord définir un chemin de téléchargement.",
     "please_enter_url_and_path": "Veuillez entrer une URL et définir un chemin de téléchargement.",

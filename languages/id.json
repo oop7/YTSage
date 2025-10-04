@@ -43,7 +43,6 @@
     "will_merge_audio": "Audio akan digabungkan",
     "has_audio": "✓ Memiliki audio",
     "audio_only": "Audio saja",
-
     "best_4k": "Terbaik (4K)",
     "best_2k": "Terbaik (2K)",
     "high_1080p": "Tinggi (1080p)",
@@ -59,7 +58,7 @@
   "buttons": {
     "download": "Unduh",
     "pause": "Jeda",
-    "resume": "Lanjutkan", 
+    "resume": "Lanjutkan",
     "cancel": "Batal",
     "browse": "Jelajahi",
     "clear": "Bersihkan",
@@ -96,7 +95,7 @@
   "tabs": {
     "cookies": "Masuk dengan cookies",
     "custom_command": "Perintah khusus",
-    "proxy": "Proxy", 
+    "proxy": "Proxy",
     "language": "Bahasa"
   },
   "cookies": {
@@ -169,6 +168,8 @@
     "processing_playlist": "📋 Memproses data playlist...",
     "paused": "Unduhan dijeda",
     "resumed": "Unduhan dilanjutkan",
+    "speed": "Kecepatan",
+    "eta": "Waktu tersisa",
     "please_enter_url": "Silakan masukkan URL terlebih dahulu.",
     "please_set_path": "Silakan atur jalur unduhan terlebih dahulu.",
     "please_enter_url_and_path": "Silakan masukkan URL dan atur jalur unduhan.",

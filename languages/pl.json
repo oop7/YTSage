@@ -39,11 +39,10 @@
     "file_size": "Rozmiar pliku",
     "codec": "Kodek",
     "audio": "Dźwięk",
-        "fps": "KL/S",
+    "fps": "KL/S",
     "will_merge_audio": "Dźwięk zostanie połączony",
     "has_audio": "✓ Zawiera dźwięk",
     "audio_only": "Tylko dźwięk",
-
     "best_4k": "Najlepsza (4K)",
     "best_2k": "Najlepsza (2K)",
     "high_1080p": "Wysoka (1080p)",
@@ -59,7 +58,7 @@
   "buttons": {
     "download": "Pobierz",
     "pause": "Wstrzymaj",
-    "resume": "Wznów", 
+    "resume": "Wznów",
     "cancel": "Anuluj",
     "browse": "Przeglądaj",
     "clear": "Wyczyść",
@@ -96,7 +95,7 @@
   "tabs": {
     "cookies": "Zaloguj za pomocą ciasteczek",
     "custom_command": "Polecenie niestandardowe",
-    "proxy": "Proxy", 
+    "proxy": "Proxy",
     "language": "Język"
   },
   "cookies": {
@@ -169,6 +168,8 @@
     "processing_playlist": "📋 Przetwarzanie danych playlisty...",
     "paused": "Pobieranie wstrzymane",
     "resumed": "Pobieranie wznowione",
+    "speed": "Prędkość",
+    "eta": "Pozostały czas",
     "please_enter_url": "Proszę najpierw wprowadzić URL.",
     "please_set_path": "Proszę najpierw ustawić ścieżkę pobierania.",
     "please_enter_url_and_path": "Proszę wprowadzić URL i ustawić ścieżkę pobierania.",

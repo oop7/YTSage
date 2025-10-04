@@ -657,7 +657,7 @@ class DownloadThread(QThread):
                 eta_str = eta_match.group(1) if eta_match else "N/A"
 
                 # Simplify status message to only show the speed and ETA
-                status = f"Speed: {speed_str} | ETA: {eta_str}"
+                status = f"{_('download.speed')}: {speed_str} | {_('download.eta')}: {eta_str}"
                 self.update_details.emit(status)
             except Exception as e:
                 # If parsing fails, just show basic status (maybe log the error)

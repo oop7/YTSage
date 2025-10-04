@@ -169,6 +169,8 @@
     "processing_playlist": "📋 Elaborazione dati playlist...",
     "paused": "Download in pausa",
     "resumed": "Download ripreso",
+    "speed": "Velocità",
+    "eta": "Tempo rimanente",
     "please_enter_url": "Inserisci prima un URL.",
     "please_set_path": "Imposta prima un percorso di download.",
     "please_enter_url_and_path": "Inserisci un URL e imposta un percorso di download.",
