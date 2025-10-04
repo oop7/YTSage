@@ -153,6 +153,22 @@
   },
   "download": {
     "preparing": "正在准备下载...",
+    "starting": "🚀 正在开始下载...",
+    "fetching_info": "🔍 正在获取视频信息...",
+    "preparing_streams": "🎯 正在准备视频流...",
+    "downloading_audio": "⏬ 正在下载音频...",
+    "downloading_video": "⏬ 正在下载视频...",
+    "downloading_subtitle": "⏬ 正在下载字幕...",
+    "downloading": "⏬ 正在下载...",
+    "completed": "✅ 下载完成!",
+    "video_completed": "✅ 视频下载完成!",
+    "audio_completed": "✅ 音频下载完成!",
+    "subtitle_completed": "✅ 字幕下载完成!",
+    "completed_cleaning": "✅ 下载完成!正在清理...",
+    "cancelled": "下载已取消",
+    "processing_playlist": "📋 正在处理播放列表数据...",
+    "paused": "下载已暂停",
+    "resumed": "下载已恢复",
     "please_enter_url": "请先输入网址。",
     "please_set_path": "请先设置下载路径。",
     "please_enter_url_and_path": "请输入网址并设置下载路径。",
@@ -187,7 +203,8 @@
     "updating_from_to": "⬆️ 从 {current} 更新到 {latest}...",
     "running_pip_install": "📦 运行 pip install --upgrade...",
     "pip_completed": "✅ pip 更新完成成功！",
-    "pip_failed": "❌ pip 更新失败：{error}"
+    "pip_failed": "❌ pip 更新失败：{error}",
+    "already_up_to_date": "✅ yt-dlp已是最新版本！"
   },
   "about": {
     "title": "关于 YTSage",
@@ -328,6 +345,34 @@
   "status": {
     "ready": "准备就绪",
     "file_exists": "⚠️ 文件已存在",
+    "video_file_exists": "⚠️ 视频文件已存在",
+    "audio_file_exists": "⚠️ 音频文件已存在",
+    "subtitle_file_exists": "⚠️ 字幕文件已存在",
     "cancelling": "正在取消下载..."
+  },
+  "errors": {
+    "playlist_no_videos": "错误：播放列表不包含有效视频。",
+    "playlist_no_url": "错误：无法获取播放列表第一个视频的URL。",
+    "ytdlp_not_found": "错误：未找到yt-dlp可执行文件。请先安装yt-dlp。",
+    "ytdlp_not_found_path": "错误：未找到yt-dlp可执行文件。这可能是由于安装不当或PATH问题。",
+    "no_data_returned": "错误：yt-dlp未返回数据",
+    "no_format_info": "错误：无可用格式信息。",
+    "analysis_timeout": "错误：分析超时。请重试。",
+    "invalid_speed_limit": "❌ 错误：设置中设置了无效的速度限制值。",
+    "ytdlp_failed": "错误：yt-dlp失败：{error}",
+    "parse_failed": "错误：解析yt-dlp输出失败：{error}",
+    "analysis_failed": "错误：分析失败：{error}",
+    "generic_error": "错误：{error}"
+  },
+  "update_dialog": {
+    "title": "有可用更新"
+  },
+  "playlist": {
+    "unknown": "未知播放列表",
+    "total_videos": "总视频数：{count}",
+    "display_format": "播放列表：{title} | {count}个视频"
+  },
+  "subtitle_selection": {
+    "count_selected": "已选择{count}个"
   }
 }

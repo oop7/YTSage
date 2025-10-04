@@ -153,9 +153,25 @@
   },
   "download": {
     "preparing": "ダウンロードを準備中...",
+    "starting": "🚀 ダウンロードを開始しています...",
+    "fetching_info": "🔍 動画情報を取得中...",
+    "preparing_streams": "🎯 動画ストリームを準備中...",
+    "downloading_audio": "⏬ 音声をダウンロード中...",
+    "downloading_video": "⏬ 動画をダウンロード中...",
+    "downloading_subtitle": "⏬ 字幕をダウンロード中...",
+    "downloading": "⏬ ダウンロード中...",
+    "completed": "✅ ダウンロード完了!",
+    "video_completed": "✅ 動画ダウンロード完了!",
+    "audio_completed": "✅ 音声ダウンロード完了!",
+    "subtitle_completed": "✅ 字幕ダウンロード完了!",
+    "completed_cleaning": "✅ ダウンロード完了!クリーンアップ中...",
+    "cancelled": "ダウンロードがキャンセルされました",
+    "processing_playlist": "📋 再生リストデータを処理中...",
+    "paused": "ダウンロードが一時停止されました",
+    "resumed": "ダウンロードが再開されました",
     "please_enter_url": "最初にURLを入力してください。",
     "please_set_path": "最初にダウンロードパスを設定してください。",
-    "please_enter_url_and_path": "URLを入力してダウンロードパスを設定してください。",
+    "please_enter_url_and_path": "URLを入力し、ダウンロードパスを設定してください。",
     "please_select_format": "最初にフォーマットを選択してください。"
   },
   "update": {
@@ -187,7 +203,8 @@
     "updating_from_to": "⬆️ {current}から{latest}に更新中...",
     "running_pip_install": "📦 pip install --upgradeを実行中...",
     "pip_completed": "✅ pipの更新が正常に完了しました！",
-    "pip_failed": "❌ pipの更新に失敗しました: {error}"
+    "pip_failed": "❌ pipの更新に失敗しました: {error}",
+    "already_up_to_date": "✅ yt-dlpはすでに最新です！"
   },
   "about": {
     "title": "YTSageについて",
@@ -327,7 +344,35 @@
   },
   "status": {
     "ready": "準備完了",
-    "file_exists": "⚠️ ファイルが既に存在します",
+    "file_exists": "⚠️ ファイルがすでに存在します",
+    "video_file_exists": "⚠️ 動画ファイルがすでに存在します",
+    "audio_file_exists": "⚠️ 音声ファイルがすでに存在します",
+    "subtitle_file_exists": "⚠️ 字幕ファイルがすでに存在します",
     "cancelling": "ダウンロードをキャンセル中..."
+  },
+  "errors": {
+    "playlist_no_videos": "エラー: 再生リストに有効な動画が含まれていません。",
+    "playlist_no_url": "エラー: 再生リストの最初の動画のURLを取得できませんでした。",
+    "ytdlp_not_found": "エラー: yt-dlp実行ファイルが見つかりません。最初にyt-dlpをインストールしてください。",
+    "ytdlp_not_found_path": "エラー: yt-dlp実行ファイルが見つかりません。不適切なインストールまたはPATHの問題が原因の可能性があります。",
+    "no_data_returned": "エラー: yt-dlpからデータが返されませんでした",
+    "no_format_info": "エラー: 利用可能なフォーマット情報がありません。",
+    "analysis_timeout": "エラー: 解析がタイムアウトしました。もう一度試してください。",
+    "invalid_speed_limit": "❌ エラー: 設定で無効な速度制限値が設定されています。",
+    "ytdlp_failed": "エラー: yt-dlpが失敗しました: {error}",
+    "parse_failed": "エラー: yt-dlp出力の解析に失敗しました: {error}",
+    "analysis_failed": "エラー: 解析が失敗しました: {error}",
+    "generic_error": "エラー: {error}"
+  },
+  "update_dialog": {
+    "title": "アップデートが利用可能です"
+  },
+  "playlist": {
+    "unknown": "不明な再生リスト",
+    "total_videos": "総動画数: {count}",
+    "display_format": "再生リスト: {title} | {count}個の動画"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count}個選択"
   }
 }

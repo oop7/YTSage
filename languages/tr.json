@@ -153,6 +153,22 @@
   },
   "download": {
     "preparing": "İndirme hazırlanıyor...",
+    "starting": "🚀 İndirme başlatılıyor...",
+    "fetching_info": "🔍 Video bilgileri alınıyor...",
+    "preparing_streams": "🎯 Video akışları hazırlanıyor...",
+    "downloading_audio": "⏬ Ses indiriliyor...",
+    "downloading_video": "⏬ Video indiriliyor...",
+    "downloading_subtitle": "⏬ Altyazı indiriliyor...",
+    "downloading": "⏬ İndiriliyor...",
+    "completed": "✅ İndirme tamamlandı!",
+    "video_completed": "✅ Video indirmesi tamamlandı!",
+    "audio_completed": "✅ Ses indirmesi tamamlandı!",
+    "subtitle_completed": "✅ Altyazı indirmesi tamamlandı!",
+    "completed_cleaning": "✅ İndirme tamamlandı! Temizleniyor...",
+    "cancelled": "İndirme iptal edildi",
+    "processing_playlist": "📋 Oynatma listesi verileri işleniyor...",
+    "paused": "İndirme duraklatıldı",
+    "resumed": "İndirme devam ettirildi",
     "please_enter_url": "Lütfen önce bir URL girin.",
     "please_set_path": "Lütfen önce indirme yolunu ayarlayın.",
     "please_enter_url_and_path": "Lütfen bir URL girin ve indirme yolunu ayarlayın.",
@@ -187,7 +203,8 @@
     "updating_from_to": "⬆️ {current}'den {latest}'e güncelleniyor...",
     "running_pip_install": "📦 pip install --upgrade çalıştırılıyor...",
     "pip_completed": "✅ Pip güncellemesi başarıyla tamamlandı!",
-    "pip_failed": "❌ Pip güncellemesi başarısız: {error}"
+    "pip_failed": "❌ Pip güncellemesi başarısız: {error}",
+    "already_up_to_date": "✅ yt-dlp zaten güncel!"
   },
   "about": {
     "title": "YTSage Hakkında",
@@ -328,6 +345,34 @@
   "status": {
     "ready": "Hazır",
     "file_exists": "⚠️ Dosya zaten mevcut",
+    "video_file_exists": "⚠️ Video dosyası zaten mevcut",
+    "audio_file_exists": "⚠️ Ses dosyası zaten mevcut",
+    "subtitle_file_exists": "⚠️ Altyazı dosyası zaten mevcut",
     "cancelling": "İndirme iptal ediliyor..."
+  },
+  "errors": {
+    "playlist_no_videos": "Hata: Oynatma listesi geçerli video içermiyor.",
+    "playlist_no_url": "Hata: Oynatma listesinin ilk videosu için URL alınamadı.",
+    "ytdlp_not_found": "Hata: yt-dlp çalıştırılabilir dosyası bulunamadı. Lütfen önce yt-dlp'yi yükleyin.",
+    "ytdlp_not_found_path": "Hata: yt-dlp çalıştırılabilir dosyası bulunamadı. Bu, hatalı kurulum veya PATH sorunu nedeniyle olabilir.",
+    "no_data_returned": "Hata: yt-dlp'den veri döndürülmedi",
+    "no_format_info": "Hata: Kullanılabilir format bilgisi yok.",
+    "analysis_timeout": "Hata: Analiz zaman aşımına uğradı. Lütfen tekrar deneyin.",
+    "invalid_speed_limit": "❌ Hata: Ayarlarda geçersiz hız sınırı değeri ayarlandı.",
+    "ytdlp_failed": "Hata: yt-dlp başarısız oldu: {error}",
+    "parse_failed": "Hata: yt-dlp çıktısı ayrıştırılamadı: {error}",
+    "analysis_failed": "Hata: Analiz başarısız oldu: {error}",
+    "generic_error": "Hata: {error}"
+  },
+  "update_dialog": {
+    "title": "Güncelleme Mevcut"
+  },
+  "playlist": {
+    "unknown": "Bilinmeyen Oynatma Listesi",
+    "total_videos": "Toplam Video: {count}",
+    "display_format": "Oynatma Listesi: {title} | {count} video"
+  },
+  "subtitle_selection": {
+    "count_selected": "{count} seçildi"
   }
 }
