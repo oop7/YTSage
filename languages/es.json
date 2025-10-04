@@ -28,7 +28,7 @@
     "download": "Descargar",
     "pause": "Pausar",
     "resume": "Reanudar",
-    "cancel": "Cancelar", 
+    "cancel": "Cancelar",
     "browse": "Examinar",
     "clear": "Limpiar",
     "ok": "Aceptar",
@@ -150,9 +150,8 @@
     "will_merge_audio": "Se combinará audio",
     "has_audio": "✓ Tiene Audio",
     "audio_only": "Solo Audio",
-
     "best_4k": "Óptima (4K)",
-    "best_2k": "Óptima (2K)", 
+    "best_2k": "Óptima (2K)",
     "high_1080p": "Alta (1080p)",
     "high_720p": "Alta (720p)",
     "medium_480p": "Media (480p)",
@@ -359,5 +358,21 @@
   },
   "subtitle_selection": {
     "count_selected": "{count} seleccionados"
+  },
+  "file_exists_dialog": {
+    "title": "El archivo ya existe",
+    "message": "El archivo ya existe:\n{filename}",
+    "info": "Este video ya ha sido descargado."
+  },
+  "auto_update": {
+    "last_check_never": "Última verificación: Nunca",
+    "last_check": "Última verificación: {time}",
+    "next_check_disabled": "Próxima verificación: Deshabilitada",
+    "next_check_startup": "Próxima verificación: Al iniciar",
+    "next_check_overdue": "Próxima verificación: Ahora (atrasada)",
+    "next_check": "Próxima verificación: {time}",
+    "next_check_error": "Próxima verificación: Error al calcular",
+    "checking": "🔄 Verificando...",
+    "check_now": "🔍 Verificar actualizaciones ahora"
   }
 }

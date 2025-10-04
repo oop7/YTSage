@@ -43,7 +43,6 @@
     "will_merge_audio": "L'audio sera fusionné",
     "has_audio": "✓ Contient de l'audio",
     "audio_only": "Audio uniquement",
-
     "best_4k": "Meilleure (4K)",
     "best_2k": "Meilleure (2K)",
     "high_1080p": "Haute (1080p)",
@@ -59,7 +58,7 @@
   "buttons": {
     "download": "Télécharger",
     "pause": "Pause",
-    "resume": "Reprendre", 
+    "resume": "Reprendre",
     "cancel": "Annuler",
     "browse": "Parcourir",
     "clear": "Effacer",
@@ -96,7 +95,7 @@
   "tabs": {
     "cookies": "Se connecter avec des cookies",
     "custom_command": "Commande personnalisée",
-    "proxy": "Proxy", 
+    "proxy": "Proxy",
     "language": "Langue"
   },
   "cookies": {
@@ -376,5 +375,21 @@
   },
   "subtitle_selection": {
     "count_selected": "{count} sélectionné(s)"
+  },
+  "file_exists_dialog": {
+    "title": "Le fichier existe déjà",
+    "message": "Le fichier existe déjà :\n{filename}",
+    "info": "Cette vidéo a déjà été téléchargée."
+  },
+  "auto_update": {
+    "last_check_never": "Dernière vérification : Jamais",
+    "last_check": "Dernière vérification : {time}",
+    "next_check_disabled": "Prochaine vérification : Désactivée",
+    "next_check_startup": "Prochaine vérification : Au démarrage",
+    "next_check_overdue": "Prochaine vérification : Maintenant (en retard)",
+    "next_check": "Prochaine vérification : {time}",
+    "next_check_error": "Prochaine vérification : Erreur de calcul",
+    "checking": "🔄 Vérification...",
+    "check_now": "🔍 Vérifier les mises à jour maintenant"
   }
 }

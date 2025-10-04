@@ -375,5 +375,21 @@
   },
   "subtitle_selection": {
     "count_selected": "{count} dipilih"
+  },
+  "file_exists_dialog": {
+    "title": "File Sudah Ada",
+    "message": "File sudah ada:\n{filename}",
+    "info": "Video ini sudah pernah diunduh."
+  },
+  "auto_update": {
+    "last_check_never": "Pemeriksaan terakhir: Tidak pernah",
+    "last_check": "Pemeriksaan terakhir: {time}",
+    "next_check_disabled": "Pemeriksaan berikutnya: Dinonaktifkan",
+    "next_check_startup": "Pemeriksaan berikutnya: Saat startup",
+    "next_check_overdue": "Pemeriksaan berikutnya: Sekarang (terlambat)",
+    "next_check": "Pemeriksaan berikutnya: {time}",
+    "next_check_error": "Pemeriksaan berikutnya: Kesalahan perhitungan",
+    "checking": "🔄 Memeriksa...",
+    "check_now": "🔍 Periksa pembaruan sekarang"
   }
 }

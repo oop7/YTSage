@@ -375,5 +375,21 @@
   },
   "subtitle_selection": {
     "count_selected": "{count} wybrano"
+  },
+  "file_exists_dialog": {
+    "title": "Plik już istnieje",
+    "message": "Plik już istnieje:\n{filename}",
+    "info": "Ten film został już pobrany."
+  },
+  "auto_update": {
+    "last_check_never": "Ostatnie sprawdzenie: Nigdy",
+    "last_check": "Ostatnie sprawdzenie: {time}",
+    "next_check_disabled": "Następne sprawdzenie: Wyłączone",
+    "next_check_startup": "Następne sprawdzenie: Przy starcie",
+    "next_check_overdue": "Następne sprawdzenie: Teraz (zaległe)",
+    "next_check": "Następne sprawdzenie: {time}",
+    "next_check_error": "Następne sprawdzenie: Błąd obliczania",
+    "checking": "🔄 Sprawdzanie...",
+    "check_now": "🔍 Sprawdź aktualizacje teraz"
   }
 }

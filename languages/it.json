@@ -43,7 +43,6 @@
     "will_merge_audio": "L'audio verrà unito",
     "has_audio": "✓ Contiene audio",
     "audio_only": "Solo audio",
-
     "best_4k": "Migliore (4K)",
     "best_2k": "Migliore (2K)",
     "high_1080p": "Alta (1080p)",
@@ -59,7 +58,7 @@
   "buttons": {
     "download": "Scarica",
     "pause": "Pausa",
-    "resume": "Riprendi", 
+    "resume": "Riprendi",
     "cancel": "Annulla",
     "browse": "Sfoglia",
     "clear": "Cancella",
@@ -96,7 +95,7 @@
   "tabs": {
     "cookies": "Accedi con i cookie",
     "custom_command": "Comando personalizzato",
-    "proxy": "Proxy", 
+    "proxy": "Proxy",
     "language": "Lingua"
   },
   "cookies": {
@@ -376,5 +375,21 @@
   },
   "subtitle_selection": {
     "count_selected": "{count} selezionati"
+  },
+  "file_exists_dialog": {
+    "title": "Il file esiste già",
+    "message": "Il file esiste già:\n{filename}",
+    "info": "Questo video è già stato scaricato."
+  },
+  "auto_update": {
+    "last_check_never": "Ultimo controllo aggiornamenti: Mai",
+    "last_check": "Ultimo controllo aggiornamenti: {time}",
+    "next_check_disabled": "Prossimo controllo: Disabilitato",
+    "next_check_startup": "Prossimo controllo: All'avvio",
+    "next_check_overdue": "Prossimo controllo: Ora (in ritardo)",
+    "next_check": "Prossimo controllo: {time}",
+    "next_check_error": "Prossimo controllo: Errore di calcolo",
+    "checking": "🔄 Controllo...",
+    "check_now": "🔍 Controlla aggiornamenti ora"
   }
 }

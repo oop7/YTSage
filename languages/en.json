@@ -43,7 +43,6 @@
     "will_merge_audio": "Will merge audio",
     "has_audio": "✓ Has Audio",
     "audio_only": "Audio Only",
-
     "best_4k": "Best (4K)",
     "best_2k": "Best (2K)",
     "high_1080p": "High (1080p)",
@@ -59,7 +58,7 @@
   "buttons": {
     "download": "Download",
     "pause": "Pause",
-    "resume": "Resume", 
+    "resume": "Resume",
     "cancel": "Cancel",
     "browse": "Browse",
     "clear": "Clear",
@@ -96,7 +95,7 @@
   "tabs": {
     "cookies": "Login with Cookies",
     "custom_command": "Custom Command",
-    "proxy": "Proxy", 
+    "proxy": "Proxy",
     "language": "Language"
   },
   "cookies": {
@@ -151,7 +150,6 @@
     "main_configured": "Main proxy configured",
     "geo_configured": "Geo proxy configured"
   },
-
   "download": {
     "preparing": "Preparing download...",
     "starting": "🚀 Starting download...",
@@ -349,7 +347,7 @@
     "ready": "Ready",
     "file_exists": "⚠️ File already exists",
     "video_file_exists": "⚠️ Video file already exists",
-    "audio_file_exists": "⚠️ Audio file already exists", 
+    "audio_file_exists": "⚠️ Audio file already exists",
     "subtitle_file_exists": "⚠️ Subtitle file already exists",
     "cancelling": "Cancelling download..."
   },
@@ -377,5 +375,21 @@
   },
   "subtitle_selection": {
     "count_selected": "{count} selected"
+  },
+  "file_exists_dialog": {
+    "title": "File Already Exists",
+    "message": "The file already exists:\n{filename}",
+    "info": "This video has already been downloaded."
+  },
+  "auto_update": {
+    "last_check_never": "Last update check: Never",
+    "last_check": "Last update check: {time}",
+    "next_check_disabled": "Next check: Disabled",
+    "next_check_startup": "Next check: On next startup",
+    "next_check_overdue": "Next check: Now (overdue)",
+    "next_check": "Next check: {time}",
+    "next_check_error": "Next check: Error calculating",
+    "checking": "🔄 Checking...",
+    "check_now": "🔍 Check for Updates Now"
   }
 }

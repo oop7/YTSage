@@ -375,5 +375,21 @@
   },
   "subtitle_selection": {
     "count_selected": "{count} ausgewählt"
+  },
+  "file_exists_dialog": {
+    "title": "Datei existiert bereits",
+    "message": "Die Datei existiert bereits:\n{filename}",
+    "info": "Dieses Video wurde bereits heruntergeladen."
+  },
+  "auto_update": {
+    "last_check_never": "Letzte Aktualisierungsprüfung: Nie",
+    "last_check": "Letzte Aktualisierungsprüfung: {time}",
+    "next_check_disabled": "Nächste Prüfung: Deaktiviert",
+    "next_check_startup": "Nächste Prüfung: Beim Start",
+    "next_check_overdue": "Nächste Prüfung: Jetzt (überfällig)",
+    "next_check": "Nächste Prüfung: {time}",
+    "next_check_error": "Nächste Prüfung: Fehler bei Berechnung",
+    "checking": "🔄 Prüfen...",
+    "check_now": "🔍 Jetzt nach Updates suchen"
   }
 }

@@ -1480,9 +1480,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Show a simple message dialog
         msg_box = QMessageBox()
         msg_box.setIcon(QMessageBox.Icon.Information)
-        msg_box.setWindowTitle("File Already Exists")
-        msg_box.setText(f"The file already exists:\n{filename}")
-        msg_box.setInformativeText("This video has already been downloaded.")
+        msg_box.setWindowTitle(_("file_exists_dialog.title"))
+        msg_box.setText(_("file_exists_dialog.message", filename=filename))
+        msg_box.setInformativeText(_("file_exists_dialog.info"))
         msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
 
         # Set the window icon to match the main application

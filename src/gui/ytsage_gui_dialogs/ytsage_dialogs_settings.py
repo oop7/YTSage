@@ -575,9 +575,9 @@ class AutoUpdateSettingsDialog(QDialog):
             last_check = settings["last_check"]
             if last_check > 0:
                 last_check_time = datetime.fromtimestamp(last_check).strftime("%Y-%m-%d %H:%M:%S")
-                self.last_check_label.setText(f"Last update check: {last_check_time}")
+                self.last_check_label.setText(_("auto_update.last_check", time=last_check_time))
             else:
-                self.last_check_label.setText("Last update check: Never")
+                self.last_check_label.setText(_("auto_update.last_check_never"))
 
             # Calculate next check time
             self.update_next_check_label()
@@ -592,7 +592,7 @@ class AutoUpdateSettingsDialog(QDialog):
         """Update the next check label based on current settings."""
         try:
             if not self.enable_checkbox.isChecked():
-                self.next_check_label.setText("Next check: Disabled")
+                self.next_check_label.setText(_("auto_update.next_check_disabled"))
                 return
 
             settings = get_auto_update_settings()
@@ -600,7 +600,7 @@ class AutoUpdateSettingsDialog(QDialog):
             frequency = self.get_selected_frequency()
 
             if last_check == 0:
-                self.next_check_label.setText("Next check: On next startup")
+                self.next_check_label.setText(_("auto_update.next_check_startup"))
                 return
 
             next_check_time = last_check
@@ -613,13 +613,13 @@ class AutoUpdateSettingsDialog(QDialog):
 
             current_time = time.time()
             if next_check_time <= current_time:
-                self.next_check_label.setText("Next check: Now (overdue)")
+                self.next_check_label.setText(_("auto_update.next_check_overdue"))
             else:
                 next_check_datetime = datetime.fromtimestamp(next_check_time)
-                self.next_check_label.setText(f"Next check: {next_check_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
+                self.next_check_label.setText(_("auto_update.next_check", time=next_check_datetime.strftime('%Y-%m-%d %H:%M:%S')))
 
         except Exception as e:
-            self.next_check_label.setText("Next check: Error calculating")
+            self.next_check_label.setText(_("auto_update.next_check_error"))
             logger.exception(f"Error calculating next check time: {e}")
 
     def on_enable_toggled(self, enabled) -> None:
@@ -642,7 +642,7 @@ class AutoUpdateSettingsDialog(QDialog):
     def manual_check(self) -> None:
         """Perform a manual update check."""
         self.manual_check_btn.setEnabled(False)
-        self.manual_check_btn.setText("🔄 Checking...")
+        self.manual_check_btn.setText(_("auto_update.checking"))
 
         # Force an immediate update check
         def check_in_thread() -> None:
@@ -696,7 +696,7 @@ class AutoUpdateSettingsDialog(QDialog):
     def manual_check_finished(self, success) -> None:
         """Handle completion of manual update check."""
         self.manual_check_btn.setEnabled(True)
-        self.manual_check_btn.setText("🔍 Check for Updates Now")
+        self.manual_check_btn.setText(_("auto_update.check_now"))
 
         if success:
             msg_box = self._create_styled_message_box(

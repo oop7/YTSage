@@ -43,7 +43,6 @@
     "will_merge_audio": "将合并音频",
     "has_audio": "✓ 有音频",
     "audio_only": "仅音频",
-
     "best_4k": "最佳 (4K)",
     "best_2k": "最佳 (2K)",
     "high_1080p": "高清 (1080p)",
@@ -59,7 +58,7 @@
   "buttons": {
     "download": "下载",
     "pause": "暂停",
-    "resume": "恢复", 
+    "resume": "恢复",
     "cancel": "取消",
     "browse": "浏览",
     "clear": "清除",
@@ -96,7 +95,7 @@
   "tabs": {
     "cookies": "使用 Cookie 登录",
     "custom_command": "自定义命令",
-    "proxy": "代理", 
+    "proxy": "代理",
     "language": "语言"
   },
   "cookies": {
@@ -376,5 +375,21 @@
   },
   "subtitle_selection": {
     "count_selected": "已选择{count}个"
+  },
+  "file_exists_dialog": {
+    "title": "文件已存在",
+    "message": "文件已存在:\n{filename}",
+    "info": "该视频已被下载。"
+  },
+  "auto_update": {
+    "last_check_never": "上次检查更新: 从未",
+    "last_check": "上次检查更新: {time}",
+    "next_check_disabled": "下次检查: 已禁用",
+    "next_check_startup": "下次检查: 启动时",
+    "next_check_overdue": "下次检查: 现在 (已逾期)",
+    "next_check": "下次检查: {time}",
+    "next_check_error": "下次检查: 计算错误",
+    "checking": "🔄 检查中...",
+    "check_now": "🔍 立即检查更新"
   }
 }

@@ -43,7 +43,6 @@
     "will_merge_audio": "Ses birleştirilecek",
     "has_audio": "✓ Ses var",
     "audio_only": "Sadece ses",
-
     "best_4k": "En iyi (4K)",
     "best_2k": "En iyi (2K)",
     "high_1080p": "Yüksek (1080p)",
@@ -59,7 +58,7 @@
   "buttons": {
     "download": "İndir",
     "pause": "Duraklat",
-    "resume": "Devam Et", 
+    "resume": "Devam Et",
     "cancel": "İptal",
     "browse": "Gözat",
     "clear": "Temizle",
@@ -96,7 +95,7 @@
   "tabs": {
     "cookies": "Çerezlerle giriş yap",
     "custom_command": "Özel komut",
-    "proxy": "Proxy", 
+    "proxy": "Proxy",
     "language": "Dil"
   },
   "cookies": {
@@ -376,5 +375,21 @@
   },
   "subtitle_selection": {
     "count_selected": "{count} seçildi"
+  },
+  "file_exists_dialog": {
+    "title": "Dosya zaten mevcut",
+    "message": "Dosya zaten mevcut:\n{filename}",
+    "info": "Bu video zaten indirilmiş."
+  },
+  "auto_update": {
+    "last_check_never": "Son güncelleme kontrolü: Hiç",
+    "last_check": "Son güncelleme kontrolü: {time}",
+    "next_check_disabled": "Sonraki kontrol: Devre dışı",
+    "next_check_startup": "Sonraki kontrol: Başlangıçta",
+    "next_check_overdue": "Sonraki kontrol: Şimdi (gecikmiş)",
+    "next_check": "Sonraki kontrol: {time}",
+    "next_check_error": "Sonraki kontrol: Hesaplama hatası",
+    "checking": "🔄 Kontrol ediliyor...",
+    "check_now": "🔍 Şimdi güncellemeleri kontrol et"
   }
 }
