@@ -218,6 +218,27 @@ python main.py
 
 </details>
 
+<details>
+<summary>🌍 Localization</summary>
+
+YTSage supports **14 languages** for worldwide accessibility. Select your preferred language from **Custom Options → Language**.
+
+### Supported Languages
+
+| Language | Code | Language | Code |
+|----------|------|----------|------|
+| 🇺🇸 English | `en` | 🇪🇸 Spanish | `es` |
+| 🇸🇦 Arabic | `ar` | 🇫🇷 French | `fr` |
+| 🇩🇪 German | `de` | 🇮🇳 Hindi | `hi` |
+| 🇮🇩 Indonesian | `id` | 🇮🇹 Italian | `it` |
+| 🇯🇵 Japanese | `ja` | 🇵🇱 Polish | `pl` |
+| 🇧🇷 Portuguese | `pt` | 🇷🇺 Russian | `ru` |
+| 🇹🇷 Turkish | `tr` | 🇨🇳 Chinese | `zh` |
+
+> 💡 **Want to contribute a translation?** Check out the [Contributing](#contributing) section to help us add more languages!
+
+</details>
+
 <a id="troubleshooting"></a>
 ## 🛠️ Troubleshooting
 
