@@ -124,6 +124,7 @@ jobs:
             include_files=[
                 ("src", "src"),
                 ("assets", "lib/assets"),
+                ("languages", "lib/languages"),
             ],
         )
 

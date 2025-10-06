@@ -123,6 +123,7 @@ jobs:
             include_files=[
                 ("src", "src"),
                 ("assets", "lib/assets"),
+                ("languages", "lib/languages"),
                 ("ytsage.desktop", "share/applications/ytsage.desktop"),
                 ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
             ],
