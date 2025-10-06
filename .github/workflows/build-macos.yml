@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  PYTHON_VERSION: '3.13.6'
+  PYTHON_VERSION: '3.13'
 
 jobs:
   build-macos:
