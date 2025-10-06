@@ -214,6 +214,7 @@ python main.py
 - **Update yt-dlp:** Update yt-dlp
 - **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
+- **Proxy Support:** Use a proxy server for downloads (e.g., `http://<proxy-server>:<port>`)
 
 </details>
 
