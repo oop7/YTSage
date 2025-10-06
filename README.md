@@ -352,6 +352,21 @@ YTSage/
 │   │   └── icon.png
 │   └── 📁 sound/                 # Audio files
 │       └── notification.mp3
+├── 📁 languages/                 # Localization files
+│   ├── 📄 ar.json                # Arabic translation
+│   ├── 📄 de.json                # German translation
+│   ├── 📄 en.json                # English translation
+│   ├── 📄 es.json                # Spanish translation
+│   ├── 📄 fr.json                # French translation
+│   ├── 📄 hi.json                # Hindi translation
+│   ├── 📄 id.json                # Indonesian translation
+│   ├── 📄 it.json                # Italian translation
+│   ├── 📄 ja.json                # Japanese translation
+│   ├── 📄 pl.json                # Polish translation
+│   ├── 📄 pt.json                # Portuguese translation
+│   ├── 📄 ru.json                # Russian translation
+│   ├── 📄 tr.json                # Turkish translation
+│   └── 📄 zh.json                # Chinese translation
 ├── 📄 LICENSE                    # License file
 ├── 📄 main.py                    # Application entry point
 ├── 📄 README.md                  # Project documentation
@@ -362,7 +377,6 @@ YTSage/
     │   ├── 📄 __init__.py        # Core package init
     │   ├── 📄 ytsage_downloader.py # Download functionality
     │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
-    │   ├── 📄 ytsage_logging.py  # Logging utilities
     │   ├── 📄 ytsage_style.py    # UI styling
     │   ├── 📄 ytsage_utils.py    # Utility functions
     │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
@@ -381,7 +395,10 @@ YTSage/
     │       └── 📄 ytsage_dialogs_update.py    # Update dialogs
     └── 📁 utils/                 # Utility modules
         ├── 📄 __init__.py        # Utils package init
-        └── 📄 ytsage_constants.py # Application constants
+        ├── 📄 ytsage_config_manager.py # Configuration management
+        ├── 📄 ytsage_constants.py # Application constants
+        ├── 📄 ytsage_localization.py # Localization utilities
+        └── 📄 ytsage_logger.py   # Logging utilities
 ```
 
 </details>
