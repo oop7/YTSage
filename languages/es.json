@@ -137,7 +137,8 @@
     "please_enter_url": "Por favor ingresa una URL primero.",
     "please_set_path": "Por favor establece una ruta de descarga primero.",
     "please_enter_url_and_path": "Por favor ingresa URL y establece ruta de descarga.",
-    "please_select_format": "Por favor selecciona un formato primero."
+    "please_select_format": "Por favor selecciona un formato primero.",
+    "downloading_fallback": "⚡ Descargando..."
   },
   "formats": {
     "show_formats": "Mostrar formatos:",
@@ -221,7 +222,8 @@
     "updating_from_to": "⬆️ Actualizando de {current} a {latest}...",
     "running_pip_install": "📦 Ejecutando pip install --upgrade...",
     "pip_completed": "✅ ¡Actualización de pip completada exitosamente!",
-    "pip_failed": "❌ Actualización de pip falló: {error}"
+    "pip_failed": "❌ Actualización de pip falló: {error}",
+    "pip_timeout": "❌ Tiempo de espera agotado para actualización de pip después de 5 minutos"
   },
   "settings": {
     "title": "Configuración de Descarga",
@@ -290,7 +292,9 @@
     "analyzing_loading_thumbnail_ytdlp": "Analizando (85%)... Cargando miniatura",
     "analyzing_processing_subtitles_ytdlp": "Analizando (90%)... Procesando subtítulos",
     "select_subtitles": "Seleccionar Subtítulos...",
-    "sponsorblock_categories": "Categorías SponsorBlock..."
+    "sponsorblock_categories": "Categorías SponsorBlock...",
+    "invalid_url_or_enter": "URL inválida o por favor ingresa una URL.",
+    "zero_selected": "0 seleccionados"
   },
   "sponsorblock": {
     "sponsor": "Patrocinador",
@@ -357,7 +361,8 @@
   "playlist": {
     "unknown": "Lista de reproducción desconocida",
     "total_videos": "Total de Videos: {count}",
-    "display_format": "Lista de reproducción: {title} | {count} videos"
+    "display_format": "Lista de reproducción: {title} | {count} videos",
+    "select_videos_title": "Seleccionar Videos de la Lista de Reproducción"
   },
   "subtitle_selection": {
     "count_selected": "{count} seleccionados"

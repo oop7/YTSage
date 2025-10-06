@@ -176,7 +176,8 @@
     "please_enter_url": "Lütfen önce bir URL girin.",
     "please_set_path": "Lütfen önce indirme yolunu ayarlayın.",
     "please_enter_url_and_path": "Lütfen bir URL girin ve indirme yolunu ayarlayın.",
-    "please_select_format": "Lütfen önce bir format seçin."
+    "please_select_format": "Lütfen önce bir format seçin.",
+    "downloading_fallback": "⚡ İndiriliyor..."
   },
   "update": {
     "title": "yt-dlp'yi güncelle",
@@ -208,7 +209,8 @@
     "running_pip_install": "📦 pip install --upgrade çalıştırılıyor...",
     "pip_completed": "✅ Pip güncellemesi başarıyla tamamlandı!",
     "pip_failed": "❌ Pip güncellemesi başarısız: {error}",
-    "already_up_to_date": "✅ yt-dlp zaten güncel!"
+    "already_up_to_date": "✅ yt-dlp zaten güncel!",
+    "pip_timeout": "❌ pip güncellemesi 5 dakika sonra zaman aşımına uğradı"
   },
   "about": {
     "title": "YTSage Hakkında",
@@ -307,7 +309,9 @@
     "analyzing_loading_thumbnail_ytdlp": "Analiz ediliyor (85%)... Küçük resim yükleniyor",
     "analyzing_processing_subtitles_ytdlp": "Analiz ediliyor (90%)... Altyazılar işleniyor",
     "select_subtitles": "Altyazı seç...",
-    "sponsorblock_categories": "SponsorBlock kategorileri..."
+    "sponsorblock_categories": "SponsorBlock kategorileri...",
+    "invalid_url_or_enter": "Geçersiz URL veya lütfen bir URL girin.",
+    "zero_selected": "0 seçildi"
   },
   "sponsorblock": {
     "sponsor": "Sponsor",
@@ -374,7 +378,8 @@
   "playlist": {
     "unknown": "Bilinmeyen Oynatma Listesi",
     "total_videos": "Toplam Video: {count}",
-    "display_format": "Oynatma Listesi: {title} | {count} video"
+    "display_format": "Oynatma Listesi: {title} | {count} video",
+    "select_videos_title": "Oynatma Listesi Videolarını Seç"
   },
   "subtitle_selection": {
     "count_selected": "{count} seçildi"

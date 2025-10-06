@@ -176,7 +176,8 @@
     "please_enter_url": "الرجاء إدخال رابط أولاً.",
     "please_set_path": "الرجاء تحديد مسار التنزيل أولاً.",
     "please_enter_url_and_path": "الرجاء إدخال رابط وتحديد مسار التنزيل.",
-    "please_select_format": "الرجاء اختيار تنسيق أولاً."
+    "please_select_format": "الرجاء اختيار تنسيق أولاً.",
+    "downloading_fallback": "⚡ جاري التنزيل..."
   },
   "update": {
     "title": "تحديث yt-dlp",
@@ -208,7 +209,8 @@
     "running_pip_install": "📦 جاري تشغيل pip install --upgrade...",
     "pip_completed": "✅ اكتمل تحديث pip بنجاح!",
     "pip_failed": "❌ فشل تحديث pip: {error}",
-    "already_up_to_date": "✅ yt-dlp محدث بالفعل!"
+    "already_up_to_date": "✅ yt-dlp محدث بالفعل!",
+    "pip_timeout": "❌ انتهت مهلة تحديث pip بعد 5 دقائق"
   },
   "about": {
     "title": "حول YTSage",
@@ -307,7 +309,9 @@
     "analyzing_loading_thumbnail_ytdlp": "التحليل (85%)... جاري تحميل الصورة المصغرة",
     "analyzing_processing_subtitles_ytdlp": "التحليل (90%)... جاري معالجة الترجمات",
     "select_subtitles": "اختر الترجمات...",
-    "sponsorblock_categories": "فئات SponsorBlock..."
+    "sponsorblock_categories": "فئات SponsorBlock...",
+    "invalid_url_or_enter": "عنوان URL غير صالح أو الرجاء إدخال عنوان URL.",
+    "zero_selected": "تم اختيار 0"
   },
   "sponsorblock": {
     "sponsor": "الراعي",
@@ -374,7 +378,8 @@
   "playlist": {
     "unknown": "قائمة تشغيل غير معروفة",
     "total_videos": "إجمالي الفيديوهات: {count}",
-    "display_format": "قائمة التشغيل: {title} | {count} فيديوهات"
+    "display_format": "قائمة التشغيل: {title} | {count} فيديوهات",
+    "select_videos_title": "اختر مقاطع الفيديو من قائمة التشغيل"
   },
   "subtitle_selection": {
     "count_selected": "{count} محدد"

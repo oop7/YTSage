@@ -176,7 +176,8 @@
     "please_enter_url": "Silakan masukkan URL terlebih dahulu.",
     "please_set_path": "Silakan atur jalur unduhan terlebih dahulu.",
     "please_enter_url_and_path": "Silakan masukkan URL dan atur jalur unduhan.",
-    "please_select_format": "Silakan pilih format terlebih dahulu."
+    "please_select_format": "Silakan pilih format terlebih dahulu.",
+    "downloading_fallback": "⚡ Mengunduh..."
   },
   "update": {
     "title": "Perbarui yt-dlp",
@@ -208,7 +209,8 @@
     "running_pip_install": "📦 Menjalankan pip install --upgrade...",
     "pip_completed": "✅ Pembaruan pip berhasil diselesaikan!",
     "pip_failed": "❌ Pembaruan pip gagal: {error}",
-    "already_up_to_date": "✅ yt-dlp sudah terbaru!"
+    "already_up_to_date": "✅ yt-dlp sudah terbaru!",
+    "pip_timeout": "❌ Waktu habis untuk pembaruan pip setelah 5 menit"
   },
   "about": {
     "title": "Tentang YTSage",
@@ -307,7 +309,9 @@
     "analyzing_loading_thumbnail_ytdlp": "Menganalisis (85%)... Memuat thumbnail",
     "analyzing_processing_subtitles_ytdlp": "Menganalisis (90%)... Memproses subtitle",
     "select_subtitles": "Pilih subtitle...",
-    "sponsorblock_categories": "Kategori SponsorBlock..."
+    "sponsorblock_categories": "Kategori SponsorBlock...",
+    "invalid_url_or_enter": "URL tidak valid atau silakan masukkan URL.",
+    "zero_selected": "0 dipilih"
   },
   "sponsorblock": {
     "sponsor": "Sponsor",
@@ -374,7 +378,8 @@
   "playlist": {
     "unknown": "Playlist Tidak Dikenal",
     "total_videos": "Total Video: {count}",
-    "display_format": "Playlist: {title} | {count} video"
+    "display_format": "Playlist: {title} | {count} video",
+    "select_videos_title": "Pilih Video Playlist"
   },
   "subtitle_selection": {
     "count_selected": "{count} dipilih"

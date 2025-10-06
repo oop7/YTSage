@@ -176,7 +176,8 @@
     "please_enter_url": "Please enter a URL first.",
     "please_set_path": "Please set a download path first.",
     "please_enter_url_and_path": "Please enter a URL and set download path.",
-    "please_select_format": "Please select a format first."
+    "please_select_format": "Please select a format first.",
+    "downloading_fallback": "⚡ Downloading..."
   },
   "update": {
     "title": "Update yt-dlp",
@@ -208,7 +209,8 @@
     "updating_from_to": "⬆️ Updating from {current} to {latest}...",
     "running_pip_install": "📦 Running pip install --upgrade...",
     "pip_completed": "✅ Pip update completed successfully!",
-    "pip_failed": "❌ Pip update failed: {error}"
+    "pip_failed": "❌ Pip update failed: {error}",
+    "pip_timeout": "❌ Pip update timed out after 5 minutes"
   },
   "about": {
     "title": "About YTSage",
@@ -307,7 +309,9 @@
     "analyzing_loading_thumbnail_ytdlp": "Analyzing (85%)... Loading thumbnail",
     "analyzing_processing_subtitles_ytdlp": "Analyzing (90%)... Processing subtitles",
     "select_subtitles": "Select Subtitles...",
-    "sponsorblock_categories": "SponsorBlock Categories..."
+    "sponsorblock_categories": "SponsorBlock Categories...",
+    "invalid_url_or_enter": "Invalid URL or please enter a URL.",
+    "zero_selected": "0 selected"
   },
   "sponsorblock": {
     "sponsor": "Sponsor",
@@ -374,7 +378,8 @@
   "playlist": {
     "unknown": "Unknown Playlist",
     "total_videos": "Total Videos: {count}",
-    "display_format": "Playlist: {title} | {count} videos"
+    "display_format": "Playlist: {title} | {count} videos",
+    "select_videos_title": "Select Playlist Videos"
   },
   "subtitle_selection": {
     "count_selected": "{count} selected"

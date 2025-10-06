@@ -198,7 +198,7 @@ class SubtitleSelectionDialog(QDialog):
 class PlaylistSelectionDialog(QDialog):
     def __init__(self, playlist_entries, previously_selected_string, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Select Playlist Videos")
+        self.setWindowTitle(_("playlist.select_videos_title"))
         self.setMinimumWidth(500)
         self.setMinimumHeight(400)  # Allow more vertical space
 

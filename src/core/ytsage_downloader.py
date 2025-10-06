@@ -568,7 +568,7 @@ class DownloadThread(QThread):
                     self.status_signal.emit(_("download.downloading"))
             except Exception as e:
                 logger.exception(f"Error extracting filename from line '{line}': {e}")
-                self.status_signal.emit("⚡ Downloading...")  # Fallback status
+                self.status_signal.emit(_("download.downloading_fallback"))  # Fallback status
             return  # Don't process this line further for speed/ETA
 
         # Check for specific download types in the output
@@ -693,7 +693,7 @@ class DownloadThread(QThread):
                 self.file_exists_signal.emit(filename)
             else:
                 logger.info(f"Could not extract filename from 'already downloaded' line: {line}")
-                self.status_signal.emit("⚠️ File already exists")  # Fallback status
+                self.status_signal.emit(_("download.file_exists"))  # Fallback status
         elif "Finished downloading" in line:
             self.progress_signal.emit(100)
 

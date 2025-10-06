@@ -176,7 +176,8 @@
     "please_enter_url": "请先输入网址。",
     "please_set_path": "请先设置下载路径。",
     "please_enter_url_and_path": "请输入网址并设置下载路径。",
-    "please_select_format": "请先选择格式。"
+    "please_select_format": "请先选择格式。",
+    "downloading_fallback": "⚡ 正在下载..."
   },
   "update": {
     "title": "更新 yt-dlp",
@@ -208,6 +209,7 @@
     "running_pip_install": "📦 运行 pip install --upgrade...",
     "pip_completed": "✅ pip 更新完成成功！",
     "pip_failed": "❌ pip 更新失败：{error}",
+    "pip_timeout": "❌ pip 更新超时（超过5分钟）",
     "already_up_to_date": "✅ yt-dlp已是最新版本！"
   },
   "about": {
@@ -307,7 +309,9 @@
     "analyzing_loading_thumbnail_ytdlp": "分析中 (85%)... 正在加载缩略图",
     "analyzing_processing_subtitles_ytdlp": "分析中 (90%)... 正在处理字幕",
     "select_subtitles": "选择字幕...",
-    "sponsorblock_categories": "SponsorBlock 分类..."
+    "sponsorblock_categories": "SponsorBlock 分类...",
+    "invalid_url_or_enter": "无效的URL或请输入URL。",
+    "zero_selected": "已选择 0 个"
   },
   "sponsorblock": {
     "sponsor": "赞助商",
@@ -374,7 +378,8 @@
   "playlist": {
     "unknown": "未知播放列表",
     "total_videos": "总视频数：{count}",
-    "display_format": "播放列表：{title} | {count}个视频"
+    "display_format": "播放列表：{title} | {count}个视频",
+    "select_videos_title": "选择播放列表视频"
   },
   "subtitle_selection": {
     "count_selected": "已选择{count}个"

@@ -276,7 +276,7 @@ class UpdateThread(QThread):
                         return False
 
                 except subprocess.TimeoutExpired:
-                    self.update_status.emit("❌ Pip update timed out after 5 minutes")
+                    self.update_status.emit(_("update.pip_timeout"))
                     return False
                 except Exception as e:
                     self.update_status.emit(f"❌ Error during pip update: {e}")

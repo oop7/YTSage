@@ -176,7 +176,8 @@
     "please_enter_url": "最初にURLを入力してください。",
     "please_set_path": "最初にダウンロードパスを設定してください。",
     "please_enter_url_and_path": "URLを入力し、ダウンロードパスを設定してください。",
-    "please_select_format": "最初にフォーマットを選択してください。"
+    "please_select_format": "最初にフォーマットを選択してください。",
+    "downloading_fallback": "⚡ ダウンロード中..."
   },
   "update": {
     "title": "yt-dlpを更新",
@@ -208,7 +209,8 @@
     "running_pip_install": "📦 pip install --upgradeを実行中...",
     "pip_completed": "✅ pipの更新が正常に完了しました！",
     "pip_failed": "❌ pipの更新に失敗しました: {error}",
-    "already_up_to_date": "✅ yt-dlpはすでに最新です！"
+    "already_up_to_date": "✅ yt-dlpはすでに最新です！",
+    "pip_timeout": "❌ pip更新が5分後にタイムアウトしました"
   },
   "about": {
     "title": "YTSageについて",
@@ -307,7 +309,9 @@
     "analyzing_loading_thumbnail_ytdlp": "解析中 (85%)... サムネイルを読み込み中",
     "analyzing_processing_subtitles_ytdlp": "解析中 (90%)... 字幕を処理中",
     "select_subtitles": "字幕を選択...",
-    "sponsorblock_categories": "SponsorBlockカテゴリ..."
+    "sponsorblock_categories": "SponsorBlockカテゴリ...",
+    "invalid_url_or_enter": "無効なURLまたはURLを入力してください。",
+    "zero_selected": "0個選択"
   },
   "sponsorblock": {
     "sponsor": "スポンサー",
@@ -374,7 +378,8 @@
   "playlist": {
     "unknown": "不明な再生リスト",
     "total_videos": "総動画数: {count}",
-    "display_format": "再生リスト: {title} | {count}個の動画"
+    "display_format": "再生リスト: {title} | {count}個の動画",
+    "select_videos_title": "プレイリスト動画を選択"
   },
   "subtitle_selection": {
     "count_selected": "{count}個選択"

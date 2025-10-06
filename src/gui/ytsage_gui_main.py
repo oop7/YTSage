@@ -675,7 +675,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
     def analyze_url(self) -> None:
         url = self.url_input.text().strip()
         if not url:
-            self.signals.update_status.emit("Invalid URL or please enter a URL.")
+            self.signals.update_status.emit(_("main_ui.invalid_url_or_enter"))
             return
 
         self.signals.update_status.emit(_("main_ui.analyzing_preparing"))
@@ -1830,7 +1830,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
                 # Show playlist selection button
                 # update signal method from QMetaObject.invokeMethod to signals
-                self.signals.playlist_select_btn_text.emit("Select Videos... (All selected)")
+                self.signals.playlist_select_btn_text.emit(_("main_ui.select_videos_all"))
 
                 # update signal method from QMetaObject.invokeMethod to signals
                 self.signals.playlist_select_btn_visible.emit(True)
@@ -1883,10 +1883,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             # Update subtitle UI
             # update signal method from QMetaObject.invokeMethod to signals
-            self.signals.selected_subs_label_text.emit("0 selected")
+            self.signals.selected_subs_label_text.emit(_("main_ui.zero_selected"))
 
             # Update format table
-            self.signals.update_status.emit("Analyzing (95%)... Updating format table")
+            self.signals.update_status.emit(_("main_ui.analyzing_updating_table"))
             self.video_button.setChecked(True)
             self.audio_button.setChecked(False)
             self.filter_formats()
