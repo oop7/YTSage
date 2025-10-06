@@ -169,6 +169,8 @@
     "processing_playlist": "📋 Processing playlist data...",
     "paused": "Download paused",
     "resumed": "Download resumed",
+    "merging_formats": "✨ Post-processing: Merging formats...",
+    "removing_sponsor_segments": "✨ Post-processing: Removing sponsor segments...",
     "speed": "Speed",
     "eta": "ETA",
     "please_enter_url": "Please enter a URL first.",

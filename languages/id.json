@@ -169,6 +169,8 @@
     "processing_playlist": "📋 Memproses data playlist...",
     "paused": "Unduhan dijeda",
     "resumed": "Unduhan dilanjutkan",
+    "merging_formats": "✨ Pasca-pemrosesan: Menggabungkan format...",
+    "removing_sponsor_segments": "✨ Pasca-pemrosesan: Menghapus segmen sponsor...",
     "speed": "Kecepatan",
     "eta": "Waktu tersisa",
     "please_enter_url": "Silakan masukkan URL terlebih dahulu.",

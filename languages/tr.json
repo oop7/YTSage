@@ -169,6 +169,8 @@
     "processing_playlist": "📋 Oynatma listesi verileri işleniyor...",
     "paused": "İndirme duraklatıldı",
     "resumed": "İndirme devam ettirildi",
+    "merging_formats": "✨ İşleme sonrası: Formatlar birleştiriliyor...",
+    "removing_sponsor_segments": "✨ İşleme sonrası: Sponsor segmentleri kaldırılıyor...",
     "speed": "Hız",
     "eta": "Kalan süre",
     "please_enter_url": "Lütfen önce bir URL girin.",

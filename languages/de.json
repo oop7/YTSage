@@ -169,6 +169,8 @@
     "processing_playlist": "📋 Playlist-Daten werden verarbeitet...",
     "paused": "Download pausiert",
     "resumed": "Download fortgesetzt",
+    "merging_formats": "✨ Nachbearbeitung: Formate werden zusammengeführt...",
+    "removing_sponsor_segments": "✨ Nachbearbeitung: Sponsor-Segmente werden entfernt...",
     "speed": "Geschwindigkeit",
     "eta": "Verbleibende Zeit",
     "please_enter_url": "Bitte geben Sie zuerst eine URL ein.",

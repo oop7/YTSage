@@ -130,6 +130,8 @@
     "processing_playlist": "📋 Procesando datos de lista de reproducción...",
     "paused": "Descarga pausada",
     "resumed": "Descarga reanudada",
+    "merging_formats": "✨ Post-procesamiento: Fusionando formatos...",
+    "removing_sponsor_segments": "✨ Post-procesamiento: Eliminando segmentos patrocinados...",
     "speed": "Velocidad",
     "eta": "Tiempo restante",
     "please_enter_url": "Por favor ingresa una URL primero.",

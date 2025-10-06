@@ -1891,7 +1891,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.audio_button.setChecked(False)
             self.filter_formats()
 
-            self.signals.update_status.emit("Analysis complete!")
+            self.signals.update_status.emit(_("main_ui.analysis_complete"))
 
         except subprocess.TimeoutExpired:
             logger.error("Analysis timed out. Please try again.")

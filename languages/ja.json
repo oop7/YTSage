@@ -169,6 +169,8 @@
     "processing_playlist": "📋 再生リストデータを処理中...",
     "paused": "ダウンロードが一時停止されました",
     "resumed": "ダウンロードが再開されました",
+    "merging_formats": "✨ 後処理：フォーマットを結合中...",
+    "removing_sponsor_segments": "✨ 後処理：スポンサーセグメントを削除中...",
     "speed": "速度",
     "eta": "予想時間",
     "please_enter_url": "最初にURLを入力してください。",

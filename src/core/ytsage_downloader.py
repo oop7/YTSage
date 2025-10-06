@@ -666,10 +666,10 @@ class DownloadThread(QThread):
 
         # Check for post-processing
         if "[Merger]" in line or "Merging formats" in line:
-            self.status_signal.emit("✨ Post-processing: Merging formats...")
+            self.status_signal.emit(_("download.merging_formats"))
             self.progress_signal.emit(95)
         elif "SponsorBlock" in line:
-            self.status_signal.emit("✨ Post-processing: Removing sponsor segments...")
+            self.status_signal.emit(_("download.removing_sponsor_segments"))
             self.progress_signal.emit(97)
         elif "Deleting original file" in line:
             self.progress_signal.emit(98)
