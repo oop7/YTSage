@@ -114,7 +114,9 @@ jobs:
         Add-Content -Path "setup_cxfreeze.py" -Value "    ],"
         Add-Content -Path "setup_cxfreeze.py" -Value "    include_files=["
         Add-Content -Path "setup_cxfreeze.py" -Value '        ("src", "src"),'
-        Add-Content -Path "setup_cxfreeze.py" -Value '        ("assets", "lib/assets"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("assets/branding/icons", "lib/assets/branding/icons"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("assets/Icon", "lib/assets/Icon"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("assets/sound", "lib/assets/sound"),'
         Add-Content -Path "setup_cxfreeze.py" -Value '        ("languages", "lib/languages"),'
         Add-Content -Path "setup_cxfreeze.py" -Value "    ],"
         Add-Content -Path "setup_cxfreeze.py" -Value ")"

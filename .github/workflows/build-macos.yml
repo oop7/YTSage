@@ -123,7 +123,9 @@ jobs:
             ],
             include_files=[
                 ("src", "src"),
-                ("assets", "lib/assets"),
+                ("assets/branding/icons", "lib/assets/branding/icons"),
+                ("assets/Icon", "lib/assets/Icon"),
+                ("assets/sound", "lib/assets/sound"),
                 ("languages", "lib/languages"),
             ],
         )
