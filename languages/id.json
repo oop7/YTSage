@@ -210,7 +210,13 @@
     "pip_completed": "✅ Pembaruan pip berhasil diselesaikan!",
     "pip_failed": "❌ Pembaruan pip gagal: {error}",
     "already_up_to_date": "✅ yt-dlp sudah terbaru!",
-    "pip_timeout": "❌ Waktu habis untuk pembaruan pip setelah 5 menit"
+    "pip_timeout": "❌ Waktu habis untuk pembaruan pip setelah 5 menit",
+    "update_success": "✅ yt-dlp telah berhasil diperbarui!",
+    "already_latest": "yt-dlp sudah terbaru (versi {version})",
+    "network_error": "❌ Kesalahan jaringan selama pembaruan: {error}",
+    "general_error": "❌ Pembaruan gagal: {error}",
+    "error_pip_update": "❌ Kesalahan selama pembaruan pip: {error}",
+    "pip_update_failed": "❌ Pembaruan pip gagal: {error}"
   },
   "about": {
     "title": "Tentang YTSage",

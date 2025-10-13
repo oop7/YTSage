@@ -210,7 +210,13 @@
     "pip_completed": "✅ Pip अपडेट सफलतापूर्वक पूर्ण!",
     "pip_failed": "❌ Pip अपडेट असफल: {error}",
     "already_up_to_date": "✅ yt-dlp पहले से अप टू डेट है!",
-    "pip_timeout": "❌ pip अपडेट 5 मिनट के बाद समय समाप्त हो गया"
+    "pip_timeout": "❌ pip अपडेट 5 मिनट के बाद समय समाप्त हो गया",
+    "update_success": "✅ yt-dlp सफलतापूर्वक अपडेट किया गया है!",
+    "already_latest": "yt-dlp अप टू डेट है (संस्करण {version})",
+    "network_error": "❌ अपडेट के दौरान नेटवर्क त्रुटि: {error}",
+    "general_error": "❌ अपडेट असफल: {error}",
+    "error_pip_update": "❌ pip अपडेट के दौरान त्रुटि: {error}",
+    "pip_update_failed": "❌ Pip अपडेट असफल: {error}"
   },
   "about": {
     "title": "YTSage के बारे में",

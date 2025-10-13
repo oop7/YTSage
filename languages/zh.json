@@ -210,7 +210,13 @@
     "pip_completed": "✅ pip 更新完成成功！",
     "pip_failed": "❌ pip 更新失败：{error}",
     "pip_timeout": "❌ pip 更新超时（超过5分钟）",
-    "already_up_to_date": "✅ yt-dlp已是最新版本！"
+    "already_up_to_date": "✅ yt-dlp已是最新版本！",
+    "update_success": "✅ yt-dlp 已成功更新！",
+    "already_latest": "yt-dlp 是最新版本（版本 {version}）",
+    "network_error": "❌ 更新期间网络错误：{error}",
+    "general_error": "❌ 更新失败：{error}",
+    "error_pip_update": "❌ pip 更新期间出错：{error}",
+    "pip_update_failed": "❌ pip 更新失败：{error}"
   },
   "about": {
     "title": "关于 YTSage",

@@ -210,7 +210,13 @@
     "pip_completed": "✅ Atualização pip concluída com sucesso!",
     "pip_failed": "❌ Atualização pip falhou: {error}",
     "already_up_to_date": "✅ yt-dlp já está atualizado!",
-    "pip_timeout": "❌ Tempo limite de atualização do pip esgotado após 5 minutos"
+    "pip_timeout": "❌ Tempo limite de atualização do pip esgotado após 5 minutos",
+    "update_success": "✅ yt-dlp foi atualizado com sucesso!",
+    "already_latest": "yt-dlp está atualizado (versão {version})",
+    "network_error": "❌ Erro de rede durante a atualização: {error}",
+    "general_error": "❌ A atualização falhou: {error}",
+    "error_pip_update": "❌ Erro durante a atualização do pip: {error}",
+    "pip_update_failed": "❌ Atualização do pip falhou: {error}"
   },
   "about": {
     "title": "Sobre YTSage",

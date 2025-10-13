@@ -223,7 +223,13 @@
     "running_pip_install": "📦 Ejecutando pip install --upgrade...",
     "pip_completed": "✅ ¡Actualización de pip completada exitosamente!",
     "pip_failed": "❌ Actualización de pip falló: {error}",
-    "pip_timeout": "❌ Tiempo de espera agotado para actualización de pip después de 5 minutos"
+    "pip_timeout": "❌ Tiempo de espera agotado para actualización de pip después de 5 minutos",
+    "update_success": "✅ ¡yt-dlp se ha actualizado exitosamente!",
+    "already_latest": "yt-dlp está actualizado (versión {version})",
+    "network_error": "❌ Error de red durante la actualización: {error}",
+    "general_error": "❌ La actualización falló: {error}",
+    "error_pip_update": "❌ Error durante la actualización de pip: {error}",
+    "pip_update_failed": "❌ Actualización de pip falló: {error}"
   },
   "settings": {
     "title": "Configuración de Descarga",

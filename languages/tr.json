@@ -210,7 +210,13 @@
     "pip_completed": "✅ Pip güncellemesi başarıyla tamamlandı!",
     "pip_failed": "❌ Pip güncellemesi başarısız: {error}",
     "already_up_to_date": "✅ yt-dlp zaten güncel!",
-    "pip_timeout": "❌ pip güncellemesi 5 dakika sonra zaman aşımına uğradı"
+    "pip_timeout": "❌ pip güncellemesi 5 dakika sonra zaman aşımına uğradı",
+    "update_success": "✅ yt-dlp başarıyla güncellendi!",
+    "already_latest": "yt-dlp güncel (sürüm {version})",
+    "network_error": "❌ Güncelleme sırasında ağ hatası: {error}",
+    "general_error": "❌ Güncelleme başarısız: {error}",
+    "error_pip_update": "❌ Pip güncellemesi sırasında hata: {error}",
+    "pip_update_failed": "❌ Pip güncellemesi başarısız: {error}"
   },
   "about": {
     "title": "YTSage Hakkında",

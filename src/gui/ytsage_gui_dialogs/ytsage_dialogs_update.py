@@ -132,7 +132,7 @@ class UpdateThread(QThread):
                 self.update_status.emit(_('update.found_at', path=yt_dlp_path))
             except Exception as e:
                 self.update_status.emit(_('update.error_getting_path', error=e))
-                self.update_finished.emit(False, f"❌ Error getting yt-dlp path: {e}")
+                self.update_finished.emit(False, _('update.error_getting_path', error=e))
                 return
 
             # Extra logic moved to src\utils\ytsage_constants.py
@@ -165,16 +165,16 @@ class UpdateThread(QThread):
 
             if success:
                 self.update_progress.emit(100)
-                error_message = "✅ yt-dlp has been successfully updated!"
+                error_message = _('update.update_success')
             else:
                 error_message = _('update.update_failed')
 
         except requests.RequestException as e:
-            error_message = f"❌ Network error during update: {e}"
+            error_message = _('update.network_error', error=e)
             self.update_status.emit(error_message)
             success = False
         except Exception as e:
-            error_message = f"❌ Update failed: {e}"
+            error_message = _('update.general_error', error=e)
             self.update_status.emit(error_message)
             success = False
 
@@ -279,7 +279,7 @@ class UpdateThread(QThread):
                     self.update_status.emit(_("update.pip_timeout"))
                     return False
                 except Exception as e:
-                    self.update_status.emit(f"❌ Error during pip update: {e}")
+                    self.update_status.emit(_('update.error_pip_update', error=e))
                     return False
             else:
                 self.update_status.emit(_("update.already_up_to_date"))
@@ -287,7 +287,7 @@ class UpdateThread(QThread):
                 return True
 
         except Exception as e:
-            self.update_status.emit(f"❌ Pip update failed: {e}")
+            self.update_status.emit(_('update.pip_update_failed', error=e))
             return False
 
 
@@ -407,7 +407,7 @@ class YTDLPUpdateDialog(QDialog):
                 )
                 self.update_btn.setEnabled(True)
             else:
-                self.status_label.setText(f"yt-dlp is up to date (version {current_version})")
+                self.status_label.setText(_('update.already_latest', version=current_version))
                 self.update_btn.setEnabled(False)
         except version.InvalidVersion:
             # If version parsing fails, do a simple string comparison

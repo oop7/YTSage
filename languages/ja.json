@@ -210,7 +210,13 @@
     "pip_completed": "✅ pipの更新が正常に完了しました！",
     "pip_failed": "❌ pipの更新に失敗しました: {error}",
     "already_up_to_date": "✅ yt-dlpはすでに最新です！",
-    "pip_timeout": "❌ pip更新が5分後にタイムアウトしました"
+    "pip_timeout": "❌ pip更新が5分後にタイムアウトしました",
+    "update_success": "✅ yt-dlpが正常に更新されました！",
+    "already_latest": "yt-dlpは最新です（バージョン {version}）",
+    "network_error": "❌ 更新中にネットワークエラーが発生しました: {error}",
+    "general_error": "❌ 更新に失敗しました: {error}",
+    "error_pip_update": "❌ pipの更新中にエラーが発生しました: {error}",
+    "pip_update_failed": "❌ pipの更新に失敗しました: {error}"
   },
   "about": {
     "title": "YTSageについて",
