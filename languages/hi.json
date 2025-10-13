@@ -379,7 +379,13 @@
     "generic_error": "त्रुटि: {error}"
   },
   "update_dialog": {
-    "title": "अपडेट उपलब्ध"
+    "title": "अपडेट उपलब्ध",
+    "new_version_available": "YTSage का नया संस्करण उपलब्ध है!",
+    "current_version_label": "वर्तमान संस्करण:",
+    "latest_version_label": "नवीनतम संस्करण:",
+    "changelog": "परिवर्तन सूची",
+    "download_update": "अपडेट डाउनलोड करें",
+    "remind_later": "बाद में याद दिलाएं"
   },
   "playlist": {
     "unknown": "अज्ञात प्लेलिस्ट",

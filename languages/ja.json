@@ -379,7 +379,13 @@
     "generic_error": "エラー: {error}"
   },
   "update_dialog": {
-    "title": "アップデートが利用可能です"
+    "title": "アップデートが利用可能です",
+    "new_version_available": "YTSageの新しいバージョンが利用可能です！",
+    "current_version_label": "現在のバージョン：",
+    "latest_version_label": "最新バージョン：",
+    "changelog": "変更履歴",
+    "download_update": "更新をダウンロード",
+    "remind_later": "後で通知"
   },
   "playlist": {
     "unknown": "不明な再生リスト",

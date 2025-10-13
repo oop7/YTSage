@@ -379,7 +379,13 @@
     "generic_error": "Hata: {error}"
   },
   "update_dialog": {
-    "title": "Güncelleme Mevcut"
+    "title": "Güncelleme Mevcut",
+    "new_version_available": "YTSage'in yeni bir sürümü mevcut!",
+    "current_version_label": "Mevcut sürüm:",
+    "latest_version_label": "En son sürüm:",
+    "changelog": "Değişiklik günlüğü",
+    "download_update": "Güncellemeyi İndir",
+    "remind_later": "Daha Sonra Hatırlat"
   },
   "playlist": {
     "unknown": "Bilinmeyen Oynatma Listesi",

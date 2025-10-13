@@ -379,7 +379,13 @@
     "generic_error": "Ошибка: {error}"
   },
   "update_dialog": {
-    "title": "Доступно обновление"
+    "title": "Доступно обновление",
+    "new_version_available": "Доступна новая версия YTSage!",
+    "current_version_label": "Текущая версия:",
+    "latest_version_label": "Последняя версия:",
+    "changelog": "Список изменений",
+    "download_update": "Скачать обновление",
+    "remind_later": "Напомнить позже"
   },
   "playlist": {
     "unknown": "Неизвестный плейлист",

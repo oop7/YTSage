@@ -379,7 +379,13 @@
     "generic_error": "خطأ: {error}"
   },
   "update_dialog": {
-    "title": "تحديث متاح"
+    "title": "تحديث متاح",
+    "new_version_available": "يتوفر إصدار جديد من YTSage!",
+    "current_version_label": "الإصدار الحالي:",
+    "latest_version_label": "أحدث إصدار:",
+    "changelog": "سجل التغييرات",
+    "download_update": "تنزيل التحديث",
+    "remind_later": "ذكرني لاحقاً"
   },
   "playlist": {
     "unknown": "قائمة تشغيل غير معروفة",

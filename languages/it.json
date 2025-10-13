@@ -379,7 +379,13 @@
     "generic_error": "Errore: {error}"
   },
   "update_dialog": {
-    "title": "Aggiornamento disponibile"
+    "title": "Aggiornamento disponibile",
+    "new_version_available": "È disponibile una nuova versione di YTSage!",
+    "current_version_label": "Versione corrente:",
+    "latest_version_label": "Ultima versione:",
+    "changelog": "Registro modifiche",
+    "download_update": "Scarica aggiornamento",
+    "remind_later": "Ricordamelo dopo"
   },
   "playlist": {
     "unknown": "Playlist sconosciuta",

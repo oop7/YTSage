@@ -379,7 +379,13 @@
     "generic_error": "Kesalahan: {error}"
   },
   "update_dialog": {
-    "title": "Pembaruan Tersedia"
+    "title": "Pembaruan Tersedia",
+    "new_version_available": "Versi baru YTSage tersedia!",
+    "current_version_label": "Versi saat ini:",
+    "latest_version_label": "Versi terbaru:",
+    "changelog": "Catatan perubahan",
+    "download_update": "Unduh Pembaruan",
+    "remind_later": "Ingatkan Nanti"
   },
   "playlist": {
     "unknown": "Playlist Tidak Dikenal",

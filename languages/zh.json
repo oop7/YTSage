@@ -379,7 +379,13 @@
     "generic_error": "错误：{error}"
   },
   "update_dialog": {
-    "title": "有可用更新"
+    "title": "有可用更新",
+    "new_version_available": "YTSage 有新版本可用！",
+    "current_version_label": "当前版本：",
+    "latest_version_label": "最新版本：",
+    "changelog": "更新日志",
+    "download_update": "下载更新",
+    "remind_later": "稍后提醒"
   },
   "playlist": {
     "unknown": "未知播放列表",

@@ -1169,9 +1169,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Update message with better formatting
         message_label = QLabel(
             f"<div style='font-size: 13px; line-height: 1.4;'>"
-            f"<b style='color: #ffffff;'>A new version of YTSage is available!</b><br><br>"
-            f"<span style='color: #cccccc;'>Current version: <b style='color: #ffffff;'>{self.version}</b></span><br>"
-            f"<span style='color: #cccccc;'>Latest version: <b style='color: #00ff88;'>{latest_version}</b></span>"
+            f"<b style='color: #ffffff;'>{_('update_dialog.new_version_available')}</b><br><br>"
+            f"<span style='color: #cccccc;'>{_('update_dialog.current_version_label')} <b style='color: #ffffff;'>{self.version}</b></span><br>"
+            f"<span style='color: #cccccc;'>{_('update_dialog.latest_version_label')} <b style='color: #00ff88;'>{latest_version}</b></span>"
             f"</div>"
         )
         message_label.setWordWrap(True)
@@ -1189,7 +1189,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         layout.addWidget(message_label)
 
         # Changelog Section
-        changelog_label = QLabel("<b style='color: #ffffff; font-size: 14px;'>Changelog:</b>")
+        changelog_label = QLabel(f"<b style='color: #ffffff; font-size: 14px;'>{_('update_dialog.changelog')}:</b>")
         changelog_label.setStyleSheet("padding: 5px 0; margin-top: 10px;")
         layout.addWidget(changelog_label)
 
@@ -1244,7 +1244,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         button_layout = QHBoxLayout()
         button_layout.setSpacing(10)
 
-        download_btn = QPushButton("Download Update")
+        download_btn = QPushButton(_('update_dialog.download_update'))
         download_btn.clicked.connect(lambda: self.open_release_page(release_url))
         download_btn.setStyleSheet(
             """
@@ -1267,7 +1267,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         """
         )
 
-        remind_btn = QPushButton("Remind Me Later")
+        remind_btn = QPushButton(_('update_dialog.remind_later'))
         remind_btn.clicked.connect(msg.close)
         remind_btn.setStyleSheet(
             """
