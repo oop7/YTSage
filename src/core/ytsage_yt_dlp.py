@@ -480,9 +480,10 @@ class YtdlpSetupDialog(QDialog):
 
 def check_ytdlp_binary() -> Optional[Path]:
     """
-    Check if yt-dlp binary exists in the expected location.
+    Check if yt-dlp binary exists in the app's bin directory ONLY.
+    We now ignore system PATH and only use our managed binary.
     Returns:
-        Path or None: Path to yt-dlp binary if found, None otherwise
+        Path or None: Path to yt-dlp binary if found in app bin, None otherwise
     """
     exe_path = YTDLP_APP_BIN_PATH
     if exe_path.exists():
@@ -493,33 +494,11 @@ def check_ytdlp_binary() -> Optional[Path]:
                 logger.info(f"Fixed permissions on yt-dlp at {exe_path}")
             except Exception as e:
                 logger.exception(f"Could not set executable permissions on {exe_path}: {e}")
+        logger.info(f"Found yt-dlp in app bin directory: {exe_path}")
         return exe_path
 
-    # If not found in app directory, check if yt-dlp is available in PATH
-    try:
-        # Use subprocess to check if yt-dlp is available
-        if OS_NAME == "Windows":
-            # On Windows, use 'where' command and hide console window
-            # Extra logic moved to src\utils\ytsage_constants.py
-
-            result = subprocess.run(
-                ["where", "yt-dlp"], capture_output=True, text=True, check=False, creationflags=SUBPROCESS_CREATIONFLAGS
-            )
-            if result.returncode == 0 and result.stdout.strip():
-                yt_dlp_path = result.stdout.strip().split("\n")[0]
-                logger.info(f"Found yt-dlp in PATH: {yt_dlp_path}")
-                return Path(yt_dlp_path)
-        else:
-            # On Unix systems, use 'which' command
-            result = subprocess.run(["which", "yt-dlp"], capture_output=True, text=True, check=False)
-            if result.returncode == 0 and result.stdout.strip():
-                yt_dlp_path = result.stdout.strip()
-                logger.info(f"Found yt-dlp in PATH: {yt_dlp_path}")
-                return Path(yt_dlp_path)
-    except Exception as e:
-        logger.exception(f"Error checking for yt-dlp in PATH: {e}")
-        # We're only interested in our app-specific installation or system PATH
-
+    # Binary not found in app directory - return None to trigger setup
+    logger.warning(f"yt-dlp binary not found in app bin directory: {exe_path}")
     return None
 
 

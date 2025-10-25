@@ -385,52 +385,63 @@ class VideoInfoMixin:
             return False
 
         try:
-            # Import yt_dlp locally to avoid import errors when yt-dlp is not installed
-            from yt_dlp import YoutubeDL
+            # Note: yt_dlp Python package removed - this feature now uses subprocess
+            # Extract thumbnail info using yt-dlp CLI instead
+            from src.core.ytsage_yt_dlp import get_yt_dlp_path
+            from src.utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
+            import subprocess
+            import json
 
             logger.debug(f"Attempting to save thumbnail for URL: {video_url}")
 
-            ydl_opts = {
-                "logger": logger,
-                "quiet": True,
-                "skip_download": True,
-                "force_generic_extractor": False,
-                "no_warnings": True,
-                "extract_flat": False,
-            }
+            ytdlp_path = get_yt_dlp_path()
+            
+            # Use yt-dlp CLI to extract thumbnail info
+            result = subprocess.run(
+                [ytdlp_path, "--dump-json", "--skip-download", video_url],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                creationflags=SUBPROCESS_CREATIONFLAGS,
+            )
+            
+            if result.returncode != 0:
+                logger.error(f"Failed to extract video info: {result.stderr}")
+                return False
+                
+            info = json.loads(result.stdout)
+            thumbnails = info.get("thumbnails", [])
 
-            with YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(video_url, download=False)
-                thumbnails = info.get("thumbnails", [])
+            if not thumbnails:
+                logger.info("No thumbnails available")
+                return False
 
-                if not thumbnails:
-                    logger.info("No thumbnails available")
+            thumbnail_url = max(
+                thumbnails,
+                key=lambda t: (t.get("height", 0) or 0) * (t.get("width", 0) or 0),
+            ).get("url")
 
-                thumbnail_url = max(
-                    thumbnails,
-                    key=lambda t: (t.get("height", 0) or 0) * (t.get("width", 0) or 0),
-                ).get("url")
+            if not thumbnail_url:
+                logger.info("Failed to extract thumbnail URL")
+                return False
 
-                if not thumbnail_url:
-                    logger.info("Failed to extract thumbnail URL")
+            # Download using requests
+            response = requests.get(thumbnail_url)
+            response.raise_for_status()
 
-                # Download using requests
-                response = requests.get(thumbnail_url)
-                response.raise_for_status()
+            # Save the thumbnail
+            thumb_dir = Path(path).joinpath("Thumbnails")
+            thumb_dir.mkdir(exist_ok=True)
 
-                # Save the thumbnail
-                thumb_dir = Path(path).joinpath("Thumbnails")
-                thumb_dir.mkdir(exist_ok=True)
+            filename = f"{self.sanitize_filename(info['title'])}.jpg"
+            thumbnail_path = thumb_dir.joinpath(filename)
 
-                filename = f"{self.sanitize_filename(info['title'])}.jpg"
-                thumbnail_path = thumb_dir.joinpath(filename)
+            with open(thumbnail_path, "wb") as f:
+                f.write(response.content)
 
-                with open(thumbnail_path, "wb") as f:
-                    f.write(response.content)
-
-                logger.info(f"Thumbnail saved to: {thumbnail_path}")
-                self.signals.update_status.emit(f"✅ Thumbnail saved: {filename}")
-                return True
+            logger.info(f"Thumbnail saved to: {thumbnail_path}")
+            self.signals.update_status.emit(f"✅ Thumbnail saved: {filename}")
+            return True
 
         except Exception as e:
             error_msg = f"❌ Thumbnail error: {e}"

@@ -1,13 +1,12 @@
 """
 Update-related dialogs and threads for YTSage application.
-Contains dialogs and background threads for checking and performing yt-dlp updates.
+Contains dialogs and background threads for checking and performing yt-dlp binary updates.
+Note: This module only handles binary updates. Python package updates have been removed.
 """
 
 import os
 import subprocess
-import sys
 import time
-from importlib.metadata import PackageNotFoundError
 from pathlib import Path
 
 import requests
@@ -24,30 +23,6 @@ from src.utils.ytsage_localization import LocalizationManager
 _ = LocalizationManager.get_text
 from src.utils.ytsage_localization import _
 from src.utils.ytsage_logger import logger
-
-try:
-    from importlib.metadata import PackageNotFoundError as ImportlibPackageNotFoundError
-    from importlib.metadata import version as importlib_version
-
-    def get_version(package_name: str) -> str:
-        return importlib_version(package_name)
-
-    PackageNotFoundError = ImportlibPackageNotFoundError
-except ImportError:
-    # Fallback for older Python versions
-    import pkg_resources
-
-    def get_version(package_name: str) -> str:
-        return pkg_resources.get_distribution(package_name).version
-
-    PackageNotFoundError = pkg_resources.DistributionNotFound
-
-try:
-    import yt_dlp
-
-    YT_DLP_AVAILABLE = True
-except ImportError:
-    YT_DLP_AVAILABLE = False
 
 
 class VersionCheckThread(QThread):
@@ -73,31 +48,20 @@ class VersionCheckThread(QThread):
                 )
                 if result.returncode == 0:
                     current_version = result.stdout.strip()
-                else:  # Try fallback if command failed
-                    if YT_DLP_AVAILABLE:
-                        current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
-                    else:
-                        error_message = "yt-dlp not available."
-                        self.finished.emit(current_version, latest_version, error_message)
+                else:
+                    error_message = "yt-dlp binary not accessible."
+                    self.finished.emit(current_version, latest_version, error_message)
                     return
             except subprocess.TimeoutExpired:
-                # Try fallback if timeout
-                if YT_DLP_AVAILABLE:
-                    current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
-                else:
-                    error_message = "yt-dlp version check timed out and package not found."
-                    self.finished.emit(current_version, latest_version, error_message)
-                    return
-            except Exception:
-                # Fallback to importing yt_dlp package directly if subprocess fails
-                if YT_DLP_AVAILABLE:
-                    current_version = yt_dlp.version.__version__  # type: ignore[reportAttributeAccessIssue]
-                else:
-                    error_message = "yt-dlp not found or accessible."
-                    self.finished.emit(current_version, latest_version, error_message)
-                    return
+                error_message = "yt-dlp version check timed out."
+                self.finished.emit(current_version, latest_version, error_message)
+                return
+            except Exception as e:
+                error_message = f"yt-dlp not found or accessible: {e}"
+                self.finished.emit(current_version, latest_version, error_message)
+                return
 
-            # Get latest version from PyPI
+            # Get latest version from PyPI (yt-dlp releases are also published to PyPI)
             response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
             response.raise_for_status()
             latest_version = response.json()["info"]["version"]
@@ -135,33 +99,11 @@ class UpdateThread(QThread):
                 self.update_finished.emit(False, _('update.error_getting_path', error=e))
                 return
 
-            # Extra logic moved to src\utils\ytsage_constants.py
-
             self.update_progress.emit(20)
 
-            # Extra logic moved to src\utils\ytsage_constants.py
-            # Check if this is an app-managed binary by comparing paths safely
-            is_app_managed = False
-            try:
-                # Only compare if both files exist
-                if yt_dlp_path.exists() and YTDLP_APP_BIN_PATH.exists():
-                    is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
-                elif str(yt_dlp_path) == str(YTDLP_APP_BIN_PATH):
-                    # If paths are identical as strings, consider it app-managed
-                    is_app_managed = True
-                else:
-                    # If app binary doesn't exist, this is definitely not app-managed
-                    is_app_managed = False
-            except (OSError, IOError) as e:
-                logger.debug(f"Error comparing paths: {e}")
-                is_app_managed = False
-
-            if is_app_managed:
-                self.update_status.emit(_('update.updating_binary'))
-                success = self._update_binary(yt_dlp_path)
-            else:
-                self.update_status.emit(_('update.updating_pip'))
-                success = self._update_via_pip()
+            # Update the binary (no more pip-based updates)
+            self.update_status.emit(_('update.updating_binary'))
+            success = self._update_binary(yt_dlp_path)
 
             if success:
                 self.update_progress.emit(100)
@@ -217,77 +159,6 @@ class UpdateThread(QThread):
         except Exception as e:
             logger.exception(f"UpdateThread: Unexpected error during update: {e}")
             self.update_status.emit(_('update.unexpected_error', error=e))
-            return False
-
-    def _update_via_pip(self) -> bool:
-        """Update yt-dlp via pip."""
-        try:
-            self.update_status.emit(_('update.checking_pip'))
-            self.update_progress.emit(30)
-
-            # Get current version
-            try:
-                current_version = get_version("yt-dlp")
-                self.update_status.emit(_('update.current_version', version=current_version))
-            except PackageNotFoundError:
-                self.update_status.emit(_('update.not_found_pip'))
-                current_version = "0.0.0"
-
-            self.update_progress.emit(40)
-
-            # Get the latest version from PyPI
-            self.update_status.emit(_('update.checking_latest'))
-            response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
-
-            if response.status_code != 200:
-                self.update_status.emit(_('update.failed_check_updates'))
-                return False
-
-            data = response.json()
-            latest_version = data["info"]["version"]
-            self.update_status.emit(_('update.latest_version', version=latest_version))
-            self.update_progress.emit(50)
-
-            # Compare versions
-            if version.parse(latest_version) > version.parse(current_version):
-                self.update_status.emit(_('update.updating_from_to', current=current_version, latest=latest_version))
-                self.update_progress.emit(60)
-
-                try:
-                    # Run pip update with timeout
-                    self.update_status.emit(_('update.running_pip_install'))
-                    update_result = subprocess.run(
-                        [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
-                        capture_output=True,
-                        text=True,
-                        check=False,
-                        timeout=300,  # 5 minute timeout for pip install
-                        creationflags=SUBPROCESS_CREATIONFLAGS,
-                    )
-
-                    self.update_progress.emit(85)
-
-                    if update_result.returncode == 0:
-                        self.update_status.emit(_('update.pip_completed'))
-                        self.update_progress.emit(95)
-                        return True
-                    else:
-                        self.update_status.emit(_('update.pip_failed', error=update_result.stderr))
-                        return False
-
-                except subprocess.TimeoutExpired:
-                    self.update_status.emit(_("update.pip_timeout"))
-                    return False
-                except Exception as e:
-                    self.update_status.emit(_('update.error_pip_update', error=e))
-                    return False
-            else:
-                self.update_status.emit(_("update.already_up_to_date"))
-                self.update_progress.emit(95)
-                return True
-
-        except Exception as e:
-            self.update_status.emit(_('update.pip_update_failed', error=e))
             return False
 
 
@@ -569,35 +440,14 @@ class AutoUpdateThread(QThread):
             self.update_finished.emit(False, f"Critical error: {e}")
 
     def _perform_update(self) -> bool:
-        """Perform the actual update using similar logic to UpdateThread but without UI feedback."""
+        """Perform the actual binary update."""
         try:
             # Get the yt-dlp path
             yt_dlp_path = get_yt_dlp_path()
 
-            # Extra logic moved to src\utils\ytsage_constants.py
-
-            # Check if this is an app-managed binary by comparing paths safely
-            is_app_managed = False
-            try:
-                # Only compare if both files exist
-                if yt_dlp_path.exists() and YTDLP_APP_BIN_PATH.exists():
-                    is_app_managed = yt_dlp_path.samefile(YTDLP_APP_BIN_PATH)
-                elif str(yt_dlp_path) == str(YTDLP_APP_BIN_PATH):
-                    # If paths are identical as strings, consider it app-managed
-                    is_app_managed = True
-                else:
-                    # If app binary doesn't exist, this is definitely not app-managed
-                    is_app_managed = False
-            except (OSError, IOError) as e:
-                logger.debug(f"AutoUpdateThread: Error comparing paths: {e}")
-                is_app_managed = False
-
-            if is_app_managed:
-                logger.info("AutoUpdateThread: Updating app-managed yt-dlp binary...")
-                return self._update_binary(yt_dlp_path)
-            else:
-                logger.info("AutoUpdateThread: Updating system yt-dlp via pip...")
-                return self._update_via_pip()
+            # Always update the binary (no more pip-based updates)
+            logger.info("AutoUpdateThread: Updating yt-dlp binary...")
+            return self._update_binary(yt_dlp_path)
 
         except Exception as e:
             logger.exception(f"AutoUpdateThread: Error in _perform_update: {e}")
@@ -635,59 +485,4 @@ class AutoUpdateThread(QThread):
 
         except Exception as e:
             logger.exception(f"AutoUpdateThread: Unexpected error during update: {e}")
-            return False
-
-    def _update_via_pip(self) -> bool:
-        """Update yt-dlp via pip (silent version)."""
-        try:
-            logger.info("AutoUpdateThread: Checking current pip installation...")
-
-            # Get current version
-            try:
-                current_version = get_version("yt-dlp")
-                logger.info(f"AutoUpdateThread: Current version: {current_version}")
-            except PackageNotFoundError:
-                logger.warning("AutoUpdateThread: yt-dlp not found via pip, attempting installation...")
-                current_version = "0.0.0"
-
-            # Get the latest version from PyPI
-            logger.info("AutoUpdateThread: Checking for latest version...")
-            response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
-
-            if response.status_code != 200:
-                logger.error("AutoUpdateThread: Failed to check for updates")
-                return False
-
-            data = response.json()
-            latest_version = data["info"]["version"]
-            logger.info(f"AutoUpdateThread: Latest version: {latest_version}")
-
-            # Compare versions
-            if version.parse(latest_version) > version.parse(current_version):
-                logger.info(f"AutoUpdateThread: Updating from {current_version} to {latest_version}...")
-
-                # Extra logic moved to src\utils\ytsage_constants.py
-
-                # Run pip update
-                logger.info("AutoUpdateThread: Running pip install --upgrade...")
-                update_result = subprocess.run(
-                    [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    creationflags=SUBPROCESS_CREATIONFLAGS,
-                )
-
-                if update_result.returncode == 0:
-                    logger.info("AutoUpdateThread: Pip update completed successfully!")
-                    return True
-                else:
-                    logger.error(f"AutoUpdateThread: Pip update failed: {update_result.stderr}")
-                    return False
-            else:
-                logger.info("AutoUpdateThread: yt-dlp is already up to date!")
-                return True
-
-        except Exception as e:
-            logger.exception(f"AutoUpdateThread: Pip update failed: {e}")
             return False

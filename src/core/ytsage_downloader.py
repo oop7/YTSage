@@ -15,14 +15,6 @@ from src.utils.ytsage_logger import logger
 # Shorthand for localization
 _ = LocalizationManager.get_text
 
-try:
-    import yt_dlp  # Keep yt_dlp import here - only downloader uses it.
-
-    YT_DLP_AVAILABLE = True
-except ImportError:
-    YT_DLP_AVAILABLE = False
-    logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
-
 
 class SignalManager(QObject):
     update_formats = Signal(list)
@@ -162,62 +154,10 @@ class DownloadThread(QThread):
 
     def check_file_exists(self) -> bool | None:
         """Check if the file already exists before downloading"""
-        try:
-            logger.debug("Starting file existence check")
-            # Use yt-dlp to get the filename without downloading, suppressing warnings
-            ydl_opts_check = {
-                "logger": logger,  # passed app logger
-                "quiet": True,
-                "skip_download": True,
-                "no_warnings": True,  # <-- Suppress warnings during check
-                "ignoreerrors": True,  # Also ignore other potential errors during this check
-                "outtmpl": {"default": str(self.path / "%(title)s.%(ext)s")},
-                "format": (self.format_id if self.format_id else "best"),  # Use selected format or best
-            }
-            if self.cookie_file:
-                ydl_opts_check["cookiefile"] = str(self.cookie_file)
-            elif self.browser_cookies:
-                ydl_opts_check["cookiesfrombrowser"] = (
-                    self.browser_cookies.split(":")[0],
-                    self.browser_cookies.split(":")[1] if ":" in self.browser_cookies else None,
-                )
-
-            # Add proxy settings if specified
-            if self.proxy_url:
-                ydl_opts_check["proxy"] = self.proxy_url
-            
-            if self.geo_proxy_url:
-                ydl_opts_check["geo_verification_proxy"] = self.geo_proxy_url
-
-            if YT_DLP_AVAILABLE:
-                with yt_dlp.YoutubeDL(ydl_opts_check) as ydl:
-                    info = ydl.extract_info(self.url, download=False)
-
-                    # Handle cases where info extraction fails silently
-                    if not info:
-                        logger.debug("Failed to extract info during file existence check. Skipping check.")
-                        return False  # Proceed with download attempt
-
-                # Get the title and sanitize it for filename
-                title = info.get("title", "video")
-                # Don't remove colons and other special characters yet
-                logger.debug(f"Original video title: {title}")
-
-                # Get resolution for better matching
-                resolution = ""
-                for format_info in info.get("formats", []):
-                    if format_info.get("format_id") == self.format_id:
-                        resolution = format_info.get("resolution", "")
-                        break
-
-                logger.debug(f"Resolution: {resolution}")
-            else:
-                logger.debug("yt-dlp not available, skipping file existence check")
-                return False  # Proceed with download attempt
-
-        except Exception as e:
-            logger.exception(f"Error checking file existence: {e}")
-            return None
+        # This method is kept for backwards compatibility but always returns False
+        # to proceed with download. File existence is now handled by yt-dlp CLI itself.
+        logger.debug("Skipping file existence check (handled by yt-dlp)")
+        return False  # Proceed with download attempt
 
     def _build_yt_dlp_command(self) -> list:
         """Build the yt-dlp command line with all options for direct execution."""
@@ -231,27 +171,10 @@ class DownloadThread(QThread):
             # Strip the -drc suffix if present to fix issues with certain audio formats
             clean_format_id = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
 
-            # Check if this is an audio-only format
-            is_audio_format = False
-            try:
-                if YT_DLP_AVAILABLE:
-                    ydl_opts = {
-                        "logger": logger,
-                        "quiet": True,
-                        "no_warnings": True,
-                        "skip_download": True,
-                    }
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(self.url, download=False) or {}
-                        for fmt in info.get("formats", []):
-                            if fmt.get("format_id") == clean_format_id:
-                                if fmt.get("vcodec") == "none" or "audio only" in fmt.get("format_note", "").lower():
-                                    is_audio_format = True
-                                    logger.debug(f"Detected audio-only format for ID: {clean_format_id}")
-                                break
-            except Exception as e:
-                logger.exception(f"Error checking if format is audio-only: {e}")
-
+            # Use a simple heuristic: if format_id contains 'audio' or ends with 'a', treat as audio-only
+            # This avoids the need for Python API metadata extraction
+            is_audio_format = "audio" in clean_format_id.lower() or clean_format_id.endswith("a")
+            
             # For audio-only formats, don't try to merge with video
             if is_audio_format:
                 cmd.extend(["-f", clean_format_id])
@@ -261,35 +184,10 @@ class DownloadThread(QThread):
                 logger.debug(f"Using video format selection with audio: {clean_format_id}+bestaudio/best")
 
             # Determine output format based on the selected format ID - only for video formats
+            # Note: This is a best-effort approach without Python API metadata
             if not is_audio_format:
-                try:
-                    format_ext = None
-                    logger.debug(f"Getting format information for format ID: {self.format_id} (using: {clean_format_id})")
-
-                    if YT_DLP_AVAILABLE:
-                        ydl_opts = {"quiet": True, "no_warnings": True, "skip_download": True, "logger": logger}
-                        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                            info = ydl.extract_info(self.url, download=False) or {}
-                            # Look for the clean format ID first
-                            for fmt in info.get("formats", []):
-                                if fmt.get("format_id") == clean_format_id:
-                                    format_ext = fmt.get("ext")
-                                    break
-                            # If not found, try the original ID as fallback
-                            if not format_ext:
-                                for fmt in info.get("formats", []):
-                                    if fmt.get("format_id") == self.format_id:
-                                        format_ext = fmt.get("ext")
-                                        break
-
-                    if format_ext:
-                        logger.debug(f"Detected format extension: {format_ext}")
-                        # Ensure output matches the selected format - only for video formats
-                        cmd.extend(["--merge-output-format", format_ext])
-                except Exception as e:
-                    logger.exception(f"Error detecting format extension: {e}")
-                    # If we can't determine the format, don't specify merge-output-format
-                    pass
+                # Let yt-dlp handle format detection automatically via CLI
+                logger.debug("Letting yt-dlp CLI determine output format automatically")
         else:
             # If no specific format ID, use resolution-based sorting (-S)
             res_value = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified

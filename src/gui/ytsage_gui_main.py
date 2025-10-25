@@ -48,13 +48,15 @@ from src.utils.ytsage_logger import logger
 from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import LocalizationManager, _
 
-try:
-    import yt_dlp
-    from yt_dlp.utils import DownloadError, ExtractorError
+# Note: yt-dlp Python package removed - using binary-only approach
+# DownloadError and ExtractorError definitions kept for compatibility
+class DownloadError(Exception):
+    """Compatibility class for yt-dlp DownloadError"""
+    pass
 
-    YT_DLP_AVAILABLE = True
-except ImportError:
-    YT_DLP_AVAILABLE = False
+class ExtractorError(Exception):
+    """Compatibility class for yt-dlp ExtractorError"""
+    pass
 
 
 class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from mixins
@@ -64,10 +66,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize localization system
         saved_language = ConfigManager.get("language") or "en"
         LocalizationManager.initialize(saved_language)
-
-        # Log startup warnings for missing dependencies
-        if not YT_DLP_AVAILABLE:
-            logger.warning("yt-dlp not available at startup, will be downloaded at runtime")
 
         # Check for FFmpeg before proceeding
         if not check_ffmpeg():
@@ -722,210 +720,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 playlist_id = url.split("list=")[1].split("&")[0]
                 url = f"https://www.youtube.com/playlist?list={playlist_id}"
 
-            # Check if yt-dlp Python module is available
-            if not YT_DLP_AVAILABLE:
-                # Use subprocess to call yt-dlp executable
-                self._analyze_url_with_subprocess(url)
-                return
-
-            # Initial extraction with basic options - suppress warnings here too
-            ydl_opts = {
-                "logger": logger,
-                "quiet": False,
-                "no_warnings": True,  # <-- Suppress warnings for initial check
-                "extract_flat": True,
-                "force_generic_extractor": False,
-                "ignoreerrors": False,  # Set to False to catch errors properly
-                "no_color": True,
-                "verbose": True,
-                "cookiefile": None,
-            }
-
-            # Add cookies argument if cookie file path is set
-            if self.cookie_file_path:
-                ydl_opts["cookiefile"] = str(self.cookie_file_path)
-            elif self.browser_cookies_option:
-                ydl_opts["cookiesfrombrowser"] = (
-                    self.browser_cookies_option.split(":")[0],
-                    self.browser_cookies_option.split(":")[1] if ":" in self.browser_cookies_option else None,
-                )
-
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                try:
-                    basic_info = ydl.extract_info(url, download=False)
-                    if not basic_info:
-                        logger.error("Could not extract basic video information")
-                        self.signals.update_status.emit(
-                            _("main_ui.error_extract_info")
-                        )
-                        # Hide playlist UI on error
-                        self.signals.playlist_info_label_visible.emit(False)
-                        self.signals.playlist_select_btn_visible.emit(False)
-                        return
-                except Exception as e:
-                    logger.exception(f"First extraction failed: {e}")
-                    self.signals.playlist_info_label_visible.emit(False)
-                    self.signals.playlist_select_btn_visible.emit(False)
-                    user_friendly_error = parse_yt_dlp_error(str(e))
-                    self.signals.update_status.emit(user_friendly_error)
-                    return
-
-            self.signals.update_status.emit(_("main_ui.analyzing_extracting_detailed"))
-            # Configure options for detailed extraction (keep other options)
-            # Add no_warnings here as well, as this is where detailed info is fetched
-            ydl_opts_detail = {
-                "logger": logger,
-                "extract_flat": False,
-                "format": None,
-                "writesubtitles": True,
-                "allsubtitles": True,
-                "writeautomaticsub": True,
-                "playliststart": 1,
-                "playlistend": 1,
-                "youtube_include_dash_manifest": True,
-                "youtube_include_hls_manifest": True,
-                "no_warnings": True,  # <-- Add flag here for detailed extraction
-            }
-
-            # Add cookies argument if cookie file path is set
-            if self.cookie_file_path:
-                ydl_opts_detail["cookiefile"] = str(self.cookie_file_path)
-            elif self.browser_cookies_option:
-                ydl_opts_detail["cookiesfrombrowser"] = (
-                    self.browser_cookies_option.split(":")[0],
-                    self.browser_cookies_option.split(":")[1] if ":" in self.browser_cookies_option else None,
-                )
-
-            # Use a separate options dict for the detailed extraction
-            with yt_dlp.YoutubeDL(ydl_opts_detail) as ydl_detail:
-                try:
-                    self.signals.update_status.emit(_("main_ui.analyzing_processing_video"))
-                    if basic_info.get("_type") == "playlist":
-                        self.is_playlist = True
-                        self.playlist_info = basic_info
-                        self.selected_playlist_items = None  # Reset selection for new playlist
-                        self.playlist_entries = [entry for entry in basic_info.get("entries", []) if entry]  # Store entries
-
-                        # Ensure there are entries before proceeding
-                        if not self.playlist_entries:
-                            logger.error("Playlist contains no valid videos.")
-                            self.signals.update_status.emit(_("errors.playlist_no_videos"))
-                            self.signals.playlist_info_label_visible.emit(False)
-                            self.signals.playlist_select_btn_visible.emit(False)
-                            return
-                        # Extract detailed info for the FIRST video in the playlist
-                        # This provides formats/subs for the UI, assuming consistency
-                        first_video_url = self.playlist_entries[0].get("url")
-                        if not first_video_url:
-                            logger.error("Could not get URL for the first playlist video.")
-                            self.signals.update_status.emit(_("errors.playlist_no_url"))
-                            self.signals.playlist_info_label_visible.emit(False)
-                            self.signals.playlist_select_btn_visible.emit(False)
-                            return
-                        try:
-                            # Use the ydl_detail instance with no_warnings
-                            self.video_info = ydl_detail.extract_info(first_video_url, download=False)
-                        except Exception as e:
-                            logger.exception(f"Failed to extract info for the first playlist video: {e}")
-                            self.signals.playlist_info_label_visible.emit(False)
-                            self.signals.playlist_select_btn_visible.emit(False)
-                            user_friendly_error = parse_yt_dlp_error(str(e))
-                            self.signals.update_status.emit(user_friendly_error)
-                            return
-                        # Update playlist info label text (remains the same)
-                        playlist_text = _("playlist.display_format", 
-                                         title=basic_info.get('title', _('playlist.unknown')), 
-                                         count=len(self.playlist_entries))
-
-                        # update signal method from QMetaObject.invokeMethod to signals
-                        self.signals.playlist_info_label_text.emit(playlist_text)
-                        self.signals.playlist_info_label_visible.emit(True)
-
-                        # Show playlist selection BUTTON
-                        # update signal method from QMetaObject.invokeMethod to signals
-                        self.signals.playlist_select_btn_text.emit(_("main_ui.select_videos_all"))
-                        self.signals.playlist_select_btn_visible.emit(True)
-
-                    else:  # Single video
-                        self.is_playlist = False
-                        # Use ydl_detail instance here too for consistency
-                        self.video_info = ydl_detail.extract_info(url, download=False)
-                        self.playlist_entries = []  # Clear entries
-                        self.selected_playlist_items = None  # Clear selection
-
-                        # Hide playlist info label and button
-                        # update signal method from QMetaObject.invokeMethod to signals
-                        self.signals.playlist_info_label_visible.emit(False)
-                        self.signals.playlist_select_btn_visible.emit(False)
-
-                    # Verify we have format information
-                    if not self.video_info or "formats" not in self.video_info:
-                        logger.debug(f"video_info keys: {self.video_info.keys() if self.video_info else 'None'}")
-                        self.signals.update_status.emit(_("main_ui.error_no_format_info"))
-                        self.signals.playlist_info_label_visible.emit(False)
-                        self.signals.playlist_select_btn_visible.emit(False)
-                        return
-
-                    self.signals.update_status.emit(_("main_ui.analyzing_processing_formats"))
-                    self.all_formats = self.video_info["formats"]
-
-                    # Update UI
-                    self.update_video_info(self.video_info)
-
-                    # Update thumbnail
-                    self.signals.update_status.emit(_("main_ui.analyzing_loading_thumbnail"))
-                    # Try to get thumbnail from playlist info first
-                    # Fallback to video thumbnail if playlist thumbnail not found or not a playlist
-                    thumbnail_url = (self.playlist_info or {}).get("thumbnail") or (self.video_info or {}).get("thumbnail")
-                    self.download_thumbnail(thumbnail_url)
-
-                    # Save thumbnail if enabled - use the stored VIDEO URL
-                    if self.save_thumbnail:
-                        self.download_thumbnail_file(
-                            self.video_url, self.path_input.text()  # type: ignore[reportAttributeAccessIssue]
-                        )
-
-                    # --- Subtitle Handling ---
-                    self.signals.update_status.emit(_("main_ui.analyzing_processing_subtitles"))
-                    # Clear previous selections when analyzing a new video
-                    self.selected_subtitles = []
-                    self.available_subtitles = self.video_info.get("subtitles", {})
-                    self.available_automatic_subtitles = self.video_info.get("automatic_captions", {})
-                    # Update the UI elements related to subtitle selection state
-                    # update signal method from QMetaObject.invokeMethod to signals
-                    self.signals.selected_subs_label_text.emit(_("main_ui.subtitles_selected", count=0))
-
-                    # QMetaObject.invokeMethod(
-                    #     self.subtitle_select_btn,
-                    #     b"setProperty",
-                    #     Qt.ConnectionType.QueuedConnection,
-                    #     Q_ARG(str, b"subtitlesSelected"),
-                    #     Q_ARG(bool, False),
-                    # )  # <-- COMMENT OUT THIS LINE
-
-                    # REMOVE the merge_subs_checkbox update call from here
-                    # QMetaObject.invokeMethod(
-                    #     self.merge_subs_checkbox,
-                    #     b"setEnabled",
-                    #     Qt.ConnectionType.QueuedConnection,
-                    #     Q_ARG(bool, False),
-                    # )
-
-                    # Update format table
-                    self.signals.update_status.emit(_("main_ui.analyzing_updating_table"))
-                    self.video_button.setChecked(True)
-                    self.audio_button.setChecked(False)
-                    self.filter_formats()
-                    self.signals.update_status.emit(_("main_ui.analysis_complete"))
-
-                except Exception as e:
-                    logger.exception(f"Detailed extraction failed: {e}")
-                    self.signals.playlist_info_label_visible.emit(False)
-                    self.signals.playlist_select_btn_visible.emit(False)
-                    # Use the error parser for other extraction errors too
-                    user_friendly_error = parse_yt_dlp_error(str(e))
-                    self.signals.update_status.emit(user_friendly_error)
-                    return
+            # Always use subprocess to call yt-dlp binary (Python package removed)
+            self._analyze_url_with_subprocess(url)
 
         except Exception as e:
             logger.exception(f"Error in analysis: {e}")
