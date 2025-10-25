@@ -30,6 +30,29 @@ def get_asset_path(asset_relative_path: str) -> Path:
     Returns:
         Path: Absolute path to the asset file
     """
+    # Check if running as a frozen executable (PyInstaller, cx_Freeze, etc.)
+    if getattr(sys, "frozen", False):
+        # Running as a frozen executable
+        # Try sys._MEIPASS first (PyInstaller)
+        if hasattr(sys, "_MEIPASS"):
+            asset_path = Path(sys._MEIPASS) / asset_relative_path
+            if asset_path.exists():
+                return asset_path
+        
+        # For cx_Freeze, assets are typically in lib/ directory next to the executable
+        executable_dir = Path(sys.executable).parent
+        
+        # Try with lib/ prefix (cx_Freeze standard structure)
+        asset_path = executable_dir / "lib" / asset_relative_path
+        if asset_path.exists():
+            return asset_path
+        
+        # Try directly in executable directory
+        asset_path = executable_dir / asset_relative_path
+        if asset_path.exists():
+            return asset_path
+    
+    # Not frozen - try importlib.resources for installed packages
     try:
         # Use importlib.resources (standard in Python 3.9+)
         import importlib.resources as resources
@@ -66,11 +89,9 @@ USER_HOME_DIR: Path = Path.home()
 if OS_NAME == "Windows":
     OS_FULL_NAME: str = f"{OS_NAME} {platform.release()}"
 
-    if IS_FROZEN:
-        APP_DIR: Path = Path(sys.executable).parent
-    else:
-        # APP_PATH will be from system environment path or fallback to Path.home()
-        APP_DIR: Path = Path(os.environ.get("LOCALAPPDATA", USER_HOME_DIR / "AppData" / "Local")) / "YTSage"
+    # Always use user data directory for app data, logs, config, and binaries
+    # Even when frozen, we don't want to create these folders next to the executable
+    APP_DIR: Path = Path(os.environ.get("LOCALAPPDATA", USER_HOME_DIR / "AppData" / "Local")) / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
     APP_LOG_DIR: Path = APP_DIR / "logs"
@@ -85,10 +106,9 @@ elif OS_NAME == "Darwin":  # macOS
     _mac_version = platform.mac_ver()[0]
     OS_FULL_NAME: str = f"macOS {_mac_version}" if _mac_version else "macOS"
 
-    if IS_FROZEN:
-        APP_DIR: Path = Path(sys.executable).parent
-    else:
-        APP_DIR: Path = USER_HOME_DIR / "Library" / "Application Support" / "YTSage"
+    # Always use user data directory for app data, logs, config, and binaries
+    # Even when frozen, we don't want to create these folders next to the executable
+    APP_DIR: Path = USER_HOME_DIR / "Library" / "Application Support" / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
     APP_LOG_DIR: Path = APP_DIR / "logs"
@@ -103,10 +123,9 @@ elif OS_NAME == "Darwin":  # macOS
 else:  # Linux and other UNIX-like
     OS_FULL_NAME: str = f"{OS_NAME} {platform.release()}"
 
-    if IS_FROZEN:
-        APP_DIR: Path = Path(sys.executable).parent
-    else:
-        APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
+    # Always use user data directory for app data, logs, config, and binaries
+    # Even when frozen, we don't want to create these folders next to the executable
+    APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
     APP_LOG_DIR: Path = APP_DIR / "logs"
