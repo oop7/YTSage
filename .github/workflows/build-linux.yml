@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  PYTHON_VERSION: '3.13.6'
+  PYTHON_VERSION: '3.13'
 
 jobs:
   build-linux:
@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
 
@@ -31,12 +31,12 @@ jobs:
         echo "VERSION=$version" >> "$GITHUB_OUTPUT"
 
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Cache Python dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           venv
@@ -122,7 +122,10 @@ jobs:
             ],
             include_files=[
                 ("src", "src"),
-                ("assets", "lib/assets"),
+                ("assets/branding/icons", "lib/assets/branding/icons"),
+                ("assets/Icon", "lib/assets/Icon"),
+                ("assets/sound", "lib/assets/sound"),
+                ("languages", "lib/languages"),
                 ("ytsage.desktop", "share/applications/ytsage.desktop"),
                 ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
             ],

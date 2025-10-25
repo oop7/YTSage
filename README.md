@@ -47,7 +47,7 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 | ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp Detection         |
 | 📋 Playlist Support              |  🖼️ Save thumbnail                       | ⚙️ Custom Commands                 |
 | 🖼️ Playlist Selector             | 🚀 Speed Limiter                        | 🍪 Login with Cookies              |
-| 📑 Embed Chapters                | ✂️ Trim Video Sections                   |                                    |
+| 📑 Embed Chapters                | ✂️ Trim Video Sections                  | 🌐 Proxy Support                   |
 
 </div>
 
@@ -214,6 +214,28 @@ python main.py
 - **Update yt-dlp:** Update yt-dlp
 - **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
+- **Proxy Support:** Use a proxy server for downloads (e.g., `http://<proxy-server>:<port>`)
+
+</details>
+
+<details>
+<summary>🌍 Localization</summary>
+
+YTSage supports **14 languages** for worldwide accessibility. Select your preferred language from **Custom Options → Language**.
+
+### Supported Languages
+
+| Language | Code | Language | Code |
+|----------|------|----------|------|
+| 🇺🇸 English | `en` | 🇪🇸 Spanish | `es` |
+| 🇸🇦 Arabic | `ar` | 🇫🇷 French | `fr` |
+| 🇩🇪 German | `de` | 🇮🇳 Hindi | `hi` |
+| 🇮🇩 Indonesian | `id` | 🇮🇹 Italian | `it` |
+| 🇯🇵 Japanese | `ja` | 🇵🇱 Polish | `pl` |
+| 🇧🇷 Portuguese | `pt` | 🇷🇺 Russian | `ru` |
+| 🇹🇷 Turkish | `tr` | 🇨🇳 Chinese | `zh` |
+
+> 💡 **Want to contribute a translation?** Check out the [Contributing](#contributing) section to help us add more languages!
 
 </details>
 
@@ -330,6 +352,21 @@ YTSage/
 │   │   └── icon.png
 │   └── 📁 sound/                 # Audio files
 │       └── notification.mp3
+├── 📁 languages/                 # Localization files
+│   ├── 📄 ar.json                # Arabic translation
+│   ├── 📄 de.json                # German translation
+│   ├── 📄 en.json                # English translation
+│   ├── 📄 es.json                # Spanish translation
+│   ├── 📄 fr.json                # French translation
+│   ├── 📄 hi.json                # Hindi translation
+│   ├── 📄 id.json                # Indonesian translation
+│   ├── 📄 it.json                # Italian translation
+│   ├── 📄 ja.json                # Japanese translation
+│   ├── 📄 pl.json                # Polish translation
+│   ├── 📄 pt.json                # Portuguese translation
+│   ├── 📄 ru.json                # Russian translation
+│   ├── 📄 tr.json                # Turkish translation
+│   └── 📄 zh.json                # Chinese translation
 ├── 📄 LICENSE                    # License file
 ├── 📄 main.py                    # Application entry point
 ├── 📄 README.md                  # Project documentation
@@ -340,7 +377,6 @@ YTSage/
     │   ├── 📄 __init__.py        # Core package init
     │   ├── 📄 ytsage_downloader.py # Download functionality
     │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
-    │   ├── 📄 ytsage_logging.py  # Logging utilities
     │   ├── 📄 ytsage_style.py    # UI styling
     │   ├── 📄 ytsage_utils.py    # Utility functions
     │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
@@ -359,7 +395,10 @@ YTSage/
     │       └── 📄 ytsage_dialogs_update.py    # Update dialogs
     └── 📁 utils/                 # Utility modules
         ├── 📄 __init__.py        # Utils package init
-        └── 📄 ytsage_constants.py # Application constants
+        ├── 📄 ytsage_config_manager.py # Configuration management
+        ├── 📄 ytsage_constants.py # Application constants
+        ├── 📄 ytsage_localization.py # Localization utilities
+        └── 📄 ytsage_logger.py   # Logging utilities
 ```
 
 </details>

@@ -30,6 +30,29 @@ def get_asset_path(asset_relative_path: str) -> Path:
     Returns:
         Path: Absolute path to the asset file
     """
+    # Check if running as a frozen executable (PyInstaller, cx_Freeze, etc.)
+    if getattr(sys, "frozen", False):
+        # Running as a frozen executable
+        # Try sys._MEIPASS first (PyInstaller)
+        if hasattr(sys, "_MEIPASS"):
+            asset_path = Path(sys._MEIPASS) / asset_relative_path
+            if asset_path.exists():
+                return asset_path
+        
+        # For cx_Freeze, assets are typically in lib/ directory next to the executable
+        executable_dir = Path(sys.executable).parent
+        
+        # Try with lib/ prefix (cx_Freeze standard structure)
+        asset_path = executable_dir / "lib" / asset_relative_path
+        if asset_path.exists():
+            return asset_path
+        
+        # Try directly in executable directory
+        asset_path = executable_dir / asset_relative_path
+        if asset_path.exists():
+            return asset_path
+    
+    # Not frozen - try importlib.resources for installed packages
     try:
         # Use importlib.resources (standard in Python 3.9+)
         import importlib.resources as resources
@@ -59,13 +82,15 @@ SOUND_PATH: Path = get_asset_path("assets/sound/notification.mp3")
 
 OS_NAME: str = platform.system()  # Windows ; Darwin ; Linux
 
+IS_FROZEN = getattr(sys, "frozen", False)
 USER_HOME_DIR: Path = Path.home()
 
 # OS Specific Constants
 if OS_NAME == "Windows":
     OS_FULL_NAME: str = f"{OS_NAME} {platform.release()}"
 
-    # APP_PATH will be from system environment path or fallback to Path.home()
+    # Always use user data directory for app data, logs, config, and binaries
+    # Even when frozen, we don't want to create these folders next to the executable
     APP_DIR: Path = Path(os.environ.get("LOCALAPPDATA", USER_HOME_DIR / "AppData" / "Local")) / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
@@ -74,9 +99,6 @@ if OS_NAME == "Windows":
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp.exe"
-    
-    # Documentation URLs
-    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = subprocess.CREATE_NO_WINDOW
 
@@ -84,6 +106,8 @@ elif OS_NAME == "Darwin":  # macOS
     _mac_version = platform.mac_ver()[0]
     OS_FULL_NAME: str = f"macOS {_mac_version}" if _mac_version else "macOS"
 
+    # Always use user data directory for app data, logs, config, and binaries
+    # Even when frozen, we don't want to create these folders next to the executable
     APP_DIR: Path = USER_HOME_DIR / "Library" / "Application Support" / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
@@ -92,9 +116,6 @@ elif OS_NAME == "Darwin":  # macOS
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp"
-    
-    # Documentation URLs
-    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = 0
 
@@ -102,6 +123,8 @@ elif OS_NAME == "Darwin":  # macOS
 else:  # Linux and other UNIX-like
     OS_FULL_NAME: str = f"{OS_NAME} {platform.release()}"
 
+    # Always use user data directory for app data, logs, config, and binaries
+    # Even when frozen, we don't want to create these folders next to the executable
     APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
@@ -110,12 +133,11 @@ else:  # Linux and other UNIX-like
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
     YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp"
-    
-    # Documentation URLs
-    YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
     SUBPROCESS_CREATIONFLAGS: int = 0
 
+# Documentation URLs
+YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
 # ffmpeg download links
 FFMPEG_7Z_DOWNLOAD_URL = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.7z"
@@ -124,6 +146,7 @@ FFMPEG_ZIP_DOWNLOAD_URL = "https://github.com/GyanD/codexffmpeg/releases/downloa
 
 if __name__ == "__main__":
     # If this file is run directly, print directory information; if imported, create the necessary directories for the application.
+    # for debug, to check os specific variable which can be different based on os.
     info = {
         "OS_NAME": OS_NAME,
         "OS_FULL_NAME": OS_FULL_NAME,
@@ -135,7 +158,6 @@ if __name__ == "__main__":
         "APP_CONFIG_FILE": str(APP_CONFIG_FILE),
         "YTDLP_DOWNLOAD_URL": YTDLP_DOWNLOAD_URL,
         "YTDLP_APP_BIN_PATH": YTDLP_APP_BIN_PATH,
-        "YTDLP_DOCS_URL": YTDLP_DOCS_URL,
         "SUBPROCESS_CREATIONFLAGS": SUBPROCESS_CREATIONFLAGS,
     }
     for key, value in info.items():

@@ -3,11 +3,13 @@ Settings-related dialogs for YTSage application.
 Contains dialogs for configuring download settings and auto-update preferences.
 """
 
+import threading
 import time
 from datetime import datetime
 
 import requests
-from PySide6.QtCore import Qt
+from packaging import version as version_parser
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QButtonGroup,
     QCheckBox,
@@ -25,19 +27,20 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from src.core.ytsage_logging import logger
 from src.core.ytsage_utils import (
     check_and_update_ytdlp_auto,
     get_auto_update_settings,
     get_ytdlp_version,
     update_auto_update_settings,
 )
+from src.utils.ytsage_logger import logger
+from src.utils.ytsage_localization import _
 
 
 class DownloadSettingsDialog(QDialog):
     def __init__(self, current_path, current_limit, current_unit_index, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Download Settings")
+        self.setWindowTitle(_("settings.title"))
         self.setMinimumWidth(450)
         self.setMinimumHeight(400)
         self.current_path = current_path
@@ -161,17 +164,18 @@ class DownloadSettingsDialog(QDialog):
         layout = QVBoxLayout(self)
 
         # --- Download Path Section ---
-        path_group_box = QGroupBox("Download Path")
+        path_group_box = QGroupBox(_("settings.download_path"))
         path_layout = QVBoxLayout()
 
-        self.path_display = QLabel(self.current_path)
+        self.path_display = QLabel(str(self.current_path))
         self.path_display.setWordWrap(True)
         self.path_display.setStyleSheet(
             "QLabel { color: #ffffff; padding: 5px; border: 1px solid #1b2021; border-radius: 4px; background-color: #1b2021; }"
         )
         path_layout.addWidget(self.path_display)
 
-        browse_button = QPushButton("Browse...")
+                
+        browse_button = QPushButton(_("settings.browse"))
         browse_button.clicked.connect(self.browse_new_path)
         path_layout.addWidget(browse_button)
 
@@ -179,11 +183,11 @@ class DownloadSettingsDialog(QDialog):
         layout.addWidget(path_group_box)
 
         # --- Speed Limit Section ---
-        speed_group_box = QGroupBox("Speed Limit")
+        speed_group_box = QGroupBox(_("settings.speed_limit"))
         speed_layout = QHBoxLayout()
 
         self.speed_limit_input = QLineEdit(str(self.current_limit))
-        self.speed_limit_input.setPlaceholderText("None")
+        self.speed_limit_input.setPlaceholderText(_("settings.speed_limit_placeholder"))
         speed_layout.addWidget(self.speed_limit_input)
 
         self.speed_limit_unit = QComboBox()
@@ -195,25 +199,25 @@ class DownloadSettingsDialog(QDialog):
         layout.addWidget(speed_group_box)
 
         # --- Auto-Update yt-dlp Section ---
-        auto_update_group_box = QGroupBox("Auto-Update yt-dlp")
+        auto_update_group_box = QGroupBox(_("settings.auto_update_ytdlp"))
         auto_update_layout = QVBoxLayout()
 
         # Load current auto-update settings
         auto_settings = get_auto_update_settings()
 
         # Enable/Disable auto-update checkbox
-        self.auto_update_enabled = QCheckBox("Enable automatic yt-dlp updates")
+        self.auto_update_enabled = QCheckBox(_("settings.enable_auto_updates"))
         self.auto_update_enabled.setChecked(auto_settings["enabled"])
         auto_update_layout.addWidget(self.auto_update_enabled)
 
         # Frequency options
-        frequency_label = QLabel("Update frequency:")
+        frequency_label = QLabel(_("settings.update_frequency"))
         frequency_label.setStyleSheet("color: #ffffff; margin-top: 10px;")
         auto_update_layout.addWidget(frequency_label)
 
-        self.startup_radio = QRadioButton("Check on every startup (minimum 1 hour between checks)")
-        self.daily_radio = QRadioButton("Check daily")
-        self.weekly_radio = QRadioButton("Check weekly")
+        self.startup_radio = QRadioButton(_("settings.check_startup"))
+        self.daily_radio = QRadioButton(_("settings.check_daily"))
+        self.weekly_radio = QRadioButton(_("settings.check_weekly"))
 
         # Set current selection based on saved settings
         current_frequency = auto_settings["frequency"]
@@ -230,7 +234,7 @@ class DownloadSettingsDialog(QDialog):
 
         # Test update button
         test_update_layout = QHBoxLayout()
-        test_update_button = QPushButton("Check for Updates Now")
+        test_update_button = QPushButton(_("settings.check_updates_now"))
         test_update_button.clicked.connect(self.test_update_check)
         test_update_layout.addWidget(test_update_button)
         test_update_layout.addStretch()
@@ -240,13 +244,15 @@ class DownloadSettingsDialog(QDialog):
         layout.addWidget(auto_update_group_box)
 
         # Dialog buttons (OK/Cancel)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox()
+        ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_button = button_box.addButton(_("buttons.cancel"), QDialogButtonBox.ButtonRole.RejectRole)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
 
     def browse_new_path(self) -> None:
-        new_path = QFileDialog.getExistingDirectory(self, "Select Download Directory", self.current_path)
+        new_path = QFileDialog.getExistingDirectory(self, _("dialogs.select_folder"), str(self.current_path))
         if new_path:
             self.current_path = new_path
             self.path_display.setText(self.current_path)
@@ -314,8 +320,8 @@ class DownloadSettingsDialog(QDialog):
             if "Error" in current_version:
                 msg_box = self._create_styled_message_box(
                     QMessageBox.Icon.Warning,
-                    "Update Check",
-                    "Could not determine current yt-dlp version.",
+                    _("settings.update_check_title"),
+                    _("settings.could_not_determine_version"),
                 )
                 msg_box.exec()
                 return
@@ -329,27 +335,25 @@ class DownloadSettingsDialog(QDialog):
             current_version = current_version.replace("_", ".")
             latest_version = latest_version.replace("_", ".")
 
-            from packaging import version as version_parser
-
             if version_parser.parse(latest_version) > version_parser.parse(current_version):
                 msg_box = self._create_styled_message_box(
                     QMessageBox.Icon.Information,
-                    "Update Check",
-                    f"Update available!\n\nCurrent: {current_version}\nLatest: {latest_version}\n\nUse the 'Update yt-dlp' button in the main window to update.",
+                    _("settings.update_check_title"),
+                    _("settings.update_available_dialog", current=current_version, latest=latest_version),
                 )
                 msg_box.exec()
             else:
                 msg_box = self._create_styled_message_box(
                     QMessageBox.Icon.Information,
-                    "Update Check",
-                    f"yt-dlp is up to date!\n\nCurrent version: {current_version}",
+                    _("settings.update_check_title"),
+                    _("settings.up_to_date_dialog", version=current_version),
                 )
                 msg_box.exec()
         except Exception as e:
             msg_box = self._create_styled_message_box(
                 QMessageBox.Icon.Warning,
-                "Update Check",
-                f"Error checking for updates: {str(e)}",
+                _("settings.update_check_title"),
+                _("settings.error_checking_updates", error=str(e)),
             )
             msg_box.exec()
 
@@ -375,13 +379,13 @@ class DownloadSettingsDialog(QDialog):
             if update_auto_update_settings(enabled, frequency):
                 QMessageBox.information(
                     self,
-                    "Settings Saved",
-                    "Auto-update settings have been saved successfully!",
+                    _("settings.settings_saved_title"),
+                    _("settings.settings_saved_message"),
                 )
             else:
-                QMessageBox.warning(self, "Error", "Failed to save auto-update settings.")
+                QMessageBox.warning(self, _("settings.error_title"), _("settings.failed_save_settings"))
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Error saving auto-update settings: {str(e)}")
+            QMessageBox.critical(self, _("settings.error_title"), _("settings.error_saving_settings", error=str(e)))
 
         # Call the parent accept method to close the dialog
         super().accept()
@@ -390,7 +394,7 @@ class DownloadSettingsDialog(QDialog):
 class AutoUpdateSettingsDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Auto-Update Settings")
+        self.setWindowTitle(_("settings.auto_update_title"))
         self.setMinimumWidth(400)
         self.setMinimumHeight(300)
 
@@ -406,32 +410,32 @@ class AutoUpdateSettingsDialog(QDialog):
         layout = QVBoxLayout(self)
 
         # Title
-        title_label = QLabel("<h2>🔄 Auto-Update Settings</h2>")
+        title_label = QLabel(f"<h2>{_("settings.auto_update_header")}</h2>")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
 
         # Description
-        desc_label = QLabel("Configure automatic updates for yt-dlp to ensure you always have the latest features and bug fixes.")
+        desc_label = QLabel(_("settings.auto_update_description"))
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         desc_label.setStyleSheet("color: #cccccc; margin: 10px; font-size: 11px;")
         layout.addWidget(desc_label)
 
         # Enable/Disable auto-update
-        self.enable_checkbox = QCheckBox("Enable automatic yt-dlp updates")
+        self.enable_checkbox = QCheckBox(_("settings.enable_auto_updates"))
         self.enable_checkbox.setChecked(True)  # Default enabled
         self.enable_checkbox.toggled.connect(self.on_enable_toggled)
         layout.addWidget(self.enable_checkbox)
 
         # Frequency options
-        frequency_group = QGroupBox("Update Frequency")
+        frequency_group = QGroupBox(_("settings.update_frequency_group"))
         frequency_layout = QVBoxLayout()
 
         self.frequency_group = QButtonGroup(self)
 
-        self.startup_radio = QRadioButton("Check on every startup (minimum 1 hour between checks)")
-        self.daily_radio = QRadioButton("Check daily")
-        self.weekly_radio = QRadioButton("Check weekly")
+        self.startup_radio = QRadioButton(_("settings.check_startup"))
+        self.daily_radio = QRadioButton(_("settings.check_daily"))
+        self.weekly_radio = QRadioButton(_("settings.check_weekly"))
 
         self.daily_radio.setChecked(True)  # Default to daily
 
@@ -447,12 +451,12 @@ class AutoUpdateSettingsDialog(QDialog):
         layout.addWidget(frequency_group)
 
         # Current status
-        status_group = QGroupBox("Current Status")
+        status_group = QGroupBox(_("settings.current_status"))
         status_layout = QVBoxLayout()
 
-        self.current_version_label = QLabel("Current yt-dlp version: Checking...")
-        self.last_check_label = QLabel("Last update check: Never")
-        self.next_check_label = QLabel("Next check: Based on settings")
+        self.current_version_label = QLabel(_("settings.current_version_label"))
+        self.last_check_label = QLabel(_("settings.last_check_label"))
+        self.next_check_label = QLabel(_("settings.next_check_label"))
 
         status_layout.addWidget(self.current_version_label)
         status_layout.addWidget(self.last_check_label)
@@ -462,17 +466,17 @@ class AutoUpdateSettingsDialog(QDialog):
         layout.addWidget(status_group)
 
         # Manual check button
-        self.manual_check_btn = QPushButton("🔍 Check for Updates Now")
+        self.manual_check_btn = QPushButton(_("settings.manual_check_button"))
         self.manual_check_btn.clicked.connect(self.manual_check)
         layout.addWidget(self.manual_check_btn)
 
         # Buttons
         button_layout = QHBoxLayout()
 
-        self.save_btn = QPushButton("Save Settings")
+        self.save_btn = QPushButton(_("settings.save_settings"))
         self.save_btn.clicked.connect(self.save_settings)
 
-        self.cancel_btn = QPushButton("Cancel")
+        self.cancel_btn = QPushButton(_("buttons.cancel"))
         self.cancel_btn.clicked.connect(self.reject)
 
         button_layout.addWidget(self.save_btn)
@@ -571,9 +575,9 @@ class AutoUpdateSettingsDialog(QDialog):
             last_check = settings["last_check"]
             if last_check > 0:
                 last_check_time = datetime.fromtimestamp(last_check).strftime("%Y-%m-%d %H:%M:%S")
-                self.last_check_label.setText(f"Last update check: {last_check_time}")
+                self.last_check_label.setText(_("auto_update.last_check", time=last_check_time))
             else:
-                self.last_check_label.setText("Last update check: Never")
+                self.last_check_label.setText(_("auto_update.last_check_never"))
 
             # Calculate next check time
             self.update_next_check_label()
@@ -582,13 +586,13 @@ class AutoUpdateSettingsDialog(QDialog):
             self.on_enable_toggled(settings["enabled"])
 
         except Exception as e:
-            logger.error(f"Error loading auto-update settings: {e}")
+            logger.exception(f"Error loading auto-update settings: {e}")
 
     def update_next_check_label(self) -> None:
         """Update the next check label based on current settings."""
         try:
             if not self.enable_checkbox.isChecked():
-                self.next_check_label.setText("Next check: Disabled")
+                self.next_check_label.setText(_("auto_update.next_check_disabled"))
                 return
 
             settings = get_auto_update_settings()
@@ -596,7 +600,7 @@ class AutoUpdateSettingsDialog(QDialog):
             frequency = self.get_selected_frequency()
 
             if last_check == 0:
-                self.next_check_label.setText("Next check: On next startup")
+                self.next_check_label.setText(_("auto_update.next_check_startup"))
                 return
 
             next_check_time = last_check
@@ -609,14 +613,14 @@ class AutoUpdateSettingsDialog(QDialog):
 
             current_time = time.time()
             if next_check_time <= current_time:
-                self.next_check_label.setText("Next check: Now (overdue)")
+                self.next_check_label.setText(_("auto_update.next_check_overdue"))
             else:
                 next_check_datetime = datetime.fromtimestamp(next_check_time)
-                self.next_check_label.setText(f"Next check: {next_check_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
+                self.next_check_label.setText(_("auto_update.next_check", time=next_check_datetime.strftime('%Y-%m-%d %H:%M:%S')))
 
         except Exception as e:
-            self.next_check_label.setText("Next check: Error calculating")
-            logger.error(f"Error calculating next check time: {e}")
+            self.next_check_label.setText(_("auto_update.next_check_error"))
+            logger.exception(f"Error calculating next check time: {e}")
 
     def on_enable_toggled(self, enabled) -> None:
         """Handle enable/disable checkbox toggle."""
@@ -638,7 +642,7 @@ class AutoUpdateSettingsDialog(QDialog):
     def manual_check(self) -> None:
         """Perform a manual update check."""
         self.manual_check_btn.setEnabled(False)
-        self.manual_check_btn.setText("🔄 Checking...")
+        self.manual_check_btn.setText(_("auto_update.checking"))
 
         # Force an immediate update check
         def check_in_thread() -> None:
@@ -646,16 +650,12 @@ class AutoUpdateSettingsDialog(QDialog):
                 result = check_and_update_ytdlp_auto()
 
                 # Update UI in main thread
-                from PySide6.QtCore import QTimer
-
                 QTimer.singleShot(0, lambda: self.manual_check_finished(result))
             except Exception as e:
-                logger.error(f"Error during manual check: {e}")
+                logger.exception(f"Error during manual check: {e}")
                 QTimer.singleShot(0, lambda: self.manual_check_finished(False))
 
         # Run in separate thread to avoid blocking UI
-        import threading
-
         threading.Thread(target=check_in_thread, daemon=True).start()
 
     def _create_styled_message_box(self, icon, title, text) -> QMessageBox:
@@ -696,7 +696,7 @@ class AutoUpdateSettingsDialog(QDialog):
     def manual_check_finished(self, success) -> None:
         """Handle completion of manual update check."""
         self.manual_check_btn.setEnabled(True)
-        self.manual_check_btn.setText("🔍 Check for Updates Now")
+        self.manual_check_btn.setText(_("auto_update.check_now"))
 
         if success:
             msg_box = self._create_styled_message_box(
@@ -725,19 +725,19 @@ class AutoUpdateSettingsDialog(QDialog):
             if update_auto_update_settings(enabled, frequency):
                 msg_box = self._create_styled_message_box(
                     QMessageBox.Icon.Information,
-                    "Settings Saved",
-                    "✅ Auto-update settings have been saved successfully!",
+                    _("settings.settings_saved_title"),
+                    _("settings.settings_saved_successfully"),
                 )
                 msg_box.exec()
                 self.accept()
             else:
                 msg_box = self._create_styled_message_box(
                     QMessageBox.Icon.Warning,
-                    "Error",
-                    "❌ Failed to save auto-update settings.\nPlease try again.",
+                    _("settings.error_title"),
+                    _("settings.failed_save_settings"),
                 )
                 msg_box.exec()
         except Exception as e:
-            logger.error(f"Error saving auto-update settings: {e}")
-            msg_box = self._create_styled_message_box(QMessageBox.Icon.Critical, "Error", f"❌ Error saving settings: {str(e)}")
+            logger.exception(f"Error saving auto-update settings: {e}")
+            msg_box = self._create_styled_message_box(QMessageBox.Icon.Critical, _("settings.error_title"), _("settings", "error_saving", error=str(e)))
             msg_box.exec()

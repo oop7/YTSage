@@ -3,6 +3,8 @@ Base dialogs for YTSage application.
 Contains basic utility dialogs like LogWindow and AboutDialog.
 """
 
+from datetime import datetime
+
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import (
     QDialog,
@@ -16,6 +18,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from src.utils.ytsage_localization import _
 
 from src.core.ytsage_ffmpeg import get_ffmpeg_path
 from src.core.ytsage_utils import _version_cache, check_ffmpeg, get_ffmpeg_version, get_ytdlp_version, refresh_version_cache
@@ -58,7 +62,7 @@ class AboutDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._parent = parent  # Store parent to access version etc.
-        self.setWindowTitle("About YTSage")
+        self.setWindowTitle(_("about.title"))
         self.setMinimumSize(460, 420)  # Slightly increased to accommodate paths
         self.resize(460, 440)  # Slightly increased initial size
         self.setMaximumSize(500, 480)  # Reasonable maximum size
@@ -155,13 +159,13 @@ class AboutDialog(QDialog):
         layout.addWidget(title_label)
 
         version_label = QLabel(
-            f"<span style='color: #cccccc; font-size: 13px; font-weight: normal;'>Version {getattr(self._parent, 'version', '4.8.3')}</span>"
+            f"<span style='color: #cccccc; font-size: 13px; font-weight: normal;'>{_('about.version', version=getattr(self._parent, 'version', '4.9.0b'))}</span>"
         )
         version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(version_label)
 
         # Description - more compact
-        description_label = QLabel("Modern YouTube downloader with a clean PySide6 interface.")
+        description_label = QLabel(_("about.description"))
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         description_label.setStyleSheet("color: #ffffff; font-size: 11px; margin: 6px 0;")
@@ -172,13 +176,13 @@ class AboutDialog(QDialog):
         info_layout.setSpacing(15)
 
         author_label = QLabel(
-            "By: <a href='https://github.com/oop7/' style='color: #c90000; text-decoration: none; font-size: 10px;'>oop7</a>"
+            f"{_('about.author', author='<a href=\'https://github.com/oop7/\' style=\'color: #c90000; text-decoration: none; font-size: 10px;\'>oop7</a>')}"
         )
         author_label.setOpenExternalLinks(True)
         info_layout.addWidget(author_label)
 
         repo_label = QLabel(
-            "GitHub: <a href='https://github.com/oop7/YTSage/' style='color: #c90000; text-decoration: none; font-size: 10px;'>YTSage</a>"
+            f"{_('about.github', repo='<a href=\'https://github.com/oop7/YTSage/\' style=\'color: #c90000; text-decoration: none; font-size: 10px;\'>YTSage</a>')}"
         )
         repo_label.setOpenExternalLinks(True)
         info_layout.addWidget(repo_label)
@@ -217,7 +221,7 @@ class AboutDialog(QDialog):
         header_layout.setContentsMargins(0, 0, 0, 5)
 
         # System Information title
-        title_label = QLabel("System Information")
+        title_label = QLabel(_("about.system_info"))
         title_label.setStyleSheet(
             """
             QLabel {
@@ -235,7 +239,7 @@ class AboutDialog(QDialog):
         header_layout.addStretch()
 
         # Create refresh button
-        self.refresh_btn = QPushButton("🔄")
+        self.refresh_btn = QPushButton(_("about.refresh"))
         self.refresh_btn.setFixedSize(16, 16)
         self.refresh_btn.setStyleSheet(
             """
@@ -281,7 +285,7 @@ class AboutDialog(QDialog):
 
     def _show_loading_message(self) -> None:
         """Show a compact loading message while system information is being gathered."""
-        loading_label = QLabel("🔄 Loading system information...")
+        loading_label = QLabel(_("about.loading"))
         loading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         loading_label.setStyleSheet(
             """
@@ -379,7 +383,7 @@ class AboutDialog(QDialog):
         # yt-dlp Status - compact version with path
         ytdlp_found = check_ytdlp_installed()
         ytdlp_status_text = (
-            "<span style='color: #4CAF50;'>✓ Detected</span>" if ytdlp_found else "<span style='color: #F44336;'>✗ Missing</span>"
+            f"<span style='color: #4CAF50;'>{_('about.detected')}</span>" if ytdlp_found else f"<span style='color: #F44336;'>{_('about.missing')}</span>"
         )
         ytdlp_version = get_ytdlp_version()
 
@@ -392,8 +396,6 @@ class AboutDialog(QDialog):
         last_check = ytdlp_cache.get("last_check", 0)
         cache_status = ""
         if last_check > 0:
-            from datetime import datetime
-
             cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
             cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
 
@@ -409,11 +411,11 @@ class AboutDialog(QDialog):
         # FFmpeg Status - compact version with path
         ffmpeg_found = check_ffmpeg()
         ffmpeg_status_text = (
-            "<span style='color: #4CAF50;'>✓ Detected</span>"
+            f"<span style='color: #4CAF50;'>{_('about.detected')}</span>"
             if ffmpeg_found
-            else "<span style='color: #F44336;'>✗ Missing</span>"
+            else f"<span style='color: #F44336;'>{_('about.missing')}</span>"
         )
-        ffmpeg_version = get_ffmpeg_version() if ffmpeg_found else "Not Available"
+        ffmpeg_version = get_ffmpeg_version() if ffmpeg_found else _('about.not_available')
 
         # Get FFmpeg path
         ffmpeg_path_text = None
@@ -426,8 +428,6 @@ class AboutDialog(QDialog):
         last_check = ffmpeg_cache.get("last_check", 0)
         cache_status = ""
         if last_check > 0 and ffmpeg_found:
-            from datetime import datetime
-
             cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
             cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
 
@@ -442,7 +442,7 @@ class AboutDialog(QDialog):
 
     def refresh_version_info(self) -> None:
         """Refresh version information manually."""
-        self.refresh_btn.setText("🔄 Refreshing...")
+        self.refresh_btn.setText(_('about.refreshing'))
         self.refresh_btn.setEnabled(False)
 
         # Perform refresh in a separate thread to avoid blocking UI
@@ -459,7 +459,7 @@ class AboutDialog(QDialog):
 
     def on_refresh_finished(self, success) -> None:
         """Handle refresh completion."""
-        self.refresh_btn.setText("🔄 Refresh")
+        self.refresh_btn.setText(_('about.refresh'))
         self.refresh_btn.setEnabled(True)
 
         if success:
@@ -468,8 +468,8 @@ class AboutDialog(QDialog):
             # Show error message with proper styling
             msg_box = QMessageBox(self)
             msg_box.setIcon(QMessageBox.Icon.Warning)
-            msg_box.setWindowTitle("Refresh Failed")
-            msg_box.setText("Failed to refresh version information.")
+            msg_box.setWindowTitle(_('about.refresh_failed'))
+            msg_box.setText(_('about.refresh_failed_message'))
             msg_box.setWindowIcon(self.windowIcon())
             msg_box.setStyleSheet(
                 """
