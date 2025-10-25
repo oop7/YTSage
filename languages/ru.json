@@ -80,7 +80,8 @@
     "update": "Обновить yt-dlp",
     "select_defaults": "Выбрать по умолчанию",
     "select_all": "Выбрать всё",
-    "deselect_all": "Снять выделение"
+    "deselect_all": "Снять выделение",
+    "open_folder": "Открыть расположение папки"
   },
   "dialogs": {
     "custom_options": "Пользовательские опции",

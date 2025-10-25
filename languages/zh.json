@@ -80,7 +80,8 @@
     "update": "更新 yt-dlp",
     "select_defaults": "选择默认值",
     "select_all": "全选",
-    "deselect_all": "取消全选"
+    "deselect_all": "取消全选",
+    "open_folder": "打开文件夹位置"
   },
   "dialogs": {
     "custom_options": "自定义选项",

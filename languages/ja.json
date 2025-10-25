@@ -80,7 +80,8 @@
     "update": "yt-dlpを更新",
     "select_defaults": "デフォルトを選択",
     "select_all": "すべて選択",
-    "deselect_all": "すべて解除"
+    "deselect_all": "すべて解除",
+    "open_folder": "フォルダの場所を開く"
   },
   "dialogs": {
     "custom_options": "カスタムオプション",

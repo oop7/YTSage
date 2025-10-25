@@ -80,7 +80,8 @@
     "update": "Update yt-dlp",
     "select_defaults": "Select Defaults",
     "select_all": "Select All",
-    "deselect_all": "Deselect All"
+    "deselect_all": "Deselect All",
+    "open_folder": "Open folder location"
   },
   "dialogs": {
     "custom_options": "Custom Options",

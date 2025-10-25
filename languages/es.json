@@ -47,7 +47,8 @@
     "download_settings": "Configuración de Descarga",
     "select_defaults": "Seleccionar Predeterminados",
     "select_all": "Seleccionar Todos",
-    "deselect_all": "Deseleccionar Todos"
+    "deselect_all": "Deseleccionar Todos",
+    "open_folder": "Abrir ubicación de carpeta"
   },
   "dialogs": {
     "custom_options": "Opciones Personalizadas",

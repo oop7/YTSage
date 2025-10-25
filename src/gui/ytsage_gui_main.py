@@ -645,6 +645,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         )
         progress_layout.addWidget(self.download_details_label)
 
+        # Create a horizontal layout for status label and open folder button
+        status_layout = QHBoxLayout()
+        
         self.status_label = QLabel(_("app.ready"))
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setStyleSheet(
@@ -656,7 +659,36 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             }
         """
         )
-        progress_layout.addWidget(self.status_label)
+        status_layout.addWidget(self.status_label)
+
+        # Add "Open Folder" button (initially hidden)
+        self.open_folder_btn = QPushButton("📁")
+        self.open_folder_btn.setToolTip(_("buttons.open_folder"))
+        self.open_folder_btn.setFixedSize(30, 30)
+        self.open_folder_btn.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #2a2d2e;
+                color: #cccccc;
+                border: 1px solid #404040;
+                border-radius: 5px;
+                font-size: 16px;
+                padding: 2px;
+            }
+            QPushButton:hover {
+                background-color: #3a3d3e;
+                border: 1px solid #505050;
+            }
+            QPushButton:pressed {
+                background-color: #1a1d1e;
+            }
+        """
+        )
+        self.open_folder_btn.clicked.connect(self.open_download_folder)
+        self.open_folder_btn.setVisible(False)  # Hidden by default
+        status_layout.addWidget(self.open_folder_btn)
+        
+        progress_layout.addLayout(status_layout)
 
         layout.addLayout(progress_layout)
 
@@ -970,6 +1002,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Show preparation message
         self.status_label.setText(_('download.preparing'))
         self.progress_bar.setValue(0)
+        self.open_folder_btn.setVisible(False)  # Hide the open folder button on new download
 
         # Get resolution for filename
         resolution = "default"
@@ -1081,9 +1114,60 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # Default case
             else:
                 self.status_label.setText(_('download.completed'))
+            
+            # Show the open folder button
+            self.open_folder_btn.setVisible(True)
 
         # Play notification sound when download completes
         self.play_notification_sound()
+
+    def open_download_folder(self) -> None:
+        """Open the folder containing the downloaded file and select it if possible"""
+        try:
+            if self.download_thread and self.download_thread.last_file_path:
+                file_path = Path(self.download_thread.last_file_path)
+                
+                if file_path.exists():
+                    # On Windows, use explorer with /select to highlight the file
+                    if subprocess.sys.platform == "win32":
+                        subprocess.run(['explorer', '/select,', str(file_path)], creationflags=SUBPROCESS_CREATIONFLAGS)
+                    # On macOS, use open with -R to reveal in Finder
+                    elif subprocess.sys.platform == "darwin":
+                        subprocess.run(['open', '-R', str(file_path)])
+                    # On Linux, try to open the folder (file selection not widely supported)
+                    else:
+                        folder_path = file_path.parent
+                        subprocess.run(['xdg-open', str(folder_path)])
+                    
+                    logger.info(f"Opened folder for: {file_path}")
+                else:
+                    # If file doesn't exist, just open the download folder
+                    folder_path = Path(self.last_path)
+                    if folder_path.exists():
+                        if subprocess.sys.platform == "win32":
+                            subprocess.run(['explorer', str(folder_path)], creationflags=SUBPROCESS_CREATIONFLAGS)
+                        elif subprocess.sys.platform == "darwin":
+                            subprocess.run(['open', str(folder_path)])
+                        else:
+                            subprocess.run(['xdg-open', str(folder_path)])
+                    else:
+                        logger.warning(f"Download folder does not exist: {folder_path}")
+            else:
+                # Fallback to opening the general download folder
+                folder_path = Path(self.last_path)
+                if folder_path.exists():
+                    if subprocess.sys.platform == "win32":
+                        subprocess.run(['explorer', str(folder_path)], creationflags=SUBPROCESS_CREATIONFLAGS)
+                    elif subprocess.sys.platform == "darwin":
+                        subprocess.run(['open', str(folder_path)])
+                    else:
+                        subprocess.run(['xdg-open', str(folder_path)])
+                else:
+                    logger.warning(f"Download folder does not exist: {folder_path}")
+                    
+        except Exception as e:
+            logger.exception(f"Error opening download folder: {e}")
+            QMessageBox.warning(self, "Error", f"Could not open folder: {str(e)}")
 
     def download_error(self, error_message) -> None:
         self.toggle_download_controls(True)

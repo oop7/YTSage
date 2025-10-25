@@ -80,7 +80,8 @@
     "update": "yt-dlp'yi güncelle",
     "select_defaults": "Varsayılanları seç",
     "select_all": "Tümünü seç",
-    "deselect_all": "Tüm seçimi kaldır"
+    "deselect_all": "Tüm seçimi kaldır",
+    "open_folder": "Klasör konumunu aç"
   },
   "dialogs": {
     "custom_options": "Özel seçenekler",

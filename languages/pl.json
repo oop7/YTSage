@@ -80,7 +80,8 @@
     "update": "Zaktualizuj yt-dlp",
     "select_defaults": "Wybierz domyślne",
     "select_all": "Zaznacz wszystko",
-    "deselect_all": "Odznacz wszystko"
+    "deselect_all": "Odznacz wszystko",
+    "open_folder": "Otwórz lokalizację folderu"
   },
   "dialogs": {
     "custom_options": "Opcje niestandardowe",

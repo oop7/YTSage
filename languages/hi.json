@@ -80,7 +80,8 @@
     "update": "yt-dlp अपडेट करें",
     "select_defaults": "डिफ़ॉल्ट चुनें",
     "select_all": "सभी चुनें",
-    "deselect_all": "सभी को अचयनित करें"
+    "deselect_all": "सभी को अचयनित करें",
+    "open_folder": "फ़ोल्डर स्थान खोलें"
   },
   "dialogs": {
     "custom_options": "कस्टम विकल्प",

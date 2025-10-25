@@ -80,7 +80,8 @@
     "update": "Aggiorna yt-dlp",
     "select_defaults": "Seleziona predefiniti",
     "select_all": "Seleziona tutto",
-    "deselect_all": "Deseleziona tutto"
+    "deselect_all": "Deseleziona tutto",
+    "open_folder": "Apri posizione cartella"
   },
   "dialogs": {
     "custom_options": "Opzioni personalizzate",

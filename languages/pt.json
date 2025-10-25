@@ -80,7 +80,8 @@
     "update": "Atualizar yt-dlp",
     "select_defaults": "Selecionar Padrões",
     "select_all": "Selecionar Tudo",
-    "deselect_all": "Desmarcar Tudo"
+    "deselect_all": "Desmarcar Tudo",
+    "open_folder": "Abrir local da pasta"
   },
   "dialogs": {
     "custom_options": "Opções Personalizadas",

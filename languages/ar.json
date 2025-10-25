@@ -80,7 +80,8 @@
     "update": "تحديث yt-dlp",
     "select_defaults": "اختر الافتراضي",
     "select_all": "تحديد الكل",
-    "deselect_all": "إلغاء تحديد الكل"
+    "deselect_all": "إلغاء تحديد الكل",
+    "open_folder": "فتح موقع المجلد"
   },
   "dialogs": {
     "custom_options": "خيارات مخصصة",

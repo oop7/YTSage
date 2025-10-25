@@ -80,7 +80,8 @@
     "update": "Perbarui yt-dlp",
     "select_defaults": "Pilih default",
     "select_all": "Pilih semua",
-    "deselect_all": "Batalkan pilihan semua"
+    "deselect_all": "Batalkan pilihan semua",
+    "open_folder": "Buka lokasi folder"
   },
   "dialogs": {
     "custom_options": "Opsi khusus",

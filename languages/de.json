@@ -80,7 +80,8 @@
     "update": "yt-dlp aktualisieren",
     "select_defaults": "Standard auswählen",
     "select_all": "Alle auswählen",
-    "deselect_all": "Alle abwählen"
+    "deselect_all": "Alle abwählen",
+    "open_folder": "Ordnerspeicherort öffnen"
   },
   "dialogs": {
     "custom_options": "Benutzerdefinierte Optionen",

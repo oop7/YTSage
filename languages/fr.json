@@ -80,7 +80,8 @@
     "update": "Mettre à jour yt-dlp",
     "select_defaults": "Sélectionner par défaut",
     "select_all": "Tout sélectionner",
-    "deselect_all": "Tout désélectionner"
+    "deselect_all": "Tout désélectionner",
+    "open_folder": "Ouvrir l'emplacement du dossier"
   },
   "dialogs": {
     "custom_options": "Options personnalisées",
