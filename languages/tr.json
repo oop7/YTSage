@@ -398,5 +398,27 @@
     "next_check_error": "Sonraki kontrol: Hesaplama hatası",
     "checking": "🔄 Kontrol ediliyor...",
     "check_now": "🔍 Şimdi güncellemeleri kontrol et"
+  },
+  "url_validation": {
+    "empty_url": "URL boş olamaz",
+    "invalid_format": "Geçersiz URL formatı",
+    "invalid_scheme": "URL http:// veya https:// ile başlamalıdır",
+    "missing_domain": "Geçersiz URL: alan adı eksik",
+    "unsupported_platform": "YTSage yalnızca YouTube ve YouTube Music URL'lerini destekler.\n'{domain}' alan adı desteklenmiyor.",
+    "invalid_youtu_be": "Geçersiz youtu.be URL'si: video ID'si eksik"
+  },
+  "ytdlp_errors": {
+    "private_video": "Bu özel bir video. Çerezleri kullanarak hesabınıza giriş yaparak indirebilirsiniz.\nKimlik doğrulamak için 'Özel Seçenekler' → 'Çerezlerle Giriş' → 'Tarayıcıdan çerezleri çıkar' bölümüne gidin.",
+    "age_restricted": "Bu video yaş kısıtlamalı. Erişmek için giriş yapmanız gerekiyor.\nHesabınızla kimlik doğrulamak için 'Özel Seçenekler' → 'Çerezlerle Giriş' kullanın.",
+    "geo_blocked": "Bu video bölgenizde kullanılamıyor (coğrafi engel).\nBir VPN kullanmanız gerekebilir veya video ülkenizde kısıtlanmış olabilir.",
+    "video_unavailable": "Bu video kaldırıldı veya artık kullanılamıyor.\nVideo, yükleyici tarafından silinmiş veya politika ihlalleri nedeniyle kaldırılmış olabilir.",
+    "live_stream": "Bu, aktifken indirilemeyen canlı bir yayındır.\nYayın bitene kadar bekleyin, ardından arşivlenmiş sürümü indirmeyi deneyin.",
+    "playlist_error": "Bu oynatma listesine erişilemiyor. Özel, silinmiş veya boş olabilir.\nOynatma listesinin var olduğunu ve herkese açık olduğunu kontrol edin.",
+    "network_error": "Ağ bağlantı hatası. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.\nSorun devam ederse, video sunucusu geçici olarak kullanılamıyor olabilir.",
+    "invalid_url": "Geçersiz veya desteklenmeyen URL. Lütfen bağlantıyı kontrol edin ve tekrar deneyin.\nGeçerli bir YouTube, Vimeo veya desteklenen başka bir platform URL'si kullandığınızdan emin olun.",
+    "premium_content": "Bu içerik YouTube Premium veya kanal üyeliği gerektirir.\nBu içeriğe erişimi olan bir hesapla giriş yapmanız gerekiyor.",
+    "copyright_blocked": "Bu video telif hakkı iddiaları nedeniyle engellenmiş.\nİçerik sahibi bu videoya erişimi kısıtlamış.",
+    "extraction_failed": "Video bilgileri çıkarılamadı. Bu geçici bir sorun olabilir.\nLütfen birkaç dakika içinde tekrar deneyin veya video bağlantısının doğru olup olmadığını kontrol edin.",
+    "generic_error": "Video bilgileri çıkarılamadı. Lütfen bağlantınızı kontrol edin.\nTeknik ayrıntılar: {error}"
   }
 }

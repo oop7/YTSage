@@ -398,5 +398,27 @@
     "next_check_error": "Próxima verificação: Erro ao calcular",
     "checking": "🔄 Verificando...",
     "check_now": "🔍 Verificar atualizações agora"
+  },
+  "url_validation": {
+    "empty_url": "O URL não pode estar vazio",
+    "invalid_format": "Formato de URL inválido",
+    "invalid_scheme": "O URL deve começar com http:// ou https://",
+    "missing_domain": "URL inválido: nome de domínio ausente",
+    "unsupported_platform": "YTSage suporta apenas URLs do YouTube e YouTube Music.\nO domínio '{domain}' não é suportado.",
+    "invalid_youtu_be": "URL youtu.be inválido: ID do vídeo ausente"
+  },
+  "ytdlp_errors": {
+    "private_video": "Este é um vídeo privado. Você pode baixá-lo fazendo login em sua conta usando cookies.\nVá para 'Opções Personalizadas' → 'Login com Cookies' → 'Extrair cookies do navegador' para autenticar.",
+    "age_restricted": "Este vídeo tem restrição de idade. Você precisa estar conectado para acessá-lo.\nUse 'Opções Personalizadas' → 'Login com Cookies' para autenticar com sua conta.",
+    "geo_blocked": "Este vídeo não está disponível em sua região (geo-bloqueado).\nVocê pode precisar usar uma VPN ou o vídeo pode estar restrito em seu país.",
+    "video_unavailable": "Este vídeo foi removido ou não está mais disponível.\nO vídeo pode ter sido excluído pelo uploader ou removido devido a violações de políticas.",
+    "live_stream": "Esta é uma transmissão ao vivo que não pode ser baixada enquanto está ativa.\nAguarde o término da transmissão e tente baixar a versão arquivada.",
+    "playlist_error": "Não é possível acessar esta playlist. Ela pode ser privada, excluída ou vazia.\nVerifique se a playlist existe e está acessível publicamente.",
+    "network_error": "Erro de conexão de rede. Verifique sua conexão com a internet e tente novamente.\nSe o problema persistir, o servidor de vídeo pode estar temporariamente indisponível.",
+    "invalid_url": "URL inválido ou não suportado. Verifique o link e tente novamente.\nCertifique-se de usar um URL válido do YouTube, Vimeo ou outra plataforma suportada.",
+    "premium_content": "Este conteúdo requer YouTube Premium ou associação ao canal.\nVocê precisa fazer login com uma conta que tenha acesso a este conteúdo.",
+    "copyright_blocked": "Este vídeo está bloqueado devido a reivindicações de direitos autorais.\nO proprietário do conteúdo restringiu o acesso a este vídeo.",
+    "extraction_failed": "Falha ao extrair informações do vídeo. Isso pode ser um problema temporário.\nTente novamente em alguns minutos ou verifique se o link do vídeo está correto.",
+    "generic_error": "Não foi possível extrair informações do vídeo. Verifique seu link.\nDetalhes técnicos: {error}"
   }
 }

@@ -398,5 +398,27 @@
     "next_check_error": "Pemeriksaan berikutnya: Kesalahan perhitungan",
     "checking": "🔄 Memeriksa...",
     "check_now": "🔍 Periksa pembaruan sekarang"
+  },
+  "url_validation": {
+    "empty_url": "URL tidak boleh kosong",
+    "invalid_format": "Format URL tidak valid",
+    "invalid_scheme": "URL harus dimulai dengan http:// atau https://",
+    "missing_domain": "URL tidak valid: nama domain hilang",
+    "unsupported_platform": "YTSage hanya mendukung URL YouTube dan YouTube Music.\nDomain '{domain}' tidak didukung.",
+    "invalid_youtu_be": "URL youtu.be tidak valid: ID video hilang"
+  },
+  "ytdlp_errors": {
+    "private_video": "Ini adalah video privat. Anda dapat mengunduhnya dengan masuk ke akun Anda menggunakan cookie.\nBuka 'Opsi Kustom' → 'Masuk dengan Cookie' → 'Ekstrak cookie dari browser' untuk autentikasi.",
+    "age_restricted": "Video ini dibatasi usia. Anda perlu masuk untuk mengaksesnya.\nGunakan 'Opsi Kustom' → 'Masuk dengan Cookie' untuk autentikasi dengan akun Anda.",
+    "geo_blocked": "Video ini tidak tersedia di wilayah Anda (diblokir geografis).\nAnda mungkin perlu menggunakan VPN atau video mungkin dibatasi di negara Anda.",
+    "video_unavailable": "Video ini telah dihapus atau tidak lagi tersedia.\nVideo mungkin telah dihapus oleh pengunggah atau dihapus karena pelanggaran kebijakan.",
+    "live_stream": "Ini adalah siaran langsung yang tidak dapat diunduh saat aktif.\nTunggu hingga siaran berakhir, lalu coba unduh versi arsip.",
+    "playlist_error": "Tidak dapat mengakses playlist ini. Mungkin privat, dihapus, atau kosong.\nPeriksa apakah playlist ada dan dapat diakses publik.",
+    "network_error": "Kesalahan koneksi jaringan. Silakan periksa koneksi internet Anda dan coba lagi.\nJika masalah berlanjut, server video mungkin tidak tersedia sementara.",
+    "invalid_url": "URL tidak valid atau tidak didukung. Silakan periksa tautan dan coba lagi.\nPastikan Anda menggunakan URL YouTube, Vimeo, atau platform didukung lainnya yang valid.",
+    "premium_content": "Konten ini memerlukan YouTube Premium atau keanggotaan channel.\nAnda perlu masuk dengan akun yang memiliki akses ke konten ini.",
+    "copyright_blocked": "Video ini diblokir karena klaim hak cipta.\nPemilik konten telah membatasi akses ke video ini.",
+    "extraction_failed": "Gagal mengekstrak informasi video. Ini mungkin masalah sementara.\nSilakan coba lagi dalam beberapa menit, atau periksa apakah tautan video benar.",
+    "generic_error": "Tidak dapat mengekstrak informasi video. Silakan periksa tautan Anda.\nDetail teknis: {error}"
   }
 }

@@ -398,5 +398,27 @@
     "next_check_error": "Next check: Error calculating",
     "checking": "🔄 Checking...",
     "check_now": "🔍 Check for Updates Now"
+  },
+  "url_validation": {
+    "empty_url": "URL cannot be empty",
+    "invalid_format": "Invalid URL format",
+    "invalid_scheme": "URL must start with http:// or https://",
+    "missing_domain": "Invalid URL: missing domain name",
+    "unsupported_platform": "YTSage only supports YouTube and YouTube Music URLs.\nThe domain '{domain}' is not supported.",
+    "invalid_youtu_be": "Invalid youtu.be URL: missing video ID"
+  },
+  "ytdlp_errors": {
+    "private_video": "This is a private video. You can download it by logging into your account using cookies.\nGo to 'Custom Options' → 'Login with Cookies' → 'Extract cookies from browser' to authenticate.",
+    "age_restricted": "This video is age-restricted. You need to be logged in to access it.\nUse 'Custom Options' → 'Login with Cookies' to authenticate with your account.",
+    "geo_blocked": "This video is not available in your region (geo-blocked).\nYou may need to use a VPN or the video might be restricted in your country.",
+    "video_unavailable": "This video has been removed or is no longer available.\nThe video may have been deleted by the uploader or removed due to policy violations.",
+    "live_stream": "This is a live stream that cannot be downloaded while active.\nWait for the stream to end, then try downloading the archived version.",
+    "playlist_error": "Unable to access this playlist. It may be private, deleted, or empty.\nCheck if the playlist exists and is publicly accessible.",
+    "network_error": "Network connection error. Please check your internet connection and try again.\nIf the problem persists, the video server might be temporarily unavailable.",
+    "invalid_url": "Invalid or unsupported URL. Please check the link and try again.\nMake sure you're using a valid YouTube, Vimeo, or other supported platform URL.",
+    "premium_content": "This content requires YouTube Premium or channel membership.\nYou need to be logged in with an account that has access to this content.",
+    "copyright_blocked": "This video is blocked due to copyright claims.\nThe content owner has restricted access to this video.",
+    "extraction_failed": "Failed to extract video information. This might be a temporary issue.\nPlease try again in a few minutes, or check if the video link is correct.",
+    "generic_error": "Could not extract video information. Please check your link.\nTechnical details: {error}"
   }
 }

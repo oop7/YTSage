@@ -398,5 +398,27 @@
     "next_check_error": "Prochaine vérification : Erreur de calcul",
     "checking": "🔄 Vérification...",
     "check_now": "🔍 Vérifier les mises à jour maintenant"
+  },
+  "url_validation": {
+    "empty_url": "L'URL ne peut pas être vide",
+    "invalid_format": "Format d'URL invalide",
+    "invalid_scheme": "L'URL doit commencer par http:// ou https://",
+    "missing_domain": "URL invalide : nom de domaine manquant",
+    "unsupported_platform": "YTSage ne prend en charge que les URLs YouTube et YouTube Music.\nLe domaine '{domain}' n'est pas pris en charge.",
+    "invalid_youtu_be": "URL youtu.be invalide : ID de vidéo manquant"
+  },
+  "ytdlp_errors": {
+    "private_video": "Ceci est une vidéo privée. Vous pouvez la télécharger en vous connectant à votre compte avec des cookies.\nAllez dans 'Options Personnalisées' → 'Se connecter avec des Cookies' → 'Extraire les cookies du navigateur' pour vous authentifier.",
+    "age_restricted": "Cette vidéo est soumise à une restriction d'âge. Vous devez être connecté pour y accéder.\nUtilisez 'Options Personnalisées' → 'Se connecter avec des Cookies' pour vous authentifier avec votre compte.",
+    "geo_blocked": "Cette vidéo n'est pas disponible dans votre région (géo-bloquée).\nVous pourriez avoir besoin d'utiliser un VPN ou la vidéo pourrait être restreinte dans votre pays.",
+    "video_unavailable": "Cette vidéo a été supprimée ou n'est plus disponible.\nLa vidéo a peut-être été supprimée par l'uploader ou retirée en raison de violations de politique.",
+    "live_stream": "Ceci est un flux en direct qui ne peut pas être téléchargé pendant qu'il est actif.\nAttendez la fin du flux, puis essayez de télécharger la version archivée.",
+    "playlist_error": "Impossible d'accéder à cette playlist. Elle peut être privée, supprimée ou vide.\nVérifiez si la playlist existe et est accessible publiquement.",
+    "network_error": "Erreur de connexion réseau. Veuillez vérifier votre connexion Internet et réessayer.\nSi le problème persiste, le serveur vidéo pourrait être temporairement indisponible.",
+    "invalid_url": "URL invalide ou non prise en charge. Veuillez vérifier le lien et réessayer.\nAssurez-vous d'utiliser une URL YouTube, Vimeo ou autre plateforme prise en charge valide.",
+    "premium_content": "Ce contenu nécessite YouTube Premium ou l'adhésion à la chaîne.\nVous devez être connecté avec un compte ayant accès à ce contenu.",
+    "copyright_blocked": "Cette vidéo est bloquée en raison de réclamations pour droits d'auteur.\nLe propriétaire du contenu a restreint l'accès à cette vidéo.",
+    "extraction_failed": "Échec de l'extraction des informations vidéo. Cela pourrait être un problème temporaire.\nVeuillez réessayer dans quelques minutes ou vérifier si le lien vidéo est correct.",
+    "generic_error": "Impossible d'extraire les informations vidéo. Veuillez vérifier votre lien.\nDétails techniques : {error}"
   }
 }

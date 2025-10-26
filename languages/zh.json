@@ -398,5 +398,27 @@
     "next_check_error": "下次检查: 计算错误",
     "checking": "🔄 检查中...",
     "check_now": "🔍 立即检查更新"
+  },
+  "url_validation": {
+    "empty_url": "URL不能为空",
+    "invalid_format": "无效的URL格式",
+    "invalid_scheme": "URL必须以http://或https://开头",
+    "missing_domain": "无效的URL：缺少域名",
+    "unsupported_platform": "YTSage仅支持YouTube和YouTube Music的URL。\n不支持域名'{domain}'。",
+    "invalid_youtu_be": "无效的youtu.be URL：缺少视频ID"
+  },
+  "ytdlp_errors": {
+    "private_video": "这是一个私人视频。您可以通过使用Cookie登录您的账户来下载它。\n转到【自定义选项】→【使用Cookie登录】→【从浏览器提取Cookie】进行身份验证。",
+    "age_restricted": "此视频有年龄限制。您需要登录才能访问它。\n使用【自定义选项】→【使用Cookie登录】以使用您的账户进行身份验证。",
+    "geo_blocked": "此视频在您所在的地区不可用（地理封锁）。\n您可能需要使用VPN，或者该视频在您的国家受到限制。",
+    "video_unavailable": "此视频已被删除或不再可用。\n该视频可能已被上传者删除或因违反政策而被删除。",
+    "live_stream": "这是一个在活动时无法下载的直播。\n等待直播结束，然后尝试下载存档版本。",
+    "playlist_error": "无法访问此播放列表。它可能是私有的、已删除或为空。\n检查播放列表是否存在并且可以公开访问。",
+    "network_error": "网络连接错误。请检查您的互联网连接并重试。\n如果问题仍然存在，视频服务器可能暂时不可用。",
+    "invalid_url": "无效或不支持的URL。请检查链接并重试。\n确保您使用的是有效的YouTube、Vimeo或其他支持的平台URL。",
+    "premium_content": "此内容需要YouTube Premium或频道会员资格。\n您需要使用有权访问此内容的账户登录。",
+    "copyright_blocked": "由于版权声明，此视频已被封锁。\n内容所有者已限制对此视频的访问。",
+    "extraction_failed": "提取视频信息失败。这可能是一个临时问题。\n请在几分钟后重试，或检查视频链接是否正确。",
+    "generic_error": "无法提取视频信息。请检查您的链接。\n技术详情：{error}"
   }
 }

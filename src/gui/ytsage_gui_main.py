@@ -29,7 +29,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
-from src.core.ytsage_utils import check_ffmpeg, load_saved_path, parse_yt_dlp_error, save_path, should_check_for_auto_update
+from src.core.ytsage_utils import check_ffmpeg, load_saved_path, parse_yt_dlp_error, save_path, should_check_for_auto_update, validate_video_url
 from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     AboutDialog,
@@ -707,6 +707,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         if not url:
             self.signals.update_status.emit(_("main_ui.invalid_url_or_enter"))
             return
+        
+        # Validate URL before processing
+        is_valid, error_message = validate_video_url(url)
+        if not is_valid:
+            self.signals.update_status.emit(error_message)
+            return
 
         self.signals.update_status.emit(_("main_ui.analyzing_preparing"))
         threading.Thread(target=self._analyze_url_thread, args=(url,), daemon=True).start()
@@ -788,6 +794,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 self.status_label.setText(_('download.please_enter_url_and_path'))
             return
         # --- End Path Change ---
+        
+        # Validate URL before starting download
+        is_valid, error_message = validate_video_url(url)
+        if not is_valid:
+            self.status_label.setText(error_message)
+            return
 
         # Get selected format
         format_id = self.get_selected_format()

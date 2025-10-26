@@ -398,5 +398,27 @@
     "next_check_error": "Następne sprawdzenie: Błąd obliczania",
     "checking": "🔄 Sprawdzanie...",
     "check_now": "🔍 Sprawdź aktualizacje teraz"
+  },
+  "url_validation": {
+    "empty_url": "URL nie może być pusty",
+    "invalid_format": "Nieprawidłowy format URL",
+    "invalid_scheme": "URL musi zaczynać się od http:// lub https://",
+    "missing_domain": "Nieprawidłowy URL: brak nazwy domeny",
+    "unsupported_platform": "YTSage obsługuje tylko adresy URL YouTube i YouTube Music.\nDomena '{domain}' nie jest obsługiwana.",
+    "invalid_youtu_be": "Nieprawidłowy URL youtu.be: brak ID wideo"
+  },
+  "ytdlp_errors": {
+    "private_video": "To jest prywatny film. Możesz go pobrać, logując się na swoje konto za pomocą plików cookie.\nPrzejdź do 'Opcje Niestandardowe' → 'Zaloguj się z plikami cookie' → 'Wyodrębnij pliki cookie z przeglądarki', aby się uwierzytelnić.",
+    "age_restricted": "Ten film ma ograniczenie wiekowe. Musisz się zalogować, aby uzyskać do niego dostęp.\nUżyj 'Opcje Niestandardowe' → 'Zaloguj się z plikami cookie', aby uwierzytelnić się swoim kontem.",
+    "geo_blocked": "Ten film nie jest dostępny w Twoim regionie (geoblokada).\nMożesz potrzebować VPN lub film może być ograniczony w Twoim kraju.",
+    "video_unavailable": "Ten film został usunięty lub nie jest już dostępny.\nFilm mógł zostać usunięty przez osobę przesyłającą lub usunięty z powodu naruszenia zasad.",
+    "live_stream": "To jest transmisja na żywo, której nie można pobrać, gdy jest aktywna.\nPoczekaj, aż transmisja się zakończy, a następnie spróbuj pobrać zarchiwizowaną wersję.",
+    "playlist_error": "Nie można uzyskać dostępu do tej playlisty. Może być prywatna, usunięta lub pusta.\nSprawdź, czy playlista istnieje i jest publicznie dostępna.",
+    "network_error": "Błąd połączenia sieciowego. Sprawdź swoje połączenie internetowe i spróbuj ponownie.\nJeśli problem będzie się utrzymywał, serwer wideo może być tymczasowo niedostępny.",
+    "invalid_url": "Nieprawidłowy lub nieobsługiwany URL. Sprawdź link i spróbuj ponownie.\nUpewnij się, że używasz prawidłowego adresu URL YouTube, Vimeo lub innej obsługiwanej platformy.",
+    "premium_content": "Ta treść wymaga YouTube Premium lub członkostwa w kanale.\nMusisz zalogować się na konto, które ma dostęp do tej treści.",
+    "copyright_blocked": "Ten film jest zablokowany z powodu roszczeń dotyczących praw autorskich.\nWłaściciel treści ograniczył dostęp do tego filmu.",
+    "extraction_failed": "Nie udało się wyodrębnić informacji o filmie. To może być tymczasowy problem.\nSpróbuj ponownie za kilka minut lub sprawdź, czy link do filmu jest poprawny.",
+    "generic_error": "Nie udało się wyodrębnić informacji o filmie. Sprawdź swój link.\nSzczegóły techniczne: {error}"
   }
 }

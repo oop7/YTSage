@@ -381,5 +381,27 @@
     "next_check_error": "Próxima verificación: Error al calcular",
     "checking": "🔄 Verificando...",
     "check_now": "🔍 Verificar actualizaciones ahora"
+  },
+  "url_validation": {
+    "empty_url": "La URL no puede estar vacía",
+    "invalid_format": "Formato de URL no válido",
+    "invalid_scheme": "La URL debe comenzar con http:// o https://",
+    "missing_domain": "URL no válida: falta el nombre de dominio",
+    "unsupported_platform": "YTSage solo admite URLs de YouTube y YouTube Music.\nEl dominio '{domain}' no es compatible.",
+    "invalid_youtu_be": "URL de youtu.be no válida: falta el ID del video"
+  },
+  "ytdlp_errors": {
+    "private_video": "Este es un video privado. Puede descargarlo iniciando sesión en su cuenta usando cookies.\nVaya a 'Opciones Personalizadas' → 'Iniciar sesión con Cookies' → 'Extraer cookies del navegador' para autenticarse.",
+    "age_restricted": "Este video tiene restricción de edad. Debe iniciar sesión para acceder a él.\nUse 'Opciones Personalizadas' → 'Iniciar sesión con Cookies' para autenticarse con su cuenta.",
+    "geo_blocked": "Este video no está disponible en su región (bloqueado geográficamente).\nPuede necesitar usar una VPN o el video puede estar restringido en su país.",
+    "video_unavailable": "Este video ha sido eliminado o ya no está disponible.\nEl video puede haber sido eliminado por el usuario que lo subió o eliminado debido a violaciones de políticas.",
+    "live_stream": "Esta es una transmisión en vivo que no se puede descargar mientras está activa.\nEspere a que termine la transmisión y luego intente descargar la versión archivada.",
+    "playlist_error": "No se puede acceder a esta lista de reproducción. Puede ser privada, estar eliminada o vacía.\nVerifique si la lista de reproducción existe y es públicamente accesible.",
+    "network_error": "Error de conexión de red. Verifique su conexión a Internet e intente nuevamente.\nSi el problema persiste, el servidor de video puede no estar disponible temporalmente.",
+    "invalid_url": "URL no válida o no compatible. Verifique el enlace e intente nuevamente.\nAsegúrese de usar una URL válida de YouTube, Vimeo u otra plataforma compatible.",
+    "premium_content": "Este contenido requiere YouTube Premium o membresía del canal.\nDebe iniciar sesión con una cuenta que tenga acceso a este contenido.",
+    "copyright_blocked": "Este video está bloqueado debido a reclamaciones de derechos de autor.\nEl propietario del contenido ha restringido el acceso a este video.",
+    "extraction_failed": "Error al extraer información del video. Esto podría ser un problema temporal.\nIntente nuevamente en unos minutos o verifique si el enlace del video es correcto.",
+    "generic_error": "No se pudo extraer la información del video. Verifique su enlace.\nDetalles técnicos: {error}"
   }
 }

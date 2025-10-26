@@ -398,5 +398,27 @@
     "next_check_error": "Nächste Prüfung: Fehler bei Berechnung",
     "checking": "🔄 Prüfen...",
     "check_now": "🔍 Jetzt nach Updates suchen"
+  },
+  "url_validation": {
+    "empty_url": "URL kann nicht leer sein",
+    "invalid_format": "Ungültiges URL-Format",
+    "invalid_scheme": "URL muss mit http:// oder https:// beginnen",
+    "missing_domain": "Ungültige URL: Domain-Name fehlt",
+    "unsupported_platform": "YTSage unterstützt nur YouTube- und YouTube Music-URLs.\nDie Domain '{domain}' wird nicht unterstützt.",
+    "invalid_youtu_be": "Ungültige youtu.be-URL: Video-ID fehlt"
+  },
+  "ytdlp_errors": {
+    "private_video": "Dies ist ein privates Video. Sie können es herunterladen, indem Sie sich mit Cookies in Ihr Konto einloggen.\nGehen Sie zu 'Benutzerdefinierte Optionen' → 'Mit Cookies anmelden' → 'Cookies aus Browser extrahieren', um sich zu authentifizieren.",
+    "age_restricted": "Dieses Video ist altersbeschränkt. Sie müssen angemeldet sein, um darauf zuzugreifen.\nVerwenden Sie 'Benutzerdefinierte Optionen' → 'Mit Cookies anmelden', um sich mit Ihrem Konto zu authentifizieren.",
+    "geo_blocked": "Dieses Video ist in Ihrer Region nicht verfügbar (geografisch gesperrt).\nSie benötigen möglicherweise ein VPN oder das Video ist in Ihrem Land eingeschränkt.",
+    "video_unavailable": "Dieses Video wurde entfernt oder ist nicht mehr verfügbar.\nDas Video wurde möglicherweise vom Uploader gelöscht oder wegen Richtlinienverstößen entfernt.",
+    "live_stream": "Dies ist ein Live-Stream, der während der Aktivität nicht heruntergeladen werden kann.\nWarten Sie, bis der Stream endet, und versuchen Sie dann, die archivierte Version herunterzuladen.",
+    "playlist_error": "Zugriff auf diese Playlist nicht möglich. Sie ist möglicherweise privat, gelöscht oder leer.\nÜberprüfen Sie, ob die Playlist existiert und öffentlich zugänglich ist.",
+    "network_error": "Netzwerkverbindungsfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.\nWenn das Problem weiterhin besteht, ist der Videoserver möglicherweise vorübergehend nicht verfügbar.",
+    "invalid_url": "Ungültige oder nicht unterstützte URL. Bitte überprüfen Sie den Link und versuchen Sie es erneut.\nStellen Sie sicher, dass Sie eine gültige YouTube-, Vimeo- oder andere unterstützte Plattform-URL verwenden.",
+    "premium_content": "Dieser Inhalt erfordert YouTube Premium oder eine Kanalmitgliedschaft.\nSie müssen mit einem Konto angemeldet sein, das Zugriff auf diesen Inhalt hat.",
+    "copyright_blocked": "Dieses Video ist aufgrund von Urheberrechtsansprüchen gesperrt.\nDer Inhaltsinhaber hat den Zugriff auf dieses Video eingeschränkt.",
+    "extraction_failed": "Fehler beim Extrahieren von Videoinformationen. Dies könnte ein vorübergehendes Problem sein.\nBitte versuchen Sie es in ein paar Minuten erneut oder überprüfen Sie, ob der Videolink korrekt ist.",
+    "generic_error": "Videoinformationen konnten nicht extrahiert werden. Bitte überprüfen Sie Ihren Link.\nTechnische Details: {error}"
   }
 }

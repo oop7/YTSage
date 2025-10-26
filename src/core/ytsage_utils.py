@@ -20,6 +20,7 @@ from src.utils.ytsage_constants import (
     YTDLP_APP_BIN_PATH,
     YTDLP_DOWNLOAD_URL,
 )
+from src.utils.ytsage_localization import _
 from src.utils.ytsage_logger import logger
 
 try:
@@ -677,17 +678,11 @@ def parse_yt_dlp_error(error_message: str) -> str:
 
     # Private video errors
     if any(keyword in error_str for keyword in ["private video", "login_required", "sign in if you"]):
-        return (
-            "This is a private video. You can download it by logging into your account using cookies.\n"
-            "Go to 'Custom Options' → 'Login with Cookies' → 'Extract cookies from browser' to authenticate."
-        )
+        return _("ytdlp_errors.private_video")
 
     # Age-restricted content
     if any(keyword in error_str for keyword in ["age restricted", "age-restricted", "confirm your age"]):
-        return (
-            "This video is age-restricted. You need to be logged in to access it.\n"
-            "Use 'Custom Options' → 'Login with Cookies' to authenticate with your account."
-        )
+        return _("ytdlp_errors.age_restricted")
 
     # Geo-blocked content
     if any(
@@ -699,66 +694,42 @@ def parse_yt_dlp_error(error_message: str) -> str:
             "not made this video available in your country",
         ]
     ):
-        return (
-            "This video is not available in your region (geo-blocked).\n"
-            "You may need to use a VPN or the video might be restricted in your country."
-        )
+        return _("ytdlp_errors.geo_blocked")
 
     # Removed/deleted videos
     if any(keyword in error_str for keyword in ["video unavailable", "this video has been removed", "video does not exist"]):
-        return (
-            "This video has been removed or is no longer available.\n"
-            "The video may have been deleted by the uploader or removed due to policy violations."
-        )
+        return _("ytdlp_errors.video_unavailable")
 
     # Live stream errors
     if any(keyword in error_str for keyword in ["live stream", "livestream", "is live"]):
-        return (
-            "This is a live stream that cannot be downloaded while active.\n"
-            "Wait for the stream to end, then try downloading the archived version."
-        )
+        return _("ytdlp_errors.live_stream")
 
     # Playlist errors
     if any(keyword in error_str for keyword in ["playlist", "no entries"]):
-        return (
-            "Unable to access this playlist. It may be private, deleted, or empty.\n"
-            "Check if the playlist exists and is publicly accessible."
-        )
+        return _("ytdlp_errors.playlist_error")
 
     # Network/connection errors
     if any(keyword in error_str for keyword in ["network error", "connection", "timeout", "unable to download"]):
-        return (
-            "Network connection error. Please check your internet connection and try again.\n"
-            "If the problem persists, the video server might be temporarily unavailable."
-        )
+        return _("ytdlp_errors.network_error")
 
     # Invalid URL
     if any(keyword in error_str for keyword in ["invalid url", "unsupported url", "no video found"]):
-        return (
-            "Invalid or unsupported URL. Please check the link and try again.\n"
-            "Make sure you're using a valid YouTube, Vimeo, or other supported platform URL."
-        )
+        return _("ytdlp_errors.invalid_url")
 
     # YouTube premium content
     if any(keyword in error_str for keyword in ["youtube premium", "premium", "members only"]):
-        return (
-            "This content requires YouTube Premium or channel membership.\n"
-            "You need to be logged in with an account that has access to this content."
-        )
+        return _("ytdlp_errors.premium_content")
 
     # Copyright/DMCA
     if any(keyword in error_str for keyword in ["copyright", "dmca", "blocked"]):
-        return "This video is blocked due to copyright claims.\n" "The content owner has restricted access to this video."
+        return _("ytdlp_errors.copyright_blocked")
 
     # Extraction errors (could be temporary)
     if any(keyword in error_str for keyword in ["unable to extract", "extraction failed"]):
-        return (
-            "Failed to extract video information. This might be a temporary issue.\n"
-            "Please try again in a few minutes, or check if the video link is correct."
-        )
+        return _("ytdlp_errors.extraction_failed")
 
     # Generic fallback with the original error for debugging
-    return f"Could not extract video information. Please check your link.\n" f"Technical details: {error_message}"
+    return _("ytdlp_errors.generic_error", error=error_message)
 
 
 def validate_video_url(url: str) -> tuple[bool, str]:
@@ -782,7 +753,7 @@ def validate_video_url(url: str) -> tuple[bool, str]:
     
     # Check if URL is empty
     if not url or not url.strip():
-        return False, "URL cannot be empty"
+        return False, _("url_validation.empty_url")
     
     url = url.strip()
     
@@ -791,15 +762,15 @@ def validate_video_url(url: str) -> tuple[bool, str]:
         parsed = urlparse(url)
     except Exception as e:
         logger.debug(f"URL parsing error: {e}")
-        return False, "Invalid URL format"
+        return False, _("url_validation.invalid_format")
     
     # Check if scheme is http or https
     if parsed.scheme not in ['http', 'https']:
-        return False, "URL must start with http:// or https://"
+        return False, _("url_validation.invalid_scheme")
     
     # Check if netloc (domain) exists
     if not parsed.netloc:
-        return False, "Invalid URL: missing domain name"
+        return False, _("url_validation.missing_domain")
     
     # YTSage focuses on YouTube and YouTube Music only
     # Supported YouTube domains
@@ -820,14 +791,7 @@ def validate_video_url(url: str) -> tuple[bool, str]:
     )
     
     if not is_youtube:
-        return False, (
-            "YTSage only supports YouTube and YouTube Music URLs.\n"
-            f"The domain '{parsed.netloc}' is not supported.\n\n"
-            "Supported domains:\n"
-            "  • youtube.com\n"
-            "  • youtu.be\n"
-            "  • music.youtube.com"
-        )
+        return False, _("url_validation.unsupported_platform", domain=parsed.netloc)
     
     # Optional: Validate YouTube URL patterns
     # Common YouTube URL patterns:
@@ -849,7 +813,7 @@ def validate_video_url(url: str) -> tuple[bool, str]:
     # For youtu.be, the path itself is the video ID
     if 'youtu.be' in netloc_lower:
         if not parsed.path or parsed.path == '/':
-            return False, "Invalid youtu.be URL: missing video ID"
+            return False, _("url_validation.invalid_youtu_be")
         return True, ""
     
     # For youtube.com domains, check for valid patterns
