@@ -759,3 +759,135 @@ def parse_yt_dlp_error(error_message: str) -> str:
 
     # Generic fallback with the original error for debugging
     return f"Could not extract video information. Please check your link.\n" f"Technical details: {error_message}"
+
+
+def validate_video_url(url: str) -> tuple[bool, str]:
+    """
+    Validate a video URL for supported platforms.
+    
+    Args:
+        url: The URL string to validate
+        
+    Returns:
+        tuple[bool, str]: (is_valid, error_message)
+        - is_valid: True if URL is valid, False otherwise
+        - error_message: Empty string if valid, error description if invalid
+        
+    Example:
+        >>> is_valid, error = validate_video_url("https://youtube.com/watch?v=xxx")
+        >>> if not is_valid:
+        ...     print(error)
+    """
+    from urllib.parse import urlparse
+    
+    # Check if URL is empty
+    if not url or not url.strip():
+        return False, "URL cannot be empty"
+    
+    url = url.strip()
+    
+    # Check basic URL structure
+    try:
+        parsed = urlparse(url)
+    except Exception as e:
+        logger.debug(f"URL parsing error: {e}")
+        return False, "Invalid URL format"
+    
+    # Check if scheme is http or https
+    if parsed.scheme not in ['http', 'https']:
+        return False, "URL must start with http:// or https://"
+    
+    # Check if netloc (domain) exists
+    if not parsed.netloc:
+        return False, "Invalid URL: missing domain name"
+    
+    # YTSage focuses on YouTube and YouTube Music only
+    # Supported YouTube domains
+    youtube_domains = [
+        'youtube.com',
+        'www.youtube.com',
+        'youtu.be',
+        'm.youtube.com',
+        'music.youtube.com',  # YouTube Music
+        'gaming.youtube.com',  # YouTube Gaming (redirects to main)
+    ]
+    
+    # Check if domain is YouTube
+    netloc_lower = parsed.netloc.lower()
+    is_youtube = any(
+        netloc_lower == domain or netloc_lower.endswith('.' + domain)
+        for domain in youtube_domains
+    )
+    
+    if not is_youtube:
+        return False, (
+            "YTSage only supports YouTube and YouTube Music URLs.\n"
+            f"The domain '{parsed.netloc}' is not supported.\n\n"
+            "Supported domains:\n"
+            "  • youtube.com\n"
+            "  • youtu.be\n"
+            "  • music.youtube.com"
+        )
+    
+    # Optional: Validate YouTube URL patterns
+    # Common YouTube URL patterns:
+    # - /watch?v=VIDEO_ID
+    # - /playlist?list=PLAYLIST_ID
+    # - /shorts/VIDEO_ID
+    # - youtu.be/VIDEO_ID
+    valid_patterns = [
+        '/watch',
+        '/playlist',
+        '/shorts/',
+        '/live/',
+        '/channel/',
+        '/c/',
+        '/user/',
+        '@',  # New handle format
+    ]
+    
+    # For youtu.be, the path itself is the video ID
+    if 'youtu.be' in netloc_lower:
+        if not parsed.path or parsed.path == '/':
+            return False, "Invalid youtu.be URL: missing video ID"
+        return True, ""
+    
+    # For youtube.com domains, check for valid patterns
+    if any(pattern in url.lower() for pattern in valid_patterns):
+        return True, ""
+    
+    # If it's a YouTube domain but doesn't match known patterns, still allow it
+    # (yt-dlp might support formats we don't know about)
+    logger.info(f"YouTube URL doesn't match known patterns but allowing: {url}")
+    return True, ""
+
+
+def sanitize_filename(filename: str) -> str:
+    """
+    Sanitize a filename by removing or replacing dangerous characters.
+    
+    Args:
+        filename: The filename to sanitize
+        
+    Returns:
+        str: Sanitized filename safe for filesystem use
+        
+    Example:
+        >>> sanitize_filename('video<>file?.mp4')
+        'video__file_.mp4'
+    """
+    import re
+    
+    # Replace dangerous characters with underscore
+    # Characters not allowed in Windows filenames: < > : " / \ | ? *
+    # Also remove control characters
+    sanitized = re.sub(r'[<>:"/\\|?*\x00-\x1f]', '_', filename)
+    
+    # Remove leading/trailing dots and spaces (Windows compatibility)
+    sanitized = sanitized.strip('. ')
+    
+    # Ensure filename is not empty after sanitization
+    if not sanitized:
+        sanitized = "video"
+    
+    return sanitized
