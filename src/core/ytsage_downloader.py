@@ -34,7 +34,6 @@ class DownloadThread(QThread):
     error_signal = Signal(str)
     file_exists_signal = Signal(str)  # New signal for file existence
     update_details = Signal(str)  # New signal for filename, speed, ETA
-    update_details = Signal(str)  # New signal for filename, speed, ETA
 
     def __init__(
         self,
