@@ -1279,32 +1279,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
     def show_custom_options(self) -> None:
         dialog = CustomOptionsDialog(self)
         if dialog.exec():
-            # Handle cookies
-            cookie_path = dialog.get_cookie_file_path()
-            browser_cookies = dialog.get_browser_cookies_option()
-
-            # Clear both first to avoid conflicts
-            self.cookie_file_path = None
-            self.browser_cookies_option = None
-
-            if cookie_path:
-                self.cookie_file_path = cookie_path
-                logger.info(f"Selected cookie file: {self.cookie_file_path}")
-                QMessageBox.information(
-                    self,
-                    "Cookie File Selected",
-                    f"Cookie file selected: {self.cookie_file_path}",
-                )
-            elif browser_cookies:
-                self.browser_cookies_option = browser_cookies
-                logger.info(f"Selected browser cookies: {self.browser_cookies_option}")
-                QMessageBox.information(
-                    self,
-                    "Browser Cookies Selected",
-                    f"Browser cookies will be extracted from: {browser_cookies}",
-                )
-            # If neither is selected, both remain None (cleared above)
-
             # Handle proxy options
             proxy_url = dialog.get_proxy_url()
             geo_proxy_url = dialog.get_geo_proxy_url()
