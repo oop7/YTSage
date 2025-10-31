@@ -288,6 +288,7 @@
     "all_selected": "全部已选择",
     "select_videos_all": "选择视频...（全部已选择）",
     "please_enter_url": "请先输入网址",
+    "error_title": "错误",
     "cookie_file_selected_title": "已选择 Cookie 文件",
     "cookie_file_selected_message": "已选择 Cookie 文件：{path}",
     "browser_cookies_selected_title": "已选择浏览器 Cookie",

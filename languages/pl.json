@@ -288,6 +288,7 @@
     "all_selected": "Wszystkie wybrane",
     "select_videos_all": "Wybierz wideo... (Wszystkie wybrane)",
     "please_enter_url": "Proszę najpierw wprowadzić URL",
+    "error_title": "Błąd",
     "cookie_file_selected_title": "Wybrano plik ciasteczek",
     "cookie_file_selected_message": "Wybrano plik ciasteczek: {path}",
     "browser_cookies_selected_title": "Wybrano ciasteczka przeglądarki",

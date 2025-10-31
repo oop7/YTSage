@@ -288,6 +288,7 @@
     "all_selected": "सभी चुने गए",
     "select_videos_all": "वीडियो चुनें... (सभी चुने गए)",
     "please_enter_url": "कृपया पहले URL दर्ज करें",
+    "error_title": "त्रुटि",
     "cookie_file_selected_title": "कुकी फ़ाइल चुनी गई",
     "cookie_file_selected_message": "कुकी फ़ाइल चुनी गई: {path}",
     "browser_cookies_selected_title": "ब्राउज़र कुकीज़ चुनी गईं",

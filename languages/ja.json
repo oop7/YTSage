@@ -288,6 +288,7 @@
     "all_selected": "すべて選択済み",
     "select_videos_all": "動画を選択... (すべて選択済み)",
     "please_enter_url": "最初にURLを入力してください",
+    "error_title": "エラー",
     "cookie_file_selected_title": "Cookieファイルが選択されました",
     "cookie_file_selected_message": "選択されたCookieファイル: {path}",
     "browser_cookies_selected_title": "ブラウザCookieが選択されました",

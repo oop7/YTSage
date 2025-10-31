@@ -288,6 +288,7 @@
     "all_selected": "Tümü seçildi",
     "select_videos_all": "Video seç... (Tümü seçildi)",
     "please_enter_url": "Lütfen önce bir URL girin",
+    "error_title": "Hata",
     "cookie_file_selected_title": "Çerez dosyası seçildi",
     "cookie_file_selected_message": "Çerez dosyası seçildi: {path}",
     "browser_cookies_selected_title": "Tarayıcı çerezleri seçildi",

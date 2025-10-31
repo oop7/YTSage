@@ -711,7 +711,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Validate URL before processing
         is_valid, error_message = validate_video_url(url)
         if not is_valid:
-            self.signals.update_status.emit(error_message)
+            QMessageBox.warning(self, _("main_ui.error_title"), error_message)
             return
 
         self.signals.update_status.emit(_("main_ui.analyzing_preparing"))
@@ -798,7 +798,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Validate URL before starting download
         is_valid, error_message = validate_video_url(url)
         if not is_valid:
-            self.status_label.setText(error_message)
+            QMessageBox.warning(self, _("main_ui.error_title"), error_message)
             return
 
         # Get selected format

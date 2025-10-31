@@ -288,6 +288,7 @@
     "all_selected": "تم تحديد الكل",
     "select_videos_all": "اختر الفيديوهات... (تم تحديد الكل)",
     "please_enter_url": "الرجاء إدخال رابط أولاً",
+    "error_title": "خطأ",
     "cookie_file_selected_title": "تم تحديد ملف الكوكيز",
     "cookie_file_selected_message": "ملف الكوكيز المحدد: {path}",
     "browser_cookies_selected_title": "تم تحديد كوكيز المتصفح",

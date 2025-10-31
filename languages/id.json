@@ -288,6 +288,7 @@
     "all_selected": "Semua dipilih",
     "select_videos_all": "Pilih video... (Semua dipilih)",
     "please_enter_url": "Silakan masukkan URL terlebih dahulu",
+    "error_title": "Kesalahan",
     "cookie_file_selected_title": "File cookie dipilih",
     "cookie_file_selected_message": "File cookie dipilih: {path}",
     "browser_cookies_selected_title": "Cookies browser dipilih",

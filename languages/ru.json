@@ -288,6 +288,7 @@
     "all_selected": "Все выбраны",
     "select_videos_all": "Выбрать видео... (Все выбраны)",
     "please_enter_url": "Пожалуйста, введите URL сначала",
+    "error_title": "Ошибка",
     "cookie_file_selected_title": "Файл Cookie выбран",
     "cookie_file_selected_message": "Файл cookie выбран: {path}",
     "browser_cookies_selected_title": "Cookie браузера выбраны",

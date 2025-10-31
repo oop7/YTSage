@@ -288,6 +288,7 @@
     "all_selected": "Alle ausgewählt",
     "select_videos_all": "Videos auswählen... (Alle ausgewählt)",
     "please_enter_url": "Bitte geben Sie zuerst eine URL ein",
+    "error_title": "Fehler",
     "cookie_file_selected_title": "Cookie-Datei ausgewählt",
     "cookie_file_selected_message": "Cookie-Datei ausgewählt: {path}",
     "browser_cookies_selected_title": "Browser-Cookies ausgewählt",
