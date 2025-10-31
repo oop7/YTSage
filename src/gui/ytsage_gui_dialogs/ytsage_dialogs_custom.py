@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QRadioButton,
@@ -117,6 +118,7 @@ class CustomOptionsDialog(QDialog):
 
         # === Cookies Tab ===
         cookies_tab = QWidget()
+
         cookies_layout = QVBoxLayout(cookies_tab)
 
         # Help text
@@ -130,14 +132,14 @@ class CustomOptionsDialog(QDialog):
         cookie_source_layout = QVBoxLayout(cookie_source_group)
 
         # Radio buttons for cookie source
-        self.cookie_file_radio = QRadioButton(_('cookies.use_cookie_file'))
-        self.cookie_file_radio.setChecked(True)
-        self.cookie_file_radio.toggled.connect(self.on_cookie_source_changed)
-        cookie_source_layout.addWidget(self.cookie_file_radio)
-
-        self.cookie_browser_radio = QRadioButton(_('cookies.extract_from_browser'))
+        self.cookie_browser_radio = QRadioButton(_('cookies.extract_from_browser') + f" ({_('cookies.recommended')})")
+        self.cookie_browser_radio.setChecked(True)
         self.cookie_browser_radio.toggled.connect(self.on_cookie_source_changed)
         cookie_source_layout.addWidget(self.cookie_browser_radio)
+
+        self.cookie_file_radio = QRadioButton(_('cookies.use_cookie_file'))
+        self.cookie_file_radio.toggled.connect(self.on_cookie_source_changed)
+        cookie_source_layout.addWidget(self.cookie_file_radio)
 
         cookies_layout.addWidget(cookie_source_group)
 
@@ -191,13 +193,42 @@ class CustomOptionsDialog(QDialog):
 
         cookies_layout.addWidget(self.cookie_browser_group)
 
-        # Initially hide browser group
-        self.cookie_browser_group.setVisible(False)
+        # Initially show browser group (recommended default) and hide file group
+        self.cookie_file_group.setVisible(False)
+        self.cookie_browser_group.setVisible(True)
 
-        # Status indicator for cookies
-        self.cookie_status = QLabel("")
-        self.cookie_status.setStyleSheet("color: #999999; font-style: italic;")
-        cookies_layout.addWidget(self.cookie_status)
+        # Apply button and status indicator
+        apply_layout = QHBoxLayout()
+        
+        # Status indicator for active cookies
+        self.cookies_active_status = QLabel()
+        self._update_cookies_active_status()
+        apply_layout.addWidget(self.cookies_active_status)
+        
+        apply_layout.addStretch()
+        
+        # Apply button
+        self.apply_cookies_btn = QPushButton(_('buttons.apply'))
+        self.apply_cookies_btn.clicked.connect(self.apply_cookies)
+        self.apply_cookies_btn.setStyleSheet(
+            """
+            QPushButton {
+                padding: 8px 20px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+                min-width: 100px;
+            }
+            QPushButton:hover {
+                background-color: #a50000;
+            }
+        """
+        )
+        apply_layout.addWidget(self.apply_cookies_btn)
+        
+        cookies_layout.addLayout(apply_layout)
 
         cookies_layout.addStretch()
 
@@ -622,17 +653,24 @@ class CustomOptionsDialog(QDialog):
 
             # Set profile if any
             self.profile_input.setText(profile)
-
-            self.cookie_status.setText(f"Browser cookies active: {self._parent.browser_cookies_option}")
-            self.cookie_status.setStyleSheet("color: #00cc00; font-style: italic;")
         elif hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
-            # File cookies are active - ensure file radio is selected and update status
+            # File cookies are active - ensure file radio is selected
             self.cookie_file_radio.setChecked(True)
-            self.cookie_status.setText(f"Cookie file active: {self._parent.cookie_file_path.name}")
-            self.cookie_status.setStyleSheet("color: #00cc00; font-style: italic;")
         else:
-            # No cookies configured - ensure file radio is selected by default
-            self.cookie_file_radio.setChecked(True)
+            # No cookies configured - browser extraction is the recommended default
+            self.cookie_browser_radio.setChecked(True)
+    
+    def _update_cookies_active_status(self) -> None:
+        """Update the status indicator showing if cookies are currently active"""
+        if hasattr(self._parent, "browser_cookies_option") and self._parent.browser_cookies_option:
+            self.cookies_active_status.setText(f"✓ Active: Browser cookies ({self._parent.browser_cookies_option})")
+            self.cookies_active_status.setStyleSheet("color: #00cc00; font-weight: bold;")
+        elif hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
+            self.cookies_active_status.setText(f"✓ Active: Cookie file ({self._parent.cookie_file_path.name})")
+            self.cookies_active_status.setStyleSheet("color: #00cc00; font-weight: bold;")
+        else:
+            self.cookies_active_status.setText("○ No cookies active")
+            self.cookies_active_status.setStyleSheet("color: #888888; font-style: italic;")
 
     def _initialize_proxy_settings(self) -> None:
         """Initialize the dialog with current proxy settings from config"""
@@ -655,23 +693,56 @@ class CustomOptionsDialog(QDialog):
         if self.cookie_file_radio.isChecked():
             self.cookie_file_group.setVisible(True)
             self.cookie_browser_group.setVisible(False)
-            self.cookie_status.setText("")
         else:
             self.cookie_file_group.setVisible(False)
             self.cookie_browser_group.setVisible(True)
-            self.cookie_status.setText(_("cookies.browser_extract_message"))
-            self.cookie_status.setStyleSheet("color: #ffaa00; font-style: italic;")
+
+    def apply_cookies(self) -> None:
+        """Apply cookie settings when user clicks Apply button"""
+        # Handle cookies
+        cookie_path = self.get_cookie_file_path()
+        browser_cookies = self.get_browser_cookies_option()
+
+        # Clear both first to avoid conflicts
+        self._parent.cookie_file_path = None
+        self._parent.browser_cookies_option = None
+
+        if cookie_path:
+            self._parent.cookie_file_path = cookie_path
+            logger.info(f"Applied cookie file: {self._parent.cookie_file_path}")
+            QMessageBox.information(
+                self,
+                _("cookies.file_selected_title"),
+                _("cookies.file_applied_message", path=str(cookie_path)),
+            )
+        elif browser_cookies:
+            self._parent.browser_cookies_option = browser_cookies
+            logger.info(f"Applied browser cookies: {self._parent.browser_cookies_option}")
+            QMessageBox.information(
+                self,
+                _("cookies.browser_selected_title"),
+                _("cookies.browser_applied_message", browser=browser_cookies),
+            )
+        else:
+            # Clear cookies
+            logger.info("Cookies cleared")
+            QMessageBox.information(
+                self,
+                _("cookies.cleared_title"),
+                _("cookies.cleared_message"),
+            )
+        
+        # Update the status indicator
+        self._update_cookies_active_status()
 
     def browse_cookie_file(self) -> None:
         # Open file dialog to select cookie file
-        selected_files, _ = QFileDialog.getOpenFileName(self, _("cookies.select_file_title"), "", _("cookies.file_filter"))
+        selected_files, _filter = QFileDialog.getOpenFileName(self, _("cookies.select_file_title"), "", _("cookies.file_filter"))
 
         if selected_files:
             # Ensure we have a valid full path
             cookie_path = Path(selected_files).resolve()
             self.cookie_path_input.setText(str(cookie_path))
-            self.cookie_status.setText(_("cookies.file_selected_message"))
-            self.cookie_status.setStyleSheet("color: #00cc00; font-style: italic;")
 
     def get_cookie_file_path(self) -> Path | None:
         # Return the selected cookie file path if it's not empty and using file mode
@@ -701,7 +772,7 @@ class CustomOptionsDialog(QDialog):
     def is_using_browser_cookies(self) -> bool:
         """Returns True if browser cookies mode is selected"""
         return self.cookie_browser_radio.isChecked()
-
+    
     def get_proxy_url(self) -> str | None:
         """Returns the main proxy URL if specified"""
         proxy_url = self.proxy_url_input.text().strip()
