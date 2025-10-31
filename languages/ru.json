@@ -105,6 +105,7 @@
     "cookie_source": "Источник Cookie",
     "use_cookie_file": "Использовать файл cookie",
     "extract_from_browser": "Извлечь из браузера",
+    "recommended": "Рекомендуется",
     "cookie_file": "Файл Cookie",
     "cookie_file_placeholder": "Путь к файлу cookies.txt...",
     "browser_selection": "Выбор браузера",
@@ -115,7 +116,13 @@
     "browser_extract_message": "Cookie браузера будут извлечены при применении",
     "file_selected_message": "Файл cookie выбран - Нажмите OK для применения",
     "select_file_title": "Выбрать файл Cookie",
-    "file_filter": "Файлы cookie (*.txt *.lwp)"
+    "file_filter": "Файлы cookie (*.txt *.lwp)",
+    "file_selected_title": "Файл Cookie применён",
+    "file_applied_message": "Файл cookie применён: {path}",
+    "browser_selected_title": "Cookie браузера применены",
+    "browser_applied_message": "Cookie браузера будут извлечены из: {browser}",
+    "cleared_title": "Cookie очищены",
+    "cleared_message": "Настройки cookie были очищены"
   },
   "custom_command": {
     "help_text": "Введите пользовательскую команду yt-dlp ниже. Текущий URL будет добавлен автоматически.<br><br>Для полного списка опций и примеров использования, <a href=\"{docs_url}\">нажмите здесь для просмотра официальной документации yt-dlp</a>.<br><br>Примечание: Путь загрузки и шаблон имени файла будут обработаны автоматически.",

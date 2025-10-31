@@ -105,6 +105,7 @@
     "cookie_source": "Çerez kaynağı",
     "use_cookie_file": "Çerez dosyası kullan",
     "extract_from_browser": "Tarayıcıdan çıkar",
+    "recommended": "Önerilen",
     "cookie_file": "Çerez dosyası",
     "cookie_file_placeholder": "cookies.txt dosya yolu...",
     "browser_selection": "Tarayıcı seçimi",
@@ -115,7 +116,13 @@
     "browser_extract_message": "Tarayıcı çerezleri uygulandığında çıkarılacak",
     "file_selected_message": "Çerez dosyası seçildi - Uygulamak için Tamam'a tıklayın",
     "select_file_title": "Çerez dosyası seç",
-    "file_filter": "Çerez dosyaları (*.txt *.lwp)"
+    "file_filter": "Çerez dosyaları (*.txt *.lwp)",
+    "file_selected_title": "Çerez Dosyası Uygulandı",
+    "file_applied_message": "Çerez dosyası uygulandı: {path}",
+    "browser_selected_title": "Tarayıcı Çerezleri Uygulandı",
+    "browser_applied_message": "Tarayıcı çerezleri şuradan çıkarılacak: {browser}",
+    "cleared_title": "Çerezler Temizlendi",
+    "cleared_message": "Çerez ayarları temizlendi"
   },
   "custom_command": {
     "help_text": "Özel yt-dlp komutunuzu aşağıya girin. Mevcut URL otomatik olarak eklenecektir.<br><br>Seçeneklerin tam listesi ve kullanım örnekleri için <a href=\"{docs_url}\">resmi yt-dlp belgelerini görmek için buraya tıklayın</a>.<br><br>Not: İndirme yolu ve dosya adı şablonu otomatik olarak işlenir.",

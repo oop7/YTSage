@@ -105,6 +105,7 @@
     "cookie_source": "مصدر الكوكيز",
     "use_cookie_file": "استخدام ملف كوكيز",
     "extract_from_browser": "استخراج من المتصفح",
+    "recommended": "موصى به",
     "cookie_file": "ملف الكوكيز",
     "cookie_file_placeholder": "مسار ملف cookies.txt...",
     "browser_selection": "اختيار المتصفح",
@@ -115,7 +116,13 @@
     "browser_extract_message": "سيتم استخراج كوكيز المتصفح بعد التطبيق",
     "file_selected_message": "تم تحديد ملف الكوكيز - انقر على موافق للتطبيق",
     "select_file_title": "اختر ملف الكوكيز",
-    "file_filter": "ملفات الكوكيز (*.txt *.lwp)"
+    "file_filter": "ملفات الكوكيز (*.txt *.lwp)",
+    "file_selected_title": "تم تطبيق ملف الكوكيز",
+    "file_applied_message": "تم تطبيق ملف الكوكيز: {path}",
+    "browser_selected_title": "تم تطبيق كوكيز المتصفح",
+    "browser_applied_message": "سيتم استخراج كوكيز المتصفح من: {browser}",
+    "cleared_title": "تم مسح الكوكيز",
+    "cleared_message": "تم مسح إعدادات الكوكيز"
   },
   "custom_command": {
     "help_text": "أدخل أمر yt-dlp مخصص أدناه. سيتم إضافة الرابط الحالي تلقائياً.<br><br>للحصول على قائمة كاملة بالخيارات وأمثلة الاستخدام <a href=\"{docs_url}\">انقر هنا لمشاهدة الوثائق الرسمية لـ yt-dlp</a>.<br><br>ملاحظة: يتم التعامل مع مسار التنزيل ونموذج اسم الملف تلقائياً.",

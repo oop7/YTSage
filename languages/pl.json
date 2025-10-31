@@ -105,6 +105,7 @@
     "cookie_source": "Źródło ciasteczek",
     "use_cookie_file": "Użyj pliku ciasteczek",
     "extract_from_browser": "Wyodrębnij z przeglądarki",
+    "recommended": "Zalecane",
     "cookie_file": "Plik ciasteczek",
     "cookie_file_placeholder": "Ścieżka do pliku cookies.txt...",
     "browser_selection": "Wybór przeglądarki",
@@ -115,7 +116,13 @@
     "browser_extract_message": "Ciasteczka przeglądarki zostaną wyodrębnione po zastosowaniu",
     "file_selected_message": "Wybrano plik ciasteczek - Kliknij OK, aby zastosować",
     "select_file_title": "Wybierz plik ciasteczek",
-    "file_filter": "Pliki ciasteczek (*.txt *.lwp)"
+    "file_filter": "Pliki ciasteczek (*.txt *.lwp)",
+    "file_selected_title": "Zastosowano plik ciasteczek",
+    "file_applied_message": "Zastosowano plik ciasteczek: {path}",
+    "browser_selected_title": "Zastosowano ciasteczka przeglądarki",
+    "browser_applied_message": "Ciasteczka przeglądarki zostaną wyodrębnione z: {browser}",
+    "cleared_title": "Wyczyszczono ciasteczka",
+    "cleared_message": "Ustawienia ciasteczek zostały wyczyszczone"
   },
   "custom_command": {
     "help_text": "Wprowadź niestandardowe polecenie yt-dlp poniżej. Aktualny URL zostanie automatycznie dodany.<br><br>Aby uzyskać pełną listę opcji i przykładów użycia <a href=\"{docs_url}\">kliknij tutaj, aby zobaczyć oficjalną dokumentację yt-dlp</a>.<br><br>Uwaga: Ścieżka pobierania i szablon nazwy pliku są obsługiwane automatycznie.",

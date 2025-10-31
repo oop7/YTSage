@@ -105,6 +105,7 @@
     "cookie_source": "कुकी स्रोत",
     "use_cookie_file": "कुकी फ़ाइल का उपयोग करें",
     "extract_from_browser": "ब्राउज़र से निकालें",
+    "recommended": "अनुशंसित",
     "cookie_file": "कुकी फ़ाइल",
     "cookie_file_placeholder": "cookies.txt फ़ाइल का पथ...",
     "browser_selection": "ब्राउज़र चयन",
@@ -115,7 +116,13 @@
     "browser_extract_message": "लागू करने पर ब्राउज़र कुकीज़ निकाली जाएंगी",
     "file_selected_message": "कुकी फ़ाइल चुनी गई - लागू करने के लिए OK दबाएं",
     "select_file_title": "कुकी फ़ाइल चुनें",
-    "file_filter": "कुकी फ़ाइलें (*.txt *.lwp)"
+    "file_filter": "कुकी फ़ाइलें (*.txt *.lwp)",
+    "file_selected_title": "कुकी फ़ाइल लागू की गई",
+    "file_applied_message": "कुकी फ़ाइल लागू की गई: {path}",
+    "browser_selected_title": "ब्राउज़र कुकीज़ लागू की गईं",
+    "browser_applied_message": "ब्राउज़र कुकीज़ निकाली जाएंगी: {browser}",
+    "cleared_title": "कुकीज़ साफ़ की गईं",
+    "cleared_message": "कुकी सेटिंग्स साफ़ कर दी गई हैं"
   },
   "custom_command": {
     "help_text": "नीचे अपना कस्टम yt-dlp कमांड दर्ज करें। वर्तमान URL स्वचालित रूप से जोड़ा जाएगा।<br><br>विकल्पों की पूरी सूची और उपयोग के उदाहरणों के लिए <a href=\"{docs_url}\">आधिकारिक yt-dlp दस्तावेज़ देखने के लिए यहाँ क्लिक करें</a>।<br><br>नोट: डाउनलोड पथ और फ़ाइलनाम टेम्प्लेट स्वचालित रूप से संभाले जाते हैं।",

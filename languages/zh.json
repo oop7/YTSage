@@ -105,6 +105,7 @@
     "cookie_source": "Cookie 来源",
     "use_cookie_file": "使用 cookie 文件",
     "extract_from_browser": "从浏览器提取",
+    "recommended": "推荐",
     "cookie_file": "Cookie 文件",
     "cookie_file_placeholder": "cookies.txt 文件路径...",
     "browser_selection": "浏览器选择",
@@ -115,7 +116,13 @@
     "browser_extract_message": "应用时将提取浏览器 cookie",
     "file_selected_message": "已选择 Cookie 文件 - 点击确定应用",
     "select_file_title": "选择 Cookie 文件",
-    "file_filter": "Cookie 文件 (*.txt *.lwp)"
+    "file_filter": "Cookie 文件 (*.txt *.lwp)",
+    "file_selected_title": "已应用 Cookie 文件",
+    "file_applied_message": "已应用 Cookie 文件：{path}",
+    "browser_selected_title": "已应用浏览器 Cookie",
+    "browser_applied_message": "将从以下位置提取浏览器 cookie：{browser}",
+    "cleared_title": "已清除 Cookie",
+    "cleared_message": "Cookie 设置已被清除"
   },
   "custom_command": {
     "help_text": "在下面输入您的自定义 yt-dlp 命令。当前网址将自动附加。<br><br>有关选项和使用示例的完整列表，<a href=\"{docs_url}\">点击此处查看官方 yt-dlp 文档</a>。<br><br>注意：下载路径和文件名模板将自动处理。",

@@ -105,6 +105,7 @@
     "cookie_source": "Sumber cookie",
     "use_cookie_file": "Gunakan file cookie",
     "extract_from_browser": "Ekstrak dari browser",
+    "recommended": "Direkomendasikan",
     "cookie_file": "File cookie",
     "cookie_file_placeholder": "Jalur ke file cookies.txt...",
     "browser_selection": "Pilihan browser",
@@ -115,7 +116,13 @@
     "browser_extract_message": "Cookies browser akan diekstrak saat diterapkan",
     "file_selected_message": "File cookie dipilih - Klik OK untuk menerapkan",
     "select_file_title": "Pilih file cookie",
-    "file_filter": "File cookie (*.txt *.lwp)"
+    "file_filter": "File cookie (*.txt *.lwp)",
+    "file_selected_title": "File Cookie Diterapkan",
+    "file_applied_message": "File cookie diterapkan: {path}",
+    "browser_selected_title": "Cookies Browser Diterapkan",
+    "browser_applied_message": "Cookies browser akan diekstrak dari: {browser}",
+    "cleared_title": "Cookies Dihapus",
+    "cleared_message": "Pengaturan cookie telah dihapus"
   },
   "custom_command": {
     "help_text": "Masukkan perintah yt-dlp khusus Anda di bawah. URL saat ini akan ditambahkan secara otomatis.<br><br>Untuk daftar lengkap opsi dan contoh penggunaan <a href=\"{docs_url}\">klik di sini untuk melihat dokumentasi resmi yt-dlp</a>.<br><br>Catatan: Jalur unduhan dan template nama file ditangani secara otomatis.",

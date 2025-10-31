@@ -105,6 +105,7 @@
     "cookie_source": "Fonte cookie",
     "use_cookie_file": "Usa file cookie",
     "extract_from_browser": "Estrai dal browser",
+    "recommended": "Consigliato",
     "cookie_file": "File cookie",
     "cookie_file_placeholder": "Percorso al file cookies.txt...",
     "browser_selection": "Selezione browser",
@@ -115,7 +116,13 @@
     "browser_extract_message": "I cookie del browser verranno estratti dopo l'applicazione",
     "file_selected_message": "File cookie selezionato - Clicca OK per applicare",
     "select_file_title": "Seleziona file cookie",
-    "file_filter": "File cookie (*.txt *.lwp)"
+    "file_filter": "File cookie (*.txt *.lwp)",
+    "file_selected_title": "File Cookie Applicato",
+    "file_applied_message": "File cookie applicato: {path}",
+    "browser_selected_title": "Cookie del Browser Applicati",
+    "browser_applied_message": "I cookie del browser verranno estratti da: {browser}",
+    "cleared_title": "Cookie Cancellati",
+    "cleared_message": "Le impostazioni dei cookie sono state cancellate"
   },
   "custom_command": {
     "help_text": "Inserisci un comando yt-dlp personalizzato qui sotto. L'URL corrente verrà aggiunto automaticamente.<br><br>Per l'elenco completo delle opzioni ed esempi di utilizzo <a href=\"{docs_url}\">clicca qui per vedere la documentazione ufficiale yt-dlp</a>.<br><br>Nota: Il percorso di download e il modello del nome file sono gestiti automaticamente.",
