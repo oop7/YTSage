@@ -40,6 +40,8 @@ class DownloadThread(QThread):
         url,
         path,
         format_id,
+        is_audio_only=False,
+        format_has_audio=False,
         subtitle_langs=None,
         is_playlist=False,
         merge_subs=False,
@@ -61,6 +63,8 @@ class DownloadThread(QThread):
         self.url = url
         self.path = Path(path)
         self.format_id = format_id
+        self.is_audio_only = is_audio_only
+        self.format_has_audio = format_has_audio
         self.subtitle_langs = subtitle_langs if subtitle_langs else []
         self.is_playlist = is_playlist
         self.merge_subs = merge_subs
@@ -167,26 +171,19 @@ class DownloadThread(QThread):
 
         # Format selection strategy - use format ID if provided or fallback to resolution
         if self.format_id:
-            # Strip the -drc suffix if present to fix issues with certain audio formats
             clean_format_id = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
 
-            # Use a simple heuristic: if format_id contains 'audio' or ends with 'a', treat as audio-only
-            # This avoids the need for Python API metadata extraction
-            is_audio_format = "audio" in clean_format_id.lower() or clean_format_id.endswith("a")
-            
-            # For audio-only formats, don't try to merge with video
-            if is_audio_format:
+            # If the selected format is audio-only, pass it directly.
+            if self.is_audio_only:
                 cmd.extend(["-f", clean_format_id])
                 logger.debug(f"Using audio-only format selection: {clean_format_id}")
+            # If the selected format already includes an audio track (progressive), no merge needed.
+            elif self.format_has_audio:
+                cmd.extend(["-f", clean_format_id])
+                logger.debug(f"Using progressive format with bundled audio: {clean_format_id}")
             else:
                 cmd.extend(["-f", f"{clean_format_id}+bestaudio/best"])
-                logger.debug(f"Using video format selection with audio: {clean_format_id}+bestaudio/best")
-
-            # Determine output format based on the selected format ID - only for video formats
-            # Note: This is a best-effort approach without Python API metadata
-            if not is_audio_format:
-                # Let yt-dlp handle format detection automatically via CLI
-                logger.debug("Letting yt-dlp CLI determine output format automatically")
+                logger.debug(f"Using video-only format merged with best audio: {clean_format_id}+bestaudio/best")
         else:
             # If no specific format ID, use resolution-based sorting (-S)
             res_value = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified

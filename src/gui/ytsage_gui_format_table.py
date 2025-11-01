@@ -262,6 +262,8 @@ class FormatTableMixin:
             # Column 0: Select Checkbox (Always shown)
             checkbox = QCheckBox()
             checkbox.format_id = str(f.get("format_id", ""))  # type: ignore[reportAttributeAccessIssue]
+            checkbox.is_audio_only = bool((f.get("vcodec") or "none").lower() == "none")  # type: ignore[attr-defined]
+            checkbox.has_audio = bool(f.get("acodec") and f.get("acodec") != "none")  # type: ignore[attr-defined]
             checkbox.clicked.connect(lambda checked, cb=checkbox: self.handle_checkbox_click(cb))
             self.format_checkboxes.append(checkbox)
             checkbox_widget = QWidget()
@@ -427,7 +429,11 @@ class FormatTableMixin:
 
         for checkbox in self.format_checkboxes:
             if checkbox.isChecked():
-                return checkbox.format_id
+                return {
+                    "format_id": checkbox.format_id,
+                    "is_audio_only": getattr(checkbox, "is_audio_only", False),
+                    "has_audio": getattr(checkbox, "has_audio", False),
+                }
         return None
 
     def update_format_table(self, formats) -> None:

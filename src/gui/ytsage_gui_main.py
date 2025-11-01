@@ -802,10 +802,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             return
 
         # Get selected format
-        format_id = self.get_selected_format()
-        if not format_id:
+        selected_format = self.get_selected_format()
+        if not selected_format:
             self.status_label.setText(_('download.please_select_format'))
             return
+        format_id = selected_format["format_id"]
+        is_audio_only = bool(selected_format.get("is_audio_only"))
+        format_has_audio = bool(selected_format.get("has_audio"))
 
         # Show preparation message
         self.status_label.setText(_('download.preparing'))
@@ -859,6 +862,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             url=url,
             path=path,
             format_id=format_id,
+            is_audio_only=is_audio_only,
+            format_has_audio=format_has_audio,
             subtitle_langs=selected_subs,  # Pass the list of selected subs
             is_playlist=self.is_playlist,  # Use the flag directly
             merge_subs=self.merge_subs_checkbox.isChecked(),
