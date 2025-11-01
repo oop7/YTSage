@@ -28,6 +28,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from src import __version__ as APP_VERSION
 from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
 from src.core.ytsage_utils import check_ffmpeg, load_saved_path, parse_yt_dlp_error, save_path, should_check_for_auto_update, validate_video_url
 from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
@@ -78,7 +79,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         else:
             logger.info(f"Using yt-dlp from: {ytdlp_path}")
 
-        self.version = "4.9.2"
+        self.version = APP_VERSION
         self.check_for_updates()
 
         # Check for auto-updates if enabled

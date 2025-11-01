@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from src import __version__ as APP_VERSION
 from src.utils.ytsage_localization import _
 
 from src.core.ytsage_ffmpeg import get_ffmpeg_path
@@ -159,7 +160,8 @@ class AboutDialog(QDialog):
         layout.addWidget(title_label)
 
         version_label = QLabel(
-            f"<span style='color: #cccccc; font-size: 13px; font-weight: normal;'>{_('about.version', version=getattr(self._parent, 'version', '4.9.2'))}</span>"
+            f"<span style='color: #cccccc; font-size: 13px; font-weight: normal;'>"
+            f"{_('about.version', version=getattr(self._parent, 'version', APP_VERSION))}</span>"
         )
         version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(version_label)
