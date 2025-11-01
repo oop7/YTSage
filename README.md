@@ -42,7 +42,7 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 
 | Core Features                     | Advanced Features                       | Extra Features                     |
 |-----------------------------------|-----------------------------------------|------------------------------------|
-| 🎥 Format Table                   | 🚫 SponsorBlock Integration             | 💾 Save Download Path             |
+| 🎥 Format Table                   | 🚫 SponsorBlock Integration             | 🎞️ FPS/HDR Display             |
 | 🎵 Audio Extraction               | 📝 Multi-Subtitle Select & Merge        | 🔄 Auto-Update yt-dlp                  |
 | ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp Detection         |
 | 📋 Playlist Support              |  🖼️ Save thumbnail                       | ⚙️ Custom Commands                 |
