@@ -1508,7 +1508,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.sponsorblock_select_btn.setEnabled(enabled)
         self.merge_subs_checkbox.setEnabled(enabled)  # Enable/disable merge subs checkbox
         self.custom_options_btn.setEnabled(enabled)  # Enable/disable custom options button
-        self.update_ytdlp_btn.setEnabled(enabled)  # Enable/disable update button
         self.time_range_btn.setEnabled(enabled)  # Enable/disable time range button
         self.settings_button.setEnabled(enabled)  # Enable/disable settings button
 
