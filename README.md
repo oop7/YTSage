@@ -194,14 +194,14 @@ python main.py
 <details>
 <summary>🧰 Advanced Options</summary>
 
-- **Quality Selection:** Choose the highest resolution for best quality
-- **Subtitle Options:** Filter languages and embed into video
-- **Custom Commands:** Access advanced yt-dlp features
-- **Save Description:** Save the description of the video
-- **Save Thumbnail:** Save the thumbnail of the video
+- **Subtitle Options:** Filter languages and embed into video file
+- **Subtitle Merge:** Merge subtitles into video file for hardcoded subtitles
+- **Custom Commands:** Access advanced yt-dlp features via command line arguments
+- **Save Description:** Save the description of the video as a text file
+- **Save Thumbnail:** Save the thumbnail of the video as an image file
 - **Embed Chapters:** Embed chapter markers as metadata in the downloaded video file for compatible video players
-- **Remove Sponsor Segments:** Remove sponsor segments from the video
-- **Speed Limiter:** Limit the download speed
+- **Remove Sponsor Segments:** Remove sponsor segments from the video using SponsorBlock
+- **Speed Limiter:** Limit the download speed (e.g., `500K` for 500 KB/s)
 - **Login with Cookies:** Login to YouTube using cookies to access private content  
   How to use it:
   1. **Recommended:** Use the built-in "Extract cookies from browser" option in the app. Select your browser (Chrome, Firefox, etc.) and then select Profile (optional).
@@ -210,11 +210,12 @@ python main.py
      b. Copy the cookies in Netscape format
      c. Create a file named `cookies.txt` and paste the cookies into it
      d. Select the `cookies.txt` file in the app
-- **Save Download Path:** Save the download path
-- **Update yt-dlp:** Update yt-dlp
-- **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp
+- **Save Download Path:** save the default download path for future downloads you can find this option in the about download settings dialog
+- **Update yt-dlp:** check and update yt-dlp to the latest version from within the app you can find this option in the about download settings dialog
+- **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp path and version you can find in the about dialog
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
 - **Proxy Support:** Use a proxy server for downloads (e.g., `http://<proxy-server>:<port>`)
+- **Force output Format:** Force download in a specific format (e.g., `mp4`, `mkv`) you can find this option in the download settings dialog
 
 </details>
 
