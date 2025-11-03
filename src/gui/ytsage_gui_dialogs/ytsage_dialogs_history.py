@@ -72,9 +72,9 @@ class HistoryEntryWidget(QFrame):
         main_layout.setSpacing(15)
         main_layout.setContentsMargins(10, 10, 10, 10)
         
-        # Thumbnail - Balanced size for better visibility without taking too much space
+        # Thumbnail - Larger size to utilize available space
         self.thumbnail_label = QLabel()
-        self.thumbnail_label.setFixedSize(240, 135)  # 16:9 ratio, balanced size
+        self.thumbnail_label.setFixedSize(280, 158)  # 16:9 ratio, larger to fill space
         self.thumbnail_label.setStyleSheet("""
             QLabel {
                 border: 2px solid #3d3d3d;
