@@ -312,7 +312,7 @@
     "analyzing_processing_subtitles": "Анализ (85%)... Обработка субтитров",
     "analyzing_updating_table": "Анализ (95%)... Обновление таблицы форматов",
     "analysis_complete": "Анализ завершен!",
-    "analyzing_extracting_ytdlp": "Анализ (30%)... Извлечение информации с исполняемым файлом yt-dlp",
+    "analyzing_extracting_ytdlp": "Анализ (30%)... Извлечение информации с yt-dlp",
     "analyzing_processing_data": "Анализ (60%)... Обработка данных",
     "analyzing_processing_formats_ytdlp": "Анализ (75%)... Обработка форматов",
     "analyzing_loading_thumbnail_ytdlp": "Анализ (85%)... Загрузка миниатюры",

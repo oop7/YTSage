@@ -312,7 +312,7 @@
     "analyzing_processing_subtitles": "Menganalisis (85%)... Memproses subtitle",
     "analyzing_updating_table": "Menganalisis (95%)... Memperbarui tabel format",
     "analysis_complete": "Analisis selesai!",
-    "analyzing_extracting_ytdlp": "Menganalisis (30%)... Mengekstrak informasi dengan executable yt-dlp",
+    "analyzing_extracting_ytdlp": "Menganalisis (30%)... Mengekstrak informasi dengan yt-dlp",
     "analyzing_processing_data": "Menganalisis (60%)... Memproses data",
     "analyzing_processing_formats_ytdlp": "Menganalisis (75%)... Memproses format",
     "analyzing_loading_thumbnail_ytdlp": "Menganalisis (85%)... Memuat thumbnail",

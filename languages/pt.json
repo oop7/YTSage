@@ -312,7 +312,7 @@
     "analyzing_processing_subtitles": "Analisando (85%)... Processando legendas",
     "analyzing_updating_table": "Analisando (95%)... Atualizando tabela de formatos",
     "analysis_complete": "Análise completa!",
-    "analyzing_extracting_ytdlp": "Analisando (30%)... Extraindo informações com executável yt-dlp",
+    "analyzing_extracting_ytdlp": "Analisando (30%)... Extraindo informações com yt-dlp",
     "analyzing_processing_data": "Analisando (60%)... Processando dados",
     "analyzing_processing_formats_ytdlp": "Analisando (75%)... Processando formatos",
     "analyzing_loading_thumbnail_ytdlp": "Analisando (85%)... Carregando miniatura",

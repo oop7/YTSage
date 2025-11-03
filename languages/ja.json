@@ -312,7 +312,7 @@
     "analyzing_processing_subtitles": "解析中 (85%)... 字幕を処理中",
     "analyzing_updating_table": "解析中 (95%)... フォーマットテーブルを更新中",
     "analysis_complete": "解析完了！",
-    "analyzing_extracting_ytdlp": "解析中 (30%)... yt-dlp実行ファイルを使用して情報を抽出中",
+    "analyzing_extracting_ytdlp": "解析中 (30%)... yt-dlpを使用して情報を抽出中",
     "analyzing_processing_data": "解析中 (60%)... データを処理中",
     "analyzing_processing_formats_ytdlp": "解析中 (75%)... フォーマットを処理中",
     "analyzing_loading_thumbnail_ytdlp": "解析中 (85%)... サムネイルを読み込み中",

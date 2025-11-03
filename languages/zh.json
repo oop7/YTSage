@@ -312,7 +312,7 @@
     "analyzing_processing_subtitles": "分析中 (85%)... 正在处理字幕",
     "analyzing_updating_table": "分析中 (95%)... 正在更新格式表",
     "analysis_complete": "分析完成！",
-    "analyzing_extracting_ytdlp": "分析中 (30%)... 使用 yt-dlp 可执行文件提取信息",
+    "analyzing_extracting_ytdlp": "分析中 (30%)... 使用 yt-dlp 提取信息",
     "analyzing_processing_data": "分析中 (60%)... 正在处理数据",
     "analyzing_processing_formats_ytdlp": "分析中 (75%)... 正在处理格式",
     "analyzing_loading_thumbnail_ytdlp": "分析中 (85%)... 正在加载缩略图",

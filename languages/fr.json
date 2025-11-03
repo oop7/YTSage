@@ -312,7 +312,7 @@
     "analyzing_processing_subtitles": "Analyse (85%)... Traitement des sous-titres",
     "analyzing_updating_table": "Analyse (95%)... Mise à jour du tableau des formats",
     "analysis_complete": "Analyse terminée !",
-    "analyzing_extracting_ytdlp": "Analyse (30%)... Extraction d'informations avec l'exécutable yt-dlp",
+    "analyzing_extracting_ytdlp": "Analyse (30%)... Extraction d'informations avec yt-dlp",
     "analyzing_processing_data": "Analyse (60%)... Traitement des données",
     "analyzing_processing_formats_ytdlp": "Analyse (75%)... Traitement des formats",
     "analyzing_loading_thumbnail_ytdlp": "Analyse (85%)... Chargement de la miniature",
