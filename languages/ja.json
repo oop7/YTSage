@@ -320,7 +320,10 @@
     "select_subtitles": "字幕を選択...",
     "sponsorblock_categories": "SponsorBlockカテゴリ...",
     "invalid_url_or_enter": "無効なURLまたはURLを入力してください。",
-    "zero_selected": "0個選択"
+    "zero_selected": "0個選択",
+    "analyze_first_tooltip": "最初に動画を分析してください",
+    "audio_mode_disabled": "音声のみモードでは利用できません",
+    "select_subtitles_first": "最初に字幕を選択してください"
   },
   "sponsorblock": {
     "sponsor": "スポンサー",

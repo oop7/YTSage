@@ -8,7 +8,7 @@ import markdown
 import pyglet
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
@@ -127,6 +127,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize output format settings
         self.force_output_format = ConfigManager.get("force_output_format") or False
         self.preferred_output_format = ConfigManager.get("preferred_output_format") or "mp4"
+        # Track if video analysis is completed
+        self.analysis_completed = False
 
         self.init_ui()
         self.setStyleSheet(
@@ -708,6 +710,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.signals.playlist_select_btn_visible.connect(self.playlist_select_btn.setVisible)
         self.signals.playlist_select_btn_text.connect(self.playlist_select_btn.setText)
 
+        # Disable analysis-dependent controls until video is analyzed
+        self.toggle_analysis_dependent_controls(enabled=False)
+
     def analyze_url(self) -> None:
         url = self.url_input.text().strip()
         if not url:
@@ -719,6 +724,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         if not is_valid:
             QMessageBox.warning(self, _("main_ui.error_title"), error_message)
             return
+
+        # Reset analysis state and disable controls
+        self.analysis_completed = False
+        self.toggle_analysis_dependent_controls(enabled=False)
 
         self.signals.update_status.emit(_("main_ui.analyzing_preparing"))
         threading.Thread(target=self._analyze_url_thread, args=(url,), daemon=True).start()
@@ -1532,39 +1541,128 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.status_label.setText(_("status.ready"))
             self.download_details_label.setText("")  # Clear details label
 
+    @Slot(bool)
+    def toggle_analysis_dependent_controls(self, enabled=True) -> None:
+        """Enable or disable controls that require video analysis to be completed"""
+        # Determine tooltip text for disabled state
+        tooltip_text = "" if enabled else _("main_ui.analyze_first_tooltip")
+        
+        # Subtitle selection
+        if hasattr(self, "subtitle_select_btn"):
+            self.subtitle_select_btn.setEnabled(enabled)
+            if not enabled:
+                self.subtitle_select_btn.setToolTip(tooltip_text)
+            else:
+                self.subtitle_select_btn.setToolTip("")
+        
+        # SponsorBlock (only if not in audio mode)
+        if hasattr(self, "sponsorblock_select_btn"):
+            is_audio_mode = self.audio_button.isChecked()
+            self.sponsorblock_select_btn.setEnabled(enabled and not is_audio_mode)
+            if not enabled or is_audio_mode:
+                self.sponsorblock_select_btn.setToolTip(tooltip_text if not enabled else _("main_ui.audio_mode_disabled"))
+            else:
+                self.sponsorblock_select_btn.setToolTip("")
+        
+        # Save Thumbnail checkbox
+        if hasattr(self, "save_thumbnail_checkbox"):
+            self.save_thumbnail_checkbox.setEnabled(enabled)
+            if not enabled:
+                self.save_thumbnail_checkbox.setToolTip(tooltip_text)
+            else:
+                self.save_thumbnail_checkbox.setToolTip("")
+        
+        # Save Description checkbox
+        if hasattr(self, "save_description_checkbox"):
+            self.save_description_checkbox.setEnabled(enabled)
+            if not enabled:
+                self.save_description_checkbox.setToolTip(tooltip_text)
+            else:
+                self.save_description_checkbox.setToolTip("")
+        
+        # Embed Chapters checkbox
+        if hasattr(self, "embed_chapters_checkbox"):
+            self.embed_chapters_checkbox.setEnabled(enabled)
+            if not enabled:
+                self.embed_chapters_checkbox.setToolTip(tooltip_text)
+            else:
+                self.embed_chapters_checkbox.setToolTip("")
+        
+        # Merge Subtitles (only if subtitles are selected and not in audio mode)
+        if hasattr(self, "merge_subs_checkbox"):
+            has_subs = len(getattr(self, "selected_subtitles", [])) > 0
+            is_audio_mode = self.audio_button.isChecked()
+            should_enable = enabled and has_subs and not is_audio_mode
+            self.merge_subs_checkbox.setEnabled(should_enable)
+            if not enabled:
+                self.merge_subs_checkbox.setToolTip(tooltip_text)
+            elif not has_subs:
+                self.merge_subs_checkbox.setToolTip(_("main_ui.select_subtitles_first"))
+            elif is_audio_mode:
+                self.merge_subs_checkbox.setToolTip(_("main_ui.audio_mode_disabled"))
+            else:
+                self.merge_subs_checkbox.setToolTip("")
+
     def handle_format_selection(self, button) -> None:
         # Update formats
         self.filter_formats()
 
     def handle_mode_change(self) -> None:
         """Enable or disable features based on video/audio mode"""
+        # Only allow enabling if analysis is complete
+        can_enable = self.analysis_completed
+        
         if self.audio_button.isChecked():
             # In Audio Only mode, disable video-specific features
             if hasattr(self, "sponsorblock_select_btn"):
                 self.sponsorblock_select_btn.setEnabled(False)
+                self.sponsorblock_select_btn.setToolTip(_("main_ui.audio_mode_disabled"))
             if hasattr(self, "selected_sponsorblock_categories"):
                 self.selected_sponsorblock_categories = []  # Clear selection when disabled
             if hasattr(self, "_update_sponsorblock_display"):
                 self._update_sponsorblock_display()
             self.merge_subs_checkbox.setEnabled(False)
             self.merge_subs_checkbox.setChecked(False)  # Uncheck when disabled
+            if not can_enable:
+                self.merge_subs_checkbox.setToolTip(_("main_ui.analyze_first_tooltip"))
+            else:
+                self.merge_subs_checkbox.setToolTip(_("main_ui.audio_mode_disabled"))
 
-            # Allow subtitle selection in Audio Only mode too
+            # Allow subtitle selection in Audio Only mode if analysis is complete
             if hasattr(self, "subtitle_select_btn"):
-                self.subtitle_select_btn.setEnabled(True)
+                self.subtitle_select_btn.setEnabled(can_enable)
+                if not can_enable:
+                    self.subtitle_select_btn.setToolTip(_("main_ui.analyze_first_tooltip"))
+                else:
+                    self.subtitle_select_btn.setToolTip("")
         else:
-            # In Video mode, enable video-specific features
+            # In Video mode, enable video-specific features (if analysis complete)
             if hasattr(self, "sponsorblock_select_btn"):
-                self.sponsorblock_select_btn.setEnabled(True)
+                self.sponsorblock_select_btn.setEnabled(can_enable)
+                if not can_enable:
+                    self.sponsorblock_select_btn.setToolTip(_("main_ui.analyze_first_tooltip"))
+                else:
+                    self.sponsorblock_select_btn.setToolTip("")
             # Don't automatically restore categories - let user choose when they open the dialog
 
-            # Enable merge_subs only if subtitles are selected
+            # Enable merge_subs only if subtitles are selected and analysis is complete
             has_subs_selected = len(getattr(self, "selected_subtitles", [])) > 0
-            self.merge_subs_checkbox.setEnabled(has_subs_selected)
+            should_enable_merge = can_enable and has_subs_selected
+            self.merge_subs_checkbox.setEnabled(should_enable_merge)
+            if not can_enable:
+                self.merge_subs_checkbox.setToolTip(_("main_ui.analyze_first_tooltip"))
+            elif not has_subs_selected:
+                self.merge_subs_checkbox.setToolTip(_("main_ui.select_subtitles_first"))
+            else:
+                self.merge_subs_checkbox.setToolTip("")
 
-            # Re-enable subtitle selection button in Video mode
+            # Re-enable subtitle selection button in Video mode (if analysis complete)
             if hasattr(self, "subtitle_select_btn"):
-                self.subtitle_select_btn.setEnabled(True)
+                self.subtitle_select_btn.setEnabled(can_enable)
+                if not can_enable:
+                    self.subtitle_select_btn.setToolTip(_("main_ui.analyze_first_tooltip"))
+                else:
+                    self.subtitle_select_btn.setToolTip("")
 
     # Keep these methods for backwards compatibility - they just call the new dialog now
     def show_custom_command(self) -> None:
@@ -1842,6 +1940,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.filter_formats()
 
             self.signals.update_status.emit(_("main_ui.analysis_complete"))
+
+            # Mark analysis as complete and enable analysis-dependent controls
+            self.analysis_completed = True
+            QMetaObject.invokeMethod(
+                self,
+                "toggle_analysis_dependent_controls",
+                Qt.ConnectionType.QueuedConnection,
+                Q_ARG(bool, True),
+            )
 
         except subprocess.TimeoutExpired:
             logger.error("Analysis timed out. Please try again.")

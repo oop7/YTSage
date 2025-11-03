@@ -320,7 +320,10 @@
     "select_subtitles": "اختر الترجمات...",
     "sponsorblock_categories": "فئات SponsorBlock...",
     "invalid_url_or_enter": "عنوان URL غير صالح أو الرجاء إدخال عنوان URL.",
-    "zero_selected": "تم اختيار 0"
+    "zero_selected": "تم اختيار 0",
+    "analyze_first_tooltip": "يرجى تحليل الفيديو أولاً",
+    "audio_mode_disabled": "غير متاح في وضع الصوت فقط",
+    "select_subtitles_first": "يرجى تحديد الترجمة أولاً"
   },
   "sponsorblock": {
     "sponsor": "الراعي",

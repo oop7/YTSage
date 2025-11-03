@@ -320,7 +320,10 @@
     "select_subtitles": "Pilih subtitle...",
     "sponsorblock_categories": "Kategori SponsorBlock...",
     "invalid_url_or_enter": "URL tidak valid atau silakan masukkan URL.",
-    "zero_selected": "0 dipilih"
+    "zero_selected": "0 dipilih",
+    "analyze_first_tooltip": "Silakan analisis video terlebih dahulu",
+    "audio_mode_disabled": "Tidak tersedia dalam mode audio saja",
+    "select_subtitles_first": "Silakan pilih subtitle terlebih dahulu"
   },
   "sponsorblock": {
     "sponsor": "Sponsor",

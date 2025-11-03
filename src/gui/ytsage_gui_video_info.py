@@ -300,11 +300,21 @@ class VideoInfoMixin:
 
             # Enable/disable the merge checkbox in the parent window
             if merge_checkbox:
-                # Only enable merge checkbox if we're not in Audio Only mode
+                # Only enable merge checkbox if we're not in Audio Only mode and analysis is complete
                 is_audio_only = hasattr(self, "audio_button") and self.audio_button.isChecked()
+                has_analysis = getattr(self, "analysis_completed", False)
                 # In audio-only mode, we still allow subtitle selection but not merging
-                should_enable = count > 0 and not is_audio_only
+                should_enable = count > 0 and not is_audio_only and has_analysis
                 merge_checkbox.setEnabled(should_enable)
+                # Update tooltip
+                if not has_analysis:
+                    merge_checkbox.setToolTip(_("main_ui.analyze_first_tooltip"))
+                elif is_audio_only:
+                    merge_checkbox.setToolTip(_("main_ui.audio_mode_disabled"))
+                elif count == 0:
+                    merge_checkbox.setToolTip(_("main_ui.select_subtitles_first"))
+                else:
+                    merge_checkbox.setToolTip("")
             else:
                 logger.warning("merge_subs_checkbox not found on parent window.")
 

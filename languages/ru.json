@@ -320,7 +320,10 @@
     "select_subtitles": "Выбрать субтитры...",
     "sponsorblock_categories": "Категории SponsorBlock...",
     "invalid_url_or_enter": "Неверный URL или пожалуйста введите URL.",
-    "zero_selected": "0 выбрано"
+    "zero_selected": "0 выбрано",
+    "analyze_first_tooltip": "Пожалуйста, сначала проанализируйте видео",
+    "audio_mode_disabled": "Недоступно в режиме только аудио",
+    "select_subtitles_first": "Пожалуйста, сначала выберите субтитры"
   },
   "sponsorblock": {
     "sponsor": "Спонсор",

@@ -320,7 +320,10 @@
     "select_subtitles": "Altyazı seç...",
     "sponsorblock_categories": "SponsorBlock kategorileri...",
     "invalid_url_or_enter": "Geçersiz URL veya lütfen bir URL girin.",
-    "zero_selected": "0 seçildi"
+    "zero_selected": "0 seçildi",
+    "analyze_first_tooltip": "Lütfen önce videoyu analiz edin",
+    "audio_mode_disabled": "Yalnızca ses modunda kullanılamaz",
+    "select_subtitles_first": "Lütfen önce altyazıları seçin"
   },
   "sponsorblock": {
     "sponsor": "Sponsor",

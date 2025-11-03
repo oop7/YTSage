@@ -320,7 +320,10 @@
     "select_subtitles": "उपशीर्षक चुनें...",
     "sponsorblock_categories": "SponsorBlock श्रेणियां...",
     "invalid_url_or_enter": "अमान्य URL या कृपया URL दर्ज करें।",
-    "zero_selected": "0 चयनित"
+    "zero_selected": "0 चयनित",
+    "analyze_first_tooltip": "कृपया पहले वीडियो का विश्लेषण करें",
+    "audio_mode_disabled": "केवल ऑडियो मोड में उपलब्ध नहीं",
+    "select_subtitles_first": "कृपया पहले उपशीर्षक चुनें"
   },
   "sponsorblock": {
     "sponsor": "प्रायोजक",

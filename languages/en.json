@@ -320,7 +320,10 @@
     "select_subtitles": "Select Subtitles...",
     "sponsorblock_categories": "SponsorBlock Categories...",
     "invalid_url_or_enter": "Invalid URL or please enter a URL.",
-    "zero_selected": "0 selected"
+    "zero_selected": "0 selected",
+    "analyze_first_tooltip": "Please analyze the video first",
+    "audio_mode_disabled": "Not available in audio-only mode",
+    "select_subtitles_first": "Please select subtitles first"
   },
   "sponsorblock": {
     "sponsor": "Sponsor",

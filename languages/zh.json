@@ -320,7 +320,10 @@
     "select_subtitles": "选择字幕...",
     "sponsorblock_categories": "SponsorBlock 分类...",
     "invalid_url_or_enter": "无效的URL或请输入URL。",
-    "zero_selected": "已选择 0 个"
+    "zero_selected": "已选择 0 个",
+    "analyze_first_tooltip": "请先分析视频",
+    "audio_mode_disabled": "在纯音频模式下不可用",
+    "select_subtitles_first": "请先选择字幕"
   },
   "sponsorblock": {
     "sponsor": "赞助商",
