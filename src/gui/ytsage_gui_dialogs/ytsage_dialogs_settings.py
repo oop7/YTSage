@@ -33,6 +33,7 @@ from src.core.ytsage_utils import (
     get_ytdlp_version,
     update_auto_update_settings,
 )
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import YTDLPUpdateDialog
 from src.utils.ytsage_logger import logger
 from src.utils.ytsage_localization import _
 
@@ -313,49 +314,11 @@ class DownloadSettingsDialog(QDialog):
         return msg_box
 
     def test_update_check(self) -> None:
-        """Test the update check functionality."""
-        try:
-            # Get current version
-            current_version = get_ytdlp_version()
-            if "Error" in current_version:
-                msg_box = self._create_styled_message_box(
-                    QMessageBox.Icon.Warning,
-                    _("settings.update_check_title"),
-                    _("settings.could_not_determine_version"),
-                )
-                msg_box.exec()
-                return
-
-            # Get latest version from PyPI
-            response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
-            response.raise_for_status()
-            latest_version = response.json()["info"]["version"]
-
-            # Clean up version strings
-            current_version = current_version.replace("_", ".")
-            latest_version = latest_version.replace("_", ".")
-
-            if version_parser.parse(latest_version) > version_parser.parse(current_version):
-                msg_box = self._create_styled_message_box(
-                    QMessageBox.Icon.Information,
-                    _("settings.update_check_title"),
-                    _("settings.update_available_dialog", current=current_version, latest=latest_version),
-                )
-                msg_box.exec()
-            else:
-                msg_box = self._create_styled_message_box(
-                    QMessageBox.Icon.Information,
-                    _("settings.update_check_title"),
-                    _("settings.up_to_date_dialog", version=current_version),
-                )
-                msg_box.exec()
-        except Exception as e:
-            msg_box = self._create_styled_message_box(
-                QMessageBox.Icon.Warning,
-                _("settings.update_check_title"),
-                _("settings.error_checking_updates", error=str(e)),
-            )
-            msg_box.exec()
+        """Open the yt-dlp update dialog with proper progress tracking."""
+        # Create and show the update dialog (non-modal to prevent blocking)
+        dialog = YTDLPUpdateDialog(self)
+        dialog.setModal(False)  # Make it non-modal
+        dialog.show()  # Use show() instead of exec() to avoid blocking
 
     def get_auto_update_settings(self) -> tuple[bool, str]:
         """Returns the auto-update settings from the dialog."""

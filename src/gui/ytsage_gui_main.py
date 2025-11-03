@@ -581,9 +581,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.time_range_btn = QPushButton(_("buttons.trim_video"))
         self.time_range_btn.clicked.connect(self.show_time_range_dialog)
 
-        self.update_ytdlp_btn = QPushButton(_("buttons.update"))
-        self.update_ytdlp_btn.clicked.connect(self.update_ytdlp)
-
         # --- Rename Path Button to Settings Button ---
         self.settings_button = QPushButton(_("buttons.download_settings"))  # Renamed button
         self.settings_button.clicked.connect(self.show_download_settings_dialog)  # Renamed method
@@ -607,7 +604,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         download_layout.addWidget(self.about_btn)
         download_layout.addWidget(self.history_btn)
         download_layout.addWidget(self.time_range_btn)  # New button position
-        download_layout.addWidget(self.update_ytdlp_btn)
         download_layout.addWidget(self.settings_button)
         download_layout.addWidget(self.download_btn)
         download_layout.addWidget(self.pause_btn)
@@ -747,13 +743,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
     def paste_url(self) -> None:
         clipboard = QApplication.clipboard()
         self.url_input.setText(clipboard.text())
-
-    def update_ytdlp(self) -> None:
-        """Show the yt-dlp update dialog with proper progress tracking"""
-        # Make the dialog non-modal to prevent blocking the main UI
-        dialog = YTDLPUpdateDialog(self)
-        dialog.setModal(False)  # Make it non-modal
-        dialog.show()  # Use show() instead of exec() to avoid blocking
 
     def show_download_settings_dialog(self) -> None:  # Renamed method
         dialog = DownloadSettingsDialog(self.last_path, self.speed_limit_value, self.speed_limit_unit_index, self)
