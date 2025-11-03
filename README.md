@@ -192,7 +192,7 @@ python main.py
 </details>
 
 <details>
-<summary>🧰 Options</summary>
+<summary>🧰 Advanced Options</summary>
 
 - **Subtitle Options:** Filter languages and embed into video file
 - **Subtitle Merge:** Merge subtitles into video file for hardcoded subtitles
@@ -210,13 +210,13 @@ python main.py
      b. Copy the cookies in Netscape format
      c. Create a file named `cookies.txt` and paste the cookies into it
      d. Select the `cookies.txt` file in the app
-- **Save Download Path:** save the default download path for future downloads you can find this option in the about download settings dialog
-- **Update yt-dlp:** check and update yt-dlp to the latest version from within the app you can find this option in the about download settings dialog
-- **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp path and version you can find in the about dialog
+- **Save Download Path:** Save the default download path for future downloads. You can find this option in the download settings dialog.
+- **Update yt-dlp:** Check and update yt-dlp to the latest version from within the app. You can find this option in the download settings dialog.
+- **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp path and version. You can find this option in the about dialog.
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
 - **Proxy Support:** Use a proxy server for downloads (e.g., `http://<proxy-server>:<port>`)
-- **Force output Format:** Force download in a specific format (e.g., `mp4`, `mkv`) you can find this option in the download settings dialog
-- **History**: View past downloads and their statuses you can redownload or open the file location from the history dialog
+- **Force output Format:** Force download in a specific format (e.g., `mp4`, `mkv`). You can find this option in the download settings dialog.
+- **History**: View past downloads and their statuses. You can redownload or open the file location from the history dialog.
 
 </details>
 
