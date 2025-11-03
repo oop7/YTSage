@@ -36,6 +36,7 @@ from src.core.ytsage_utils import (
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import YTDLPUpdateDialog
 from src.utils.ytsage_logger import logger
 from src.utils.ytsage_localization import _
+from src.utils.ytsage_config_manager import ConfigManager
 
 
 class DownloadSettingsDialog(QDialog):
@@ -199,6 +200,47 @@ class DownloadSettingsDialog(QDialog):
         speed_group_box.setLayout(speed_layout)
         layout.addWidget(speed_group_box)
 
+        # --- Output Format Settings Section ---
+        output_format_group_box = QGroupBox(_("settings.output_format_settings"))
+        output_format_layout = QVBoxLayout()
+
+        # Load current format settings from ConfigManager
+        self.force_format_enabled = ConfigManager.get("force_output_format") or False
+        self.preferred_format_value = ConfigManager.get("preferred_output_format") or "mp4"
+
+        # Enable/Disable force output format checkbox
+        self.force_format_checkbox = QCheckBox(_("settings.force_output_format"))
+        self.force_format_checkbox.setChecked(self.force_format_enabled)
+        output_format_layout.addWidget(self.force_format_checkbox)
+
+        # Format selection layout
+        format_select_layout = QHBoxLayout()
+        format_label = QLabel(_("settings.preferred_format"))
+        format_label.setStyleSheet("color: #ffffff; margin-top: 5px;")
+        format_select_layout.addWidget(format_label)
+
+        self.format_combo = QComboBox()
+        self.format_combo.addItems([
+            _("settings.format_mp4"),
+            _("settings.format_webm"),
+            _("settings.format_mkv")
+        ])
+        # Set current selection based on saved format
+        format_index_map = {"mp4": 0, "webm": 1, "mkv": 2}
+        self.format_combo.setCurrentIndex(format_index_map.get(self.preferred_format_value, 0))
+        format_select_layout.addWidget(self.format_combo)
+        format_select_layout.addStretch()
+        output_format_layout.addLayout(format_select_layout)
+
+        # Help text
+        help_label = QLabel(_("settings.force_format_help"))
+        help_label.setWordWrap(True)
+        help_label.setStyleSheet("color: #cccccc; margin: 5px; font-size: 10px;")
+        output_format_layout.addWidget(help_label)
+
+        output_format_group_box.setLayout(output_format_layout)
+        layout.addWidget(output_format_group_box)
+
         # --- Auto-Update yt-dlp Section ---
         auto_update_group_box = QGroupBox(_("settings.auto_update_ytdlp"))
         auto_update_layout = QVBoxLayout()
@@ -278,6 +320,15 @@ class DownloadSettingsDialog(QDialog):
         """Returns the index of the selected speed limit unit."""
         return self.speed_limit_unit.currentIndex()
 
+    def get_force_format_enabled(self) -> bool:
+        """Returns whether force output format is enabled."""
+        return self.force_format_checkbox.isChecked()
+
+    def get_preferred_format(self) -> str:
+        """Returns the selected preferred format (lowercase)."""
+        format_map = {0: "mp4", 1: "webm", 2: "mkv"}
+        return format_map.get(self.format_combo.currentIndex(), "mp4")
+
     def _create_styled_message_box(self, icon, title, text) -> QMessageBox:
         """Create a styled QMessageBox that matches the app theme."""
         msg_box = QMessageBox(self)
@@ -334,10 +385,16 @@ class DownloadSettingsDialog(QDialog):
         return enabled, frequency
 
     def accept(self) -> None:
-        """Override accept to save auto-update settings."""
+        """Override accept to save auto-update and format settings."""
         try:
             # Save auto-update settings
             enabled, frequency = self.get_auto_update_settings()
+
+            # Save output format settings
+            force_format = self.get_force_format_enabled()
+            preferred_format = self.get_preferred_format()
+            ConfigManager.set("force_output_format", force_format)
+            ConfigManager.set("preferred_output_format", preferred_format)
 
             if update_auto_update_settings(enabled, frequency):
                 QMessageBox.information(

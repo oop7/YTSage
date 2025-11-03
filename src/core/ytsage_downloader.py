@@ -58,6 +58,8 @@ class DownloadThread(QThread):
         force_keyframes=False,
         proxy_url=None,
         geo_proxy_url=None,
+        force_output_format=False,
+        preferred_output_format="mp4",
     ) -> None:
         super().__init__()
         self.url = url
@@ -81,6 +83,8 @@ class DownloadThread(QThread):
         self.force_keyframes = force_keyframes
         self.proxy_url = proxy_url
         self.geo_proxy_url = geo_proxy_url
+        self.force_output_format = force_output_format
+        self.preferred_output_format = preferred_output_format
         self.paused = False
         self.cancelled = False
         self.process = None
@@ -188,6 +192,17 @@ class DownloadThread(QThread):
             # If no specific format ID, use resolution-based sorting (-S)
             res_value = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified
             cmd.extend(["-S", f"res:{res_value}"])
+
+        # Force output format if enabled and merging is needed
+        if self.force_output_format and not self.is_audio_only:
+            if self.format_has_audio:
+                # Progressive format (video with audio) - use remux to convert container
+                cmd.extend(["--remux-video", self.preferred_output_format])
+                logger.debug(f"Using --remux-video to force progressive format to: {self.preferred_output_format}")
+            else:
+                # Merging video+audio - force merge output format
+                cmd.extend(["--merge-output-format", self.preferred_output_format])
+                logger.debug(f"Using --merge-output-format to force merged format to: {self.preferred_output_format}")
 
         # Output template with resolution in filename
         # Use string concatenation instead of Path.joinpath to avoid Path object issues

@@ -260,7 +260,14 @@
     "update_frequency_group": "Frecuencia de Actualización",
     "save_settings": "Guardar Configuración",
     "settings_saved_successfully": "✅ ¡Configuración guardada exitosamente!",
-    "error_saving": "❌ Error al guardar configuración: {error}"
+    "error_saving": "❌ Error al guardar configuración: {error}",
+    "output_format_settings": "Configuración de Formato de Salida",
+    "force_output_format": "Forzar formato de salida al combinar",
+    "preferred_format": "Formato preferido:",
+    "force_format_help": "Cuando está habilitado, los videos combinados se convertirán a su formato preferido. Deshabilitar para dejar que yt-dlp decida automáticamente.",
+    "format_mp4": "MP4 (Más compatible)",
+    "format_webm": "WebM (Moderno, abierto)",
+    "format_mkv": "MKV (Rico en funciones)"
   },
   "main_ui": {
     "url_placeholder": "Ingresa URL de video o lista de YouTube",

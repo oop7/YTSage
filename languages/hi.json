@@ -277,7 +277,14 @@
     "update_frequency_group": "अपडेट आवृत्ति",
     "save_settings": "सेटिंग्स सेव करें",
     "settings_saved_successfully": "✅ सेटिंग्स सफलतापूर्वक सेव हुईं!",
-    "error_saving": "❌ सेटिंग्स सेव करने में त्रुटि: {error}"
+    "error_saving": "❌ सेटिंग्स सेव करने में त्रुटि: {error}",
+    "output_format_settings": "आउटपुट प्रारूप सेटिंग्स",
+    "force_output_format": "मर्ज करते समय आउटपुट प्रारूप बाध्य करें",
+    "preferred_format": "पसंदीदा प्रारूप:",
+    "force_format_help": "सक्षम होने पर, मर्ज किए गए वीडियो आपके पसंदीदा प्रारूप में परिवर्तित हो जाएंगे। yt-dlp को स्वचालित रूप से निर्णय लेने देने के लिए अक्षम करें।",
+    "format_mp4": "MP4 (सबसे संगत)",
+    "format_webm": "WebM (आधुनिक, खुला)",
+    "format_mkv": "MKV (सुविधा समृद्ध)"
   },
   "main_ui": {
     "url_placeholder": "YouTube वीडियो या प्लेलिस्ट URL दर्ज करें",

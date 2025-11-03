@@ -277,7 +277,14 @@
     "update_frequency_group": "更新频率",
     "save_settings": "保存设置",
     "settings_saved_successfully": "✅ 设置保存成功！",
-    "error_saving": "❌ 保存设置时出错：{error}"
+    "error_saving": "❌ 保存设置时出错：{error}",
+    "output_format_settings": "输出格式设置",
+    "force_output_format": "合并时强制输出格式",
+    "preferred_format": "首选格式：",
+    "force_format_help": "启用后，合并的视频将转换为您的首选格式。禁用以让 yt-dlp 自动决定。",
+    "format_mp4": "MP4（最兼容）",
+    "format_webm": "WebM（现代、开放）",
+    "format_mkv": "MKV（功能丰富）"
   },
   "main_ui": {
     "url_placeholder": "输入 YouTube 视频或播放列表网址",

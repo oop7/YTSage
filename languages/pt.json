@@ -277,7 +277,14 @@
     "update_frequency_group": "Frequência de Atualização",
     "save_settings": "Salvar Configurações",
     "settings_saved_successfully": "✅ Configurações salvas com sucesso!",
-    "error_saving": "❌ Erro ao salvar configurações: {error}"
+    "error_saving": "❌ Erro ao salvar configurações: {error}",
+    "output_format_settings": "Configurações de Formato de Saída",
+    "force_output_format": "Forçar formato de saída ao mesclar",
+    "preferred_format": "Formato preferido:",
+    "force_format_help": "Quando ativado, os vídeos mesclados serão convertidos para o seu formato preferido. Desative para deixar o yt-dlp decidir automaticamente.",
+    "format_mp4": "MP4 (Mais compatível)",
+    "format_webm": "WebM (Moderno, aberto)",
+    "format_mkv": "MKV (Rico em recursos)"
   },
   "main_ui": {
     "url_placeholder": "Digite a URL do vídeo ou playlist do YouTube",

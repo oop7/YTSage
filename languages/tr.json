@@ -277,7 +277,14 @@
     "update_frequency_group": "Güncelleme sıklığı",
     "save_settings": "Ayarları kaydet",
     "settings_saved_successfully": "✅ Ayarlar başarıyla kaydedildi!",
-    "error_saving": "❌ Ayarları kaydetme hatası: {error}"
+    "error_saving": "❌ Ayarları kaydetme hatası: {error}",
+    "output_format_settings": "Çıktı Formatı Ayarları",
+    "force_output_format": "Birleştirirken çıktı formatını zorla",
+    "preferred_format": "Tercih edilen format:",
+    "force_format_help": "Etkinleştirildiğinde, birleştirilen videolar tercih ettiğiniz formata dönüştürülür. yt-dlp'nin otomatik karar vermesini sağlamak için devre dışı bırakın.",
+    "format_mp4": "MP4 (En uyumlu)",
+    "format_webm": "WebM (Modern, açık)",
+    "format_mkv": "MKV (Özellik açısından zengin)"
   },
   "main_ui": {
     "url_placeholder": "YouTube video veya oynatma listesi URL'sini girin",

@@ -277,7 +277,14 @@
     "update_frequency_group": "Update-Häufigkeit",
     "save_settings": "Einstellungen speichern",
     "settings_saved_successfully": "✅ Einstellungen erfolgreich gespeichert!",
-    "error_saving": "❌ Fehler beim Speichern der Einstellungen: {error}"
+    "error_saving": "❌ Fehler beim Speichern der Einstellungen: {error}",
+    "output_format_settings": "Ausgabeformat-Einstellungen",
+    "force_output_format": "Ausgabeformat beim Zusammenführen erzwingen",
+    "preferred_format": "Bevorzugtes Format:",
+    "force_format_help": "Wenn aktiviert, werden zusammengeführte Videos in Ihr bevorzugtes Format konvertiert. Deaktivieren Sie diese Option, damit yt-dlp automatisch entscheidet.",
+    "format_mp4": "MP4 (Am kompatibelsten)",
+    "format_webm": "WebM (Modern, offen)",
+    "format_mkv": "MKV (Funktionsreich)"
   },
   "main_ui": {
     "url_placeholder": "YouTube-Video- oder Playlist-URL eingeben",

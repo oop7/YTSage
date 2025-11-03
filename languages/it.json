@@ -277,7 +277,14 @@
     "update_frequency_group": "Frequenza aggiornamenti",
     "save_settings": "Salva impostazioni",
     "settings_saved_successfully": "✅ Impostazioni salvate con successo!",
-    "error_saving": "❌ Errore nel salvataggio impostazioni: {error}"
+    "error_saving": "❌ Errore nel salvataggio impostazioni: {error}",
+    "output_format_settings": "Impostazioni formato output",
+    "force_output_format": "Forza formato output durante la fusione",
+    "preferred_format": "Formato preferito:",
+    "force_format_help": "Quando attivato, i video uniti verranno convertiti nel formato preferito. Disattiva per lasciare che yt-dlp decida automaticamente.",
+    "format_mp4": "MP4 (Più compatibile)",
+    "format_webm": "WebM (Moderno, aperto)",
+    "format_mkv": "MKV (Ricco di funzionalità)"
   },
   "main_ui": {
     "url_placeholder": "Inserisci URL video YouTube o playlist",

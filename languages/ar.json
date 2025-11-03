@@ -277,7 +277,14 @@
     "update_frequency_group": "تكرار التحديثات",
     "save_settings": "حفظ الإعدادات",
     "settings_saved_successfully": "✅ تم حفظ الإعدادات بنجاح!",
-    "error_saving": "❌ خطأ في حفظ الإعدادات: {error}"
+    "error_saving": "❌ خطأ في حفظ الإعدادات: {error}",
+    "output_format_settings": "إعدادات تنسيق الإخراج",
+    "force_output_format": "فرض تنسيق الإخراج عند الدمج",
+    "preferred_format": "التنسيق المفضل:",
+    "force_format_help": "عند التمكين، سيتم تحويل الفيديوهات المدموجة إلى تنسيقك المفضل. قم بالتعطيل للسماح لـ yt-dlp بالقرار تلقائياً.",
+    "format_mp4": "MP4 (الأكثر توافقاً)",
+    "format_webm": "WebM (حديث، مفتوح)",
+    "format_mkv": "MKV (غني بالميزات)"
   },
   "main_ui": {
     "url_placeholder": "أدخل رابط فيديو يوتيوب أو قائمة تشغيل",

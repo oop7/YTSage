@@ -277,7 +277,14 @@
     "update_frequency_group": "Frekuensi pembaruan",
     "save_settings": "Simpan pengaturan",
     "settings_saved_successfully": "✅ Pengaturan berhasil disimpan!",
-    "error_saving": "❌ Kesalahan menyimpan pengaturan: {error}"
+    "error_saving": "❌ Kesalahan menyimpan pengaturan: {error}",
+    "output_format_settings": "Pengaturan Format Output",
+    "force_output_format": "Paksa format output saat menggabungkan",
+    "preferred_format": "Format yang disukai:",
+    "force_format_help": "Jika diaktifkan, video yang digabungkan akan dikonversi ke format pilihan Anda. Nonaktifkan untuk membiarkan yt-dlp memutuskan secara otomatis.",
+    "format_mp4": "MP4 (Paling kompatibel)",
+    "format_webm": "WebM (Modern, terbuka)",
+    "format_mkv": "MKV (Kaya fitur)"
   },
   "main_ui": {
     "url_placeholder": "Masukkan URL video atau playlist YouTube",

@@ -277,7 +277,14 @@
     "update_frequency_group": "Częstotliwość aktualizacji",
     "save_settings": "Zapisz ustawienia",
     "settings_saved_successfully": "✅ Ustawienia zapisane pomyślnie!",
-    "error_saving": "❌ Błąd zapisywania ustawień: {error}"
+    "error_saving": "❌ Błąd zapisywania ustawień: {error}",
+    "output_format_settings": "Ustawienia formatu wyjściowego",
+    "force_output_format": "Wymuś format wyjściowy podczas łączenia",
+    "preferred_format": "Preferowany format:",
+    "force_format_help": "Po włączeniu połączone filmy zostaną przekonwertowane na wybrany format. Wyłącz, aby pozwolić yt-dlp zdecydować automatycznie.",
+    "format_mp4": "MP4 (Najbardziej kompatybilny)",
+    "format_webm": "WebM (Nowoczesny, otwarty)",
+    "format_mkv": "MKV (Bogaty w funkcje)"
   },
   "main_ui": {
     "url_placeholder": "Wprowadź URL wideo YouTube lub playlisty",

@@ -124,6 +124,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.speed_limit_unit_index = 0  # Store speed limit unit index (0: KB/s, 1: MB/s)
         self.download_section = None
         self.force_keyframes = False
+        # Initialize output format settings
+        self.force_output_format = ConfigManager.get("force_output_format") or False
+        self.preferred_output_format = ConfigManager.get("preferred_output_format") or "mp4"
 
         self.init_ui()
         self.setStyleSheet(
@@ -768,8 +771,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     f"Speed limit updated to: {self.speed_limit_value} {['KB/s', 'MB/s'][self.speed_limit_unit_index] if self.speed_limit_value else 'None'}"
                 )
 
+            # Update Output Format Settings
+            new_force_format = dialog.get_force_format_enabled()
+            new_preferred_format = dialog.get_preferred_format()
+            format_changed = False
+            if new_force_format != self.force_output_format or new_preferred_format != self.preferred_output_format:
+                self.force_output_format = new_force_format
+                self.preferred_output_format = new_preferred_format
+                format_changed = True
+                logger.info(f"Output format settings updated - Force: {self.force_output_format}, Preferred: {self.preferred_output_format}")
+
             # Update Tooltip if anything changed
-            if path_changed or limit_changed:
+            if path_changed or limit_changed or format_changed:
                 limit_text = "None"
                 if self.speed_limit_value:
                     limit_text = f"{self.speed_limit_value} {['KB/s', 'MB/s'][self.speed_limit_unit_index]}"
@@ -876,6 +889,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             force_keyframes=self.force_keyframes,  # Pass the force keyframes setting
             proxy_url=self.proxy_url,  # Pass the proxy URL
             geo_proxy_url=self.geo_proxy_url,  # Pass the geo-verification proxy URL
+            force_output_format=self.force_output_format,  # Pass force output format setting
+            preferred_output_format=self.preferred_output_format,  # Pass preferred format
         )
 
         # Connect signals

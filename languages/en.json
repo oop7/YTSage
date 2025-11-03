@@ -277,7 +277,14 @@
     "update_frequency_group": "Update Frequency",
     "save_settings": "Save Settings",
     "settings_saved_successfully": "✅ Settings saved successfully!",
-    "error_saving": "❌ Error saving settings: {error}"
+    "error_saving": "❌ Error saving settings: {error}",
+    "output_format_settings": "Output Format Settings",
+    "force_output_format": "Force output format when merging",
+    "preferred_format": "Preferred format:",
+    "force_format_help": "When enabled, merged videos will be converted to your preferred format. Disable to let yt-dlp decide automatically.",
+    "format_mp4": "MP4 (Most compatible)",
+    "format_webm": "WebM (Modern, open)",
+    "format_mkv": "MKV (Feature-rich)"
   },
   "main_ui": {
     "url_placeholder": "Enter YouTube video or playlist URL",

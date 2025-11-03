@@ -277,7 +277,14 @@
     "update_frequency_group": "更新頻度",
     "save_settings": "設定を保存",
     "settings_saved_successfully": "✅ 設定が正常に保存されました！",
-    "error_saving": "❌ 設定の保存エラー: {error}"
+    "error_saving": "❌ 設定の保存エラー: {error}",
+    "output_format_settings": "出力形式設定",
+    "force_output_format": "マージ時に出力形式を強制",
+    "preferred_format": "優先形式:",
+    "force_format_help": "有効にすると、マージされた動画は優先形式に変換されます。無効にすると、yt-dlpが自動的に決定します。",
+    "format_mp4": "MP4（最も互換性が高い）",
+    "format_webm": "WebM（モダン、オープン）",
+    "format_mkv": "MKV（機能豊富）"
   },
   "main_ui": {
     "url_placeholder": "YouTubeの動画URLまたはプレイリストURLを入力",
