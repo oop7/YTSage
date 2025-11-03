@@ -15,6 +15,7 @@ This package contains all dialog classes organized by functionality:
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_base import AboutDialog, LogWindow
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_custom import CustomOptionsDialog, TimeRangeDialog
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_ffmpeg import FFmpegCheckDialog, FFmpegInstallThread
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_history import HistoryDialog
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_selection import (
     PlaylistSelectionDialog,
     SponsorBlockCategoryDialog,
@@ -50,4 +51,7 @@ __all__ = [
     # Custom functionality dialogs
     "CustomOptionsDialog",
     "TimeRangeDialog",
+    
+    # History dialog
+    "HistoryDialog",
 ]

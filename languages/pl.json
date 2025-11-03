@@ -81,7 +81,8 @@
     "select_defaults": "Wybierz domyślne",
     "select_all": "Zaznacz wszystko",
     "deselect_all": "Odznacz wszystko",
-    "open_folder": "Otwórz lokalizację folderu"
+    "open_folder": "Otwórz lokalizację folderu",
+    "history": "Historia"
   },
   "dialogs": {
     "custom_options": "Opcje niestandardowe",
@@ -428,5 +429,32 @@
     "copyright_blocked": "Ten film jest zablokowany z powodu roszczeń dotyczących praw autorskich.\nWłaściciel treści ograniczył dostęp do tego filmu.",
     "extraction_failed": "Nie udało się wyodrębnić informacji o filmie. To może być tymczasowy problem.\nSpróbuj ponownie za kilka minut lub sprawdź, czy link do filmu jest poprawny.",
     "generic_error": "Nie udało się wyodrębnić informacji o filmie. Sprawdź swój link.\nSzczegóły techniczne: {error}"
+  },
+  "history": {
+    "title": "Historia Pobierania",
+    "clear_all": "Wyczyść Wszystko",
+    "clear_confirm_title": "Wyczyścić Historię?",
+    "clear_confirm_message": "Czy jesteś pewien? Nie można tego cofnąć.",
+    "no_history": "Brak historii",
+    "no_history_description": "Twoje pobrane pliki pojawią się tutaj",
+    "search_placeholder": "Szukaj...",
+    "open_location": "Otwórz Lokalizację",
+    "redownload": "Pobierz Ponownie",
+    "remove": "Usuń",
+    "file_not_found": "Nie znaleziono pliku",
+    "file_not_found_message": "Plik został przeniesiony lub usunięty:\n{path}",
+    "downloaded_on": "Pobrano: {date}",
+    "file_size": "Rozmiar: {size}",
+    "audio_download": "Audio",
+    "video_download": "Wideo",
+    "remove_confirm_title": "Usunąć?",
+    "remove_confirm_message": "Usunąć z historii?\n\n{title}",
+    "item_removed": "Usunięto",
+    "history_cleared": "Historia wyczyszczona",
+    "entries_count": "{count} pobrań",
+    "one_entry": "1 pobranie",
+    "redownload_confirm_title": "Pobrać Ponownie?",
+    "redownload_confirm_message": "Pobrać ponownie?\n\n{title}",
+    "redownload_started": "Rozpoczęto pobieranie"
   }
 }

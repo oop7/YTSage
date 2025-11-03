@@ -81,7 +81,8 @@
     "select_defaults": "Selecionar Padrões",
     "select_all": "Selecionar Tudo",
     "deselect_all": "Desmarcar Tudo",
-    "open_folder": "Abrir local da pasta"
+    "open_folder": "Abrir local da pasta",
+    "history": "Histórico"
   },
   "dialogs": {
     "custom_options": "Opções Personalizadas",
@@ -428,5 +429,32 @@
     "copyright_blocked": "Este vídeo está bloqueado devido a reivindicações de direitos autorais.\nO proprietário do conteúdo restringiu o acesso a este vídeo.",
     "extraction_failed": "Falha ao extrair informações do vídeo. Isso pode ser um problema temporário.\nTente novamente em alguns minutos ou verifique se o link do vídeo está correto.",
     "generic_error": "Não foi possível extrair informações do vídeo. Verifique seu link.\nDetalhes técnicos: {error}"
+  },
+  "history": {
+    "title": "Histórico de Downloads",
+    "clear_all": "Limpar Tudo",
+    "clear_confirm_title": "Limpar Histórico?",
+    "clear_confirm_message": "Tem certeza? Isto não pode ser desfeito.",
+    "no_history": "Nenhum histórico ainda",
+    "no_history_description": "Seus downloads aparecerão aqui",
+    "search_placeholder": "Pesquisar...",
+    "open_location": "Abrir Local",
+    "redownload": "Baixar Novamente",
+    "remove": "Remover",
+    "file_not_found": "Arquivo não encontrado",
+    "file_not_found_message": "O arquivo foi movido ou excluído:\n{path}",
+    "downloaded_on": "Baixado: {date}",
+    "file_size": "Tamanho: {size}",
+    "audio_download": "Áudio",
+    "video_download": "Vídeo",
+    "remove_confirm_title": "Remover?",
+    "remove_confirm_message": "Remover do histórico?\n\n{title}",
+    "item_removed": "Removido",
+    "history_cleared": "Histórico limpo",
+    "entries_count": "{count} downloads",
+    "one_entry": "1 download",
+    "redownload_confirm_title": "Baixar Novamente?",
+    "redownload_confirm_message": "Baixar novamente?\n\n{title}",
+    "redownload_started": "Download iniciado"
   }
 }

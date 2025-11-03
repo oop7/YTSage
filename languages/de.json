@@ -81,7 +81,8 @@
     "select_defaults": "Standard auswählen",
     "select_all": "Alle auswählen",
     "deselect_all": "Alle abwählen",
-    "open_folder": "Ordnerspeicherort öffnen"
+    "open_folder": "Ordnerspeicherort öffnen",
+    "history": "Verlauf"
   },
   "dialogs": {
     "custom_options": "Benutzerdefinierte Optionen",
@@ -428,5 +429,32 @@
     "copyright_blocked": "Dieses Video ist aufgrund von Urheberrechtsansprüchen gesperrt.\nDer Inhaltsinhaber hat den Zugriff auf dieses Video eingeschränkt.",
     "extraction_failed": "Fehler beim Extrahieren von Videoinformationen. Dies könnte ein vorübergehendes Problem sein.\nBitte versuchen Sie es in ein paar Minuten erneut oder überprüfen Sie, ob der Videolink korrekt ist.",
     "generic_error": "Videoinformationen konnten nicht extrahiert werden. Bitte überprüfen Sie Ihren Link.\nTechnische Details: {error}"
+  },
+  "history": {
+    "title": "Download-Verlauf",
+    "clear_all": "Alles Löschen",
+    "clear_confirm_title": "Verlauf Löschen?",
+    "clear_confirm_message": "Sind Sie sicher? Dies kann nicht rückgängig gemacht werden.",
+    "no_history": "Noch kein Verlauf",
+    "no_history_description": "Ihre Downloads werden hier angezeigt",
+    "search_placeholder": "Suchen...",
+    "open_location": "Speicherort Öffnen",
+    "redownload": "Erneut Laden",
+    "remove": "Entfernen",
+    "file_not_found": "Datei nicht gefunden",
+    "file_not_found_message": "Die Datei wurde verschoben oder gelöscht:\n{path}",
+    "downloaded_on": "Geladen: {date}",
+    "file_size": "Größe: {size}",
+    "audio_download": "Audio",
+    "video_download": "Video",
+    "remove_confirm_title": "Entfernen?",
+    "remove_confirm_message": "Aus Verlauf entfernen?\n\n{title}",
+    "item_removed": "Entfernt",
+    "history_cleared": "Verlauf gelöscht",
+    "entries_count": "{count} Downloads",
+    "one_entry": "1 Download",
+    "redownload_confirm_title": "Erneut Laden?",
+    "redownload_confirm_message": "Erneut herunterladen?\n\n{title}",
+    "redownload_started": "Download gestartet"
   }
 }

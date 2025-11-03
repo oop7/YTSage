@@ -81,7 +81,8 @@
     "select_defaults": "Sélectionner par défaut",
     "select_all": "Tout sélectionner",
     "deselect_all": "Tout désélectionner",
-    "open_folder": "Ouvrir l'emplacement du dossier"
+    "open_folder": "Ouvrir l'emplacement du dossier",
+    "history": "Historique"
   },
   "dialogs": {
     "custom_options": "Options personnalisées",
@@ -428,5 +429,32 @@
     "copyright_blocked": "Cette vidéo est bloquée en raison de réclamations pour droits d'auteur.\nLe propriétaire du contenu a restreint l'accès à cette vidéo.",
     "extraction_failed": "Échec de l'extraction des informations vidéo. Cela pourrait être un problème temporaire.\nVeuillez réessayer dans quelques minutes ou vérifier si le lien vidéo est correct.",
     "generic_error": "Impossible d'extraire les informations vidéo. Veuillez vérifier votre lien.\nDétails techniques : {error}"
+  },
+  "history": {
+    "title": "Historique des Téléchargements",
+    "clear_all": "Tout Effacer",
+    "clear_confirm_title": "Effacer l'Historique?",
+    "clear_confirm_message": "Êtes-vous sûr? Cela ne peut pas être annulé.",
+    "no_history": "Pas encore d'historique",
+    "no_history_description": "Vos téléchargements apparaîtront ici",
+    "search_placeholder": "Rechercher...",
+    "open_location": "Ouvrir l'Emplacement",
+    "redownload": "Télécharger à Nouveau",
+    "remove": "Supprimer",
+    "file_not_found": "Fichier non trouvé",
+    "file_not_found_message": "Le fichier a été déplacé ou supprimé:\n{path}",
+    "downloaded_on": "Téléchargé: {date}",
+    "file_size": "Taille: {size}",
+    "audio_download": "Audio",
+    "video_download": "Vidéo",
+    "remove_confirm_title": "Supprimer?",
+    "remove_confirm_message": "Supprimer de l'historique?\n\n{title}",
+    "item_removed": "Supprimé",
+    "history_cleared": "Historique effacé",
+    "entries_count": "{count} téléchargements",
+    "one_entry": "1 téléchargement",
+    "redownload_confirm_title": "Télécharger à Nouveau?",
+    "redownload_confirm_message": "Télécharger à nouveau?\n\n{title}",
+    "redownload_started": "Téléchargement démarré"
   }
 }

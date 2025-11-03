@@ -38,6 +38,7 @@ from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__
     CustomOptionsDialog,
     DownloadSettingsDialog,
     FFmpegCheckDialog,
+    HistoryDialog,
     PlaylistSelectionDialog,
     TimeRangeDialog,
     YTDLPUpdateDialog,
@@ -48,6 +49,7 @@ from src.utils.ytsage_constants import ICON_PATH, SOUND_PATH, SUBPROCESS_CREATIO
 from src.utils.ytsage_logger import logger
 from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import LocalizationManager, _
+from src.utils.ytsage_history_manager import HistoryManager
 
 # Note: yt-dlp Python package removed - using binary-only approach
 # DownloadError and ExtractorError definitions kept for compatibility
@@ -571,6 +573,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         self.about_btn = QPushButton(_("buttons.about"))
         self.about_btn.clicked.connect(self.show_about_dialog)
+        
+        self.history_btn = QPushButton(_("buttons.history"))
+        self.history_btn.clicked.connect(self.show_history_dialog)
 
         # Add new Time Range button
         self.time_range_btn = QPushButton(_("buttons.trim_video"))
@@ -600,6 +605,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Add all buttons to layout in the correct order
         download_layout.addWidget(self.custom_options_btn)
         download_layout.addWidget(self.about_btn)
+        download_layout.addWidget(self.history_btn)
         download_layout.addWidget(self.time_range_btn)  # New button position
         download_layout.addWidget(self.update_ytdlp_btn)
         download_layout.addWidget(self.settings_button)
@@ -931,6 +937,44 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             
             # Show the open folder button
             self.open_folder_btn.setVisible(True)
+            
+            # Save to history
+            try:
+                if self.download_thread.last_file_path and self.video_info:
+                    # Get video information
+                    title = self.video_info.get("title", _("video_info.unknown_title"))
+                    channel = self.video_info.get("channel", None) or self.video_info.get("uploader", None)
+                    duration = self.video_info.get("duration_string", None)
+                    
+                    # Prepare download options
+                    download_options = {
+                        "format_id": self.download_thread.format_id,
+                        "subtitle_langs": self.download_thread.subtitle_langs,
+                        "merge_subs": self.download_thread.merge_subs,
+                        "enable_sponsorblock": self.download_thread.enable_sponsorblock,
+                        "sponsorblock_categories": self.download_thread.sponsorblock_categories,
+                        "save_description": self.download_thread.save_description,
+                        "embed_chapters": self.download_thread.embed_chapters,
+                        "download_section": self.download_thread.download_section,
+                        "force_keyframes": self.download_thread.force_keyframes,
+                    }
+                    
+                    # Add to history
+                    HistoryManager.add_entry(
+                        title=title,
+                        url=self.video_url,
+                        thumbnail_url=self.thumbnail_url,
+                        file_path=str(self.download_thread.last_file_path),
+                        format_id=self.download_thread.format_id,
+                        is_audio_only=self.download_thread.is_audio_only,
+                        resolution=self.download_thread.resolution,
+                        channel=channel,
+                        duration=duration,
+                        download_options=download_options,
+                    )
+                    logger.info(f"Added download to history: {title}")
+            except Exception as e:
+                logger.error(f"Error saving to history: {e}", exc_info=True)
 
         # Play notification sound when download completes
         self.play_notification_sound()
@@ -1325,6 +1369,37 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
     def show_about_dialog(self) -> None:  # ADDED METHOD HERE
         dialog = AboutDialog(self)
         dialog.exec()
+    
+    def show_history_dialog(self) -> None:
+        """Show the download history dialog."""
+        dialog = HistoryDialog(self)
+        dialog.redownload_requested.connect(self.handle_redownload_from_history)
+        dialog.exec()
+    
+    def handle_redownload_from_history(self, entry: dict) -> None:
+        """Handle redownload request from history dialog."""
+        try:
+            # Set URL
+            url = entry.get("url", "")
+            if url:
+                self.url_input.setText(url)
+                self.video_url = url
+                
+                # Analyze the URL to get format info
+                logger.info(f"Redownloading from history: {entry.get('title', 'Unknown')}")
+                QMessageBox.information(
+                    self,
+                    _("history.redownload_started"),
+                    _("history.redownload_started") + f"\n\n{entry.get('title', '')}"
+                )
+                
+                # Trigger analysis
+                self.analyze_url()
+            else:
+                QMessageBox.warning(self, "Error", "No URL found in history entry")
+        except Exception as e:
+            logger.error(f"Error handling redownload from history: {e}", exc_info=True)
+            QMessageBox.warning(self, "Error", f"Failed to start redownload: {str(e)}")
 
     def file_already_exists(self, filename) -> None:
         """Handle case when file already exists - simplified version"""

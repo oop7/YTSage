@@ -81,7 +81,8 @@
     "select_defaults": "デフォルトを選択",
     "select_all": "すべて選択",
     "deselect_all": "すべて解除",
-    "open_folder": "フォルダの場所を開く"
+    "open_folder": "フォルダの場所を開く",
+    "history": "履歴"
   },
   "dialogs": {
     "custom_options": "カスタムオプション",
@@ -428,5 +429,32 @@
     "copyright_blocked": "著作権の申し立てにより、この動画はブロックされています。\nコンテンツ所有者がこの動画へのアクセスを制限しています。",
     "extraction_failed": "動画情報の抽出に失敗しました。これは一時的な問題である可能性があります。\n数分後にもう一度お試しいただくか、動画リンクが正しいか確認してください。",
     "generic_error": "動画情報を抽出できませんでした。リンクを確認してください。\n技術的詳細：{error}"
+  },
+  "history": {
+    "title": "ダウンロード履歴",
+    "clear_all": "すべてクリア",
+    "clear_confirm_title": "履歴をクリア？",
+    "clear_confirm_message": "本当によろしいですか？この操作は取り消せません。",
+    "no_history": "まだ履歴がありません",
+    "no_history_description": "ダウンロードがここに表示されます",
+    "search_placeholder": "検索...",
+    "open_location": "場所を開く",
+    "redownload": "再ダウンロード",
+    "remove": "削除",
+    "file_not_found": "ファイルが見つかりません",
+    "file_not_found_message": "ファイルが移動または削除されました：\n{path}",
+    "downloaded_on": "ダウンロード日：{date}",
+    "file_size": "サイズ：{size}",
+    "audio_download": "オーディオ",
+    "video_download": "ビデオ",
+    "remove_confirm_title": "削除？",
+    "remove_confirm_message": "履歴から削除しますか？\n\n{title}",
+    "item_removed": "削除しました",
+    "history_cleared": "履歴をクリアしました",
+    "entries_count": "{count} 件",
+    "one_entry": "1 件",
+    "redownload_confirm_title": "再ダウンロード？",
+    "redownload_confirm_message": "再ダウンロードしますか？\n\n{title}",
+    "redownload_started": "ダウンロード開始"
   }
 }

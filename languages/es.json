@@ -48,7 +48,8 @@
     "select_defaults": "Seleccionar Predeterminados",
     "select_all": "Seleccionar Todos",
     "deselect_all": "Deseleccionar Todos",
-    "open_folder": "Abrir ubicación de carpeta"
+    "open_folder": "Abrir ubicación de carpeta",
+    "history": "Historial"
   },
   "dialogs": {
     "custom_options": "Opciones Personalizadas",
@@ -411,5 +412,32 @@
     "copyright_blocked": "Este video está bloqueado debido a reclamaciones de derechos de autor.\nEl propietario del contenido ha restringido el acceso a este video.",
     "extraction_failed": "Error al extraer información del video. Esto podría ser un problema temporal.\nIntente nuevamente en unos minutos o verifique si el enlace del video es correcto.",
     "generic_error": "No se pudo extraer la información del video. Verifique su enlace.\nDetalles técnicos: {error}"
+  },
+  "history": {
+    "title": "Historial de Descargas",
+    "clear_all": "Borrar Todo",
+    "clear_confirm_title": "¿Borrar Historial?",
+    "clear_confirm_message": "¿Estás seguro de que quieres borrar todo el historial? Esto no se puede deshacer.",
+    "no_history": "Aún no hay historial",
+    "no_history_description": "Tus descargas aparecerán aquí",
+    "search_placeholder": "Buscar...",
+    "open_location": "Abrir Ubicación",
+    "redownload": "Descargar de Nuevo",
+    "remove": "Eliminar",
+    "file_not_found": "Archivo no encontrado",
+    "file_not_found_message": "El archivo fue movido o eliminado:\n{path}",
+    "downloaded_on": "Descargado: {date}",
+    "file_size": "Tamaño: {size}",
+    "audio_download": "Audio",
+    "video_download": "Video",
+    "remove_confirm_title": "¿Eliminar?",
+    "remove_confirm_message": "¿Eliminar del historial?\n\n{title}",
+    "item_removed": "Eliminado",
+    "history_cleared": "Historial borrado",
+    "entries_count": "{count} descargas",
+    "one_entry": "1 descarga",
+    "redownload_confirm_title": "¿Descargar de Nuevo?",
+    "redownload_confirm_message": "¿Descargar nuevamente?\n\n{title}",
+    "redownload_started": "Descarga iniciada"
   }
 }

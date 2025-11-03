@@ -81,7 +81,8 @@
     "select_defaults": "Seleziona predefiniti",
     "select_all": "Seleziona tutto",
     "deselect_all": "Deseleziona tutto",
-    "open_folder": "Apri posizione cartella"
+    "open_folder": "Apri posizione cartella",
+    "history": "Cronologia"
   },
   "dialogs": {
     "custom_options": "Opzioni personalizzate",
@@ -428,5 +429,32 @@
     "copyright_blocked": "Questo video è bloccato a causa di rivendicazioni di copyright.\nIl proprietario del contenuto ha limitato l'accesso a questo video.",
     "extraction_failed": "Impossibile estrarre le informazioni del video. Questo potrebbe essere un problema temporaneo.\nRiprova tra qualche minuto o verifica se il link del video è corretto.",
     "generic_error": "Impossibile estrarre le informazioni del video. Controlla il tuo link.\nDettagli tecnici: {error}"
+  },
+  "history": {
+    "title": "Cronologia Download",
+    "clear_all": "Cancella Tutto",
+    "clear_confirm_title": "Cancellare Cronologia?",
+    "clear_confirm_message": "Sei sicuro? Questa azione non può essere annullata.",
+    "no_history": "Nessuna cronologia ancora",
+    "no_history_description": "I tuoi download appariranno qui",
+    "search_placeholder": "Cerca...",
+    "open_location": "Apri Posizione",
+    "redownload": "Scarica di Nuovo",
+    "remove": "Rimuovi",
+    "file_not_found": "File non trovato",
+    "file_not_found_message": "Il file è stato spostato o eliminato:\n{path}",
+    "downloaded_on": "Scaricato: {date}",
+    "file_size": "Dimensione: {size}",
+    "audio_download": "Audio",
+    "video_download": "Video",
+    "remove_confirm_title": "Rimuovere?",
+    "remove_confirm_message": "Rimuovere dalla cronologia?\n\n{title}",
+    "item_removed": "Rimosso",
+    "history_cleared": "Cronologia cancellata",
+    "entries_count": "{count} download",
+    "one_entry": "1 download",
+    "redownload_confirm_title": "Scaricare di Nuovo?",
+    "redownload_confirm_message": "Scaricare di nuovo?\n\n{title}",
+    "redownload_started": "Download avviato"
   }
 }

@@ -376,6 +376,36 @@ class DownloadThread(QThread):
             if return_code == 0:
                 self.progress_signal.emit(100)
                 self.status_signal.emit(_("download.completed"))
+                
+                # Try to find the actual final file if last_file_path contains format codes or doesn't exist
+                if self.last_file_path:
+                    try:
+                        last_path = Path(self.last_file_path)
+                        
+                        # Check if the file exists as-is
+                        if not last_path.exists():
+                            # The file path might have format codes or incorrect characters
+                            # Try to find the most recently modified video/audio file in the download directory
+                            video_audio_extensions = {'.mp4', '.webm', '.mkv', '.avi', '.mov', '.flv', 
+                                                     '.m4a', '.mp3', '.opus', '.flac', '.aac', '.wav', '.ogg'}
+                            
+                            # Get all video/audio files in the download directory
+                            potential_files = []
+                            for ext in video_audio_extensions:
+                                potential_files.extend(self.path.glob(f'*{ext}'))
+                            
+                            # Sort by modification time and get the most recent one
+                            if potential_files:
+                                most_recent = max(potential_files, key=lambda p: p.stat().st_mtime)
+                                
+                                # Verify it was modified within the last 10 seconds (just downloaded)
+                                import time
+                                if time.time() - most_recent.stat().st_mtime < 10:
+                                    self.last_file_path = str(most_recent)
+                                    self.current_filename = most_recent.name
+                                    logger.info(f"Found downloaded file: {self.last_file_path}")
+                    except Exception as e:
+                        logger.error(f"Error finding final file: {e}", exc_info=True)
 
                 # Clean up subtitle files if they were merged, with a small delay
                 # to ensure the embedding process has completed
@@ -562,6 +592,13 @@ class DownloadThread(QThread):
         if "[Merger]" in line or "Merging formats" in line:
             self.status_signal.emit(_("download.merging_formats"))
             self.progress_signal.emit(95)
+            # Extract the merged output filename
+            merger_match = re.search(r"Merging formats into \"(.+?)\"", line)
+            if merger_match:
+                merged_filepath = merger_match.group(1).strip()
+                self.current_filename = Path(merged_filepath).name
+                self.last_file_path = merged_filepath
+                logger.debug(f"Updated to merged filename: {self.current_filename}")
         elif "SponsorBlock" in line:
             self.status_signal.emit(_("download.removing_sponsor_segments"))
             self.progress_signal.emit(97)

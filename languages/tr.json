@@ -81,7 +81,8 @@
     "select_defaults": "Varsayılanları seç",
     "select_all": "Tümünü seç",
     "deselect_all": "Tüm seçimi kaldır",
-    "open_folder": "Klasör konumunu aç"
+    "open_folder": "Klasör konumunu aç",
+    "history": "Geçmiş"
   },
   "dialogs": {
     "custom_options": "Özel seçenekler",
@@ -428,5 +429,32 @@
     "copyright_blocked": "Bu video telif hakkı iddiaları nedeniyle engellenmiş.\nİçerik sahibi bu videoya erişimi kısıtlamış.",
     "extraction_failed": "Video bilgileri çıkarılamadı. Bu geçici bir sorun olabilir.\nLütfen birkaç dakika içinde tekrar deneyin veya video bağlantısının doğru olup olmadığını kontrol edin.",
     "generic_error": "Video bilgileri çıkarılamadı. Lütfen bağlantınızı kontrol edin.\nTeknik ayrıntılar: {error}"
+  },
+  "history": {
+    "title": "İndirme Geçmişi",
+    "clear_all": "Tümünü Temizle",
+    "clear_confirm_title": "Geçmişi Temizle?",
+    "clear_confirm_message": "Emin misiniz? Bu geri alınamaz.",
+    "no_history": "Henüz geçmiş yok",
+    "no_history_description": "İndirmeleriniz burada görünecek",
+    "search_placeholder": "Ara...",
+    "open_location": "Konumu Aç",
+    "redownload": "Tekrar İndir",
+    "remove": "Kaldır",
+    "file_not_found": "Dosya bulunamadı",
+    "file_not_found_message": "Dosya taşındı veya silindi:\n{path}",
+    "downloaded_on": "İndirildi: {date}",
+    "file_size": "Boyut: {size}",
+    "audio_download": "Ses",
+    "video_download": "Video",
+    "remove_confirm_title": "Kaldır?",
+    "remove_confirm_message": "Geçmişten kaldır?\n\n{title}",
+    "item_removed": "Kaldırıldı",
+    "history_cleared": "Geçmiş temizlendi",
+    "entries_count": "{count} indirme",
+    "one_entry": "1 indirme",
+    "redownload_confirm_title": "Tekrar İndir?",
+    "redownload_confirm_message": "Tekrar indir?\n\n{title}",
+    "redownload_started": "İndirme başladı"
   }
 }

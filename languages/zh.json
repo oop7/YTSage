@@ -81,7 +81,8 @@
     "select_defaults": "选择默认值",
     "select_all": "全选",
     "deselect_all": "取消全选",
-    "open_folder": "打开文件夹位置"
+    "open_folder": "打开文件夹位置",
+    "history": "历史"
   },
   "dialogs": {
     "custom_options": "自定义选项",
@@ -428,5 +429,32 @@
     "copyright_blocked": "由于版权声明，此视频已被封锁。\n内容所有者已限制对此视频的访问。",
     "extraction_failed": "提取视频信息失败。这可能是一个临时问题。\n请在几分钟后重试，或检查视频链接是否正确。",
     "generic_error": "无法提取视频信息。请检查您的链接。\n技术详情：{error}"
+  },
+  "history": {
+    "title": "下载历史",
+    "clear_all": "清除全部",
+    "clear_confirm_title": "清除历史？",
+    "clear_confirm_message": "确定吗？此操作无法撤消。",
+    "no_history": "暂无历史",
+    "no_history_description": "下载将显示在这里",
+    "search_placeholder": "搜索...",
+    "open_location": "打开位置",
+    "redownload": "重新下载",
+    "remove": "删除",
+    "file_not_found": "文件未找到",
+    "file_not_found_message": "文件已移动或删除：\n{path}",
+    "downloaded_on": "下载于：{date}",
+    "file_size": "大小：{size}",
+    "audio_download": "音频",
+    "video_download": "视频",
+    "remove_confirm_title": "删除？",
+    "remove_confirm_message": "从历史中删除？\n\n{title}",
+    "item_removed": "已删除",
+    "history_cleared": "历史已清除",
+    "entries_count": "{count} 个下载",
+    "one_entry": "1 个下载",
+    "redownload_confirm_title": "重新下载？",
+    "redownload_confirm_message": "重新下载？\n\n{title}",
+    "redownload_started": "已开始下载"
   }
 }

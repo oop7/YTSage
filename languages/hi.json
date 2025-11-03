@@ -81,7 +81,8 @@
     "select_defaults": "डिफ़ॉल्ट चुनें",
     "select_all": "सभी चुनें",
     "deselect_all": "सभी को अचयनित करें",
-    "open_folder": "फ़ोल्डर स्थान खोलें"
+    "open_folder": "फ़ोल्डर स्थान खोलें",
+    "history": "इतिहास"
   },
   "dialogs": {
     "custom_options": "कस्टम विकल्प",
@@ -428,5 +429,32 @@
     "copyright_blocked": "कॉपीराइट दावों के कारण यह वीडियो अवरुद्ध है।\nसामग्री स्वामी ने इस वीडियो तक पहुंच प्रतिबंधित कर दी है।",
     "extraction_failed": "वीडियो जानकारी निकालने में विफल। यह एक अस्थायी समस्या हो सकती है।\nकृपया कुछ मिनट में पुनः प्रयास करें, या जांचें कि वीडियो लिंक सही है या नहीं।",
     "generic_error": "वीडियो जानकारी निकालने में विफल। कृपया अपना लिंक जांचें।\nतकनीकी विवरण: {error}"
+  },
+  "history": {
+    "title": "डाउनलोड इतिहास",
+    "clear_all": "सभी साफ़ करें",
+    "clear_confirm_title": "इतिहास साफ़ करें?",
+    "clear_confirm_message": "क्या आप निश्चित हैं? इसे पूर्ववत नहीं किया जा सकता।",
+    "no_history": "अभी तक कोई इतिहास नहीं",
+    "no_history_description": "आपके डाउनलोड यहां दिखाई देंगे",
+    "search_placeholder": "खोजें...",
+    "open_location": "स्थान खोलें",
+    "redownload": "फिर से डाउनलोड करें",
+    "remove": "हटाएं",
+    "file_not_found": "फ़ाइल नहीं मिली",
+    "file_not_found_message": "फ़ाइल स्थानांतरित या हटाई गई:\n{path}",
+    "downloaded_on": "डाउनलोड किया: {date}",
+    "file_size": "आकार: {size}",
+    "audio_download": "ऑडियो",
+    "video_download": "वीडियो",
+    "remove_confirm_title": "हटाएं?",
+    "remove_confirm_message": "इतिहास से हटाएं?\n\n{title}",
+    "item_removed": "हटाया गया",
+    "history_cleared": "इतिहास साफ़ किया गया",
+    "entries_count": "{count} डाउनलोड",
+    "one_entry": "1 डाउनलोड",
+    "redownload_confirm_title": "फिर से डाउनलोड करें?",
+    "redownload_confirm_message": "फिर से डाउनलोड करें?\n\n{title}",
+    "redownload_started": "डाउनलोड शुरू हुआ"
   }
 }

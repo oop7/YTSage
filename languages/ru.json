@@ -81,7 +81,8 @@
     "select_defaults": "Выбрать по умолчанию",
     "select_all": "Выбрать всё",
     "deselect_all": "Снять выделение",
-    "open_folder": "Открыть расположение папки"
+    "open_folder": "Открыть расположение папки",
+    "history": "История"
   },
   "dialogs": {
     "custom_options": "Пользовательские опции",
@@ -428,5 +429,32 @@
     "copyright_blocked": "Это видео заблокировано из-за претензий по авторским правам.\nВладелец контента ограничил доступ к этому видео.",
     "extraction_failed": "Не удалось извлечь информацию о видео. Это может быть временной проблемой.\nПовторите попытку через несколько минут или проверьте правильность ссылки на видео.",
     "generic_error": "Не удалось извлечь информацию о видео. Проверьте вашу ссылку.\nТехнические детали: {error}"
+  },
+  "history": {
+    "title": "История Загрузок",
+    "clear_all": "Очистить Всё",
+    "clear_confirm_title": "Очистить Историю?",
+    "clear_confirm_message": "Вы уверены? Это нельзя отменить.",
+    "no_history": "История пока пуста",
+    "no_history_description": "Загрузки появятся здесь",
+    "search_placeholder": "Поиск...",
+    "open_location": "Открыть Папку",
+    "redownload": "Загрузить Снова",
+    "remove": "Удалить",
+    "file_not_found": "Файл не найден",
+    "file_not_found_message": "Файл был перемещен или удален:\n{path}",
+    "downloaded_on": "Загружено: {date}",
+    "file_size": "Размер: {size}",
+    "audio_download": "Аудио",
+    "video_download": "Видео",
+    "remove_confirm_title": "Удалить?",
+    "remove_confirm_message": "Удалить из истории?\n\n{title}",
+    "item_removed": "Удалено",
+    "history_cleared": "История очищена",
+    "entries_count": "{count} загрузок",
+    "one_entry": "1 загрузка",
+    "redownload_confirm_title": "Загрузить Снова?",
+    "redownload_confirm_message": "Загрузить снова?\n\n{title}",
+    "redownload_started": "Загрузка начата"
   }
 }

@@ -81,7 +81,8 @@
     "select_defaults": "Pilih default",
     "select_all": "Pilih semua",
     "deselect_all": "Batalkan pilihan semua",
-    "open_folder": "Buka lokasi folder"
+    "open_folder": "Buka lokasi folder",
+    "history": "Riwayat"
   },
   "dialogs": {
     "custom_options": "Opsi khusus",
@@ -428,5 +429,32 @@
     "copyright_blocked": "Video ini diblokir karena klaim hak cipta.\nPemilik konten telah membatasi akses ke video ini.",
     "extraction_failed": "Gagal mengekstrak informasi video. Ini mungkin masalah sementara.\nSilakan coba lagi dalam beberapa menit, atau periksa apakah tautan video benar.",
     "generic_error": "Tidak dapat mengekstrak informasi video. Silakan periksa tautan Anda.\nDetail teknis: {error}"
+  },
+  "history": {
+    "title": "Riwayat Unduhan",
+    "clear_all": "Hapus Semua",
+    "clear_confirm_title": "Hapus Riwayat?",
+    "clear_confirm_message": "Apakah Anda yakin? Ini tidak dapat dibatalkan.",
+    "no_history": "Belum ada riwayat",
+    "no_history_description": "Unduhan Anda akan muncul di sini",
+    "search_placeholder": "Cari...",
+    "open_location": "Buka Lokasi",
+    "redownload": "Unduh Lagi",
+    "remove": "Hapus",
+    "file_not_found": "File tidak ditemukan",
+    "file_not_found_message": "File dipindahkan atau dihapus:\n{path}",
+    "downloaded_on": "Diunduh: {date}",
+    "file_size": "Ukuran: {size}",
+    "audio_download": "Audio",
+    "video_download": "Video",
+    "remove_confirm_title": "Hapus?",
+    "remove_confirm_message": "Hapus dari riwayat?\n\n{title}",
+    "item_removed": "Dihapus",
+    "history_cleared": "Riwayat dihapus",
+    "entries_count": "{count} unduhan",
+    "one_entry": "1 unduhan",
+    "redownload_confirm_title": "Unduh Lagi?",
+    "redownload_confirm_message": "Unduh lagi?\n\n{title}",
+    "redownload_started": "Unduhan dimulai"
   }
 }

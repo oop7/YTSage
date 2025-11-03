@@ -81,7 +81,8 @@
     "select_defaults": "اختر الافتراضي",
     "select_all": "تحديد الكل",
     "deselect_all": "إلغاء تحديد الكل",
-    "open_folder": "فتح موقع المجلد"
+    "open_folder": "فتح موقع المجلد",
+    "history": "السجل"
   },
   "dialogs": {
     "custom_options": "خيارات مخصصة",
@@ -428,5 +429,32 @@
     "copyright_blocked": "هذا الفيديو محظور بسبب مطالبات حقوق النشر.\nصاحب المحتوى قيد الوصول إلى هذا الفيديو.",
     "extraction_failed": "فشل استخراج معلومات الفيديو. قد تكون هذه مشكلة مؤقتة.\nيرجى المحاولة مرة أخرى بعد بضع دقائق، أو تحقق من صحة رابط الفيديو.",
     "generic_error": "تعذر استخراج معلومات الفيديو. يرجى التحقق من الرابط الخاص بك.\nالتفاصيل التقنية: {error}"
+  },
+  "history": {
+    "title": "سجل التنزيلات",
+    "clear_all": "مسح الكل",
+    "clear_confirm_title": "مسح السجل؟",
+    "clear_confirm_message": "هل أنت متأكد؟ لا يمكن التراجع عن هذا.",
+    "no_history": "لا يوجد سجل بعد",
+    "no_history_description": "ستظهر تنزيلاتك هنا",
+    "search_placeholder": "بحث...",
+    "open_location": "فتح الموقع",
+    "redownload": "إعادة التنزيل",
+    "remove": "إزالة",
+    "file_not_found": "الملف غير موجود",
+    "file_not_found_message": "تم نقل الملف أو حذفه:\n{path}",
+    "downloaded_on": "تم التنزيل: {date}",
+    "file_size": "الحجم: {size}",
+    "audio_download": "صوت",
+    "video_download": "فيديو",
+    "remove_confirm_title": "إزالة؟",
+    "remove_confirm_message": "إزالة من السجل؟\n\n{title}",
+    "item_removed": "تمت الإزالة",
+    "history_cleared": "تم مسح السجل",
+    "entries_count": "{count} تنزيلات",
+    "one_entry": "تنزيل واحد",
+    "redownload_confirm_title": "إعادة التنزيل؟",
+    "redownload_confirm_message": "إعادة التنزيل؟\n\n{title}",
+    "redownload_started": "بدأ التنزيل"
   }
 }
