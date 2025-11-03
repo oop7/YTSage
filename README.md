@@ -192,7 +192,7 @@ python main.py
 </details>
 
 <details>
-<summary>🧰 Advanced Options</summary>
+<summary>🧰 Options</summary>
 
 - **Subtitle Options:** Filter languages and embed into video file
 - **Subtitle Merge:** Merge subtitles into video file for hardcoded subtitles
@@ -216,6 +216,7 @@ python main.py
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
 - **Proxy Support:** Use a proxy server for downloads (e.g., `http://<proxy-server>:<port>`)
 - **Force output Format:** Force download in a specific format (e.g., `mp4`, `mkv`) you can find this option in the download settings dialog
+- **History**: View past downloads and their statuses you can redownload or open the file location from the history dialog
 
 </details>
 
