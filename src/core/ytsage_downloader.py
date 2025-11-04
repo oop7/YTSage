@@ -88,8 +88,6 @@ class DownloadThread(QThread):
         self.paused = False
         self.cancelled = False
         self.process = None
-        self.last_output_time = time.time()
-        self.timeout_timer = None
         self.current_filename = None  # Initialize filename storage
         self.last_file_path = None  # Initialize full file path storage
         self.subtitle_files = []  # Track subtitle files that are created
@@ -157,13 +155,6 @@ class DownloadThread(QThread):
                 logger.debug(f"Deleted {deleted_count[1]} of {len(new_subtitle_files)} new subtitle files")
         except Exception as e:
             logger.exception(f"Error cleaning subtitle files: {e}")
-
-    def check_file_exists(self) -> bool | None:
-        """Check if the file already exists before downloading"""
-        # This method is kept for backwards compatibility but always returns False
-        # to proceed with download. File existence is now handled by yt-dlp CLI itself.
-        logger.debug("Skipping file existence check (handled by yt-dlp)")
-        return False  # Proceed with download attempt
 
     def _build_yt_dlp_command(self) -> list:
         """Build the yt-dlp command line with all options for direct execution."""
@@ -294,15 +285,6 @@ class DownloadThread(QThread):
     def run(self) -> None:
         try:
             logger.debug("Starting download thread")
-
-            # First check if file already exists using original method
-            existing_file = self.check_file_exists()
-            if existing_file:
-                logger.debug(f"File exists, emitting signal: {existing_file}")
-                self.file_exists_signal.emit(existing_file)
-                return
-
-            logger.debug("No existing file found, proceeding with download")
 
             # Get initial list of subtitle files to compare later
             self.initial_subtitle_files = set()
