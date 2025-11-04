@@ -825,33 +825,3 @@ def validate_video_url(url: str) -> tuple[bool, str]:
     logger.info(f"YouTube URL doesn't match known patterns but allowing: {url}")
     return True, ""
 
-
-def sanitize_filename(filename: str) -> str:
-    """
-    Sanitize a filename by removing or replacing dangerous characters.
-    
-    Args:
-        filename: The filename to sanitize
-        
-    Returns:
-        str: Sanitized filename safe for filesystem use
-        
-    Example:
-        >>> sanitize_filename('video<>file?.mp4')
-        'video__file_.mp4'
-    """
-    import re
-    
-    # Replace dangerous characters with underscore
-    # Characters not allowed in Windows filenames: < > : " / \ | ? *
-    # Also remove control characters
-    sanitized = re.sub(r'[<>:"/\\|?*\x00-\x1f]', '_', filename)
-    
-    # Remove leading/trailing dots and spaces (Windows compatibility)
-    sanitized = sanitized.strip('. ')
-    
-    # Ensure filename is not empty after sanitization
-    if not sanitized:
-        sanitized = "video"
-    
-    return sanitized

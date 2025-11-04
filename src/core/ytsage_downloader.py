@@ -88,7 +88,6 @@ class DownloadThread(QThread):
         self.paused = False
         self.cancelled = False
         self.process = None
-        self.use_direct_command = True  # Flag to use direct CLI command instead of Python API
         self.last_output_time = time.time()
         self.timeout_timer = None
         self.current_filename = None  # Initialize filename storage
@@ -317,12 +316,8 @@ class DownloadThread(QThread):
                 except Exception as e:
                     logger.exception(f"Error scanning for initial subtitle files: {e}")
 
-            if self.use_direct_command:
-                # Use direct CLI command instead of Python API
-                self._run_direct_command()
-            else:
-                # Original method using Python API - code left for reference
-                self._run_python_api()
+            # Use direct CLI command
+            self._run_direct_command()
 
         except Exception as e:
             # Catch errors during setup
@@ -663,11 +658,6 @@ class DownloadThread(QThread):
                 self.status_signal.emit(_("download.completed"))
 
             self.update_details.emit("")  # Clear details label on completion
-
-    def _run_python_api(self) -> None:
-        """Original download method using Python API - kept for reference."""
-        # The existing run method code using yt_dlp.YoutubeDL starts here
-        # This method is no longer used by default
 
     def pause(self) -> None:
         self.paused = True

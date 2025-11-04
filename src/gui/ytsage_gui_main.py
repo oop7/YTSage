@@ -51,16 +51,6 @@ from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import LocalizationManager, _
 from src.utils.ytsage_history_manager import HistoryManager
 
-# Note: yt-dlp Python package removed - using binary-only approach
-# DownloadError and ExtractorError definitions kept for compatibility
-class DownloadError(Exception):
-    """Compatibility class for yt-dlp DownloadError"""
-    pass
-
-class ExtractorError(Exception):
-    """Compatibility class for yt-dlp ExtractorError"""
-    pass
-
 
 class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from mixins
     def __init__(self) -> None:
