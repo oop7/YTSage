@@ -379,7 +379,6 @@ YTSage/
     │   ├── 📄 __init__.py        # Core package init
     │   ├── 📄 ytsage_downloader.py # Download functionality
     │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
-    │   ├── 📄 ytsage_style.py    # UI styling
     │   ├── 📄 ytsage_utils.py    # Utility functions
     │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
     ├── 📁 gui/                   # User interface components
