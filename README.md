@@ -380,7 +380,8 @@ YTSage/
     │   ├── 📄 ytsage_downloader.py # Download functionality
     │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
     │   ├── 📄 ytsage_utils.py    # Utility functions
-    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
+    │   ├── 📄 ytsage_yt_dlp.py   # yt-dlp integration
+    │   └── 📄 ytsage_ffmpeg_updater.py   # FFmpeg updater
     ├── 📁 gui/                   # User interface components
     │   ├── 📄 __init__.py        # GUI package init
     │   ├── 📄 ytsage_gui_format_table.py # Format table functionality
@@ -393,7 +394,8 @@ YTSage/
     │       ├── 📄 ytsage_dialogs_ffmpeg.py   # FFmpeg-related dialogs
     │       ├── 📄 ytsage_dialogs_selection.py # Selection dialogs
     │       ├── 📄 ytsage_dialogs_settings.py  # Settings dialogs
-    │       └── 📄 ytsage_dialogs_update.py    # Update dialogs
+    │       ├── 📄 ytsage_dialogs_update.py    # Update dialogs
+    │       └── 📄 ytsage_dialogs_updater.py    # Updater dialogs
     └── 📁 utils/                 # Utility modules
         ├── 📄 __init__.py        # Utils package init
         ├── 📄 ytsage_config_manager.py # Configuration management
