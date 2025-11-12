@@ -3,9 +3,7 @@ FFmpeg installation dialogs for YTSage application.
 Contains dialogs and threads for checking and installing FFmpeg.
 """
 
-import contextlib
 import webbrowser
-from io import StringIO
 
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QIcon
@@ -20,15 +18,12 @@ class FFmpegInstallThread(QThread):
     progress = Signal(str)
 
     def run(self) -> None:
-        # Redirect stdout to capture progress messages
-        output = StringIO()
-        with contextlib.redirect_stdout(output):
-            success = auto_install_ffmpeg()
-
-        # Process captured output and emit progress signals
-        for line in output.getvalue().splitlines():
-            self.progress.emit(line)
-
+        # Use a callback to capture progress instead of stdout redirection
+        def progress_callback(msg: str):
+            self.progress.emit(msg)
+        
+        # Install FFmpeg with progress callback
+        success = auto_install_ffmpeg(progress_callback=progress_callback)
         self.finished.emit(success)
 
 
@@ -36,9 +31,9 @@ class FFmpegCheckDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle("FFmpeg Installation")
-        self.setMinimumWidth(450)
-        self.setMinimumHeight(200)
-        self.resize(450, 220)
+        self.setMinimumWidth(500)
+        self.setMinimumHeight(280)
+        self.resize(500, 300)
 
         # Set the window icon to match the main app
         if parent and parent.windowIcon():
@@ -67,11 +62,12 @@ class FFmpegCheckDialog(QDialog):
         self.message_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.message_label)
 
-        # Progress label with improved styling and compact height
+        # Progress label with improved styling
         self.progress_label = QLabel("")
         self.progress_label.setWordWrap(True)
-        self.progress_label.setMinimumHeight(60)  # Smaller but visible area
-        self.progress_label.setMaximumHeight(80)  # Limit maximum height
+        self.progress_label.setMinimumHeight(80)
+        self.progress_label.setMaximumHeight(120)
+        self.progress_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         self.progress_label.setStyleSheet(
             """
             QLabel {
@@ -79,22 +75,22 @@ class FFmpegCheckDialog(QDialog):
                 color: #cccccc;
                 border: 1px solid #3d3d3d;
                 border-radius: 6px;
-                padding: 8px;
+                padding: 12px;
                 font-family: 'Consolas', 'Courier New', monospace;
                 font-size: 11px;
-                line-height: 1.2;
+                line-height: 1.4;
             }
         """
         )
         self.progress_label.hide()
         layout.addWidget(self.progress_label)
 
-        # Add minimal stretch - just enough to push buttons down slightly
-        layout.addSpacing(10)
+        # Add stretch to push buttons to bottom
+        layout.addStretch()
 
         # Buttons container - simple approach that should work
         button_layout = QHBoxLayout()
-        button_layout.setSpacing(15)  # Simple spacing
+        button_layout.setSpacing(12)
 
         # Install button
         self.install_btn = QPushButton("Install FFmpeg")
@@ -148,6 +144,7 @@ class FFmpegCheckDialog(QDialog):
 
         # Initialize installation thread
         self.install_thread = None
+        self.progress_messages = []  # Store progress messages
 
     def start_installation(self) -> None:
         self.install_btn.setEnabled(False)
@@ -165,6 +162,7 @@ class FFmpegCheckDialog(QDialog):
             return
 
         self.message_label.setText("Installing FFmpeg... Please wait")
+        self.progress_messages = []  # Clear previous messages
         self.progress_label.show()
 
         self.install_thread = FFmpegInstallThread()
@@ -173,7 +171,13 @@ class FFmpegCheckDialog(QDialog):
         self.install_thread.start()
 
     def update_progress(self, message) -> None:
-        self.progress_label.setText(message)
+        # Keep only the last 5 messages to avoid overflow
+        self.progress_messages.append(message)
+        if len(self.progress_messages) > 5:
+            self.progress_messages.pop(0)
+        
+        # Display the messages
+        self.progress_label.setText("\n".join(self.progress_messages))
 
     def installation_finished(self, success) -> None:
         if success:

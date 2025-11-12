@@ -99,7 +99,8 @@
     "cookies": "Login with Cookies",
     "custom_command": "Custom Command",
     "proxy": "Proxy",
-    "language": "Language"
+    "language": "Language",
+    "updater": "Updater"
   },
   "cookies": {
     "help_text": "Choose how to provide cookies for logging in.\nThis allows downloading of private videos and premium quality audio.",
@@ -466,5 +467,25 @@
     "redownload_confirm_title": "Redownload Video?",
     "redownload_confirm_message": "Download this video again using the same settings?\n\n{title}",
     "redownload_started": "Redownload started"
+  },
+  "ffmpeg_updater": {
+    "title": "FFmpeg Updater",
+    "current_version": "Current Version:",
+    "latest_version": "Latest Version:",
+    "status_up_to_date": "✓ Up to date",
+    "status_update_available": "⚠ Update available",
+    "status_not_installed": "✗ Not installed",
+    "status_idle": "Click 'Check for Updates' to get started",
+    "status_checking": "🔄 Checking for updates...",
+    "status_downloading": "⬇ Downloading FFmpeg...",
+    "status_installing": "⚙ Installing FFmpeg...",
+    "status_verifying": "✓ Verifying integrity...",
+    "check_updates": "Check for Updates",
+    "update_button": "Update FFmpeg",
+    "update_success": "FFmpeg successfully updated to version {version}!",
+    "update_failed": "Failed to update FFmpeg. Please try again.",
+    "check_failed": "Failed to check for updates. Please check your internet connection.",
+    "install_first": "FFmpeg is not installed. Click Update to install.",
+    "description": "Keep FFmpeg up to date for the best performance and compatibility."
   }
 }

@@ -23,6 +23,7 @@ from src.gui.ytsage_gui_dialogs.ytsage_dialogs_selection import (
 )
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_settings import AutoUpdateSettingsDialog, DownloadSettingsDialog
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import AutoUpdateThread, UpdateThread, VersionCheckThread, YTDLPUpdateDialog
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_updater import UpdaterTabWidget
 
 __all__ = [
     # Base dialogs
@@ -51,6 +52,9 @@ __all__ = [
     # Custom functionality dialogs
     "CustomOptionsDialog",
     "TimeRangeDialog",
+    
+    # Updater widget
+    "UpdaterTabWidget",
     
     # History dialog
     "HistoryDialog",

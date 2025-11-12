@@ -145,10 +145,13 @@ else:  # Linux and other UNIX-like
 # Documentation URLs
 YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
-# ffmpeg download links
-FFMPEG_7Z_DOWNLOAD_URL = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.7z"
-FFMPEG_7Z_SHA256_URL = "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-7.1.1-full_build.7z.sha256"
-FFMPEG_ZIP_DOWNLOAD_URL = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.zip"
+# FFmpeg download links (Essentials build - always latest version)
+FFMPEG_7Z_DOWNLOAD_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z"
+FFMPEG_ZIP_DOWNLOAD_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
+FFMPEG_7Z_SHA256_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z.sha256"
+FFMPEG_ZIP_SHA256_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip.sha256"
+FFMPEG_7Z_VERSION_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z.ver"
+FFMPEG_ZIP_VERSION_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip.ver"
 
 if __name__ == "__main__":
     # If this file is run directly, print directory information; if imported, create the necessary directories for the application.

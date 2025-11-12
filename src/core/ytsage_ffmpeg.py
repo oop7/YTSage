@@ -85,9 +85,26 @@ def verify_sha256(file_path, expected_hash_url) -> bool:
 
 
 def get_ffmpeg_install_path() -> Path:
-    """Get the FFmpeg installation path."""
+    """
+    Get the FFmpeg installation path.
+    For Windows, tries to find the latest essentials build dynamically.
+    """
     if OS_NAME == "Windows":
-        return Path(os.getenv("LOCALAPPDATA")) / "ffmpeg" / "ffmpeg-7.1.1-full_build" / "bin"  # type: ignore
+        ffmpeg_base = Path(os.getenv("LOCALAPPDATA")) / "ffmpeg"  # type: ignore
+        
+        # If the directory exists, look for any ffmpeg-*-essentials_build folder
+        if ffmpeg_base.exists():
+            # Find all directories matching the pattern
+            essentials_dirs = list(ffmpeg_base.glob("ffmpeg-*-essentials_build"))
+            if essentials_dirs:
+                # Sort by name (which includes version) and take the latest
+                latest_dir = sorted(essentials_dirs, reverse=True)[0]
+                bin_dir = latest_dir / "bin"
+                if bin_dir.exists():
+                    return bin_dir
+        
+        # Fallback: return default path (even if it doesn't exist yet)
+        return ffmpeg_base / "ffmpeg-essentials_build" / "bin"
 
     elif OS_NAME == "Darwin":
         paths = ["/usr/local/bin", "/opt/homebrew/bin", "/usr/bin"]
@@ -97,6 +114,7 @@ def get_ffmpeg_install_path() -> Path:
         return Path("/usr/local/bin")  # Default Homebrew path
     else:
         return Path("/usr/bin")  # Standard Linux path
+
 
 
 def get_ffmpeg_path() -> str | Path:
@@ -175,106 +193,29 @@ def check_ffmpeg_installed() -> bool:
         return False
 
 
-def install_ffmpeg_windows() -> bool:
+def install_ffmpeg_windows(progress_callback=None) -> bool:
     """Install FFmpeg on Windows using 7z method primarily, with zip as fallback."""
-    ffmpeg_path = get_ffmpeg_install_path()
-
     # Check if already installed
     if check_ffmpeg_installed():
         logger.info("FFmpeg is already installed!")
+        if progress_callback:
+            progress_callback("✅ FFmpeg is already installed!")
         return True
 
     try:
-        # Define variables - prioritize 7z version
-        # ffmpeg variables moved to src\utils\ytsage_constants.py
-        extract_dir = Path(os.getenv("LOCALAPPDATA")) / "ffmpeg"  # type: ignore
-        full_build_dir = extract_dir / "ffmpeg-7.1.1-full_build"
-        bin_dir = full_build_dir / "bin"
-
-        # Create extraction directory if it doesn't exist
-        extract_dir.mkdir(exist_ok=True)
-
-        # Try 7z method first (smaller size)
-        use_7zip = check_7zip_installed()
-        if use_7zip:
-            logger.info("Using 7-Zip method (smaller download size)...")
-            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".7z").name
-
-            # Download 7z file
-            if not download_file(
-                FFMPEG_7Z_DOWNLOAD_URL,
-                temp_file,
-                progress_callback=lambda msg: logger.debug(msg),
-            ):
-                logger.error("Failed to download 7z file, trying zip fallback...")
-                use_7zip = False
-            else:
-                # Verify SHA-256 hash for 7z file
-                if verify_sha256(temp_file, FFMPEG_7Z_SHA256_URL):
-                    logger.info("Extracting FFmpeg components from 7z archive...")
-                    try:
-                        subprocess.run(
-                            ["7z", "x", temp_file, f"-o{extract_dir}", "-y"],
-                            creationflags=SUBPROCESS_CREATIONFLAGS,
-                            timeout=300,
-                        )  # 5-minute timeout
-                    except Exception as e:
-                        logger.exception(f"7z extraction failed: {e}, trying zip fallback...")
-                        use_7zip = False
-                else:
-                    logger.error("SHA-256 verification failed for 7z file, trying zip fallback...")
-                    use_7zip = False
-
-        # Fallback to zip method if 7z failed or not available
-        if not use_7zip:
-            logger.info("Using ZIP method as fallback...")
-            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".zip").name
-
-            # Download zip file
-            if not download_file(
-                FFMPEG_ZIP_DOWNLOAD_URL,
-                temp_file,
-                progress_callback=lambda msg: logger.debug(msg),
-            ):
-                logger.exception("Failed to download FFmpeg (both 7z and zip methods failed)")
-                return False
-
-            logger.info("Extracting FFmpeg components from zip archive...")
-            try:
-                import zipfile
-
-                with zipfile.ZipFile(temp_file, "r") as zip_ref:
-                    zip_ref.extractall(extract_dir)
-            except Exception as e:
-                logger.exception(f"Extraction failed: {e}")
-                return False
-
-        logger.info("Configuring system paths...")
-        # Add to System Path
-        user_path = os.environ.get("PATH", "")
-        if str(bin_dir) not in user_path.split(os.pathsep):
-            subprocess.run(
-                ["setx", "PATH", f"{user_path};{bin_dir}"],
-                creationflags=SUBPROCESS_CREATIONFLAGS,
-            )
-            os.environ["PATH"] = f"{user_path};{bin_dir}"
-
-        # Clean up
-        try:
-            Path(temp_file).unlink(missing_ok=True)
-        except Exception:
-            pass  # Ignore cleanup errors
-
-        # Verify installation
-        if not check_ffmpeg_installed():
-            logger.error("FFmpeg installation verification failed")
-            return False
-
-        logger.info("FFmpeg installation completed successfully!")
-        return True
+        # Import the updater for installation
+        from src.core.ytsage_ffmpeg_updater import update_ffmpeg_windows
+        
+        # Use the updater to install the latest version
+        logger.info("Installing FFmpeg using the updater module...")
+        if progress_callback:
+            progress_callback("📦 Installing FFmpeg...")
+        return update_ffmpeg_windows(progress_callback=progress_callback)
 
     except Exception as e:
         logger.exception(f"Error installing FFmpeg: {e}")
+        if progress_callback:
+            progress_callback(f"❌ Error installing FFmpeg: {e}")
         return False
 
 
@@ -348,14 +289,16 @@ def install_ffmpeg_linux() -> bool:
         return False
 
 
-def auto_install_ffmpeg() -> bool:
+def auto_install_ffmpeg(progress_callback=None) -> bool:
     """Automatically install FFmpeg based on the operating system."""
     if OS_NAME == "Windows":
-        return install_ffmpeg_windows()
+        return install_ffmpeg_windows(progress_callback=progress_callback)
     elif OS_NAME == "Darwin":
         return install_ffmpeg_macos()
     elif OS_NAME == "Linux":
         return install_ffmpeg_linux()
     else:
         logger.info(f"Unsupported operating system: {OS_NAME}")
+        if progress_callback:
+            progress_callback(f"❌ Unsupported operating system: {OS_NAME}")
         return False

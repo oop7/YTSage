@@ -99,7 +99,8 @@
     "cookies": "Accedi con i cookie",
     "custom_command": "Comando personalizzato",
     "proxy": "Proxy",
-    "language": "Lingua"
+    "language": "Lingua",
+    "updater": "Aggiornamento"
   },
   "cookies": {
     "help_text": "Seleziona un metodo per fornire i cookie per l'autenticazione.\nCiò consente di scaricare video privati e file audio di alta qualità.",
@@ -466,5 +467,24 @@
     "redownload_confirm_title": "Scaricare di Nuovo?",
     "redownload_confirm_message": "Scaricare di nuovo?\n\n{title}",
     "redownload_started": "Download avviato"
+  },
+  "ffmpeg_updater": {
+    "title": "Aggiornamento FFmpeg",
+    "current_version": "Versione corrente:",
+    "latest_version": "Ultima versione:",
+    "status_up_to_date": "✓ Aggiornato",
+    "status_update_available": "⚠ Aggiornamento disponibile",
+    "status_not_installed": "✗ Non installato",
+    "status_checking": "🔄 Verifica aggiornamenti...",
+    "status_downloading": "⬇ Download di FFmpeg...",
+    "status_installing": "⚙ Installazione di FFmpeg...",
+    "status_verifying": "✓ Verifica integrità...",
+    "check_updates": "Verifica aggiornamenti",
+    "update_button": "Aggiorna FFmpeg",
+    "update_success": "FFmpeg aggiornato con successo alla versione {version}!",
+    "update_failed": "Aggiornamento di FFmpeg non riuscito. Riprova.",
+    "check_failed": "Verifica aggiornamenti non riuscita. Controlla la connessione Internet.",
+    "install_first": "FFmpeg non è installato. Clicca Aggiorna per installare.",
+    "description": "Mantieni FFmpeg aggiornato per le migliori prestazioni e compatibilità."
   }
 }

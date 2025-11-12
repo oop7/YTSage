@@ -99,7 +99,8 @@
     "cookies": "Çerezlerle giriş yap",
     "custom_command": "Özel komut",
     "proxy": "Proxy",
-    "language": "Dil"
+    "language": "Dil",
+    "updater": "Güncelleyici"
   },
   "cookies": {
     "help_text": "Kimlik doğrulama için çerezlerin nasıl sağlanacağını seçin.\nBu, özel videoları ve yüksek kaliteli ses dosyalarını indirmeyi sağlar.",
@@ -466,5 +467,24 @@
     "redownload_confirm_title": "Tekrar İndir?",
     "redownload_confirm_message": "Tekrar indir?\n\n{title}",
     "redownload_started": "İndirme başladı"
+  },
+  "ffmpeg_updater": {
+    "title": "FFmpeg Güncelleyici",
+    "current_version": "Mevcut Sürüm:",
+    "latest_version": "En Son Sürüm:",
+    "status_up_to_date": "✓ Güncel",
+    "status_update_available": "⚠ Güncelleme mevcut",
+    "status_not_installed": "✗ Yüklü değil",
+    "status_checking": "🔄 Güncellemeler kontrol ediliyor...",
+    "status_downloading": "⬇ FFmpeg indiriliyor...",
+    "status_installing": "⚙ FFmpeg yükleniyor...",
+    "status_verifying": "✓ Bütünlük doğrulanıyor...",
+    "check_updates": "Güncellemeleri Kontrol Et",
+    "update_button": "FFmpeg'i Güncelle",
+    "update_success": "FFmpeg başarıyla {version} sürümüne güncellendi!",
+    "update_failed": "FFmpeg güncellemesi başarısız oldu. Lütfen tekrar deneyin.",
+    "check_failed": "Güncelleme kontrolü başarısız oldu. İnternet bağlantınızı kontrol edin.",
+    "install_first": "FFmpeg yüklü değil. Yüklemek için Güncelle'ye tıklayın.",
+    "description": "En iyi performans ve uyumluluk için FFmpeg'i güncel tutun."
   }
 }

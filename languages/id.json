@@ -99,7 +99,8 @@
     "cookies": "Masuk dengan cookies",
     "custom_command": "Perintah khusus",
     "proxy": "Proxy",
-    "language": "Bahasa"
+    "language": "Bahasa",
+    "updater": "Pembaruan"
   },
   "cookies": {
     "help_text": "Pilih cara memberikan cookies untuk autentikasi.\nIni memungkinkan pengunduhan video pribadi dan file audio berkualitas tinggi.",
@@ -466,5 +467,24 @@
     "redownload_confirm_title": "Unduh Lagi?",
     "redownload_confirm_message": "Unduh lagi?\n\n{title}",
     "redownload_started": "Unduhan dimulai"
+  },
+  "ffmpeg_updater": {
+    "title": "Pembaruan FFmpeg",
+    "current_version": "Versi Saat Ini:",
+    "latest_version": "Versi Terbaru:",
+    "status_up_to_date": "✓ Terbaru",
+    "status_update_available": "⚠ Pembaruan tersedia",
+    "status_not_installed": "✗ Tidak terinstal",
+    "status_checking": "🔄 Memeriksa pembaruan...",
+    "status_downloading": "⬇ Mengunduh FFmpeg...",
+    "status_installing": "⚙ Menginstal FFmpeg...",
+    "status_verifying": "✓ Memverifikasi integritas...",
+    "check_updates": "Periksa Pembaruan",
+    "update_button": "Perbarui FFmpeg",
+    "update_success": "FFmpeg berhasil diperbarui ke versi {version}!",
+    "update_failed": "Gagal memperbarui FFmpeg. Silakan coba lagi.",
+    "check_failed": "Gagal memeriksa pembaruan. Periksa koneksi internet Anda.",
+    "install_first": "FFmpeg tidak terinstal. Klik Perbarui untuk menginstal.",
+    "description": "Jaga FFmpeg tetap terbaru untuk performa dan kompatibilitas terbaik."
   }
 }

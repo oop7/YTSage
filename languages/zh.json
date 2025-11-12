@@ -99,7 +99,8 @@
     "cookies": "使用 Cookie 登录",
     "custom_command": "自定义命令",
     "proxy": "代理",
-    "language": "语言"
+    "language": "语言",
+    "updater": "更新器"
   },
   "cookies": {
     "help_text": "选择如何提供 cookie 来登录。\n这允许下载私人视频和高级质量音频。",
@@ -466,5 +467,24 @@
     "redownload_confirm_title": "重新下载？",
     "redownload_confirm_message": "重新下载？\n\n{title}",
     "redownload_started": "已开始下载"
+  },
+  "ffmpeg_updater": {
+    "title": "FFmpeg 更新器",
+    "current_version": "当前版本：",
+    "latest_version": "最新版本：",
+    "status_up_to_date": "✓ 已是最新",
+    "status_update_available": "⚠ 有可用更新",
+    "status_not_installed": "✗ 未安装",
+    "status_checking": "🔄 正在检查更新...",
+    "status_downloading": "⬇ 正在下载 FFmpeg...",
+    "status_installing": "⚙ 正在安装 FFmpeg...",
+    "status_verifying": "✓ 正在验证完整性...",
+    "check_updates": "检查更新",
+    "update_button": "更新 FFmpeg",
+    "update_success": "FFmpeg 已成功更新到版本 {version}！",
+    "update_failed": "更新 FFmpeg 失败。请重试。",
+    "check_failed": "检查更新失败。请检查您的网络连接。",
+    "install_first": "FFmpeg 未安装。点击更新以安装。",
+    "description": "保持 FFmpeg 更新以获得最佳性能和兼容性。"
   }
 }

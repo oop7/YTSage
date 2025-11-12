@@ -34,6 +34,7 @@ from src.utils.ytsage_constants import YTDLP_DOCS_URL
 from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import LocalizationManager, _
 from src.utils.ytsage_logger import logger
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_updater import UpdaterTabWidget
 
 if TYPE_CHECKING:
     from src.gui.ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
@@ -516,11 +517,15 @@ class CustomOptionsDialog(QDialog):
 
         language_layout.addStretch()
 
+        # === Updater Tab ===
+        updater_tab = UpdaterTabWidget(self)
+
         # Add tabs to the tab widget
         self.tab_widget.addTab(cookies_tab, _("tabs.cookies"))
         self.tab_widget.addTab(command_tab, _("tabs.custom_command"))
         self.tab_widget.addTab(proxy_tab, _("tabs.proxy"))
         self.tab_widget.addTab(language_tab, _("tabs.language"))
+        self.tab_widget.addTab(updater_tab, _("tabs.updater"))
 
         # Dialog buttons
         button_box = QDialogButtonBox()
