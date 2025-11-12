@@ -80,6 +80,7 @@ class ConfigManager:
         "auto_update_frequency": "daily",
         "last_update_check": 0,
         "language": "en",
+        "ytdlp_channel": "stable",
         "force_output_format": False,
         "preferred_output_format": "mp4",
         "cached_versions": {

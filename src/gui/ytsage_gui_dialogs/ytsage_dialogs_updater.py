@@ -3,6 +3,7 @@ Updater tab for Custom Options dialog.
 Handles checking for and installing FFmpeg updates and yt-dlp auto-update settings.
 """
 
+import subprocess
 import threading
 from typing import TYPE_CHECKING, cast
 
@@ -15,6 +16,7 @@ from PySide6.QtWidgets import (
     QProgressBar,
     QPushButton,
     QRadioButton,
+    QScrollArea,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -24,10 +26,13 @@ from src.core.ytsage_utils import (
     get_auto_update_settings,
     update_auto_update_settings,
 )
+from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import YTDLPUpdateDialog
+from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import _
 from src.utils.ytsage_logger import logger
 from src.core.ytsage_ffmpeg_updater import check_ffmpeg_update_available, update_ffmpeg
+from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS
 from src.utils.ytsage_constants import OS_NAME
 
 if TYPE_CHECKING:
@@ -77,7 +82,19 @@ class UpdaterTabWidget(QWidget):
     
     def _init_ui(self) -> None:
         """Initialize the UI components."""
-        layout = QVBoxLayout(self)
+        # Main layout for the tab
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Create scroll area
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QScrollArea.Shape.NoFrame)
+        scroll_area.setStyleSheet("QScrollArea { background: transparent; }")
+        
+        # Create a widget to hold all content
+        content_widget = QWidget()
+        layout = QVBoxLayout(content_widget)
         
         # Help text
         help_text = QLabel(_('ffmpeg_updater.description'))
@@ -209,14 +226,14 @@ class UpdaterTabWidget(QWidget):
         
         # Log output
         log_label = QLabel("Update Log:")
-        log_label.setStyleSheet("font-size: 12px; font-weight: bold; color: #ffffff; margin-top: 10px;")
+        log_label.setStyleSheet("font-size: 11px; font-weight: bold; color: #ffffff; margin-top: 5px;")
         ffmpeg_layout.addWidget(log_label)
         
         self.log_output = QTextEdit()
         self.log_output.setReadOnly(True)
         self.log_output.setPlaceholderText("Update logs will appear here...")
-        self.log_output.setMinimumHeight(80)
-        self.log_output.setMaximumHeight(120)
+        self.log_output.setMinimumHeight(60)
+        self.log_output.setMaximumHeight(100)
         self.log_output.setStyleSheet(
             """
             QTextEdit {
@@ -233,6 +250,65 @@ class UpdaterTabWidget(QWidget):
         ffmpeg_layout.addWidget(self.log_output)
         
         layout.addWidget(ffmpeg_group)
+        
+        # === yt-dlp Release Channel Section ===
+        ytdlp_channel_group = QGroupBox(_("settings.ytdlp_channel"))
+        ytdlp_channel_layout = QVBoxLayout()
+        ytdlp_channel_layout.setSpacing(5)  # Reduce spacing
+        ytdlp_channel_layout.setContentsMargins(10, 10, 10, 10)  # Reduce margins
+        
+        # Description
+        channel_desc = QLabel(_("settings.ytdlp_channel_description"))
+        channel_desc.setWordWrap(True)
+        channel_desc.setStyleSheet("color: #cccccc; font-size: 11px; padding: 2px;")
+        ytdlp_channel_layout.addWidget(channel_desc)
+        
+        # Radio buttons for channel selection
+        self.channel_stable_radio = QRadioButton(_("settings.ytdlp_channel_stable"))
+        self.channel_nightly_radio = QRadioButton(_("settings.ytdlp_channel_nightly"))
+        
+        radio_button_style = """
+            QRadioButton {
+                color: #ffffff;
+                spacing: 5px;
+                padding: 3px;
+            }
+            QRadioButton::indicator {
+                width: 16px;
+                height: 16px;
+                border-radius: 8px;
+            }
+            QRadioButton::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #15181b;
+            }
+            QRadioButton::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+            }
+        """
+        self.channel_stable_radio.setStyleSheet(radio_button_style)
+        self.channel_nightly_radio.setStyleSheet(radio_button_style)
+        
+        # Connect radio button signals
+        self.channel_stable_radio.toggled.connect(self._on_channel_changed)
+        self.channel_nightly_radio.toggled.connect(self._on_channel_changed)
+        
+        ytdlp_channel_layout.addWidget(self.channel_stable_radio)
+        ytdlp_channel_layout.addWidget(self.channel_nightly_radio)
+        
+        # Status label for channel operations
+        self.channel_status_label = QLabel("")
+        self.channel_status_label.setWordWrap(True)
+        self.channel_status_label.setStyleSheet(
+            "color: #888888; font-size: 11px; padding: 5px; "
+            "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
+        )
+        self.channel_status_label.setVisible(False)
+        ytdlp_channel_layout.addWidget(self.channel_status_label)
+        
+        ytdlp_channel_group.setLayout(ytdlp_channel_layout)
+        layout.addWidget(ytdlp_channel_group)
         
         # === Auto-Update yt-dlp Section ===
         auto_update_group_box = QGroupBox(_("settings.auto_update_ytdlp"))
@@ -310,6 +386,12 @@ class UpdaterTabWidget(QWidget):
         layout.addWidget(auto_update_group_box)
         
         layout.addStretch()
+        
+        # Set the content widget to the scroll area
+        scroll_area.setWidget(content_widget)
+        
+        # Add scroll area to main layout
+        main_layout.addWidget(scroll_area)
     
     def _load_auto_update_settings(self) -> None:
         """Load current auto-update settings for yt-dlp."""
@@ -327,6 +409,20 @@ class UpdaterTabWidget(QWidget):
                 self.daily_radio.setChecked(True)
             else:  # weekly
                 self.weekly_radio.setChecked(True)
+            
+            # Load channel setting
+            channel = ConfigManager.get("ytdlp_channel")
+            if channel is None:
+                channel = "stable"  # Default to stable if not set
+            
+            if channel == "nightly":
+                self.channel_nightly_radio.setChecked(True)
+            else:
+                self.channel_stable_radio.setChecked(True)
+            
+            # Update status label
+            self._update_channel_status(channel)
+            
         except Exception as e:
             logger.exception(f"Error loading auto-update settings: {e}")
     
@@ -342,6 +438,155 @@ class UpdaterTabWidget(QWidget):
             frequency = "weekly"
 
         return enabled, frequency
+    
+    def _on_channel_changed(self, checked: bool) -> None:
+        """Handle channel selection change."""
+        if not checked:
+            return
+        
+        # Determine which channel was selected
+        new_channel = "nightly" if self.channel_nightly_radio.isChecked() else "stable"
+        current_channel = ConfigManager.get("ytdlp_channel")
+        if current_channel is None:
+            current_channel = "stable"
+        
+        # If channel hasn't actually changed, just update status
+        if new_channel == current_channel:
+            self._update_channel_status(new_channel)
+            return
+        
+        # Show switching message
+        self.channel_status_label.setText(_("settings.ytdlp_switching_channel", channel=new_channel))
+        self.channel_status_label.setStyleSheet(
+            "color: #ffaa00; font-size: 11px; padding: 5px; "
+            "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
+        )
+        self.channel_status_label.setVisible(True)
+        
+        # Disable radio buttons during switch
+        self.channel_stable_radio.setEnabled(False)
+        self.channel_nightly_radio.setEnabled(False)
+        
+        # Run channel switch in background thread
+        def switch_channel():
+            try:
+                # Get yt-dlp path
+                yt_dlp_path = get_yt_dlp_path()
+                
+                # Build the update command
+                # When switching to stable from nightly, we need to get the latest stable version
+                # to force the switch even if versions have the same date
+                update_target = new_channel
+                
+                if new_channel == "stable" and current_channel == "nightly":
+                    # Get the latest stable version tag
+                    logger.info("Fetching latest stable version tag...")
+                    try:
+                        import requests
+                        response = requests.get("https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest", timeout=10)
+                        response.raise_for_status()
+                        latest_tag = response.json().get("tag_name", "")
+                        if latest_tag:
+                            update_target = f"stable@{latest_tag}"
+                            logger.info(f"Latest stable version tag: {latest_tag}")
+                        else:
+                            logger.warning("Could not determine latest stable tag, using 'stable'")
+                    except Exception as e:
+                        logger.warning(f"Failed to fetch latest stable tag, using 'stable': {e}")
+                
+                # Run the update-to command
+                logger.info(f"Switching yt-dlp to {new_channel} channel...")
+                logger.debug(f"Running command: {yt_dlp_path} --update-to {update_target}")
+                result = subprocess.run(
+                    [yt_dlp_path, "--update-to", update_target],
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                    creationflags=SUBPROCESS_CREATIONFLAGS,
+                )
+                
+                # Log the output for debugging
+                if result.stdout:
+                    logger.debug(f"yt-dlp stdout: {result.stdout.strip()}")
+                if result.stderr:
+                    logger.debug(f"yt-dlp stderr: {result.stderr.strip()}")
+                logger.debug(f"yt-dlp return code: {result.returncode}")
+                
+                if result.returncode == 0:
+                    # Success - save the preference
+                    ConfigManager.set("ytdlp_channel", new_channel)
+                    logger.info(f"Successfully switched to {new_channel} channel")
+                    
+                    # Update UI
+                    self.channel_status_label.setText(_("settings.ytdlp_channel_switched", channel=new_channel))
+                    self.channel_status_label.setStyleSheet(
+                        "color: #00cc00; font-size: 11px; padding: 5px; "
+                        "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
+                    )
+                    
+                    # Make executable on Unix systems
+                    if OS_NAME != "Windows":
+                        import os
+                        os.chmod(yt_dlp_path, 0o755)
+                else:
+                    # Failed - revert radio button
+                    error_msg = result.stderr.strip() if result.stderr else result.stdout.strip() if result.stdout else "Unknown error"
+                    logger.error(f"Failed to switch channel: {error_msg}")
+                    
+                    self.channel_status_label.setText(_("settings.ytdlp_channel_switch_failed", error=error_msg))
+                    self.channel_status_label.setStyleSheet(
+                        "color: #ff6666; font-size: 11px; padding: 5px; "
+                        "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
+                    )
+                    
+                    # Revert radio selection
+                    if current_channel == "nightly":
+                        self.channel_nightly_radio.setChecked(True)
+                    else:
+                        self.channel_stable_radio.setChecked(True)
+                        
+            except subprocess.TimeoutExpired:
+                logger.error("Channel switch timed out")
+                self.channel_status_label.setText(_("settings.ytdlp_channel_switch_failed", error="Timeout"))
+                self.channel_status_label.setStyleSheet(
+                    "color: #ff6666; font-size: 11px; padding: 5px; "
+                    "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
+                )
+                # Revert radio selection
+                if current_channel == "nightly":
+                    self.channel_nightly_radio.setChecked(True)
+                else:
+                    self.channel_stable_radio.setChecked(True)
+                    
+            except Exception as e:
+                logger.exception(f"Error switching channel: {e}")
+                self.channel_status_label.setText(_("settings.ytdlp_channel_switch_failed", error=str(e)))
+                self.channel_status_label.setStyleSheet(
+                    "color: #ff6666; font-size: 11px; padding: 5px; "
+                    "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
+                )
+                # Revert radio selection
+                if current_channel == "nightly":
+                    self.channel_nightly_radio.setChecked(True)
+                else:
+                    self.channel_stable_radio.setChecked(True)
+            finally:
+                # Re-enable radio buttons
+                self.channel_stable_radio.setEnabled(True)
+                self.channel_nightly_radio.setEnabled(True)
+        
+        # Start the thread
+        thread = threading.Thread(target=switch_channel, daemon=True)
+        thread.start()
+    
+    def _update_channel_status(self, channel: str) -> None:
+        """Update the channel status label."""
+        self.channel_status_label.setText(_("settings.ytdlp_current_channel", channel=channel))
+        self.channel_status_label.setStyleSheet(
+            "color: #888888; font-size: 11px; padding: 5px; "
+            "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
+        )
+        self.channel_status_label.setVisible(True)
     
     def test_update_check(self) -> None:
         """Open the yt-dlp update dialog with proper progress tracking."""
