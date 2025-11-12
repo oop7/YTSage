@@ -168,7 +168,7 @@ jobs:
         New-Item -ItemType Directory -Path "ffmpeg-temp" -Force
         
         # Download FFmpeg
-        $ffmpegUrl = "https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build.zip"
+        $ffmpegUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
         Write-Host "Downloading FFmpeg from: $ffmpegUrl"
         Invoke-WebRequest -Uri $ffmpegUrl -OutFile "ffmpeg-temp\ffmpeg.zip"
         
