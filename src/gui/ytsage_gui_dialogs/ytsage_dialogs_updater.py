@@ -1,6 +1,6 @@
 """
 Updater tab for Custom Options dialog.
-Handles checking for and installing FFmpeg updates.
+Handles checking for and installing FFmpeg updates and yt-dlp auto-update settings.
 """
 
 import threading
@@ -8,16 +8,23 @@ from typing import TYPE_CHECKING, cast
 
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import (
+    QCheckBox,
     QGroupBox,
     QHBoxLayout,
     QLabel,
     QProgressBar,
     QPushButton,
+    QRadioButton,
     QTextEdit,
     QVBoxLayout,
     QWidget,
 )
 
+from src.core.ytsage_utils import (
+    get_auto_update_settings,
+    update_auto_update_settings,
+)
+from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import YTDLPUpdateDialog
 from src.utils.ytsage_localization import _
 from src.utils.ytsage_logger import logger
 from src.core.ytsage_ffmpeg_updater import check_ffmpeg_update_available, update_ffmpeg
@@ -66,6 +73,7 @@ class UpdaterTabWidget(QWidget):
         self.update_available = False
         
         self._init_ui()
+        self._load_auto_update_settings()
     
     def _init_ui(self) -> None:
         """Initialize the UI components."""
@@ -207,7 +215,8 @@ class UpdaterTabWidget(QWidget):
         self.log_output = QTextEdit()
         self.log_output.setReadOnly(True)
         self.log_output.setPlaceholderText("Update logs will appear here...")
-        self.log_output.setMinimumHeight(150)
+        self.log_output.setMinimumHeight(80)
+        self.log_output.setMaximumHeight(120)
         self.log_output.setStyleSheet(
             """
             QTextEdit {
@@ -224,7 +233,122 @@ class UpdaterTabWidget(QWidget):
         ffmpeg_layout.addWidget(self.log_output)
         
         layout.addWidget(ffmpeg_group)
+        
+        # === Auto-Update yt-dlp Section ===
+        auto_update_group_box = QGroupBox(_("settings.auto_update_ytdlp"))
+        auto_update_layout = QVBoxLayout()
+
+        # Enable/Disable auto-update checkbox
+        self.auto_update_enabled = QCheckBox(_("settings.enable_auto_updates"))
+        auto_update_layout.addWidget(self.auto_update_enabled)
+
+        # Frequency options
+        frequency_label = QLabel(_("settings.update_frequency"))
+        frequency_label.setStyleSheet("color: #ffffff; margin-top: 10px;")
+        auto_update_layout.addWidget(frequency_label)
+
+        self.startup_radio = QRadioButton(_("settings.check_startup"))
+        self.daily_radio = QRadioButton(_("settings.check_daily"))
+        self.weekly_radio = QRadioButton(_("settings.check_weekly"))
+
+        self.startup_radio.setStyleSheet(
+            """
+            QRadioButton {
+                color: #ffffff;
+                spacing: 5px;
+            }
+            QRadioButton::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QRadioButton::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #15181b;
+            }
+            QRadioButton::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+            }
+        """
+        )
+        self.daily_radio.setStyleSheet(self.startup_radio.styleSheet())
+        self.weekly_radio.setStyleSheet(self.startup_radio.styleSheet())
+
+        auto_update_layout.addWidget(self.startup_radio)
+        auto_update_layout.addWidget(self.daily_radio)
+        auto_update_layout.addWidget(self.weekly_radio)
+
+        # Test update button
+        test_update_layout = QHBoxLayout()
+        test_update_button = QPushButton(_("settings.check_updates_now"))
+        test_update_button.clicked.connect(self.test_update_check)
+        test_update_button.setStyleSheet(
+            """
+            QPushButton {
+                padding: 8px 15px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+                min-width: 120px;
+            }
+            QPushButton:hover {
+                background-color: #a50000;
+            }
+            QPushButton:pressed {
+                background-color: #800000;
+            }
+        """
+        )
+        test_update_layout.addWidget(test_update_button)
+        test_update_layout.addStretch()
+        auto_update_layout.addLayout(test_update_layout)
+
+        auto_update_group_box.setLayout(auto_update_layout)
+        layout.addWidget(auto_update_group_box)
+        
         layout.addStretch()
+    
+    def _load_auto_update_settings(self) -> None:
+        """Load current auto-update settings for yt-dlp."""
+        try:
+            auto_settings = get_auto_update_settings()
+            
+            # Set checkbox
+            self.auto_update_enabled.setChecked(auto_settings["enabled"])
+            
+            # Set current selection based on saved settings
+            current_frequency = auto_settings["frequency"]
+            if current_frequency == "startup":
+                self.startup_radio.setChecked(True)
+            elif current_frequency == "daily":
+                self.daily_radio.setChecked(True)
+            else:  # weekly
+                self.weekly_radio.setChecked(True)
+        except Exception as e:
+            logger.exception(f"Error loading auto-update settings: {e}")
+    
+    def get_auto_update_settings(self) -> tuple[bool, str]:
+        """Returns the auto-update settings from the dialog."""
+        enabled = self.auto_update_enabled.isChecked()
+
+        if self.startup_radio.isChecked():
+            frequency = "startup"
+        elif self.daily_radio.isChecked():
+            frequency = "daily"
+        else:  # weekly_radio is checked
+            frequency = "weekly"
+
+        return enabled, frequency
+    
+    def test_update_check(self) -> None:
+        """Open the yt-dlp update dialog with proper progress tracking."""
+        # Create and show the update dialog (non-modal to prevent blocking)
+        dialog = YTDLPUpdateDialog(self)
+        dialog.setModal(False)  # Make it non-modal
+        dialog.show()  # Use show() instead of exec() to avoid blocking
     
     def check_for_updates(self) -> None:
         """Check if FFmpeg updates are available."""

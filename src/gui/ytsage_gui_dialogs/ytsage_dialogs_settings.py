@@ -1,6 +1,6 @@
 """
 Settings-related dialogs for YTSage application.
-Contains dialogs for configuring download settings and auto-update preferences.
+Contains dialogs for configuring download settings.
 """
 
 import threading
@@ -27,13 +27,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from src.core.ytsage_utils import (
-    check_and_update_ytdlp_auto,
-    get_auto_update_settings,
-    get_ytdlp_version,
-    update_auto_update_settings,
-)
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import YTDLPUpdateDialog
 from src.utils.ytsage_logger import logger
 from src.utils.ytsage_localization import _
 from src.utils.ytsage_config_manager import ConfigManager
@@ -241,51 +234,6 @@ class DownloadSettingsDialog(QDialog):
         output_format_group_box.setLayout(output_format_layout)
         layout.addWidget(output_format_group_box)
 
-        # --- Auto-Update yt-dlp Section ---
-        auto_update_group_box = QGroupBox(_("settings.auto_update_ytdlp"))
-        auto_update_layout = QVBoxLayout()
-
-        # Load current auto-update settings
-        auto_settings = get_auto_update_settings()
-
-        # Enable/Disable auto-update checkbox
-        self.auto_update_enabled = QCheckBox(_("settings.enable_auto_updates"))
-        self.auto_update_enabled.setChecked(auto_settings["enabled"])
-        auto_update_layout.addWidget(self.auto_update_enabled)
-
-        # Frequency options
-        frequency_label = QLabel(_("settings.update_frequency"))
-        frequency_label.setStyleSheet("color: #ffffff; margin-top: 10px;")
-        auto_update_layout.addWidget(frequency_label)
-
-        self.startup_radio = QRadioButton(_("settings.check_startup"))
-        self.daily_radio = QRadioButton(_("settings.check_daily"))
-        self.weekly_radio = QRadioButton(_("settings.check_weekly"))
-
-        # Set current selection based on saved settings
-        current_frequency = auto_settings["frequency"]
-        if current_frequency == "startup":
-            self.startup_radio.setChecked(True)
-        elif current_frequency == "daily":
-            self.daily_radio.setChecked(True)
-        else:  # weekly
-            self.weekly_radio.setChecked(True)
-
-        auto_update_layout.addWidget(self.startup_radio)
-        auto_update_layout.addWidget(self.daily_radio)
-        auto_update_layout.addWidget(self.weekly_radio)
-
-        # Test update button
-        test_update_layout = QHBoxLayout()
-        test_update_button = QPushButton(_("settings.check_updates_now"))
-        test_update_button.clicked.connect(self.test_update_check)
-        test_update_layout.addWidget(test_update_button)
-        test_update_layout.addStretch()
-        auto_update_layout.addLayout(test_update_layout)
-
-        auto_update_group_box.setLayout(auto_update_layout)
-        layout.addWidget(auto_update_group_box)
-
         # Dialog buttons (OK/Cancel)
         button_box = QDialogButtonBox()
         ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
@@ -364,46 +312,20 @@ class DownloadSettingsDialog(QDialog):
         )
         return msg_box
 
-    def test_update_check(self) -> None:
-        """Open the yt-dlp update dialog with proper progress tracking."""
-        # Create and show the update dialog (non-modal to prevent blocking)
-        dialog = YTDLPUpdateDialog(self)
-        dialog.setModal(False)  # Make it non-modal
-        dialog.show()  # Use show() instead of exec() to avoid blocking
-
-    def get_auto_update_settings(self) -> tuple[bool, str]:
-        """Returns the auto-update settings from the dialog."""
-        enabled = self.auto_update_enabled.isChecked()
-
-        if self.startup_radio.isChecked():
-            frequency = "startup"
-        elif self.daily_radio.isChecked():
-            frequency = "daily"
-        else:  # weekly_radio is checked
-            frequency = "weekly"
-
-        return enabled, frequency
-
     def accept(self) -> None:
-        """Override accept to save auto-update and format settings."""
+        """Override accept to save format settings."""
         try:
-            # Save auto-update settings
-            enabled, frequency = self.get_auto_update_settings()
-
             # Save output format settings
             force_format = self.get_force_format_enabled()
             preferred_format = self.get_preferred_format()
             ConfigManager.set("force_output_format", force_format)
             ConfigManager.set("preferred_output_format", preferred_format)
 
-            if update_auto_update_settings(enabled, frequency):
-                QMessageBox.information(
-                    self,
-                    _("settings.settings_saved_title"),
-                    _("settings.settings_saved_message"),
-                )
-            else:
-                QMessageBox.warning(self, _("settings.error_title"), _("settings.failed_save_settings"))
+            QMessageBox.information(
+                self,
+                _("settings.settings_saved_title"),
+                _("settings.settings_saved_message"),
+            )
         except Exception as e:
             QMessageBox.critical(self, _("settings.error_title"), _("settings.error_saving_settings", error=str(e)))
 

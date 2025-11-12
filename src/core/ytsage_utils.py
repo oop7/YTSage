@@ -643,21 +643,26 @@ def check_and_update_ytdlp_auto() -> bool:
 
 def get_auto_update_settings() -> dict:
     """Get current auto-update settings from config."""
-    config = load_config()
+    from src.utils.ytsage_config_manager import ConfigManager
+    
+    enabled = ConfigManager.get("auto_update_ytdlp")
+    frequency = ConfigManager.get("auto_update_frequency")
+    last_check = ConfigManager.get("last_update_check")
+    
     return {
-        "enabled": config.get("auto_update_ytdlp", True),
-        "frequency": config.get("auto_update_frequency", "daily"),
-        "last_check": config.get("last_update_check", 0),
+        "enabled": enabled if enabled is not None else True,
+        "frequency": frequency if frequency is not None else "daily",
+        "last_check": last_check if last_check is not None else 0,
     }
 
 
 def update_auto_update_settings(enabled, frequency) -> bool:
     """Update auto-update settings in config."""
     try:
-        config = load_config()
-        config["auto_update_ytdlp"] = enabled
-        config["auto_update_frequency"] = frequency
-        save_config(config)
+        from src.utils.ytsage_config_manager import ConfigManager
+        
+        ConfigManager.set("auto_update_ytdlp", enabled)
+        ConfigManager.set("auto_update_frequency", frequency)
         return True
     except Exception as e:
         logger.exception(f"Error updating auto-update settings: {e}")

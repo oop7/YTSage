@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
+from src.core.ytsage_utils import update_auto_update_settings
 from src.utils.ytsage_constants import YTDLP_DOCS_URL
 from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import LocalizationManager, _
@@ -518,14 +519,14 @@ class CustomOptionsDialog(QDialog):
         language_layout.addStretch()
 
         # === Updater Tab ===
-        updater_tab = UpdaterTabWidget(self)
+        self.updater_tab = UpdaterTabWidget(self)
 
         # Add tabs to the tab widget
         self.tab_widget.addTab(cookies_tab, _("tabs.cookies"))
         self.tab_widget.addTab(command_tab, _("tabs.custom_command"))
         self.tab_widget.addTab(proxy_tab, _("tabs.proxy"))
         self.tab_widget.addTab(language_tab, _("tabs.language"))
-        self.tab_widget.addTab(updater_tab, _("tabs.updater"))
+        self.tab_widget.addTab(self.updater_tab, _("tabs.updater"))
 
         # Dialog buttons
         button_box = QDialogButtonBox()
@@ -930,6 +931,21 @@ class CustomOptionsDialog(QDialog):
                 self.restart_notice.setVisible(True)
                 
                 logger.info(f"Language changed to: {selected_lang_code}")
+    
+    def accept(self) -> None:
+        """Override accept to save auto-update settings from the updater tab."""
+        logger.info("CustomOptionsDialog.accept() called")
+        try:
+            # Save auto-update settings from the updater tab
+            enabled, frequency = self.updater_tab.get_auto_update_settings()
+            logger.info(f"Saving auto-update settings: enabled={enabled}, frequency={frequency}")
+            result = update_auto_update_settings(enabled, frequency)
+            logger.info(f"Auto-update settings save result: {result}")
+        except Exception as e:
+            logger.exception(f"Error saving auto-update settings: {e}")
+        
+        # Call the parent accept method to close the dialog
+        super().accept()
 
 
 class TimeRangeDialog(QDialog):
