@@ -145,6 +145,9 @@ else:  # Linux and other UNIX-like
 # Documentation URLs
 YTDLP_DOCS_URL: str = "https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options"
 
+# yt-dlp SHA256 checksums URL
+YTDLP_SHA256_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/SHA2-256SUMS"
+
 # FFmpeg download links (Essentials build - always latest version)
 FFMPEG_7Z_DOWNLOAD_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z"
 FFMPEG_ZIP_DOWNLOAD_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"

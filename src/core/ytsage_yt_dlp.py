@@ -29,13 +29,75 @@ from src.utils.ytsage_constants import (
     SUBPROCESS_CREATIONFLAGS,
     YTDLP_APP_BIN_PATH,
     YTDLP_DOWNLOAD_URL,
+    YTDLP_SHA256_URL,
 )
+from src.core.ytsage_ffmpeg import get_file_sha256
 
 # YTDLP_URLS moved to src\utils\ytsage_constants.py
 # get_ytdlp_install_dir() moved to src\utils\ytsage_constants.py
 # get_ytdlp_executable_path() moved to src\utils\ytsage_constants.py
 # get_os_type() moved to src\utils\ytsage_constants.py
 # ensure_install_dir_exists() moved to src\utils\ytsage_constants.py
+
+
+def verify_ytdlp_sha256(file_path: Path, download_url: str) -> bool:
+    """
+    Verify yt-dlp file SHA256 hash against official checksums.
+    
+    Args:
+        file_path: Path to the downloaded yt-dlp file
+        download_url: The URL used to download the file (to determine the filename)
+        
+    Returns:
+        bool: True if verification successful, False otherwise
+    """
+    try:
+        # Download the SHA2-256SUMS file
+        logger.info(f"Downloading SHA256 checksums from: {YTDLP_SHA256_URL}")
+        response = requests.get(YTDLP_SHA256_URL, timeout=10)
+        response.raise_for_status()
+        checksum_content = response.text
+        
+        # Extract filename from download URL (e.g., yt-dlp.exe, yt-dlp_macos, yt-dlp)
+        filename = download_url.split("/")[-1]
+        logger.info(f"Looking for checksum for file: {filename}")
+        
+        # Parse the checksum file to find the matching hash
+        expected_hash = None
+        for line in checksum_content.strip().split("\n"):
+            if filename in line:
+                # Format: "hash  filename"
+                parts = line.strip().split()
+                if len(parts) >= 2 and parts[1] == filename:
+                    expected_hash = parts[0]
+                    break
+        
+        if not expected_hash:
+            logger.error(f"Could not find SHA256 hash for {filename} in checksums file")
+            return False
+        
+        # Calculate actual hash of downloaded file
+        logger.info("Calculating SHA256 hash of downloaded file...")
+        actual_hash = get_file_sha256(file_path)
+        
+        # Compare hashes
+        if actual_hash.lower() == expected_hash.lower():
+            logger.info("✓ SHA256 verification successful!")
+            logger.info(f"  Expected: {expected_hash}")
+            logger.info(f"  Actual:   {actual_hash}")
+            return True
+        else:
+            logger.error("✗ SHA256 verification failed!")
+            logger.error(f"  Expected: {expected_hash}")
+            logger.error(f"  Actual:   {actual_hash}")
+            return False
+            
+    except requests.RequestException as e:
+        logger.error(f"Failed to download SHA256 checksums: {e}")
+        return False
+    except Exception as e:
+        logger.exception(f"Error during SHA256 verification: {e}")
+        return False
 
 
 class DownloadYtdlpThread(QThread):
@@ -51,7 +113,9 @@ class DownloadYtdlpThread(QThread):
             exe_path = YTDLP_APP_BIN_PATH
 
             # Download with progress reporting
+            logger.info(f"Downloading yt-dlp from: {YTDLP_DOWNLOAD_URL}")
             response = requests.get(YTDLP_DOWNLOAD_URL, stream=True)
+            response.raise_for_status()
             total_size = int(response.headers.get("content-length", 0))
             block_size = 1024  # 1 Kibibyte
 
@@ -67,13 +131,29 @@ class DownloadYtdlpThread(QThread):
                         progress = int(downloaded / total_size * 100)
                         self.progress_signal.emit(progress)
 
+            logger.info("Download complete, verifying SHA256 hash...")
+            
+            # Verify SHA256 hash
+            if not verify_ytdlp_sha256(exe_path, YTDLP_DOWNLOAD_URL):
+                # Hash verification failed - delete the downloaded file
+                logger.error("SHA256 verification failed! Removing downloaded file.")
+                if Path(exe_path).exists():
+                    Path(exe_path).unlink()
+                self.finished_signal.emit(
+                    False, 
+                    "SHA256 verification failed. The downloaded file may be corrupted or tampered with."
+                )
+                return
+
             # Make executable on macOS and Linux
             if OS_NAME != "Windows":
                 os.chmod(exe_path, 0o755)
 
-            self.finished_signal.emit(True, exe_path)
+            logger.info("yt-dlp downloaded and verified successfully!")
+            self.finished_signal.emit(True, str(exe_path))
 
         except Exception as e:
+            logger.exception(f"Error downloading yt-dlp: {e}")
             self.finished_signal.emit(False, str(e))
 
 
@@ -568,26 +648,30 @@ def setup_ytdlp(parent_widget=None):
 
     if result == QDialog.DialogCode.Accepted:
         # First check if we received a path from the signal
-        if setup_result["path"] and Path.exists(setup_result["path"]):
-            logger.debug(f"Using path from signal: {setup_result['path']}")
-            return setup_result["path"]
+        if setup_result["path"]:
+            path_obj = Path(setup_result["path"]) if isinstance(setup_result["path"], str) else setup_result["path"]
+            if path_obj.exists():
+                logger.debug(f"Using path from signal: {setup_result['path']}")
+                return str(setup_result["path"])
 
         # Get the expected path for verification as fallback
         expected_path = YTDLP_APP_BIN_PATH
         logger.debug(f"Expected yt-dlp path: {expected_path}")
 
         # Verify the path exists after dialog is accepted
-        if Path.exists(expected_path):
+        if expected_path.exists():
             logger.debug(f"yt-dlp successfully found at expected path: {expected_path}")
-            return expected_path
+            return str(expected_path)
         else:
             logger.debug(f"Expected path does not exist, trying alternate detection")
             # Try to use the get_yt_dlp_path function to find yt-dlp elsewhere
             yt_dlp_path = get_yt_dlp_path()
             logger.debug(f"Alternate detection result: {yt_dlp_path}")
-            if yt_dlp_path != "yt-dlp" and Path.exists(yt_dlp_path):
-                logger.debug(f"yt-dlp found at alternate location: {yt_dlp_path}")
-                return yt_dlp_path
+            if yt_dlp_path != "yt-dlp":
+                path_obj = Path(yt_dlp_path) if isinstance(yt_dlp_path, str) else yt_dlp_path
+                if path_obj.exists():
+                    logger.debug(f"yt-dlp found at alternate location: {yt_dlp_path}")
+                    return str(yt_dlp_path)
 
             # Something went wrong, show an error message
             logger.debug(f"Setup failed, showing error dialog")
