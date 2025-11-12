@@ -525,8 +525,8 @@ class CustomOptionsDialog(QDialog):
         self.tab_widget.addTab(cookies_tab, _("tabs.cookies"))
         self.tab_widget.addTab(command_tab, _("tabs.custom_command"))
         self.tab_widget.addTab(proxy_tab, _("tabs.proxy"))
-        self.tab_widget.addTab(language_tab, _("tabs.language"))
         self.tab_widget.addTab(self.updater_tab, _("tabs.updater"))
+        self.tab_widget.addTab(language_tab, _("tabs.language"))
 
         # Dialog buttons
         button_box = QDialogButtonBox()
