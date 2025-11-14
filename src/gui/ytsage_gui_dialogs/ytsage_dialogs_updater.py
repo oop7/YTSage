@@ -1,19 +1,20 @@
 """
 Updater tab for Custom Options dialog.
-Handles checking for and installing FFmpeg updates and yt-dlp auto-update settings.
+Handles FFmpeg version checking and yt-dlp auto-update settings.
 """
 
+import re
 import subprocess
 import threading
-from typing import TYPE_CHECKING, cast
+from typing import Optional, Tuple, TYPE_CHECKING, cast
 
-from PySide6.QtCore import QObject, Signal
+import requests
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QGroupBox,
     QHBoxLayout,
     QLabel,
-    QProgressBar,
     QPushButton,
     QRadioButton,
     QScrollArea,
@@ -24,6 +25,7 @@ from PySide6.QtWidgets import (
 
 from src.core.ytsage_utils import (
     get_auto_update_settings,
+    get_ffmpeg_version_direct,
     update_auto_update_settings,
 )
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
@@ -31,35 +33,127 @@ from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import YTDLPUpdateDialog
 from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import _
 from src.utils.ytsage_logger import logger
-from src.core.ytsage_ffmpeg_updater import check_ffmpeg_update_available, update_ffmpeg
-from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS
-from src.utils.ytsage_constants import OS_NAME
+from src.utils.ytsage_constants import (
+    FFMPEG_7Z_VERSION_URL,
+    OS_NAME,
+    SUBPROCESS_CREATIONFLAGS,
+)
 
 if TYPE_CHECKING:
     from src.gui.ytsage_gui_dialogs.ytsage_dialogs_custom import CustomOptionsDialog
 
 
-class UpdateWorker(QObject):
-    """Worker class for running FFmpeg updates in a separate thread."""
+# Helper functions for FFmpeg version checking (copied from removed ytsage_ffmpeg_updater.py)
+def get_latest_ffmpeg_version() -> Optional[str]:
+    """
+    Fetch the latest FFmpeg version from the version URL.
     
-    progress = Signal(str)  # Progress messages
-    finished = Signal(bool)  # Completion status (success/failure)
+    Returns:
+        str: Version string (e.g., "8.0") or None if fetch failed
+    """
+    try:
+        response = requests.get(FFMPEG_7Z_VERSION_URL, timeout=10)
+        response.raise_for_status()
+        version = response.text.strip()
+        
+        # Validate version format (should be something like "8.0" or "7.1.1")
+        if re.match(r'^\d+\.\d+(\.\d+)?$', version):
+            logger.info(f"Latest FFmpeg version: {version}")
+            return version
+        else:
+            logger.warning(f"Unexpected version format: {version}")
+            return None
+            
+    except requests.RequestException as e:
+        logger.error(f"Failed to fetch latest FFmpeg version: {e}")
+        return None
+    except Exception as e:
+        logger.exception(f"Unexpected error fetching FFmpeg version: {e}")
+        return None
+
+
+def parse_version(version_str: str) -> Tuple[int, ...]:
+    """
+    Parse version string into tuple of integers for comparison.
     
-    def run_update(self):
-        """Run the FFmpeg update process."""
-        try:
-            def progress_callback(msg: str):
-                """Callback for progress updates."""
-                self.progress.emit(msg)
-            
-            # Run the update
-            success = update_ffmpeg(progress_callback=progress_callback)
-            self.finished.emit(success)
-            
-        except Exception as e:
-            logger.exception(f"Error during FFmpeg update: {e}")
-            self.progress.emit(f"❌ Error: {e}")
-            self.finished.emit(False)
+    Args:
+        version_str: Version string like "8.0" or "7.1.1"
+        
+    Returns:
+        Tuple of integers (e.g., (8, 0) or (7, 1, 1))
+    """
+    try:
+        # Extract version numbers from string
+        match = re.search(r'(\d+\.\d+(?:\.\d+)?)', version_str)
+        if match:
+            version_str = match.group(1)
+        
+        parts = version_str.split('.')
+        return tuple(int(p) for p in parts)
+    except (ValueError, AttributeError):
+        logger.warning(f"Could not parse version: {version_str}")
+        return (0,)
+
+
+def compare_versions(current: str, latest: str) -> bool:
+    """
+    Compare two version strings.
+    
+    Args:
+        current: Current version string
+        latest: Latest version string
+        
+    Returns:
+        True if update is needed (latest > current), False otherwise
+    """
+    try:
+        current_tuple = parse_version(current)
+        latest_tuple = parse_version(latest)
+        
+        logger.info(f"Comparing versions - Current: {current_tuple}, Latest: {latest_tuple}")
+        
+        # Pad shorter version with zeros for comparison
+        max_len = max(len(current_tuple), len(latest_tuple))
+        current_padded = current_tuple + (0,) * (max_len - len(current_tuple))
+        latest_padded = latest_tuple + (0,) * (max_len - len(latest_tuple))
+        
+        return latest_padded > current_padded
+    except Exception as e:
+        logger.exception(f"Error comparing versions: {e}")
+        return False
+
+
+def check_ffmpeg_version() -> Tuple[bool, str, str]:
+    """
+    Check FFmpeg version and compare with latest.
+    
+    Returns:
+        Tuple of (update_available, current_version, latest_version)
+    """
+    try:
+        # Get current version
+        current_version = get_ffmpeg_version_direct()
+        if current_version in ["Not found", "Error getting version", "Unknown version"]:
+            current_version = "Not installed"
+        
+        # Get latest version
+        latest_version = get_latest_ffmpeg_version()
+        if latest_version is None:
+            latest_version = "Unknown"
+            return False, current_version, latest_version
+        
+        # If not installed, update is available
+        if current_version == "Not installed":
+            return True, current_version, latest_version
+        
+        # Compare versions
+        update_needed = compare_versions(current_version, latest_version)
+        
+        return update_needed, current_version, latest_version
+        
+    except Exception as e:
+        logger.exception(f"Error checking FFmpeg version: {e}")
+        return False, "Error", "Error"
 
 
 class UpdaterTabWidget(QWidget):
@@ -68,9 +162,6 @@ class UpdaterTabWidget(QWidget):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._parent: "CustomOptionsDialog" = cast("CustomOptionsDialog", self.parent())
-        
-        self.update_thread = None
-        self.update_worker = None
         
         # State variables
         self.current_version = "Unknown"
@@ -102,7 +193,7 @@ class UpdaterTabWidget(QWidget):
         help_text.setStyleSheet("color: #999999; padding: 10px;")
         layout.addWidget(help_text)
         
-        # FFmpeg Update Section
+        # FFmpeg Version Check Section
         ffmpeg_group = QGroupBox(_('ffmpeg_updater.title'))
         ffmpeg_layout = QVBoxLayout(ffmpeg_group)
         
@@ -144,10 +235,8 @@ class UpdaterTabWidget(QWidget):
         )
         ffmpeg_layout.addWidget(self.status_label)
         
-        # Button layout
-        button_layout = QHBoxLayout()
-        
-        # Check for updates button
+        # Check version button
+        check_button_layout = QHBoxLayout()
         self.check_button = QPushButton(_('ffmpeg_updater.check_updates'))
         self.check_button.clicked.connect(self.check_for_updates)
         self.check_button.setStyleSheet(
@@ -170,84 +259,34 @@ class UpdaterTabWidget(QWidget):
             }
         """
         )
-        button_layout.addWidget(self.check_button)
+        check_button_layout.addWidget(self.check_button)
+        check_button_layout.addStretch()
+        ffmpeg_layout.addLayout(check_button_layout)
         
-        button_layout.addStretch()
-        
-        # Update button
-        self.update_button = QPushButton(_('ffmpeg_updater.update_button'))
-        self.update_button.clicked.connect(self.start_update)
-        self.update_button.setEnabled(False)
-        self.update_button.setStyleSheet(
+        # Installation guide info
+        guide_label = QLabel(_('ffmpeg_updater.guide_info'))
+        guide_label.setWordWrap(True)
+        guide_label.setOpenExternalLinks(True)  # Enable clickable links
+        guide_label.setTextFormat(Qt.TextFormat.RichText)  # Enable HTML formatting
+        guide_label.setStyleSheet(
             """
-            QPushButton {
-                padding: 8px 15px;
-                background-color: #c90000;
-                border: none;
+            QLabel {
+                color: #cccccc; 
+                font-size: 11px; 
+                padding: 8px; 
+                background-color: #1a1d20; 
                 border-radius: 4px;
-                color: white;
-                font-weight: bold;
-                min-width: 120px;
             }
-            QPushButton:hover {
-                background-color: #a50000;
+            QLabel a {
+                color: #4da6ff;
+                text-decoration: underline;
             }
-            QPushButton:disabled {
-                background-color: #4a4a4a;
-                color: #888888;
+            QLabel a:hover {
+                color: #66b3ff;
             }
         """
         )
-        button_layout.addWidget(self.update_button)
-        
-        ffmpeg_layout.addLayout(button_layout)
-        
-        # Progress bar
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setRange(0, 0)  # Indeterminate progress
-        self.progress_bar.setVisible(False)
-        self.progress_bar.setStyleSheet(
-            """
-            QProgressBar {
-                border: 2px solid #2a2d36;
-                border-radius: 4px;
-                background-color: #1d1e22;
-                text-align: center;
-                color: #ffffff;
-                height: 20px;
-            }
-            QProgressBar::chunk {
-                background-color: #c90000;
-                border-radius: 2px;
-            }
-        """
-        )
-        ffmpeg_layout.addWidget(self.progress_bar)
-        
-        # Log output
-        log_label = QLabel("Update Log:")
-        log_label.setStyleSheet("font-size: 11px; font-weight: bold; color: #ffffff; margin-top: 5px;")
-        ffmpeg_layout.addWidget(log_label)
-        
-        self.log_output = QTextEdit()
-        self.log_output.setReadOnly(True)
-        self.log_output.setPlaceholderText("Update logs will appear here...")
-        self.log_output.setMinimumHeight(60)
-        self.log_output.setMaximumHeight(100)
-        self.log_output.setStyleSheet(
-            """
-            QTextEdit {
-                background-color: #1d1e22;
-                color: #ffffff;
-                border: 2px solid #2a2d36;
-                border-radius: 6px;
-                padding: 8px;
-                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-                font-size: 11px;
-            }
-        """
-        )
-        ffmpeg_layout.addWidget(self.log_output)
+        ffmpeg_layout.addWidget(guide_label)
         
         layout.addWidget(ffmpeg_group)
         
@@ -596,27 +635,25 @@ class UpdaterTabWidget(QWidget):
         dialog.show()  # Use show() instead of exec() to avoid blocking
     
     def check_for_updates(self) -> None:
-        """Check if FFmpeg updates are available."""
+        """Check FFmpeg version and compare with latest."""
         self.check_button.setEnabled(False)
-        self.update_button.setEnabled(False)
         self.status_label.setText(_('ffmpeg_updater.status_checking'))
         self.status_label.setStyleSheet(
             "color: #ffaa00; font-size: 12px; padding: 8px; "
             "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
         )
-        self.log_output.append("🔍 Checking for FFmpeg updates...")
         
         # Run check in background thread
         def check_thread():
             try:
-                update_available, current_version, latest_version = check_ffmpeg_update_available()
+                update_available, current_version, latest_version = check_ffmpeg_version()
                 
-                # Update UI in main thread using signals
+                # Update UI in main thread
                 self.check_button.setEnabled(True)
                 self._update_check_results(update_available, current_version, latest_version)
                 
             except Exception as e:
-                logger.exception(f"Error checking for updates: {e}")
+                logger.exception(f"Error checking FFmpeg version: {e}")
                 self.check_button.setEnabled(True)
                 self._show_check_error(str(e))
         
@@ -624,7 +661,7 @@ class UpdaterTabWidget(QWidget):
         thread.start()
     
     def _update_check_results(self, update_available: bool, current_version: str, latest_version: str) -> None:
-        """Handle completion of update check."""
+        """Handle completion of version check."""
         self.update_available = update_available
         self.current_version = current_version
         self.latest_version = latest_version
@@ -635,97 +672,28 @@ class UpdaterTabWidget(QWidget):
         
         # Update status
         if current_version == "Not installed":
-            self.status_label.setText(_('ffmpeg_updater.install_first'))
+            self.status_label.setText(_('ffmpeg_updater.status_not_installed'))
             self.status_label.setStyleSheet(
                 "color: #ff6666; font-size: 12px; padding: 8px; "
                 "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
             )
-            self.update_button.setEnabled(True if OS_NAME == "Windows" else False)
-            self.log_output.append(f"❌ FFmpeg is not installed. Latest version available: {latest_version}")
         elif update_available:
             self.status_label.setText(_('ffmpeg_updater.status_update_available'))
             self.status_label.setStyleSheet(
                 "color: #ffaa00; font-size: 12px; padding: 8px; "
                 "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
             )
-            self.update_button.setEnabled(True if OS_NAME == "Windows" else False)
-            self.log_output.append(f"⚠ Update available: {current_version} → {latest_version}")
         else:
             self.status_label.setText(_('ffmpeg_updater.status_up_to_date'))
             self.status_label.setStyleSheet(
                 "color: #00cc00; font-size: 12px; padding: 8px; "
                 "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
             )
-            self.update_button.setEnabled(False)
-            self.log_output.append(f"✅ FFmpeg is up to date (version {current_version})")
-        
-        # Show message for non-Windows systems
-        if OS_NAME != "Windows" and update_available:
-            self.log_output.append("ℹ️ Automatic updates are only available on Windows.")
-            self.log_output.append("   Please use your system's package manager to update FFmpeg.")
     
     def _show_check_error(self, error: str) -> None:
-        """Handle error during update check."""
+        """Handle error during version check."""
         self.status_label.setText(_('ffmpeg_updater.check_failed'))
         self.status_label.setStyleSheet(
             "color: #ff6666; font-size: 12px; padding: 8px; "
             "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
         )
-        self.log_output.append(f"❌ Error checking for updates: {error}")
-    
-    def start_update(self) -> None:
-        """Start the FFmpeg update process."""
-        if OS_NAME != "Windows":
-            self.log_output.append("❌ Automatic updates are only supported on Windows.")
-            return
-        
-        # Disable buttons during update
-        self.check_button.setEnabled(False)
-        self.update_button.setEnabled(False)
-        self.progress_bar.setVisible(True)
-        
-        self.log_output.append("=" * 60)
-        self.log_output.append("🚀 Starting FFmpeg update process...")
-        self.log_output.append("=" * 60)
-        
-        # Create worker and thread
-        self.update_worker = UpdateWorker()
-        self.update_thread = threading.Thread(target=self.update_worker.run_update, daemon=True)
-        
-        # Connect signals
-        self.update_worker.progress.connect(self._on_update_progress)
-        self.update_worker.finished.connect(self._on_update_finished)
-        
-        # Start update
-        self.update_thread.start()
-    
-    def _on_update_progress(self, message: str) -> None:
-        """Handle progress updates from the update worker."""
-        self.log_output.append(message)
-        # Auto-scroll to bottom
-        cursor = self.log_output.textCursor()
-        cursor.movePosition(cursor.MoveOperation.End)
-        self.log_output.setTextCursor(cursor)
-    
-    def _on_update_finished(self, success: bool) -> None:
-        """Handle completion of the update process."""
-        self.progress_bar.setVisible(False)
-        self.check_button.setEnabled(True)
-        
-        self.log_output.append("=" * 60)
-        
-        if success:
-            self.log_output.append(_('ffmpeg_updater.update_success', version=self.latest_version))
-            self.status_label.setText(_('ffmpeg_updater.status_up_to_date'))
-            self.status_label.setStyleSheet(
-                "color: #00cc00; font-size: 12px; padding: 8px; "
-                "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
-            )
-            # Re-check to update version info
-            self.check_for_updates()
-        else:
-            self.log_output.append(_('ffmpeg_updater.update_failed'))
-            self.status_label.setText(_('ffmpeg_updater.status_update_available'))
-            self.update_button.setEnabled(True)
-        
-        self.log_output.append("=" * 60)

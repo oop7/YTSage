@@ -477,22 +477,17 @@
     "redownload_started": "ダウンロード開始"
   },
   "ffmpeg_updater": {
-    "title": "FFmpegアップデーター",
+    "title": "FFmpegバージョンチェッカー",
     "current_version": "現在のバージョン：",
     "latest_version": "最新バージョン：",
     "status_up_to_date": "✓ 最新",
     "status_update_available": "⚠ 更新可能",
     "status_not_installed": "✗ 未インストール",
-    "status_checking": "🔄 更新を確認中...",
-    "status_downloading": "⬇ FFmpegをダウンロード中...",
-    "status_installing": "⚙ FFmpegをインストール中...",
-    "status_verifying": "✓ 整合性を検証中...",
-    "check_updates": "更新を確認",
-    "update_button": "FFmpegを更新",
-    "update_success": "FFmpegがバージョン{version}に更新されました！",
-    "update_failed": "FFmpegの更新に失敗しました。再試行してください。",
-    "check_failed": "更新の確認に失敗しました。インターネット接続を確認してください。",
-    "install_first": "FFmpegがインストールされていません。インストールするには「更新」をクリックしてください。",
-    "description": "最高のパフォーマンスと互換性のためにFFmpegを最新の状態に保ってください。"
+    "status_idle": "開始するには「バージョンを確認」をクリック",
+    "status_checking": "🔄 バージョンを確認中...",
+    "check_updates": "バージョンを確認",
+    "check_failed": "バージョンの確認に失敗しました。インターネット接続を確認してください。",
+    "description": "FFmpegのバージョンを確認し、利用可能な最新バージョンと比較します。",
+    "guide_info": " FFmpegをインストールまたは更新するには、<a href='https://github.com/oop7/ffmpeg-install-guide'>こちらをクリックして包括的なインストールガイドをご覧ください</a>。"
   }
 }

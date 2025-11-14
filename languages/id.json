@@ -477,22 +477,17 @@
     "redownload_started": "Unduhan dimulai"
   },
   "ffmpeg_updater": {
-    "title": "Pembaruan FFmpeg",
+    "title": "Pemeriksa Versi FFmpeg",
     "current_version": "Versi Saat Ini:",
     "latest_version": "Versi Terbaru:",
     "status_up_to_date": "✓ Terbaru",
     "status_update_available": "⚠ Pembaruan tersedia",
     "status_not_installed": "✗ Tidak terinstal",
-    "status_checking": "🔄 Memeriksa pembaruan...",
-    "status_downloading": "⬇ Mengunduh FFmpeg...",
-    "status_installing": "⚙ Menginstal FFmpeg...",
-    "status_verifying": "✓ Memverifikasi integritas...",
-    "check_updates": "Periksa Pembaruan",
-    "update_button": "Perbarui FFmpeg",
-    "update_success": "FFmpeg berhasil diperbarui ke versi {version}!",
-    "update_failed": "Gagal memperbarui FFmpeg. Silakan coba lagi.",
-    "check_failed": "Gagal memeriksa pembaruan. Periksa koneksi internet Anda.",
-    "install_first": "FFmpeg tidak terinstal. Klik Perbarui untuk menginstal.",
-    "description": "Jaga FFmpeg tetap terbaru untuk performa dan kompatibilitas terbaik."
+    "status_idle": "Klik 'Periksa Versi' untuk memulai",
+    "status_checking": "🔄 Memeriksa versi...",
+    "check_updates": "Periksa Versi",
+    "check_failed": "Gagal memeriksa versi. Periksa koneksi internet Anda.",
+    "description": "Periksa versi FFmpeg Anda dan bandingkan dengan versi terbaru yang tersedia.",
+    "guide_info": " Untuk menginstal atau memperbarui FFmpeg, <a href='https://github.com/oop7/ffmpeg-install-guide'>klik di sini untuk melihat panduan instalasi lengkap kami</a>."
   }
 }

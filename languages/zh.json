@@ -477,22 +477,17 @@
     "redownload_started": "已开始下载"
   },
   "ffmpeg_updater": {
-    "title": "FFmpeg 更新器",
+    "title": "FFmpeg 版本检查器",
     "current_version": "当前版本：",
     "latest_version": "最新版本：",
     "status_up_to_date": "✓ 已是最新",
     "status_update_available": "⚠ 有可用更新",
     "status_not_installed": "✗ 未安装",
-    "status_checking": "🔄 正在检查更新...",
-    "status_downloading": "⬇ 正在下载 FFmpeg...",
-    "status_installing": "⚙ 正在安装 FFmpeg...",
-    "status_verifying": "✓ 正在验证完整性...",
-    "check_updates": "检查更新",
-    "update_button": "更新 FFmpeg",
-    "update_success": "FFmpeg 已成功更新到版本 {version}！",
-    "update_failed": "更新 FFmpeg 失败。请重试。",
-    "check_failed": "检查更新失败。请检查您的网络连接。",
-    "install_first": "FFmpeg 未安装。点击更新以安装。",
-    "description": "保持 FFmpeg 更新以获得最佳性能和兼容性。"
+    "status_idle": "点击「检查版本」开始",
+    "status_checking": "🔄 正在检查版本...",
+    "check_updates": "检查版本",
+    "check_failed": "检查版本失败。请检查您的网络连接。",
+    "description": "检查您的 FFmpeg 版本并与最新可用版本进行比较。",
+    "guide_info": " 要安装或更新 FFmpeg，<a href='https://github.com/oop7/ffmpeg-install-guide'>请点击此处查看我们的综合安装指南</a>。"
   }
 }

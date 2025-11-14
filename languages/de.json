@@ -477,22 +477,17 @@
     "redownload_started": "Download gestartet"
   },
   "ffmpeg_updater": {
-    "title": "FFmpeg-Updater",
+    "title": "FFmpeg-Versionsprüfer",
     "current_version": "Aktuelle Version:",
     "latest_version": "Neueste Version:",
     "status_up_to_date": "✓ Auf dem neuesten Stand",
     "status_update_available": "⚠ Update verfügbar",
     "status_not_installed": "✗ Nicht installiert",
-    "status_checking": "🔄 Suche nach Updates...",
-    "status_downloading": "⬇ FFmpeg wird heruntergeladen...",
-    "status_installing": "⚙ FFmpeg wird installiert...",
-    "status_verifying": "✓ Integrität wird überprüft...",
-    "check_updates": "Nach Updates suchen",
-    "update_button": "FFmpeg aktualisieren",
-    "update_success": "FFmpeg erfolgreich auf Version {version} aktualisiert!",
-    "update_failed": "FFmpeg-Update fehlgeschlagen. Bitte versuchen Sie es erneut.",
-    "check_failed": "Update-Prüfung fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung.",
-    "install_first": "FFmpeg ist nicht installiert. Klicken Sie auf Aktualisieren, um zu installieren.",
-    "description": "Halten Sie FFmpeg auf dem neuesten Stand für beste Leistung und Kompatibilität."
+    "status_idle": "Klicken Sie auf 'Version prüfen' um zu beginnen",
+    "status_checking": "🔄 Version wird geprüft...",
+    "check_updates": "Version prüfen",
+    "check_failed": "Versionprüfung fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung.",
+    "description": "Überprüfen Sie Ihre FFmpeg-Version und vergleichen Sie sie mit der neuesten verfügbaren Version.",
+    "guide_info": " Um FFmpeg zu installieren oder zu aktualisieren, <a href='https://github.com/oop7/ffmpeg-install-guide'>klicken Sie hier, um unseren umfassenden Installationsleitfaden anzuzeigen</a>."
   }
 }
