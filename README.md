@@ -44,10 +44,11 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 |-----------------------------------|-----------------------------------------|------------------------------------|
 | 🎥 Format Table                   | 🚫 SponsorBlock Integration             | 🎞️ FPS/HDR Display             |
 | 🎵 Audio Extraction               | 📝 Multi-Subtitle Select & Merge        | 🔄 Auto-Update yt-dlp                  |
-| ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp Detection         |
+| ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp/Deno Detection    |
 | 📋 Playlist Support              |  🖼️ Save thumbnail                       | ⚙️ Custom Commands                 |
 | 🖼️ Playlist Selector             | 🚀 Speed Limiter                        | 🍪 Login with Cookies              |
 | 📑 Embed Chapters                | ✂️ Trim Video Sections                  | 🌐 Proxy Support                   |
+| 📜 Download History              | 🔄 Release Channel Selection            | 🆙 Built-in Updater Tab            |
 
 </div>
 
@@ -176,6 +177,8 @@ python main.py
 6. **Select Output Directory**
 7. **Click "Download"**
 
+> 💡 The default download directory is the user's "Downloads" folder.
+
 </details>
 
 <details>
@@ -211,12 +214,15 @@ python main.py
      c. Create a file named `cookies.txt` and paste the cookies into it
      d. Select the `cookies.txt` file in the app
 - **Save Download Path:** Save the default download path for future downloads. You can find this option in the download settings dialog.
-- **Update yt-dlp:** Check and update yt-dlp to the latest version from within the app. You can find this option in the download settings dialog.
-- **FFmpeg/yt-dlp/deno Detection:** Automatically detect FFmpeg/yt-dlp/deno path and version. You can use this option by clicking on about button.
+- **Updater Tab:** Unified tab in Custom Options for managing all updates:
+  - **yt-dlp Updates:** Check and update yt-dlp to the latest version, with release channel selection (Stable/Nightly)
+  - **FFmpeg Version Checker:** Check your FFmpeg version with direct links to installation guides
+  - **Deno Updates:** Check and update Deno runtime to the latest version
+- **FFmpeg/yt-dlp/Deno Detection:** Automatically detect FFmpeg/yt-dlp/Deno path and version. You can use this option by clicking on about button.
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
 - **Proxy Support:** Use a proxy server for downloads (e.g., `http://<proxy-server>:<port>`)
-- **Force output Format:** Force download in a specific format (e.g., `mp4`, `mkv`). You can find this option in the download settings dialog.
-- **History**: View past downloads and their statuses. You can redownload or open the file location from the history dialog.
+- **Force Output Format:** Force download in a specific format (e.g., `mp4`, `webm`, `mkv`). You can find this option in the download settings dialog.
+- **Download History:** View past downloads with thumbnails and statuses. You can use this option by clicking on download settings button.
 
 </details>
 
@@ -446,6 +452,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
     <tr>
         <td><a href="https://ffmpeg.org/">FFmpeg</a></td>
         <td>Media Processing</td>
+    </tr>
+    <tr>
+        <td><a href="https://deno.com/">Deno</a></td>
+        <td>Runtime for integration with yt-dlp</td>
     </tr>
     <tr class="section"><th colspan="2">Libraries & Frameworks</th></tr>
     <tr>
