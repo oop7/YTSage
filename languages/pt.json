@@ -491,18 +491,18 @@
     "guide_info": " Para instalar ou atualizar o FFmpeg, <a href='https://github.com/oop7/ffmpeg-install-guide'>clique aqui para ver nosso guia completo de instalação</a>."
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "Configuração do Deno Necessária",
+    "setup_description": "O YTSage requer o Deno para executar determinados recursos.<br><br>O Deno não foi encontrado no diretório local do aplicativo. O YTSage precisa configurar o Deno para o seu sistema {os_name}.<br><br>Clique em 'Configurar Deno' para baixar e instalar automaticamente.",
+    "setup_button": "Configurar Deno",
+    "downloading": "Baixando Deno...",
+    "extracting": "Extraindo Deno...",
+    "verifying": "Verificando Deno...",
+    "success": "Deno foi instalado com sucesso!",
+    "download_failed": "Falha no Download",
+    "download_error": "Falha ao baixar o Deno: {error}",
+    "verification_failed": "Falha na verificação SHA256. O arquivo baixado pode estar corrompido ou adulterado.",
+    "setup_failed": "Falha ao configurar o Deno. Alguns recursos podem não funcionar corretamente.",
+    "setup_error": "Erro de Configuração"
   },
   "deno_updater": {
     "title": "Verificador e Atualizador de Versão do Deno",

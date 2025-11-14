@@ -491,18 +491,18 @@
     "guide_info": " Per installare o aggiornare FFmpeg, <a href='https://github.com/oop7/ffmpeg-install-guide'>clicca qui per visualizzare la nostra guida completa all'installazione</a>."
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "Configurazione Deno richiesta",
+    "setup_description": "YTSage richiede Deno per eseguire alcune funzionalità.<br><br>Deno non è stato trovato nella directory locale dell'app. YTSage deve configurare Deno per il tuo sistema {os_name}.<br><br>Fai clic su 'Configura Deno' per scaricare e installare automaticamente.",
+    "setup_button": "Configura Deno",
+    "downloading": "Download di Deno in corso...",
+    "extracting": "Estrazione di Deno in corso...",
+    "verifying": "Verifica di Deno in corso...",
+    "success": "Deno è stato installato con successo!",
+    "download_failed": "Download fallito",
+    "download_error": "Impossibile scaricare Deno: {error}",
+    "verification_failed": "Verifica SHA256 fallita. Il file scaricato potrebbe essere danneggiato o manomesso.",
+    "setup_failed": "Impossibile configurare Deno. Alcune funzionalità potrebbero non funzionare correttamente.",
+    "setup_error": "Errore di configurazione"
   },
   "deno_updater": {
     "title": "Verificatore e Aggiornatore Versione Deno",

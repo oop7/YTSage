@@ -491,18 +491,18 @@
     "guide_info": " 要安装或更新 FFmpeg，<a href='https://github.com/oop7/ffmpeg-install-guide'>请点击此处查看我们的综合安装指南</a>。"
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "需要设置 Deno",
+    "setup_description": "YTSage 需要 Deno 来运行某些功能。<br><br>在应用程序的本地目录中找不到 Deno。YTSage 需要为您的 {os_name} 系统设置 Deno。<br><br>点击“设置 Deno”以自动下载和安装。",
+    "setup_button": "设置 Deno",
+    "downloading": "正在下载 Deno...",
+    "extracting": "正在解压 Deno...",
+    "verifying": "正在验证 Deno...",
+    "success": "Deno 已成功安装！",
+    "download_failed": "下载失败",
+    "download_error": "下载 Deno 失败：{error}",
+    "verification_failed": "SHA256 验证失败。下载的文件可能已损坏或被篡改。",
+    "setup_failed": "设置 Deno 失败。某些功能可能无法正常工作。",
+    "setup_error": "设置错误"
   },
   "deno_updater": {
     "title": "Deno 版本检查器与更新器",

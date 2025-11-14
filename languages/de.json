@@ -491,18 +491,18 @@
     "guide_info": " Um FFmpeg zu installieren oder zu aktualisieren, <a href='https://github.com/oop7/ffmpeg-install-guide'>klicken Sie hier, um unseren umfassenden Installationsleitfaden anzuzeigen</a>."
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "Deno-Einrichtung erforderlich",
+    "setup_description": "YTSage benötigt Deno, um bestimmte Funktionen auszuführen.<br><br>Deno wurde im lokalen Verzeichnis der App nicht gefunden. YTSage muss Deno für Ihr {os_name}-System einrichten.<br><br>Klicken Sie auf 'Deno einrichten', um es automatisch herunterzuladen und zu installieren.",
+    "setup_button": "Deno einrichten",
+    "downloading": "Deno wird heruntergeladen...",
+    "extracting": "Deno wird extrahiert...",
+    "verifying": "Deno wird überprüft...",
+    "success": "Deno wurde erfolgreich installiert!",
+    "download_failed": "Download fehlgeschlagen",
+    "download_error": "Deno konnte nicht heruntergeladen werden: {error}",
+    "verification_failed": "SHA256-Überprüfung fehlgeschlagen. Die heruntergeladene Datei ist möglicherweise beschädigt oder manipuliert.",
+    "setup_failed": "Deno konnte nicht eingerichtet werden. Einige Funktionen funktionieren möglicherweise nicht richtig.",
+    "setup_error": "Einrichtungsfehler"
   },
   "deno_updater": {
     "title": "Deno Versionsprüfer & Updater",

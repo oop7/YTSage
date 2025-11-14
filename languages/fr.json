@@ -491,18 +491,18 @@
     "guide_info": " Pour installer ou mettre à jour FFmpeg, <a href='https://github.com/oop7/ffmpeg-install-guide'>cliquez ici pour consulter notre guide d'installation complet</a>."
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "Configuration de Deno requise",
+    "setup_description": "YTSage nécessite Deno pour exécuter certaines fonctionnalités.<br><br>Deno n'a pas été trouvé dans le répertoire local de l'application. YTSage doit configurer Deno pour votre système {os_name}.<br><br>Cliquez sur 'Configurer Deno' pour télécharger et installer automatiquement.",
+    "setup_button": "Configurer Deno",
+    "downloading": "Téléchargement de Deno...",
+    "extracting": "Extraction de Deno...",
+    "verifying": "Vérification de Deno...",
+    "success": "Deno a été installé avec succès !",
+    "download_failed": "Échec du téléchargement",
+    "download_error": "Échec du téléchargement de Deno : {error}",
+    "verification_failed": "Échec de la vérification SHA256. Le fichier téléchargé peut être corrompu ou altéré.",
+    "setup_failed": "Échec de la configuration de Deno. Certaines fonctionnalités peuvent ne pas fonctionner correctement.",
+    "setup_error": "Erreur de configuration"
   },
   "deno_updater": {
     "title": "Vérificateur et Mise à Jour de Version Deno",

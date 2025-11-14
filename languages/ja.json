@@ -491,18 +491,18 @@
     "guide_info": " FFmpegをインストールまたは更新するには、<a href='https://github.com/oop7/ffmpeg-install-guide'>こちらをクリックして包括的なインストールガイドをご覧ください</a>。"
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "Denoのセットアップが必要です",
+    "setup_description": "YTSageは特定の機能を実行するためにDenoが必要です。<br><br>アプリのローカルディレクトリにDenoが見つかりませんでした。YTSageはお使いの{os_name}システム用にDenoをセットアップする必要があります。<br><br>「Denoをセットアップ」をクリックして、自動的にダウンロードとインストールを行います。",
+    "setup_button": "Denoをセットアップ",
+    "downloading": "Denoをダウンロード中...",
+    "extracting": "Denoを展開中...",
+    "verifying": "Denoを検証中...",
+    "success": "Denoが正常にインストールされました！",
+    "download_failed": "ダウンロード失敗",
+    "download_error": "Denoのダウンロードに失敗しました：{error}",
+    "verification_failed": "SHA256検証に失敗しました。ダウンロードされたファイルが破損しているか、改ざんされている可能性があります。",
+    "setup_failed": "Denoのセットアップに失敗しました。一部の機能が正しく動作しない可能性があります。",
+    "setup_error": "セットアップエラー"
   },
   "deno_updater": {
     "title": "Denoバージョンチェッカーとアップデーター",

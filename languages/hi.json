@@ -491,18 +491,18 @@
     "guide_info": " FFmpeg को इंस्टॉल या अपडेट करने के लिए, <a href='https://github.com/oop7/ffmpeg-install-guide'>हमारी व्यापक इंस्टॉलेशन गाइड देखने के लिए यहां क्लिक करें</a>."
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "Deno सेटअप आवश्यक",
+    "setup_description": "YTSage को कुछ विशेषताओं को चलाने के लिए Deno की आवश्यकता है।<br><br>Deno एप की स्थानीय निर्देशिका में नहीं मिला। YTSage को आपकी {os_name} प्रणाली के लिए Deno सेटअप करने की आवश्यकता है।<br><br>स्वचालित रूप से डाउनलोड और इंस्टॉल करने के लिए 'Deno सेटअप करें' पर क्लिक करें।",
+    "setup_button": "Deno सेटअप करें",
+    "downloading": "Deno डाउनलोड हो रहा है...",
+    "extracting": "Deno निकाला जा रहा है...",
+    "verifying": "Deno की जांच हो रही है...",
+    "success": "Deno सफलतापूर्वक स्थापित हो गया!",
+    "download_failed": "डाउनलोड विफल",
+    "download_error": "Deno डाउनलोड करने में विफल: {error}",
+    "verification_failed": "SHA256 सत्यापन विफल। डाउनलोड की गई फ़ाइल दूषित या छेड़छाड़ की गई हो सकती है।",
+    "setup_failed": "Deno सेटअप करने में विफल। कुछ विशेषताएं सही ढंग से काम नहीं कर सकती हैं।",
+    "setup_error": "सेटअप त्रुटि"
   },
   "deno_updater": {
     "title": "Deno संस्करण जांचकर्ता और अपडेटर",

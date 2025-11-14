@@ -474,18 +474,18 @@
     "guide_info": " Para instalar o actualizar FFmpeg, <a href='https://github.com/oop7/ffmpeg-install-guide'>haga clic aquí para ver nuestra guía completa de instalación</a>."
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "Configuración de Deno requerida",
+    "setup_description": "YTSage requiere Deno para ejecutar ciertas funciones.<br><br>No se encontró Deno en el directorio local de la aplicación. YTSage necesita configurar Deno para su sistema {os_name}.<br><br>Haga clic en 'Configurar Deno' para descargar e instalar automáticamente.",
+    "setup_button": "Configurar Deno",
+    "downloading": "Descargando Deno...",
+    "extracting": "Extrayendo Deno...",
+    "verifying": "Verificando Deno...",
+    "success": "¡Deno se instaló correctamente!",
+    "download_failed": "Descarga fallida",
+    "download_error": "Error al descargar Deno: {error}",
+    "verification_failed": "Error en la verificación SHA256. El archivo descargado puede estar dañado o alterado.",
+    "setup_failed": "Error al configurar Deno. Es posible que algunas funciones no funcionen correctamente.",
+    "setup_error": "Error de configuración"
   },
   "deno_updater": {
     "title": "Verificador y Actualizador de Versión de Deno",

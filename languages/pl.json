@@ -491,18 +491,18 @@
     "guide_info": " Aby zainstalować lub zaktualizować FFmpeg, <a href='https://github.com/oop7/ffmpeg-install-guide'>kliknij tutaj, aby wyświetlić nasz kompleksowy przewodnik instalacji</a>."
   },
   "deno": {
-    "setup_required": "Deno Setup Required",
-    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
-    "setup_button": "Setup Deno",
-    "downloading": "Downloading Deno...",
-    "extracting": "Extracting Deno...",
-    "verifying": "Verifying Deno...",
-    "success": "Deno was successfully installed!",
-    "download_failed": "Download Failed",
-    "download_error": "Failed to download Deno: {error}",
-    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
-    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
-    "setup_error": "Setup Error"
+    "setup_required": "Wymagana konfiguracja Deno",
+    "setup_description": "YTSage wymaga Deno do uruchomienia niektórych funkcji.<br><br>Deno nie zostało znalezione w lokalnym katalogu aplikacji. YTSage musi skonfigurować Deno dla Twojego systemu {os_name}.<br><br>Kliknij 'Skonfiguruj Deno', aby pobrać i zainstalować automatycznie.",
+    "setup_button": "Skonfiguruj Deno",
+    "downloading": "Pobieranie Deno...",
+    "extracting": "Wyodrębnianie Deno...",
+    "verifying": "Weryfikacja Deno...",
+    "success": "Deno zostało pomyślnie zainstalowane!",
+    "download_failed": "Pobieranie nie powiodło się",
+    "download_error": "Nie udało się pobrać Deno: {error}",
+    "verification_failed": "Weryfikacja SHA256 nie powiodła się. Pobrany plik może być uszkodzony lub zmodyfikowany.",
+    "setup_failed": "Nie udało się skonfigurować Deno. Niektóre funkcje mogą nie działać poprawnie.",
+    "setup_error": "Błąd konfiguracji"
   },
   "deno_updater": {
     "title": "Sprawdzanie i Aktualizacja Wersji Deno",
