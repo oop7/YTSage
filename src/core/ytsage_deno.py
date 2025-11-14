@@ -462,6 +462,50 @@ def get_deno_path() -> Path:
     return "deno"  # type: ignore[return-value]
 
 
+def get_deno_version_direct(deno_path=None) -> str:
+    """
+    Get Deno version directly without caching.
+    
+    Args:
+        deno_path: Optional path to Deno binary. If None, uses get_deno_path()
+        
+    Returns:
+        str: Version string or error message
+    """
+    try:
+        if deno_path is None:
+            deno_path = get_deno_path()
+
+        if not deno_path or deno_path == "deno":
+            return "Not found"
+
+        result = subprocess.run(
+            [str(deno_path), "--version"], 
+            capture_output=True, 
+            text=True, 
+            timeout=10, 
+            creationflags=SUBPROCESS_CREATIONFLAGS
+        )
+
+        if result.returncode == 0:
+            # Deno outputs: "deno 1.38.0 (release, x86_64-pc-windows-msvc)"
+            # Extract version from first line
+            lines = result.stdout.strip().split("\n")
+            if lines:
+                first_line = lines[0]
+                # Extract version number (e.g., "1.38.0" from "deno 1.38.0 ...")
+                parts = first_line.split()
+                if len(parts) >= 2 and parts[0] == "deno":
+                    return parts[1]
+                return first_line.strip()
+            return "Unknown version"
+        else:
+            return "Error getting version"
+    except Exception as e:
+        logger.exception(f"Error getting Deno version: {e}")
+        return "Error getting version"
+
+
 def setup_deno(parent_widget=None):
     """
     Show the Deno setup dialog and handle the result.

@@ -23,8 +23,9 @@ from src import __version__ as APP_VERSION
 from src.utils.ytsage_localization import _
 
 from src.core.ytsage_ffmpeg import get_ffmpeg_path
-from src.core.ytsage_utils import _version_cache, check_ffmpeg, get_ffmpeg_version, get_ytdlp_version, refresh_version_cache
+from src.core.ytsage_utils import _version_cache, check_ffmpeg, get_ffmpeg_version, get_ytdlp_version, get_deno_version, refresh_version_cache
 from src.core.ytsage_yt_dlp import check_ytdlp_installed, get_yt_dlp_path
+from src.core.ytsage_deno import check_deno_installed, get_deno_path
 
 
 class LogWindow(QDialog):
@@ -441,6 +442,42 @@ class AboutDialog(QDialog):
             ffmpeg_path_text,
         )
         self.status_container.addWidget(ffmpeg_item)
+
+        # Deno Status - compact version with path (only show path if in app bin directory)
+        deno_found = check_deno_installed()
+        deno_status_text = (
+            f"<span style='color: #4CAF50;'>{_('about.detected')}</span>" if deno_found else f"<span style='color: #F44336;'>{_('about.missing')}</span>"
+        )
+        deno_version = get_deno_version() if deno_found else _('about.not_available')
+
+        # Get Deno path - only show if in app bin directory
+        deno_path_text = None
+        if deno_found:
+            deno_path = get_deno_path()
+            # Only show path if it's not the fallback "deno" and the file exists
+            if deno_path and deno_path != "deno":
+                from pathlib import Path
+                from src.utils.ytsage_constants import DENO_APP_BIN_PATH
+                # Check if the path is our managed binary
+                if Path(deno_path).resolve() == DENO_APP_BIN_PATH.resolve():
+                    deno_path_text = deno_path
+
+        # Simplified cache status for Deno
+        deno_cache = _version_cache.get("deno", {})
+        last_check = deno_cache.get("last_check", 0)
+        cache_status = ""
+        if last_check > 0 and deno_found:
+            cache_time = datetime.fromtimestamp(last_check).strftime("%H:%M")
+            cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"
+
+        deno_item = self._create_status_item(
+            "🦕",
+            "Deno",
+            deno_status_text,
+            deno_version + cache_status,
+            deno_path_text,
+        )
+        self.status_container.addWidget(deno_item)
 
     def refresh_version_info(self) -> None:
         """Refresh version information manually."""
