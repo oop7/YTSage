@@ -212,7 +212,7 @@ python main.py
      d. Select the `cookies.txt` file in the app
 - **Save Download Path:** Save the default download path for future downloads. You can find this option in the download settings dialog.
 - **Update yt-dlp:** Check and update yt-dlp to the latest version from within the app. You can find this option in the download settings dialog.
-- **FFmpeg/yt-dlp Detection:** Automatically detect FFmpeg/yt-dlp path and version. You can find this option in the about dialog.
+- **FFmpeg/yt-dlp/deno Detection:** Automatically detect FFmpeg/yt-dlp/deno path and version. You can use this option by clicking on about button.
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
 - **Proxy Support:** Use a proxy server for downloads (e.g., `http://<proxy-server>:<port>`)
 - **Force output Format:** Force download in a specific format (e.g., `mp4`, `mkv`). You can find this option in the download settings dialog.
@@ -247,7 +247,7 @@ YTSage supports **14 languages** for worldwide accessibility. Select your prefer
 <details>
 <summary>Click to view common issues and solutions</summary>
 
-- **Format table not displaying:** Update yt-dlp to the latest version.
+- **Format table not displaying:** Update yt-dlp to the latest version, and switch to yt-dlp nightly.
 - **Download fails:** Check your internet connection and ensure the video is available.
 - **Specific download errors:**
   - **Private videos:** Use cookie authentication to access private content.
@@ -329,25 +329,24 @@ This document describes the organized folder structure of YTSage.
 ```
 YTSage/
 ├── 📁 .github/                   # GitHub configuration
-│   ├── 📄 CI_CD_README.md         # CI/CD documentation
 │   ├── 📁 ISSUE_TEMPLATE/         # Issue templates
 │   │   └── 🐛-bug-report.md       # Bug report template
-│   └── 📁 workflows/              # GitHub Actions workflows
-│       ├── build-linux.yml        # Linux build workflow
-│       ├── build-macos.yml        # macOS build workflow
-│       └── build-windows.yml      # Windows build workflow
-├──  .gitignore                 # Git ignore rules
+│   ├─── 📁 workflows/              # GitHub Actions workflows
+│   │   ├── build-linux.yml        # Linux build workflow
+│   │   ├── build-macos.yml        # macOS build workflow
+│   │   └── build-windows.yml      # Windows build workflow
+│   └── 📄 CI_CD_README.md        # CI/CD documentation
 ├──  📁 assets/                    # Static assets and resources
 │   ├── 📁 branding/              # Branding assets
 │   │   ├── 📁 icons/             # Application icons
 │   │   │   ├── icon.icns         # macOS icon
 │   │   │   ├── icon.png          # PNG icon
 │   │   │   └── YTSage.ico        # Windows icon
-│   │   └── 📁 screenshots/       # Screenshots for documentation
-│   │       ├── audio_format.png
-│   │       ├── main.png
-│   │       ├── playlist.png
-│   │       └── subtitle_options.png
+│   │   ├── 📁 screenshots/       # Screenshots for documentation
+│   │   │   ├── audio_format.png
+│   │   │   ├── main.png
+│   │   │   ├── playlist.png
+│   │   │   └── subtitle_options.png
 │   │   └── 📁 svg/               # SVG assets
 │   │       └── ytsage-wordmark.svg
 │   ├── 📁 Icon/                  # Legacy icon directory
@@ -372,16 +371,17 @@ YTSage/
 ├── 📄 LICENSE                    # License file
 ├── 📄 main.py                    # Application entry point
 ├── 📄 README.md                  # Project documentation
+├── 📄 .gitignore                 # Git ignore rules
 ├── 📄 requirements.txt           # Python dependencies
 └── 📁 src/                       # Source code
-    ├── 📄 __init__.py            # Main package init
+    |
     ├── 📁 core/                  # Core business logic
     │   ├── 📄 __init__.py        # Core package init
+    │   ├── 📄 ytsage_deno.py     # Deno integration
     │   ├── 📄 ytsage_downloader.py # Download functionality
     │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
     │   ├── 📄 ytsage_utils.py    # Utility functions
-    │   ├── 📄 ytsage_yt_dlp.py   # yt-dlp integration
-    │   └── 📄 ytsage_ffmpeg_updater.py   # FFmpeg updater
+    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
     ├── 📁 gui/                   # User interface components
     │   ├── 📄 __init__.py        # GUI package init
     │   ├── 📄 ytsage_gui_format_table.py # Format table functionality
@@ -392,6 +392,7 @@ YTSage/
     │       ├── 📄 ytsage_dialogs_base.py     # Basic dialogs
     │       ├── 📄 ytsage_dialogs_custom.py   # Custom functionality dialogs
     │       ├── 📄 ytsage_dialogs_ffmpeg.py   # FFmpeg-related dialogs
+    │       ├── 📄 ytsage_dialogs_history.py  # History dialogs
     │       ├── 📄 ytsage_dialogs_selection.py # Selection dialogs
     │       ├── 📄 ytsage_dialogs_settings.py  # Settings dialogs
     │       ├── 📄 ytsage_dialogs_update.py    # Update dialogs
@@ -400,6 +401,7 @@ YTSage/
         ├── 📄 __init__.py        # Utils package init
         ├── 📄 ytsage_config_manager.py # Configuration management
         ├── 📄 ytsage_constants.py # Application constants
+        ├── 📄 ytsage_history_manager.py # History management
         ├── 📄 ytsage_localization.py # Localization utilities
         └── 📄 ytsage_logger.py   # Logging utilities
 ```
