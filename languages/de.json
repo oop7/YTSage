@@ -505,20 +505,20 @@
     "setup_error": "Setup Error"
   },
   "deno_updater": {
-    "title": "Deno Version Checker & Updater",
-    "description": "Check your Deno version and update to the latest release.",
-    "current_version": "Current Version:",
-    "latest_version": "Latest Version:",
-    "status_idle": "Click 'Check for Updates' to get started",
-    "status_checking": "🔄 Checking for updates...",
-    "status_up_to_date": "✓ Up to date",
-    "status_update_available": "⚠ Update available",
-    "status_not_installed": "✗ Not installed",
-    "check_updates": "Check for Updates",
-    "update_now": "Update Deno",
-    "updating": "🔄 Updating Deno...",
-    "update_success": "✅ Deno has been successfully updated!",
-    "update_failed": "❌ Update failed: {error}",
-    "check_failed": "Failed to check for updates. Please check your internet connection."
+    "title": "Deno Versionsprüfer & Updater",
+    "description": "Überprüfen Sie Ihre Deno-Version und aktualisieren Sie auf die neueste Version.",
+    "current_version": "Aktuelle Version:",
+    "latest_version": "Neueste Version:",
+    "status_idle": "Klicken Sie auf 'Nach Updates suchen', um zu beginnen",
+    "status_checking": "🔄 Suche nach Updates...",
+    "status_up_to_date": "✓ Aktuell",
+    "status_update_available": "⚠ Update verfügbar",
+    "status_not_installed": "✗ Nicht installiert",
+    "check_updates": "Nach Updates suchen",
+    "update_now": "Deno aktualisieren",
+    "updating": "🔄 Deno wird aktualisiert...",
+    "update_success": "✅ Deno wurde erfolgreich aktualisiert!",
+    "update_failed": "❌ Update fehlgeschlagen: {error}",
+    "check_failed": "Suche nach Updates fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung."
   }
 }

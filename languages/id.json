@@ -505,20 +505,20 @@
     "setup_error": "Setup Error"
   },
   "deno_updater": {
-    "title": "Deno Version Checker & Updater",
-    "description": "Check your Deno version and update to the latest release.",
-    "current_version": "Current Version:",
-    "latest_version": "Latest Version:",
-    "status_idle": "Click 'Check for Updates' to get started",
-    "status_checking": "🔄 Checking for updates...",
-    "status_up_to_date": "✓ Up to date",
-    "status_update_available": "⚠ Update available",
-    "status_not_installed": "✗ Not installed",
-    "check_updates": "Check for Updates",
-    "update_now": "Update Deno",
-    "updating": "🔄 Updating Deno...",
-    "update_success": "✅ Deno has been successfully updated!",
-    "update_failed": "❌ Update failed: {error}",
-    "check_failed": "Failed to check for updates. Please check your internet connection."
+    "title": "Pemeriksa & Pembaruan Versi Deno",
+    "description": "Periksa versi Deno Anda dan perbarui ke rilis terbaru.",
+    "current_version": "Versi Saat Ini:",
+    "latest_version": "Versi Terbaru:",
+    "status_idle": "Klik 'Periksa Pembaruan' untuk memulai",
+    "status_checking": "🔄 Memeriksa pembaruan...",
+    "status_up_to_date": "✓ Terbaru",
+    "status_update_available": "⚠ Pembaruan tersedia",
+    "status_not_installed": "✗ Tidak terinstal",
+    "check_updates": "Periksa Pembaruan",
+    "update_now": "Perbarui Deno",
+    "updating": "🔄 Memperbarui Deno...",
+    "update_success": "✅ Deno telah berhasil diperbarui!",
+    "update_failed": "❌ Pembaruan gagal: {error}",
+    "check_failed": "Gagal memeriksa pembaruan. Harap periksa koneksi internet Anda."
   }
 }

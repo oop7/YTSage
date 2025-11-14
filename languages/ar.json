@@ -505,20 +505,20 @@
     "setup_error": "Setup Error"
   },
   "deno_updater": {
-    "title": "Deno Version Checker & Updater",
-    "description": "Check your Deno version and update to the latest release.",
-    "current_version": "Current Version:",
-    "latest_version": "Latest Version:",
-    "status_idle": "Click 'Check for Updates' to get started",
-    "status_checking": "🔄 Checking for updates...",
-    "status_up_to_date": "✓ Up to date",
-    "status_update_available": "⚠ Update available",
-    "status_not_installed": "✗ Not installed",
-    "check_updates": "Check for Updates",
-    "update_now": "Update Deno",
-    "updating": "🔄 Updating Deno...",
-    "update_success": "✅ Deno has been successfully updated!",
-    "update_failed": "❌ Update failed: {error}",
-    "check_failed": "Failed to check for updates. Please check your internet connection."
+    "title": "فاحص ومحدث إصدار Deno",
+    "description": "تحقق من إصدار Deno الخاص بك وقم بالتحديث إلى أحدث إصدار.",
+    "current_version": "الإصدار الحالي:",
+    "latest_version": "أحدث إصدار:",
+    "status_idle": "انقر فوق 'التحقق من التحديثات' للبدء",
+    "status_checking": "🔄 جارٍ التحقق من التحديثات...",
+    "status_up_to_date": "✓ محدث",
+    "status_update_available": "⚠ التحديث متاح",
+    "status_not_installed": "✗ غير مثبت",
+    "check_updates": "التحقق من التحديثات",
+    "update_now": "تحديث Deno",
+    "updating": "🔄 جارٍ تحديث Deno...",
+    "update_success": "✅ تم تحديث Deno بنجاح!",
+    "update_failed": "❌ فشل التحديث: {error}",
+    "check_failed": "فشل التحقق من التحديثات. يرجى التحقق من اتصالك بالإنترنت."
   }
 }

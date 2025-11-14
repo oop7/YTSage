@@ -505,20 +505,20 @@
     "setup_error": "Setup Error"
   },
   "deno_updater": {
-    "title": "Deno Version Checker & Updater",
-    "description": "Check your Deno version and update to the latest release.",
-    "current_version": "Current Version:",
-    "latest_version": "Latest Version:",
-    "status_idle": "Click 'Check for Updates' to get started",
-    "status_checking": "🔄 Checking for updates...",
-    "status_up_to_date": "✓ Up to date",
-    "status_update_available": "⚠ Update available",
-    "status_not_installed": "✗ Not installed",
-    "check_updates": "Check for Updates",
-    "update_now": "Update Deno",
-    "updating": "🔄 Updating Deno...",
-    "update_success": "✅ Deno has been successfully updated!",
-    "update_failed": "❌ Update failed: {error}",
-    "check_failed": "Failed to check for updates. Please check your internet connection."
+    "title": "Deno संस्करण जांचकर्ता और अपडेटर",
+    "description": "अपने Deno संस्करण की जांच करें और नवीनतम संस्करण में अपडेट करें।",
+    "current_version": "वर्तमान संस्करण:",
+    "latest_version": "नवीनतम संस्करण:",
+    "status_idle": "शुरू करने के लिए 'अपडेट की जांच करें' पर क्लिक करें",
+    "status_checking": "🔄 अपडेट की जांच हो रही है...",
+    "status_up_to_date": "✓ अपडेट है",
+    "status_update_available": "⚠ अपडेट उपलब्ध है",
+    "status_not_installed": "✗ स्थापित नहीं है",
+    "check_updates": "अपडेट की जांच करें",
+    "update_now": "Deno अपडेट करें",
+    "updating": "🔄 Deno अपडेट हो रहा है...",
+    "update_success": "✅ Deno सफलतापूर्वक अपडेट हो गया है!",
+    "update_failed": "❌ अपडेट विफल: {error}",
+    "check_failed": "अपडेट की जांच विफल। कृपया अपना इंटरनेट कनेक्शन जांचें।"
   }
 }

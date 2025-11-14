@@ -505,20 +505,20 @@
     "setup_error": "Setup Error"
   },
   "deno_updater": {
-    "title": "Deno Version Checker & Updater",
-    "description": "Check your Deno version and update to the latest release.",
-    "current_version": "Current Version:",
-    "latest_version": "Latest Version:",
-    "status_idle": "Click 'Check for Updates' to get started",
-    "status_checking": "🔄 Checking for updates...",
-    "status_up_to_date": "✓ Up to date",
-    "status_update_available": "⚠ Update available",
-    "status_not_installed": "✗ Not installed",
-    "check_updates": "Check for Updates",
-    "update_now": "Update Deno",
-    "updating": "🔄 Updating Deno...",
-    "update_success": "✅ Deno has been successfully updated!",
-    "update_failed": "❌ Update failed: {error}",
-    "check_failed": "Failed to check for updates. Please check your internet connection."
+    "title": "Проверка и Обновление Версии Deno",
+    "description": "Проверьте вашу версию Deno и обновите до последней версии.",
+    "current_version": "Текущая Версия:",
+    "latest_version": "Последняя Версия:",
+    "status_idle": "Нажмите 'Проверить Обновления', чтобы начать",
+    "status_checking": "🔄 Проверка обновлений...",
+    "status_up_to_date": "✓ Обновлено",
+    "status_update_available": "⚠ Доступно обновление",
+    "status_not_installed": "✗ Не установлено",
+    "check_updates": "Проверить Обновления",
+    "update_now": "Обновить Deno",
+    "updating": "🔄 Обновление Deno...",
+    "update_success": "✅ Deno успешно обновлен!",
+    "update_failed": "❌ Ошибка обновления: {error}",
+    "check_failed": "Не удалось проверить обновления. Проверьте подключение к Интернету."
   }
 }

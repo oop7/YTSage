@@ -505,20 +505,20 @@
     "setup_error": "Setup Error"
   },
   "deno_updater": {
-    "title": "Deno Version Checker & Updater",
-    "description": "Check your Deno version and update to the latest release.",
-    "current_version": "Current Version:",
-    "latest_version": "Latest Version:",
-    "status_idle": "Click 'Check for Updates' to get started",
-    "status_checking": "🔄 Checking for updates...",
-    "status_up_to_date": "✓ Up to date",
-    "status_update_available": "⚠ Update available",
-    "status_not_installed": "✗ Not installed",
-    "check_updates": "Check for Updates",
-    "update_now": "Update Deno",
-    "updating": "🔄 Updating Deno...",
-    "update_success": "✅ Deno has been successfully updated!",
-    "update_failed": "❌ Update failed: {error}",
-    "check_failed": "Failed to check for updates. Please check your internet connection."
+    "title": "Deno 版本检查器与更新器",
+    "description": "检查您的 Deno 版本并更新到最新版本。",
+    "current_version": "当前版本：",
+    "latest_version": "最新版本：",
+    "status_idle": "点击“检查更新”开始",
+    "status_checking": "🔄 正在检查更新...",
+    "status_up_to_date": "✓ 已是最新",
+    "status_update_available": "⚠ 有可用更新",
+    "status_not_installed": "✗ 未安装",
+    "check_updates": "检查更新",
+    "update_now": "更新 Deno",
+    "updating": "🔄 正在更新 Deno...",
+    "update_success": "✅ Deno 已成功更新！",
+    "update_failed": "❌ 更新失败：{error}",
+    "check_failed": "检查更新失败。请检查您的网络连接。"
   }
 }
