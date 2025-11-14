@@ -1,8 +1,8 @@
-PySide6
-requests
-pillow
-packaging
-markdown
-pyglet
-loguru
-setuptools
+PySide6>=6.9.2
+requests>=2.32.5
+pillow>=11.3.0
+packaging>=25.0
+markdown>=3.9
+pyglet>=2.1.8
+loguru>=0.7.3
+setuptools>=80.9.0
