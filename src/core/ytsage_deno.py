@@ -595,3 +595,150 @@ def setup_deno(parent_widget=None):
     # User cancelled or setup failed, return the fallback command
     logger.debug("Returning fallback command 'deno'")
     return "deno"
+
+
+def get_latest_deno_version() -> Optional[str]:
+    """
+    Fetch the latest Deno version from GitHub API.
+    
+    Returns:
+        str: Version string (e.g., "2.5.6") or None if fetch failed
+    """
+    try:
+        response = requests.get(
+            "https://api.github.com/repos/denoland/deno/releases/latest",
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+        
+        # Get tag_name (e.g., "v2.5.6") and remove 'v' prefix
+        tag_name = data.get("tag_name", "")
+        if tag_name.startswith("v"):
+            version = tag_name[1:]
+        else:
+            version = tag_name
+        
+        logger.info(f"Latest Deno version: {version}")
+        return version
+        
+    except requests.RequestException as e:
+        logger.error(f"Failed to fetch latest Deno version: {e}")
+        return None
+    except Exception as e:
+        logger.exception(f"Unexpected error fetching Deno version: {e}")
+        return None
+
+
+def compare_deno_versions(current: str, latest: str) -> bool:
+    """
+    Compare two Deno version strings.
+    
+    Args:
+        current: Current version string (e.g., "2.5.6")
+        latest: Latest version string (e.g., "2.5.7")
+        
+    Returns:
+        bool: True if update is needed (latest > current), False otherwise
+    """
+    try:
+        import re
+        
+        def parse_version(version_str: str) -> tuple:
+            """Parse version string into tuple of integers."""
+            # Remove 'v' prefix if present
+            if version_str.startswith('v'):
+                version_str = version_str[1:]
+            
+            # Extract version numbers
+            match = re.search(r'(\d+\.\d+\.\d+)', version_str)
+            if match:
+                version_str = match.group(1)
+            
+            parts = version_str.split('.')
+            return tuple(int(p) for p in parts if p.isdigit())
+        
+        current_tuple = parse_version(current)
+        latest_tuple = parse_version(latest)
+        
+        logger.debug(f"Comparing Deno versions: {current_tuple} vs {latest_tuple}")
+        return latest_tuple > current_tuple
+        
+    except (ValueError, AttributeError) as e:
+        logger.warning(f"Could not compare Deno versions: {e}")
+        return False
+
+
+def upgrade_deno() -> tuple[bool, str]:
+    """
+    Upgrade Deno to the latest version using 'deno upgrade' command.
+    
+    Returns:
+        tuple: (success: bool, output: str) - Success status and command output
+    """
+    try:
+        deno_path = DENO_APP_BIN_PATH
+        
+        if not deno_path.exists():
+            error_msg = f"Deno binary not found at: {deno_path}"
+            logger.error(error_msg)
+            return False, error_msg
+        
+        logger.info(f"Upgrading Deno using: {deno_path}")
+        
+        # Run deno upgrade command
+        result = subprocess.run(
+            [str(deno_path), "upgrade"],
+            capture_output=True,
+            text=True,
+            timeout=300,  # 5 minutes timeout
+            creationflags=SUBPROCESS_CREATIONFLAGS
+        )
+        
+        output = result.stdout + result.stderr
+        
+        if result.returncode == 0:
+            logger.info("Deno upgrade successful")
+            logger.debug(f"Upgrade output: {output}")
+            return True, output
+        else:
+            logger.error(f"Deno upgrade failed with code {result.returncode}")
+            logger.error(f"Output: {output}")
+            return False, output
+            
+    except subprocess.TimeoutExpired:
+        error_msg = "Deno upgrade timed out after 5 minutes"
+        logger.error(error_msg)
+        return False, error_msg
+    except Exception as e:
+        error_msg = f"Error upgrading Deno: {str(e)}"
+        logger.exception(error_msg)
+        return False, error_msg
+
+
+def check_deno_update() -> tuple[bool, str, str]:
+    """
+    Check if a Deno update is available.
+    
+    Returns:
+        tuple: (update_needed: bool, current_version: str, latest_version: str)
+    """
+    try:
+        # Get current version
+        current_version = get_deno_version_direct()
+        if current_version in ["Not found", "Error getting version"]:
+            return False, current_version, "Unknown"
+        
+        # Get latest version
+        latest_version = get_latest_deno_version()
+        if not latest_version:
+            return False, current_version, "Error"
+        
+        # Compare versions
+        update_needed = compare_deno_versions(current_version, latest_version)
+        
+        return update_needed, current_version, latest_version
+        
+    except Exception as e:
+        logger.exception(f"Error checking Deno update: {e}")
+        return False, "Error", "Error"
