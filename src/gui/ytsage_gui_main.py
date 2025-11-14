@@ -32,6 +32,7 @@ from src import __version__ as APP_VERSION
 from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
 from src.core.ytsage_utils import check_ffmpeg, load_saved_path, parse_yt_dlp_error, save_path, should_check_for_auto_update, validate_video_url
 from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
+from src.core.ytsage_deno import get_deno_path, setup_deno  # Import the new Deno functions
 from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     AboutDialog,
     AutoUpdateThread,
@@ -70,6 +71,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.show_ytdlp_setup_dialog()
         else:
             logger.info(f"Using yt-dlp from: {ytdlp_path}")
+
+        # Check for Deno in our app's bin directory
+        deno_path = get_deno_path()
+        if deno_path == "deno":  # Not found in app dir
+            self.show_deno_setup_dialog()
+        else:
+            logger.info(f"Using Deno from: {deno_path}")
 
         self.version = APP_VERSION
         self.check_for_updates()
@@ -1741,6 +1749,39 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             success_dialog.setIcon(QMessageBox.Icon.Information)
             success_dialog.setWindowTitle("yt-dlp Setup")
             success_dialog.setText(f"yt-dlp has been successfully configured at:\n{yt_dlp_path}")
+            success_dialog.setWindowIcon(self.windowIcon())
+            success_dialog.setStyleSheet(
+                """
+                QMessageBox {
+                    background-color: #15181b;
+                    color: #ffffff;
+                }
+                QLabel {
+                    color: #ffffff;
+                }
+                QPushButton {
+                    padding: 8px 15px;
+                    background-color: #c90000;
+                    border: none;
+                    border-radius: 4px;
+                    color: white;
+                    font-weight: bold;
+                }
+                QPushButton:hover {
+                    background-color: #a50000;
+                }
+            """
+            )
+            success_dialog.exec()
+
+    def show_deno_setup_dialog(self) -> None:
+        """Show the Deno setup dialog to configure Deno"""
+        deno_path = setup_deno(self)
+        if deno_path != "deno":
+            success_dialog = QMessageBox(self)
+            success_dialog.setIcon(QMessageBox.Icon.Information)
+            success_dialog.setWindowTitle(_("deno.setup_required"))
+            success_dialog.setText(f"{_('deno.success')}\n{deno_path}")
             success_dialog.setWindowIcon(self.windowIcon())
             success_dialog.setStyleSheet(
                 """

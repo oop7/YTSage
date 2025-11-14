@@ -489,5 +489,19 @@
     "check_failed": "Не удалось проверить версию. Проверьте подключение к Интернету.",
     "description": "Проверьте версию FFmpeg и сравните ее с последней доступной версией.",
     "guide_info": " Для установки или обновления FFmpeg, <a href='https://github.com/oop7/ffmpeg-install-guide'>нажмите здесь, чтобы просмотреть наше подробное руководство по установке</a>."
+  },
+  "deno": {
+    "setup_required": "Deno Setup Required",
+    "setup_description": "YTSage requires Deno to run certain features.<br><br>Deno was not found in the app's local directory. YTSage needs to set up Deno for your {os_name} system.<br><br>Click 'Setup Deno' to download and install automatically.",
+    "setup_button": "Setup Deno",
+    "downloading": "Downloading Deno...",
+    "extracting": "Extracting Deno...",
+    "verifying": "Verifying Deno...",
+    "success": "Deno was successfully installed!",
+    "download_failed": "Download Failed",
+    "download_error": "Failed to download Deno: {error}",
+    "verification_failed": "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
+    "setup_failed": "Failed to set up Deno. Some features may not work correctly.",
+    "setup_error": "Setup Error"
   }
 }
