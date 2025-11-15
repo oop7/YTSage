@@ -47,25 +47,28 @@ class FormatTableMixin:
         else:
             # Normal mode: 9 columns
             configs = [
-                {"min_width": 70, "padding": 40},   # Select - needs space for checkbox
-                {"min_width": 100, "padding": 30},  # Quality
-                {"min_width": 85, "padding": 30},   # Extension
-                {"min_width": 100, "padding": 30},  # Resolution
-                {"min_width": 90, "padding": 30},   # File Size
-                {"min_width": 100, "padding": 30},  # Codec
-                {"min_width": 100, "padding": 30},  # Audio
-                {"min_width": 60, "padding": 30},   # FPS
-                {"min_width": 60, "padding": 30},   # HDR
+                {"min_width": 70, "padding": 40, "stretch": False},   # Select - fixed
+                {"min_width": 100, "padding": 30, "stretch": True},   # Quality - stretch
+                {"min_width": 85, "padding": 30, "stretch": False},   # Extension - fixed
+                {"min_width": 100, "padding": 30, "stretch": True},   # Resolution - stretch
+                {"min_width": 90, "padding": 30, "stretch": True},    # File Size - stretch
+                {"min_width": 100, "padding": 30, "stretch": True},   # Codec - stretch
+                {"min_width": 100, "padding": 30, "stretch": True},   # Audio - stretch
+                {"min_width": 60, "padding": 30, "stretch": False},   # FPS - fixed
+                {"min_width": 60, "padding": 30, "stretch": False},   # HDR - fixed
             ]
             
+            # Apply column widths with mixed fixed and stretch modes
             for col_index, (label, config) in enumerate(zip(header_labels, configs)):
                 calculated_width = self._calculate_column_width(label, config["min_width"], config["padding"])
                 
-                if col_index < 8:  # All columns except the last one are fixed
+                if config["stretch"]:
+                    # Stretchable columns for flexible content
+                    self.format_table.horizontalHeader().setSectionResizeMode(col_index, QHeaderView.ResizeMode.Stretch)
+                else:
+                    # Fixed columns for consistent sizing
                     self.format_table.horizontalHeader().setSectionResizeMode(col_index, QHeaderView.ResizeMode.Fixed)
                     self.format_table.setColumnWidth(col_index, calculated_width)
-                else:  # HDR column stretches to fill remaining space
-                    self.format_table.horizontalHeader().setSectionResizeMode(col_index, QHeaderView.ResizeMode.Stretch)
 
     def setup_format_table(self) -> QTableWidget:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
