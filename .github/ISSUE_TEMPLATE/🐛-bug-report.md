@@ -26,17 +26,19 @@ assignees: ''
 
 ## ✅ Expected Behavior
 <!-- What should have happened? -->
-
 ## ❌ Actual Behavior
 <!-- What actually happened? -->
 
 ## 🖥️ Environment
-- **YTSage Version**: <!-- e.g., v1.2.0 -->
-- **Python Version**: <!-- e.g., 3.9.7 -->
+- **YTSage Version**: <!-- e.g., v4.5.0 -->
+- **yt-dlp Version**: <!-- e.g., 2025.11.12 -->
 - **OS**: <!-- e.g., Windows 11, macOS Ventura, Ubuntu 22.04 -->
-- **yt-dlp Version**: <!-- Run `yt-dlp --version` -->
+- **Python Version**: <!-- e.g., 3.13.6 -->
+- **Deno Version**: <!-- e.g., 2.5.6 -->
 - **FFmpeg Version**: <!-- Run `ffmpeg -version` -->
 - **Installation Method**: <!-- - pip - executable - manual -->
+
+> 💡 You can find most of these details by clicking the About button to open the About dialog.
 
 ## 📸 Screenshots/Logs
 <!-- 
