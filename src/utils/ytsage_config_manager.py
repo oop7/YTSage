@@ -51,7 +51,8 @@ Exceptions
 
 import json
 import threading
-from typing import Any
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 from src.utils.ytsage_constants import APP_CONFIG_FILE, USER_HOME_DIR
 from src.utils.ytsage_logger import logger
@@ -65,10 +66,10 @@ class ConfigManager:
     Supports nested keys via dot notation and automatically persists changes.
     """
 
-    _lock = threading.RLock()
-    _config_file = APP_CONFIG_FILE
-    _settings: dict[str, Any] = {}
-    _default_config = {
+    _lock: threading.RLock = threading.RLock()
+    _config_file: Path = APP_CONFIG_FILE
+    _settings: Dict[str, Any] = {}
+    _default_config: Dict[str, Any] = {
         "download_path": str(USER_HOME_DIR / "Downloads"),
         "speed_limit_value": None,
         "speed_limit_unit_index": 0,
@@ -130,12 +131,12 @@ class ConfigManager:
                 logger.exception(f"Unexpected error while saving config: {e}")
 
     @classmethod
-    def get(cls, key: str) -> Any:
+    def get(cls, key: str) -> Optional[Any]:
         """
         Retrieve a configuration value using a dotted key notation.
         Args:
             key (str): The dotted key string representing the path to the desired setting (e.g., "database.host").
-            Any: The value associated with the given key, or None if the key does not exist.
+            Optional[Any]: The value associated with the given key, or None if the key does not exist.
         Notes:
             - If the configuration settings are not loaded, this method will load them before attempting retrieval.
             - If any part of the dotted key path is missing, None is returned and a debug message is logged.
@@ -143,8 +144,8 @@ class ConfigManager:
         with cls._lock:
             if not cls._settings:
                 cls._load()
-            parts = key.split(".")
-            value = cls._settings
+            parts: list[str] = key.split(".")
+            value: Any = cls._settings
             for part in parts:
                 if isinstance(value, dict) and part in value:
                     value = value[part]
@@ -170,8 +171,8 @@ class ConfigManager:
         with cls._lock:
             if not cls._settings:
                 cls._load()
-            parts = key.split(".")
-            d = cls._settings
+            parts: list[str] = key.split(".")
+            d: Dict[str, Any] = cls._settings
             for part in parts[:-1]:
                 d = d.setdefault(part, {})
             d[parts[-1]] = value
@@ -193,8 +194,8 @@ class ConfigManager:
         with cls._lock:
             if not cls._settings:
                 cls._load()
-            parts = key.split(".")
-            d = cls._settings
+            parts: list[str] = key.split(".")
+            d: Any = cls._settings
             for part in parts[:-1]:
                 if part not in d:
                     logger.debug(f"Config key '{key}' not found for deletion.")

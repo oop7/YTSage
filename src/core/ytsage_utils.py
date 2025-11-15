@@ -6,6 +6,7 @@ import tempfile
 import time
 from importlib.metadata import PackageNotFoundError
 from pathlib import Path
+from typing import Any, Dict, Optional, Union
 
 import requests
 from packaging import version
@@ -42,30 +43,30 @@ except ImportError:
 
 
 # Cache for version information to avoid delays
-_version_cache = {
+_version_cache: Dict[str, Dict[str, Any]] = {
     "ytdlp": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
     "ffmpeg": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
     "deno": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
 }
 
 # Cache expiry time in seconds (5 minutes)
-CACHE_EXPIRY = 300
+CACHE_EXPIRY: int = 300
 
 
-def get_file_mtime(filepath) -> float:
+def get_file_mtime(filepath: Optional[Union[str, Path]]) -> float:
     """Get file modification time safely."""
     try:
         if filepath and Path(filepath).exists():
             return Path(filepath).stat().st_mtime
     except Exception:
         pass
-    return 0
+    return 0.0
 
 
-def should_refresh_cache(tool_name, current_path) -> bool:
+def should_refresh_cache(tool_name: str, current_path: Optional[str]) -> bool:
     """Determine if cache should be refreshed for a tool."""
-    cache = _version_cache.get(tool_name, {})
-    current_time = time.time()
+    cache: Dict[str, Any] = _version_cache.get(tool_name, {})
+    current_time: float = time.time()
 
     # Always refresh if no cached data
     if not cache.get("version"):
@@ -87,10 +88,10 @@ def should_refresh_cache(tool_name, current_path) -> bool:
     return False
 
 
-def update_version_cache(tool_name, version_info, path, force_save=False) -> None:
+def update_version_cache(tool_name: str, version_info: str, path: Optional[str], force_save: bool = False) -> None:
     """Update the version cache and optionally save to config."""
-    current_time = time.time()
-    current_mtime = get_file_mtime(path)
+    current_time: float = time.time()
+    current_mtime: float = get_file_mtime(path)
 
     _version_cache[tool_name] = {
         "version": version_info,
@@ -239,7 +240,7 @@ def get_deno_version() -> str:
     return get_deno_version_cached()
 
 
-def get_ytdlp_version_direct(yt_dlp_path=None) -> str:
+def get_ytdlp_version_direct(yt_dlp_path: Optional[str] = None) -> str:
     """Get yt-dlp version directly without caching."""
     try:
         if yt_dlp_path is None:
@@ -324,9 +325,9 @@ def get_ffmpeg_version_direct() -> str:
 # ensure_app_data_dir() moved to src\utils\ytsage_constants.py
 
 
-def load_config() -> dict:
+def load_config() -> Dict[str, Any]:
     """Load the application configuration from file."""
-    default_config = {
+    default_config: Dict[str, Any] = {
         "download_path": str(USER_HOME_DIR / "Downloads"),
         "speed_limit_value": None,
         "speed_limit_unit_index": 0,
@@ -358,7 +359,7 @@ def load_config() -> dict:
     return default_config
 
 
-def save_config(config) -> bool:
+def save_config(config: Dict[str, Any]) -> bool:
     """Save the application configuration to file."""
     try:
         with open(APP_CONFIG_FILE, "w", encoding="utf-8") as f:
@@ -412,7 +413,7 @@ def check_ffmpeg() -> bool:
         return False
 
 
-def load_saved_path(main_window_instance) -> None:
+def load_saved_path(main_window_instance: Any) -> None:
     """Load saved download path with enhanced error handling."""
     try:
         if APP_CONFIG_FILE.exists():
@@ -444,7 +445,7 @@ def load_saved_path(main_window_instance) -> None:
         main_window_instance.last_path = tempfile.gettempdir()
 
 
-def save_path(main_window_instance, path) -> bool:
+def save_path(main_window_instance: Any, path: Union[str, Path]) -> bool:
     """Save download path with enhanced error handling."""
     try:
         # Verify the path is valid and writable
@@ -474,13 +475,13 @@ def update_yt_dlp() -> bool:
     """Check for yt-dlp updates and update if a newer version is available."""
     try:
         # Get the yt-dlp path
-        yt_dlp_path = get_yt_dlp_path()
+        yt_dlp_path: Path = get_yt_dlp_path()
 
         # Extra logic moved to src\utils\ytsage_constants.py
 
         # For binaries downloaded with our app, use direct binary update approach
         # Check if this is an app-managed binary by comparing paths safely
-        is_app_managed = False
+        is_app_managed: bool = False
         try:
             # Only compare if both files exist
             if yt_dlp_path.exists() and YTDLP_APP_BIN_PATH.exists():
@@ -599,12 +600,12 @@ def should_check_for_auto_update() -> bool:
         if not config.get("auto_update_ytdlp", False):
             return False
 
-        frequency = config.get("auto_update_frequency", "daily")
-        last_check = config.get("last_update_check", 0)
-        current_time = time.time()
+        frequency: str = config.get("auto_update_frequency", "daily")
+        last_check: float = config.get("last_update_check", 0)
+        current_time: float = time.time()
 
         # Calculate time since last check
-        time_diff = current_time - last_check
+        time_diff: float = current_time - last_check
 
         if frequency == "startup":
             # Always check on startup if we haven't checked in the last hour
@@ -679,13 +680,13 @@ def check_and_update_ytdlp_auto() -> bool:
         return False
 
 
-def get_auto_update_settings() -> dict:
+def get_auto_update_settings() -> Dict[str, Any]:
     """Get current auto-update settings from config."""
     from src.utils.ytsage_config_manager import ConfigManager
     
-    enabled = ConfigManager.get("auto_update_ytdlp")
-    frequency = ConfigManager.get("auto_update_frequency")
-    last_check = ConfigManager.get("last_update_check")
+    enabled: Optional[bool] = ConfigManager.get("auto_update_ytdlp")
+    frequency: Optional[str] = ConfigManager.get("auto_update_frequency")
+    last_check: Optional[float] = ConfigManager.get("last_update_check")
     
     return {
         "enabled": enabled if enabled is not None else True,
@@ -694,7 +695,7 @@ def get_auto_update_settings() -> dict:
     }
 
 
-def update_auto_update_settings(enabled, frequency) -> bool:
+def update_auto_update_settings(enabled: bool, frequency: str) -> bool:
     """Update auto-update settings in config."""
     try:
         from src.utils.ytsage_config_manager import ConfigManager

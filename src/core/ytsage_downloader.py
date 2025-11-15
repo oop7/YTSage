@@ -4,6 +4,7 @@ import shlex  # For safely parsing command arguments
 import subprocess  # For direct CLI command execution
 import time
 from pathlib import Path
+from typing import Optional, List, Set
 
 from PySide6.QtCore import QObject, QThread, Signal
 
@@ -85,13 +86,13 @@ class DownloadThread(QThread):
         self.geo_proxy_url = geo_proxy_url
         self.force_output_format = force_output_format
         self.preferred_output_format = preferred_output_format
-        self.paused = False
-        self.cancelled = False
-        self.process = None
-        self.current_filename = None  # Initialize filename storage
-        self.last_file_path = None  # Initialize full file path storage
-        self.subtitle_files = []  # Track subtitle files that are created
-        self.initial_subtitle_files = set()  # Track initial subtitle files before download
+        self.paused: bool = False
+        self.cancelled: bool = False
+        self.process: Optional[subprocess.Popen] = None
+        self.current_filename: Optional[str] = None  # Initialize filename storage
+        self.last_file_path: Optional[str] = None  # Initialize full file path storage
+        self.subtitle_files: List[str] = []  # Track subtitle files that are created
+        self.initial_subtitle_files: Set[Path] = set()  # Track initial subtitle files before download
 
     def cleanup_partial_files(self) -> None:
         """Delete any partial files including .part and unmerged format-specific files"""
@@ -127,7 +128,7 @@ class DownloadThread(QThread):
 
     def cleanup_subtitle_files(self) -> None:
         """Delete subtitle files after they have been merged into the video file"""
-        deleted_count = [0, 0]
+        deleted_count: List[int] = [0, 0]
 
         def safe_delete(path: Path) -> bool:
             try:
@@ -146,7 +147,7 @@ class DownloadThread(QThread):
                 logger.debug(f"Deleted {deleted_count[0]} of {len(self.subtitle_files)} tracked subtitle files")
 
             # --- Method 2: Delete new subtitle files not in initial set ---
-            new_subtitle_files = {
+            new_subtitle_files: Set[Path] = {
                 f for f in Path(self.path).rglob("*") if f.suffix in [".vtt", ".srt"] and f not in self.initial_subtitle_files
             }
             for subtitle_file in new_subtitle_files:
@@ -156,16 +157,16 @@ class DownloadThread(QThread):
         except Exception as e:
             logger.exception(f"Error cleaning subtitle files: {e}")
 
-    def _build_yt_dlp_command(self) -> list:
+    def _build_yt_dlp_command(self) -> List[str]:
         """Build the yt-dlp command line with all options for direct execution."""
         # Use the new yt-dlp path function from ytsage_yt_dlp module
-        yt_dlp_path = get_yt_dlp_path()
-        cmd: list = [yt_dlp_path]
+        yt_dlp_path: str = get_yt_dlp_path()
+        cmd: List[str] = [yt_dlp_path]
         logger.debug(f"Using yt-dlp from: {yt_dlp_path}")
 
         # Format selection strategy - use format ID if provided or fallback to resolution
         if self.format_id:
-            clean_format_id = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
+            clean_format_id: str = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
 
             # If the selected format is audio-only, pass it directly.
             if self.is_audio_only:
@@ -180,7 +181,7 @@ class DownloadThread(QThread):
                 logger.debug(f"Using video-only format merged with best audio: {clean_format_id}+bestaudio/best")
         else:
             # If no specific format ID, use resolution-based sorting (-S)
-            res_value = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified
+            res_value: str = self.resolution if self.resolution else "720"  # Default to 720p if no resolution specified
             cmd.extend(["-S", f"res:{res_value}"])
 
         # Force output format if enabled and merging is needed
@@ -196,13 +197,13 @@ class DownloadThread(QThread):
 
         # Output template with resolution in filename
         # Use string concatenation instead of Path.joinpath to avoid Path object issues
-        base_path = self.path.as_posix()
+        base_path: str = self.path.as_posix()
         
         if self.is_playlist:
             # Create output template with playlist subfolder
-            output_template = f"{base_path}/%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s"
+            output_template: str = f"{base_path}/%(playlist_title)s/%(title)s_%(resolution)s.%(ext)s"
         else:
-            output_template = f"{base_path}/%(title)s_%(resolution)s.%(ext)s"
+            output_template: str = f"{base_path}/%(title)s_%(resolution)s.%(ext)s"
 
         cmd.extend(["-o", str(output_template)])
 
@@ -220,7 +221,7 @@ class DownloadThread(QThread):
             cmd.append("--write-subs")
 
             # Get language codes from subtitle selections
-            lang_codes = []
+            lang_codes: List[str] = []
             for sub_selection in self.subtitle_langs:
                 try:
                     # Extract just the language code (e.g., 'en' from 'en - Manual')
@@ -309,8 +310,8 @@ class DownloadThread(QThread):
     def _run_direct_command(self) -> None:
         """Run yt-dlp as a direct command line process instead of using Python API."""
         try:
-            cmd = self._build_yt_dlp_command()
-            cmd_str = " ".join(shlex.quote(str(arg)) for arg in cmd)
+            cmd: List[str] = self._build_yt_dlp_command()
+            cmd_str: str = " ".join(shlex.quote(str(arg)) for arg in cmd)
             logger.debug(f"Executing command: {cmd_str}")
 
             self.status_signal.emit(_("download.starting"))
@@ -355,7 +356,7 @@ class DownloadThread(QThread):
                 self._parse_output_line(line)
 
             # Wait for process to complete
-            return_code = self.process.wait()
+            return_code: int = self.process.wait()
 
             # Special handling for specific errors
             # return code 127 typically means command not found
@@ -454,7 +455,7 @@ class DownloadThread(QThread):
             time.sleep(1)
             self.cleanup_partial_files()
 
-    def _parse_output_line(self, line) -> None:
+    def _parse_output_line(self, line: str) -> None:
         """Parse yt-dlp command output to update progress and status."""
         line = line.strip()
         # logger.info(f"yt-dlp: {line}")  # Log all output - OPTIONALLY UNCOMMENT FOR VERBOSE DEBUG
