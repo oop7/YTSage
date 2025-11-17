@@ -137,20 +137,20 @@ python main.py
 <div align="center">
 <table>
   <tr>
-    <td><img src="assets\branding\screenshots\main.png" alt="Main Interface" width="400"/></td>
+    <td><img src="assets\branding\screenshots\Download-Settings.png" alt="Download Settings" width="400"/></td>
     <td><img src="assets\branding\screenshots\playlist.png" alt="Playlist Download" width="400"/></td>
   </tr>
   <tr>
-    <td align="center"><em>Main Interface</em></td>
+    <td align="center"><em>Download Settings</em></td>
     <td align="center"><em>Playlist Download</em></td>
   </tr>
   <tr>
     <td><img src="assets\branding\screenshots\audio_format.png" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="assets\branding\screenshots\subtitle_options.png" alt="Subtitle Options merged with Remove Sponsor Segments" width="400"/></td>
+    <td><img src="assets\branding\screenshots\Custom-Option.png" alt="Custom Options" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Audio Format</em></td>
-    <td align="center"><em>Subtitle Options</em></td>
+    <td align="center"><em>Custom Options</em></td>
   </tr>
 </table>
 </div>
