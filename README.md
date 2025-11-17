@@ -351,10 +351,12 @@ YTSage/
 │   │   │   └── YTSage.ico        # Windows icon
 │   │   ├── 📁 screenshots/       # Screenshots for documentation
 │   │   │   ├── audio_format.png
-│   │   │   ├── main.png
+│   │   │   ├── Custom-Option.png
+│   │   │   ├── Download-Settings.png
 │   │   │   ├── playlist.png
-│   │   │   └── subtitle_options.png
+│   │   │   └── main.png
 │   │   └── 📁 svg/               # SVG assets
+│   │       └── ytsage-wordmark.svg
 │   │       └── ytsage-wordmark.svg
 │   ├── 📁 Icon/                  # Legacy icon directory
 │   │   └── icon.png
