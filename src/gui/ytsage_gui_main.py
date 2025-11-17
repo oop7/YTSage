@@ -790,8 +790,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 format_changed = True
                 logger.info(f"Output format settings updated - Force: {self.force_output_format}, Preferred: {self.preferred_output_format}")
 
+            # Update Audio Format Settings
+            new_force_audio_format = dialog.get_force_audio_format_enabled()
+            new_preferred_audio_format = dialog.get_preferred_audio_format()
+            audio_format_changed = False
+            if new_force_audio_format != self.force_audio_format or new_preferred_audio_format != self.preferred_audio_format:
+                self.force_audio_format = new_force_audio_format
+                self.preferred_audio_format = new_preferred_audio_format
+                audio_format_changed = True
+                logger.info(f"Audio format settings updated - Force: {self.force_audio_format}, Preferred: {self.preferred_audio_format}")
+
             # Update Tooltip if anything changed
-            if path_changed or limit_changed or format_changed:
+            if path_changed or limit_changed or format_changed or audio_format_changed:
                 limit_text = "None"
                 if self.speed_limit_value:
                     limit_text = f"{self.speed_limit_value} {['KB/s', 'MB/s'][self.speed_limit_unit_index]}"
