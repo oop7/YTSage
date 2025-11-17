@@ -293,7 +293,19 @@
     "force_format_help": "Quando attivato, i video uniti verranno convertiti nel formato preferito. Disattiva per lasciare che yt-dlp decida automaticamente.",
     "format_mp4": "MP4 (Più compatibile)",
     "format_webm": "WebM (Moderno, aperto)",
-    "format_mkv": "MKV (Ricco di funzionalità)"
+    "format_mkv": "MKV (Ricco di funzionalità)",
+    "audio_format_settings": "Impostazioni formato audio",
+    "force_audio_format": "Forza formato audio per download solo audio",
+    "preferred_audio_format": "Formato audio preferito:",
+    "force_audio_format_help": "Quando abilitato, i download solo audio verranno convertiti nel formato preferito. Questo si applica solo durante il download di formati audio.",
+    "audio_format_best": "Migliore (Nessuna conversione)",
+    "audio_format_aac": "AAC (Buono per l'editing)",
+    "audio_format_mp3": "MP3 (Universale)",
+    "audio_format_flac": "FLAC (Senza perdita)",
+    "audio_format_wav": "WAV (Non compresso)",
+    "audio_format_opus": "Opus (Efficiente)",
+    "audio_format_m4a": "M4A (Apple)",
+    "audio_format_vorbis": "Vorbis (Aperto)"
   },
   "main_ui": {
     "url_placeholder": "Inserisci URL video YouTube o playlist",

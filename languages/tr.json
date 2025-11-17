@@ -293,7 +293,19 @@
     "force_format_help": "Etkinleştirildiğinde, birleştirilen videolar tercih ettiğiniz formata dönüştürülür. yt-dlp'nin otomatik karar vermesini sağlamak için devre dışı bırakın.",
     "format_mp4": "MP4 (En uyumlu)",
     "format_webm": "WebM (Modern, açık)",
-    "format_mkv": "MKV (Özellik açısından zengin)"
+    "format_mkv": "MKV (Özellik açısından zengin)",
+    "audio_format_settings": "Ses Formatı Ayarları",
+    "force_audio_format": "Yalnızca ses indirmeleri için ses formatını zorla",
+    "preferred_audio_format": "Tercih edilen ses formatı:",
+    "force_audio_format_help": "Etkinleştirildiğinde, yalnızca ses indirmeleri tercih ettiğiniz formata dönüştürülecektir. Bu yalnızca ses formatları indirilirken geçerlidir.",
+    "audio_format_best": "En iyi (Dönüştürme yok)",
+    "audio_format_aac": "AAC (Düzenleme için iyi)",
+    "audio_format_mp3": "MP3 (Evrensel)",
+    "audio_format_flac": "FLAC (Kayıpsız)",
+    "audio_format_wav": "WAV (Sıkıştırılmamış)",
+    "audio_format_opus": "Opus (Verimli)",
+    "audio_format_m4a": "M4A (Apple)",
+    "audio_format_vorbis": "Vorbis (Açık)"
   },
   "main_ui": {
     "url_placeholder": "YouTube video veya oynatma listesi URL'sini girin",

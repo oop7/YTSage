@@ -293,7 +293,19 @@
     "force_format_help": "启用后，合并的视频将转换为您的首选格式。禁用以让 yt-dlp 自动决定。",
     "format_mp4": "MP4（最兼容）",
     "format_webm": "WebM（现代、开放）",
-    "format_mkv": "MKV（功能丰富）"
+    "format_mkv": "MKV（功能丰富）",
+    "audio_format_settings": "音频格式设置",
+    "force_audio_format": "强制仅音频下载的音频格式",
+    "preferred_audio_format": "首选音频格式：",
+    "force_audio_format_help": "启用后，仅音频下载将转换为您的首选格式。这仅在下载音频格式时适用。",
+    "audio_format_best": "最佳（不转换）",
+    "audio_format_aac": "AAC（适合编辑）",
+    "audio_format_mp3": "MP3（通用）",
+    "audio_format_flac": "FLAC（无损）",
+    "audio_format_wav": "WAV（未压缩）",
+    "audio_format_opus": "Opus（高效）",
+    "audio_format_m4a": "M4A（Apple）",
+    "audio_format_vorbis": "Vorbis（开放）"
   },
   "main_ui": {
     "url_placeholder": "输入 YouTube 视频或播放列表网址",

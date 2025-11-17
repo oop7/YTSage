@@ -293,7 +293,19 @@
     "force_format_help": "有効にすると、マージされた動画は優先形式に変換されます。無効にすると、yt-dlpが自動的に決定します。",
     "format_mp4": "MP4（最も互換性が高い）",
     "format_webm": "WebM（モダン、オープン）",
-    "format_mkv": "MKV（機能豊富）"
+    "format_mkv": "MKV（機能豊富）",
+    "audio_format_settings": "オーディオ形式設定",
+    "force_audio_format": "オーディオのみのダウンロードにオーディオ形式を強制",
+    "preferred_audio_format": "優先オーディオ形式：",
+    "force_audio_format_help": "有効にすると、オーディオのみのダウンロードが優先形式に変換されます。これはオーディオ形式をダウンロードする場合にのみ適用されます。",
+    "audio_format_best": "最高（変換なし）",
+    "audio_format_aac": "AAC（編集に適している）",
+    "audio_format_mp3": "MP3（汎用）",
+    "audio_format_flac": "FLAC（ロスレス）",
+    "audio_format_wav": "WAV（非圧縮）",
+    "audio_format_opus": "Opus（効率的）",
+    "audio_format_m4a": "M4A（Apple）",
+    "audio_format_vorbis": "Vorbis（オープン）"
   },
   "main_ui": {
     "url_placeholder": "YouTubeの動画URLまたはプレイリストURLを入力",

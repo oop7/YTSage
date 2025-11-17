@@ -234,6 +234,52 @@ class DownloadSettingsDialog(QDialog):
         output_format_group_box.setLayout(output_format_layout)
         layout.addWidget(output_format_group_box)
 
+        # --- Audio Format Settings Section (for audio-only downloads) ---
+        audio_format_group_box = QGroupBox(_("settings.audio_format_settings"))
+        audio_format_layout = QVBoxLayout()
+
+        # Load current audio format settings from ConfigManager
+        self.force_audio_format_enabled = ConfigManager.get("force_audio_format") or False
+        self.preferred_audio_format_value = ConfigManager.get("preferred_audio_format") or "best"
+
+        # Enable/Disable force audio format checkbox
+        self.force_audio_format_checkbox = QCheckBox(_("settings.force_audio_format"))
+        self.force_audio_format_checkbox.setChecked(self.force_audio_format_enabled)
+        audio_format_layout.addWidget(self.force_audio_format_checkbox)
+
+        # Audio format selection layout
+        audio_format_select_layout = QHBoxLayout()
+        audio_format_label = QLabel(_("settings.preferred_audio_format"))
+        audio_format_label.setStyleSheet("color: #ffffff; margin-top: 5px;")
+        audio_format_select_layout.addWidget(audio_format_label)
+
+        self.audio_format_combo = QComboBox()
+        self.audio_format_combo.addItems([
+            _("settings.audio_format_best"),
+            _("settings.audio_format_aac"),
+            _("settings.audio_format_mp3"),
+            _("settings.audio_format_flac"),
+            _("settings.audio_format_wav"),
+            _("settings.audio_format_opus"),
+            _("settings.audio_format_m4a"),
+            _("settings.audio_format_vorbis")
+        ])
+        # Set current selection based on saved format
+        audio_format_index_map = {"best": 0, "aac": 1, "mp3": 2, "flac": 3, "wav": 4, "opus": 5, "m4a": 6, "vorbis": 7}
+        self.audio_format_combo.setCurrentIndex(audio_format_index_map.get(self.preferred_audio_format_value, 0))
+        audio_format_select_layout.addWidget(self.audio_format_combo)
+        audio_format_select_layout.addStretch()
+        audio_format_layout.addLayout(audio_format_select_layout)
+
+        # Help text for audio format
+        audio_help_label = QLabel(_("settings.force_audio_format_help"))
+        audio_help_label.setWordWrap(True)
+        audio_help_label.setStyleSheet("color: #cccccc; margin: 5px; font-size: 10px;")
+        audio_format_layout.addWidget(audio_help_label)
+
+        audio_format_group_box.setLayout(audio_format_layout)
+        layout.addWidget(audio_format_group_box)
+
         # Dialog buttons (OK/Cancel)
         button_box = QDialogButtonBox()
         ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
@@ -276,6 +322,15 @@ class DownloadSettingsDialog(QDialog):
         """Returns the selected preferred format (lowercase)."""
         format_map = {0: "mp4", 1: "webm", 2: "mkv"}
         return format_map.get(self.format_combo.currentIndex(), "mp4")
+
+    def get_force_audio_format_enabled(self) -> bool:
+        """Returns whether force audio format is enabled."""
+        return self.force_audio_format_checkbox.isChecked()
+
+    def get_preferred_audio_format(self) -> str:
+        """Returns the selected preferred audio format (lowercase)."""
+        audio_format_map = {0: "best", 1: "aac", 2: "mp3", 3: "flac", 4: "wav", 5: "opus", 6: "m4a", 7: "vorbis"}
+        return audio_format_map.get(self.audio_format_combo.currentIndex(), "best")
 
     def _create_styled_message_box(self, icon, title, text) -> QMessageBox:
         """Create a styled QMessageBox that matches the app theme."""
@@ -320,6 +375,12 @@ class DownloadSettingsDialog(QDialog):
             preferred_format = self.get_preferred_format()
             ConfigManager.set("force_output_format", force_format)
             ConfigManager.set("preferred_output_format", preferred_format)
+
+            # Save audio format settings
+            force_audio_format = self.get_force_audio_format_enabled()
+            preferred_audio_format = self.get_preferred_audio_format()
+            ConfigManager.set("force_audio_format", force_audio_format)
+            ConfigManager.set("preferred_audio_format", preferred_audio_format)
 
             QMessageBox.information(
                 self,

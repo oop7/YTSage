@@ -84,6 +84,8 @@ class ConfigManager:
         "ytdlp_channel": "stable",
         "force_output_format": False,
         "preferred_output_format": "mp4",
+        "force_audio_format": False,
+        "preferred_audio_format": "best",
         "cached_versions": {
             "ytdlp": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
             "ffmpeg": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},

@@ -293,7 +293,19 @@
     "force_format_help": "Когда включено, объединённые видео будут конвертированы в ваш предпочтительный формат. Отключите, чтобы yt-dlp решал автоматически.",
     "format_mp4": "MP4 (Наиболее совместимый)",
     "format_webm": "WebM (Современный, открытый)",
-    "format_mkv": "MKV (Многофункциональный)"
+    "format_mkv": "MKV (Многофункциональный)",
+    "audio_format_settings": "Настройки формата аудио",
+    "force_audio_format": "Принудительный формат аудио для загрузки только аудио",
+    "preferred_audio_format": "Предпочтительный формат аудио:",
+    "force_audio_format_help": "При включении загрузки только аудио будут конвертированы в ваш предпочтительный формат. Это применяется только при загрузке аудио форматов.",
+    "audio_format_best": "Лучшее (Без конвертации)",
+    "audio_format_aac": "AAC (Хорошо для редактирования)",
+    "audio_format_mp3": "MP3 (Универсальный)",
+    "audio_format_flac": "FLAC (Без потерь)",
+    "audio_format_wav": "WAV (Несжатый)",
+    "audio_format_opus": "Opus (Эффективный)",
+    "audio_format_m4a": "M4A (Apple)",
+    "audio_format_vorbis": "Vorbis (Открытый)"
   },
   "main_ui": {
     "url_placeholder": "Введите URL видео или плейлиста YouTube",

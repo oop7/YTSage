@@ -293,7 +293,19 @@
     "force_format_help": "Jika diaktifkan, video yang digabungkan akan dikonversi ke format pilihan Anda. Nonaktifkan untuk membiarkan yt-dlp memutuskan secara otomatis.",
     "format_mp4": "MP4 (Paling kompatibel)",
     "format_webm": "WebM (Modern, terbuka)",
-    "format_mkv": "MKV (Kaya fitur)"
+    "format_mkv": "MKV (Kaya fitur)",
+    "audio_format_settings": "Pengaturan Format Audio",
+    "force_audio_format": "Paksa format audio untuk unduhan khusus audio",
+    "preferred_audio_format": "Format audio pilihan:",
+    "force_audio_format_help": "Saat diaktifkan, unduhan khusus audio akan dikonversi ke format pilihan Anda. Ini hanya berlaku saat mengunduh format audio.",
+    "audio_format_best": "Terbaik (Tanpa konversi)",
+    "audio_format_aac": "AAC (Bagus untuk editing)",
+    "audio_format_mp3": "MP3 (Universal)",
+    "audio_format_flac": "FLAC (Lossless)",
+    "audio_format_wav": "WAV (Tidak terkompresi)",
+    "audio_format_opus": "Opus (Efisien)",
+    "audio_format_m4a": "M4A (Apple)",
+    "audio_format_vorbis": "Vorbis (Terbuka)"
   },
   "main_ui": {
     "url_placeholder": "Masukkan URL video atau playlist YouTube",

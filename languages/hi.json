@@ -293,7 +293,19 @@
     "force_format_help": "सक्षम होने पर, मर्ज किए गए वीडियो आपके पसंदीदा प्रारूप में परिवर्तित हो जाएंगे। yt-dlp को स्वचालित रूप से निर्णय लेने देने के लिए अक्षम करें।",
     "format_mp4": "MP4 (सबसे संगत)",
     "format_webm": "WebM (आधुनिक, खुला)",
-    "format_mkv": "MKV (सुविधा समृद्ध)"
+    "format_mkv": "MKV (सुविधा समृद्ध)",
+    "audio_format_settings": "ऑडियो प्रारूप सेटिंग्स",
+    "force_audio_format": "केवल ऑडियो डाउनलोड के लिए ऑडियो प्रारूप लागू करें",
+    "preferred_audio_format": "पसंदीदा ऑडियो प्रारूप:",
+    "force_audio_format_help": "सक्षम होने पर, केवल ऑडियो डाउनलोड आपके पसंदीदा प्रारूप में परिवर्तित हो जाएंगे। यह केवल ऑडियो प्रारूप डाउनलोड करते समय लागू होता है।",
+    "audio_format_best": "सर्वोत्तम (कोई परिवर्तन नहीं)",
+    "audio_format_aac": "AAC (संपादन के लिए अच्छा)",
+    "audio_format_mp3": "MP3 (सार्वभौमिक)",
+    "audio_format_flac": "FLAC (हानिरहित)",
+    "audio_format_wav": "WAV (असंकुचित)",
+    "audio_format_opus": "Opus (कुशल)",
+    "audio_format_m4a": "M4A (Apple)",
+    "audio_format_vorbis": "Vorbis (खुला)"
   },
   "main_ui": {
     "url_placeholder": "YouTube वीडियो या प्लेलिस्ट URL दर्ज करें",

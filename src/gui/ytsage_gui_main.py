@@ -125,6 +125,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize output format settings
         self.force_output_format = ConfigManager.get("force_output_format") or False
         self.preferred_output_format = ConfigManager.get("preferred_output_format") or "mp4"
+        self.force_audio_format = ConfigManager.get("force_audio_format") or False
+        self.preferred_audio_format = ConfigManager.get("preferred_audio_format") or "best"
         # Track if video analysis is completed
         self.analysis_completed = False
 
@@ -898,6 +900,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             geo_proxy_url=self.geo_proxy_url,  # Pass the geo-verification proxy URL
             force_output_format=self.force_output_format,  # Pass force output format setting
             preferred_output_format=self.preferred_output_format,  # Pass preferred format
+            force_audio_format=self.force_audio_format,  # Pass force audio format setting
+            preferred_audio_format=self.preferred_audio_format,  # Pass preferred audio format
         )
 
         # Connect signals

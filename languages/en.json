@@ -293,7 +293,19 @@
     "force_format_help": "When enabled, merged videos will be converted to your preferred format. Disable to let yt-dlp decide automatically.",
     "format_mp4": "MP4 (Most compatible)",
     "format_webm": "WebM (Modern, open)",
-    "format_mkv": "MKV (Feature-rich)"
+    "format_mkv": "MKV (Feature-rich)",
+    "audio_format_settings": "Audio Format Settings",
+    "force_audio_format": "Force audio format for audio-only downloads",
+    "preferred_audio_format": "Preferred audio format:",
+    "force_audio_format_help": "When enabled, audio-only downloads will be converted to your preferred format. This only applies when downloading audio formats.",
+    "audio_format_best": "Best (No conversion)",
+    "audio_format_aac": "AAC (Good for editing)",
+    "audio_format_mp3": "MP3 (Universal)",
+    "audio_format_flac": "FLAC (Lossless)",
+    "audio_format_wav": "WAV (Uncompressed)",
+    "audio_format_opus": "Opus (Efficient)",
+    "audio_format_m4a": "M4A (Apple)",
+    "audio_format_vorbis": "Vorbis (Open)"
   },
   "main_ui": {
     "url_placeholder": "Enter YouTube video or playlist URL",

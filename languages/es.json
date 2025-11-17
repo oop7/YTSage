@@ -276,7 +276,19 @@
     "force_format_help": "Cuando está habilitado, los videos combinados se convertirán a su formato preferido. Deshabilitar para dejar que yt-dlp decida automáticamente.",
     "format_mp4": "MP4 (Más compatible)",
     "format_webm": "WebM (Moderno, abierto)",
-    "format_mkv": "MKV (Rico en funciones)"
+    "format_mkv": "MKV (Rico en funciones)",
+    "audio_format_settings": "Configuración de formato de audio",
+    "force_audio_format": "Forzar formato de audio para descargas solo de audio",
+    "preferred_audio_format": "Formato de audio preferido:",
+    "force_audio_format_help": "Cuando está habilitado, las descargas solo de audio se convertirán a su formato preferido. Esto solo se aplica al descargar formatos de audio.",
+    "audio_format_best": "Mejor (Sin conversión)",
+    "audio_format_aac": "AAC (Bueno para edición)",
+    "audio_format_mp3": "MP3 (Universal)",
+    "audio_format_flac": "FLAC (Sin pérdida)",
+    "audio_format_wav": "WAV (Sin comprimir)",
+    "audio_format_opus": "Opus (Eficiente)",
+    "audio_format_m4a": "M4A (Apple)",
+    "audio_format_vorbis": "Vorbis (Abierto)"
   },
   "main_ui": {
     "url_placeholder": "Ingresa URL de video o lista de YouTube",
