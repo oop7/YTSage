@@ -44,11 +44,11 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 |-----------------------------------|-----------------------------------------|------------------------------------|
 | 🎥 Format Table                   | 🚫 SponsorBlock Integration             | 🎞️ FPS/HDR Display             |
 | 🎵 Audio Extraction               | 📝 Multi-Subtitle Select & Merge        | 🔄 Auto-Update yt-dlp                  |
-| ✨ Simple UI                      |  💾 Save Description                    | 🛠️ FFmpeg/yt-dlp/Deno Detection    |
-| 📋 Playlist Support              |  🖼️ Save thumbnail                       | ⚙️ Custom Commands                 |
-| 🖼️ Playlist Selector             | 🚀 Speed Limiter                        | 🍪 Login with Cookies              |
-| 📑 Embed Chapters                | ✂️ Trim Video Sections                  | 🌐 Proxy Support                   |
-| 📜 Download History              | 🔄 Release Channel Selection            | 🆙 Built-in Updater Tab            |
+| ✨ Simple UI                      |  💾 Save Description & Thumbnail        | 🛠️ FFmpeg/yt-dlp/Deno Detection    |
+| 📋 Playlist Support & Selector   | 🚀 Speed Limiter                        | ⚙️ Custom Commands                 |
+| 📑 Embed Chapters                | ✂️ Trim Video Sections                  | 🍪 Login with Cookies              |
+| 📜 Download History              | 🔄 Release Channel Selection            | 🌐 Proxy Support                   |
+| 🎚️ Audio Format Conversion       | 🎬 Video Format Settings                | 🆙 Built-in Updater Tab            |
 
 </div>
 
@@ -213,7 +213,7 @@ python main.py
      b. Copy the cookies in Netscape format
      c. Create a file named `cookies.txt` and paste the cookies into it
      d. Select the `cookies.txt` file in the app
-- **Save Download Path:** Save the default download path for future downloads. You can find this option in the download settings dialog.
+- **Save Download Path:** Save the default download path for future downloads. Available in **Download Settings → Download Path**.
 - **Updater Tab:** Unified tab in Custom Options for managing all updates:
   - **yt-dlp Updates:** Check and update yt-dlp to the latest version, with release channel selection (Stable/Nightly)
   - **FFmpeg Version Checker:** Check your FFmpeg version with direct links to installation guides
@@ -221,7 +221,8 @@ python main.py
 - **FFmpeg/yt-dlp/Deno Detection:** Automatically detect FFmpeg/yt-dlp/Deno path and version. You can use this option by clicking on about button.
 - **Trim Video:** Download only specific parts of a video by specifying time ranges (HH:MM:SS format)
 - **Proxy Support:** Use a proxy server for downloads (e.g., `http://<proxy-server>:<port>`)
-- **Force Output Format:** Force download in a specific format (e.g., `mp4`, `webm`, `mkv`). You can find this option in the download settings dialog.
+- **Force Output Format:** Force video downloads in a specific container format (e.g., `mp4`, `webm`, `mkv`). Available in **Download Settings → Audio Format Settings**.
+- **Audio Format Conversion:** Convert audio-only downloads to preferred formats (`AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, or `Best`). Ideal for video editing software like DaVinci Resolve. Available in **Download Settings → Audio Format Settings**.
 - **Download History:** View past downloads with thumbnails and statuses. You can use this option by clicking on download settings button.
 
 </details>
