@@ -5,7 +5,7 @@ This repository uses GitHub Actions to automatically build and release YTSage fo
 ## How It Works
 
 ### Trigger
-The workflow is triggered when you push a git tag that starts with `v` (e.g., `v4.9.2`, `v4.9.2`).
+The workflow is triggered when you push a git tag that starts with `v` (e.g., `v4.9.5`, `v4.9.5`).
 
 ### Build Process
 1. **Setup**: Uses Python 3.13.6 on all platforms
@@ -21,13 +21,13 @@ The workflow is triggered when you push a git tag that starts with `v` (e.g., `v
 2. **Commit your changes**:
    ```bash
    git add .
-   git commit -m "Release v4.9.2"
+   git commit -m "Release v4.9.5"
    ```
 
 3. **Create and push a tag**:
    ```bash
-   git tag v4.9.2
-   git push origin v4.9.2
+   git tag v4.9.5
+   git push origin v4.9.5
    ```
 
 4. **Watch the action**: Go to Actions tab in GitHub to monitor progress
