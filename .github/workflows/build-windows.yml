@@ -124,7 +124,7 @@ jobs:
         Add-Content -Path "setup_cxfreeze.py" -Value "    Executable("
         Add-Content -Path "setup_cxfreeze.py" -Value '        script="main.py",'
         Add-Content -Path "setup_cxfreeze.py" -Value '        target_name=f"YTSage-v{version}.exe",'
-        Add-Content -Path "setup_cxfreeze.py" -Value '        base="Win32GUI",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        base="gui",'
         Add-Content -Path "setup_cxfreeze.py" -Value '        icon="assets/branding/icons/YTSage.ico",'
         Add-Content -Path "setup_cxfreeze.py" -Value "    )"
         Add-Content -Path "setup_cxfreeze.py" -Value "]"
