@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ File video sudah ada",
     "audio_file_exists": "⚠️ File audio sudah ada",
     "subtitle_file_exists": "⚠️ File subtitle sudah ada",
-    "cancelling": "Membatalkan unduhan..."
+    "cancelling": "Membatalkan unduhan...",
+    "thumbnail_saved": "✅ Thumbnail disimpan: {filename}",
+    "thumbnail_error": "❌ Kesalahan thumbnail: {error}",
+    "thumbnail_no_image": "Tidak ada thumbnail yang tersedia untuk disimpan"
   },
   "errors": {
     "playlist_no_videos": "Kesalahan: Playlist tidak berisi video yang valid.",

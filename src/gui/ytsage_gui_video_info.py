@@ -389,74 +389,47 @@ class VideoInfoMixin:
 
     def download_thumbnail_file(self, video_url, path) -> bool:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
-
-    def download_thumbnail_file(self, video_url, path) -> bool:
         if not self.save_thumbnail:
             return False
 
         try:
-            # Note: yt_dlp Python package removed - this feature now uses subprocess
-            # Extract thumbnail info using yt-dlp CLI instead
-            from src.core.ytsage_yt_dlp import get_yt_dlp_path
-            from src.utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
-            import subprocess
-            import json
-
-            logger.debug(f"Attempting to save thumbnail for URL: {video_url}")
-
-            ytdlp_path = get_yt_dlp_path()
-            
-            # Use yt-dlp CLI to extract thumbnail info
-            result = subprocess.run(
-                [ytdlp_path, "--dump-json", "--skip-download", video_url],
-                capture_output=True,
-                text=True,
-                timeout=30,
-                creationflags=SUBPROCESS_CREATIONFLAGS,
-            )
-            
-            if result.returncode != 0:
-                logger.error(f"Failed to extract video info: {result.stderr}")
-                return False
-                
-            info = json.loads(result.stdout)
-            thumbnails = info.get("thumbnails", [])
-
-            if not thumbnails:
-                logger.info("No thumbnails available")
+            # Use cached thumbnail image from analysis if available
+            if self.thumbnail_image is None:
+                logger.info("No thumbnail image cached from analysis")
+                self.signals.update_status.emit(_("status.thumbnail_no_image"))
                 return False
 
-            thumbnail_url = max(
-                thumbnails,
-                key=lambda t: (t.get("height", 0) or 0) * (t.get("width", 0) or 0),
-            ).get("url")
+            # Get video title from cached video_info
+            video_title = "thumbnail"
+            if self.video_info and "title" in self.video_info:
+                video_title = self.video_info["title"]
+            elif self.playlist_info and "title" in self.playlist_info:
+                video_title = self.playlist_info["title"]
 
-            if not thumbnail_url:
-                logger.info("Failed to extract thumbnail URL")
-                return False
-
-            # Download using requests
-            response = requests.get(thumbnail_url)
-            response.raise_for_status()
+            logger.debug(f"Saving cached thumbnail for: {video_title}")
 
             # Save the thumbnail
             thumb_dir = Path(path).joinpath("Thumbnails")
             thumb_dir.mkdir(exist_ok=True)
 
-            filename = f"{self.sanitize_filename(info['title'])}.jpg"
+            filename = f"{self.sanitize_filename(video_title)}.jpg"
             thumbnail_path = thumb_dir.joinpath(filename)
 
-            with open(thumbnail_path, "wb") as f:
-                f.write(response.content)
+            # Save the cached PIL Image directly
+            # Convert to RGB if necessary (in case of RGBA or other modes)
+            if self.thumbnail_image.mode in ("RGBA", "P"):
+                rgb_image = self.thumbnail_image.convert("RGB")
+                rgb_image.save(thumbnail_path, "JPEG", quality=95)
+            else:
+                self.thumbnail_image.save(thumbnail_path, "JPEG", quality=95)
 
             logger.info(f"Thumbnail saved to: {thumbnail_path}")
-            self.signals.update_status.emit(f"✅ Thumbnail saved: {filename}")
+            self.signals.update_status.emit(_("status.thumbnail_saved", filename=filename))
             return True
 
         except Exception as e:
-            error_msg = f"❌ Thumbnail error: {e}"
             logger.exception(f"Thumbnail Save Error: {e}")
-            self.signals.update_status.emit(error_msg)
+            self.signals.update_status.emit(_("status.thumbnail_error", error=str(e)))
             return False
 
     def sanitize_filename(self, name) -> str:

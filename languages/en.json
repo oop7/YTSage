@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ Video file already exists",
     "audio_file_exists": "⚠️ Audio file already exists",
     "subtitle_file_exists": "⚠️ Subtitle file already exists",
-    "cancelling": "Cancelling download..."
+    "cancelling": "Cancelling download...",
+    "thumbnail_saved": "✅ Thumbnail saved: {filename}",
+    "thumbnail_error": "❌ Thumbnail error: {error}",
+    "thumbnail_no_image": "No thumbnail available to save"
   },
   "errors": {
     "playlist_no_videos": "Error: Playlist contains no valid videos.",

@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ 動画ファイルがすでに存在します",
     "audio_file_exists": "⚠️ 音声ファイルがすでに存在します",
     "subtitle_file_exists": "⚠️ 字幕ファイルがすでに存在します",
-    "cancelling": "ダウンロードをキャンセル中..."
+    "cancelling": "ダウンロードをキャンセル中...",
+    "thumbnail_saved": "✅ サムネイルを保存しました: {filename}",
+    "thumbnail_error": "❌ サムネイルエラー: {error}",
+    "thumbnail_no_image": "保存できるサムネイルがありません"
   },
   "errors": {
     "playlist_no_videos": "エラー: 再生リストに有効な動画が含まれていません。",

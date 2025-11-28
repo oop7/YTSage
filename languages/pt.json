@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ Arquivo de vídeo já existe",
     "audio_file_exists": "⚠️ Arquivo de áudio já existe",
     "subtitle_file_exists": "⚠️ Arquivo de legendas já existe",
-    "cancelling": "Cancelando download..."
+    "cancelling": "Cancelando download...",
+    "thumbnail_saved": "✅ Miniatura salva: {filename}",
+    "thumbnail_error": "❌ Erro na miniatura: {error}",
+    "thumbnail_no_image": "Nenhuma miniatura disponível para salvar"
   },
   "errors": {
     "playlist_no_videos": "Erro: A playlist não contém vídeos válidos.",

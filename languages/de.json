@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ Video-Datei existiert bereits",
     "audio_file_exists": "⚠️ Audio-Datei existiert bereits",
     "subtitle_file_exists": "⚠️ Untertitel-Datei existiert bereits",
-    "cancelling": "Download wird abgebrochen..."
+    "cancelling": "Download wird abgebrochen...",
+    "thumbnail_saved": "✅ Miniaturbild gespeichert: {filename}",
+    "thumbnail_error": "❌ Miniaturbild-Fehler: {error}",
+    "thumbnail_no_image": "Kein Miniaturbild zum Speichern verfügbar"
   },
   "errors": {
     "playlist_no_videos": "Fehler: Playlist enthält keine gültigen Videos.",

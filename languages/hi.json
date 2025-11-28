@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ वीडियो फ़ाइल पहले से मौजूद है",
     "audio_file_exists": "⚠️ ऑडियो फ़ाइल पहले से मौजूद है",
     "subtitle_file_exists": "⚠️ उपशीर्षक फ़ाइल पहले से मौजूद है",
-    "cancelling": "डाउनलोड रद्द हो रहा है..."
+    "cancelling": "डाउनलोड रद्द हो रहा है...",
+    "thumbnail_saved": "✅ थंबनेल सहेजा गया: {filename}",
+    "thumbnail_error": "❌ थंबनेल त्रुटि: {error}",
+    "thumbnail_no_image": "सहेजने के लिए कोई थंबनेल उपलब्ध नहीं"
   },
   "errors": {
     "playlist_no_videos": "त्रुटि: प्लेलिस्ट में कोई वैध वीडियो नहीं है।",

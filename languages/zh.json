@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ 视频文件已存在",
     "audio_file_exists": "⚠️ 音频文件已存在",
     "subtitle_file_exists": "⚠️ 字幕文件已存在",
-    "cancelling": "正在取消下载..."
+    "cancelling": "正在取消下载...",
+    "thumbnail_saved": "✅ 缩略图已保存: {filename}",
+    "thumbnail_error": "❌ 缩略图错误: {error}",
+    "thumbnail_no_image": "没有可保存的缩略图"
   },
   "errors": {
     "playlist_no_videos": "错误：播放列表不包含有效视频。",

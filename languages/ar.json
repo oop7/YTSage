@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ ملف الفيديو موجود بالفعل",
     "audio_file_exists": "⚠️ ملف الصوت موجود بالفعل",
     "subtitle_file_exists": "⚠️ ملف الترجمات موجود بالفعل",
-    "cancelling": "جاري إلغاء التنزيل..."
+    "cancelling": "جاري إلغاء التنزيل...",
+    "thumbnail_saved": "✅ تم حفظ الصورة المصغرة: {filename}",
+    "thumbnail_error": "❌ خطأ في الصورة المصغرة: {error}",
+    "thumbnail_no_image": "لا توجد صورة مصغرة متاحة للحفظ"
   },
   "errors": {
     "playlist_no_videos": "خطأ: قائمة التشغيل لا تحتوي على مقاطع فيديو صالحة.",

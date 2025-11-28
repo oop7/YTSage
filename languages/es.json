@@ -372,7 +372,10 @@
     "video_file_exists": "⚠️ El archivo de video ya existe",
     "audio_file_exists": "⚠️ El archivo de audio ya existe",
     "subtitle_file_exists": "⚠️ El archivo de subtítulos ya existe",
-    "cancelling": "Cancelando descarga..."
+    "cancelling": "Cancelando descarga...",
+    "thumbnail_saved": "✅ Miniatura guardada: {filename}",
+    "thumbnail_error": "❌ Error de miniatura: {error}",
+    "thumbnail_no_image": "No hay miniatura disponible para guardar"
   },
   "errors": {
     "playlist_no_videos": "Error: La lista de reproducción no contiene videos válidos.",

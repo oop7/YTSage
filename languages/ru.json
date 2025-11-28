@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ Видеофайл уже существует",
     "audio_file_exists": "⚠️ Аудиофайл уже существует",
     "subtitle_file_exists": "⚠️ Файл субтитров уже существует",
-    "cancelling": "Отмена загрузки..."
+    "cancelling": "Отмена загрузки...",
+    "thumbnail_saved": "✅ Миниатюра сохранена: {filename}",
+    "thumbnail_error": "❌ Ошибка миниатюры: {error}",
+    "thumbnail_no_image": "Нет доступной миниатюры для сохранения"
   },
   "errors": {
     "playlist_no_videos": "Ошибка: Плейлист не содержит действительных видео.",

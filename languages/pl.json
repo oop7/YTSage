@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ Plik wideo już istnieje",
     "audio_file_exists": "⚠️ Plik audio już istnieje",
     "subtitle_file_exists": "⚠️ Plik napisów już istnieje",
-    "cancelling": "Anulowanie pobierania..."
+    "cancelling": "Anulowanie pobierania...",
+    "thumbnail_saved": "✅ Miniatura zapisana: {filename}",
+    "thumbnail_error": "❌ Błąd miniatury: {error}",
+    "thumbnail_no_image": "Brak miniatury do zapisania"
   },
   "errors": {
     "playlist_no_videos": "Błąd: Playlista nie zawiera prawidłowych wideo.",

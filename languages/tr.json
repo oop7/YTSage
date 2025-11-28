@@ -389,7 +389,10 @@
     "video_file_exists": "⚠️ Video dosyası zaten mevcut",
     "audio_file_exists": "⚠️ Ses dosyası zaten mevcut",
     "subtitle_file_exists": "⚠️ Altyazı dosyası zaten mevcut",
-    "cancelling": "İndirme iptal ediliyor..."
+    "cancelling": "İndirme iptal ediliyor...",
+    "thumbnail_saved": "✅ Küçük resim kaydedildi: {filename}",
+    "thumbnail_error": "❌ Küçük resim hatası: {error}",
+    "thumbnail_no_image": "Kaydedilecek küçük resim yok"
   },
   "errors": {
     "playlist_no_videos": "Hata: Oynatma listesi geçerli video içermiyor.",
