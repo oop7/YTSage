@@ -112,9 +112,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.thumbnail_image = None
         self.video_url = ""
         self.selected_subtitles = []  # Initialize selected subtitles list
-        # Initialize cookie settings - ensure they start clean
-        self.cookie_file_path = None
-        self.browser_cookies_option = None
+        # Initialize cookie settings from saved config
+        self._initialize_cookie_settings_from_config()
         # Initialize proxy settings from config
         self.proxy_url = ConfigManager.get("proxy_url")
         self.geo_proxy_url = ConfigManager.get("geo_proxy_url")
@@ -325,6 +324,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             logger.debug("Notification sound played")
         except Exception as e:
             logger.exception(f"Error playing notification sound: {e}")
+
+    def _initialize_cookie_settings_from_config(self) -> None:
+        """Initialize cookie settings - cookies are NOT auto-activated on startup.
+        User must explicitly click Apply in the dialog each session."""
+        # Cookies always start inactive on app launch
+        # User must click Apply in Custom Options dialog to activate them
+        self.cookie_file_path = None
+        self.browser_cookies_option = None
+        logger.debug("Cookie settings initialized - no cookies active (user must apply manually)")
 
     def init_ui(self) -> None:
         self.setWindowTitle(f"{_('app.title')}  {_('app.version', version=self.version)}")

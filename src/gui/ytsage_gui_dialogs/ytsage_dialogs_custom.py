@@ -644,27 +644,33 @@ class CustomOptionsDialog(QDialog):
         self._initialize_proxy_settings()
 
     def _initialize_cookie_settings(self) -> None:
-        """Initialize the dialog with current cookie settings from parent"""
-        if hasattr(self._parent, "browser_cookies_option") and self._parent.browser_cookies_option:
-            # Browser cookies are active
-            self.cookie_browser_radio.setChecked(True)
-            browser_parts = self._parent.browser_cookies_option.split(":")
-            browser = browser_parts[0]
-            profile = browser_parts[1] if len(browser_parts) > 1 else ""
-
-            # Set browser selection
-            index = self.browser_combo.findText(browser)
-            if index >= 0:
-                self.browser_combo.setCurrentIndex(index)
-
-            # Set profile if any
-            self.profile_input.setText(profile)
-        elif hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
-            # File cookies are active - ensure file radio is selected
+        """Initialize the dialog with current cookie settings from config"""
+        # Load saved cookie settings from ConfigManager
+        saved_source = ConfigManager.get("cookie_source") or "browser"
+        saved_browser = ConfigManager.get("cookie_browser") or "chrome"
+        saved_profile = ConfigManager.get("cookie_browser_profile") or ""
+        saved_file_path = ConfigManager.get("cookie_file_path")
+        
+        # Set the cookie source radio button
+        if saved_source == "file":
             self.cookie_file_radio.setChecked(True)
         else:
-            # No cookies configured - browser extraction is the recommended default
             self.cookie_browser_radio.setChecked(True)
+        
+        # Set browser selection
+        index = self.browser_combo.findText(saved_browser)
+        if index >= 0:
+            self.browser_combo.setCurrentIndex(index)
+        
+        # Set profile
+        self.profile_input.setText(saved_profile)
+        
+        # Set file path if saved
+        if saved_file_path:
+            self.cookie_path_input.setText(str(saved_file_path))
+        
+        # Update visibility based on selection
+        self.on_cookie_source_changed()
     
     def _update_cookies_active_status(self) -> None:
         """Update the status indicator showing if cookies are currently active"""
@@ -713,8 +719,18 @@ class CustomOptionsDialog(QDialog):
         self._parent.cookie_file_path = None
         self._parent.browser_cookies_option = None
 
+        # Save settings to ConfigManager for persistence
+        if self.cookie_file_radio.isChecked():
+            ConfigManager.set("cookie_source", "file")
+            ConfigManager.set("cookie_file_path", str(cookie_path) if cookie_path else None)
+        else:
+            ConfigManager.set("cookie_source", "browser")
+            ConfigManager.set("cookie_browser", self.browser_combo.currentText())
+            ConfigManager.set("cookie_browser_profile", self.profile_input.text().strip())
+
         if cookie_path:
             self._parent.cookie_file_path = cookie_path
+            ConfigManager.set("cookie_active", True)
             logger.info(f"Applied cookie file: {self._parent.cookie_file_path}")
             QMessageBox.information(
                 self,
@@ -723,6 +739,7 @@ class CustomOptionsDialog(QDialog):
             )
         elif browser_cookies:
             self._parent.browser_cookies_option = browser_cookies
+            ConfigManager.set("cookie_active", True)
             logger.info(f"Applied browser cookies: {self._parent.browser_cookies_option}")
             QMessageBox.information(
                 self,
@@ -731,6 +748,9 @@ class CustomOptionsDialog(QDialog):
             )
         else:
             # Clear cookies
+            ConfigManager.set("cookie_active", False)
+            ConfigManager.set("cookie_source", "browser")  # Reset to default
+            ConfigManager.set("cookie_file_path", None)
             logger.info("Cookies cleared")
             QMessageBox.information(
                 self,

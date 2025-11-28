@@ -73,7 +73,11 @@ class ConfigManager:
         "download_path": str(USER_HOME_DIR / "Downloads"),
         "speed_limit_value": None,
         "speed_limit_unit_index": 0,
+        "cookie_source": "browser",  # "browser" or "file"
+        "cookie_browser": "chrome",
+        "cookie_browser_profile": "",
         "cookie_file_path": None,
+        "cookie_active": False,  # True only if user explicitly applied cookies
         "last_used_cookie_file": None,
         "proxy_url": None,
         "geo_proxy_url": None,
