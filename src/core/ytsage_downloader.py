@@ -1,7 +1,10 @@
+import gc
 import os
 import re
 import shlex  # For safely parsing command arguments
+import signal
 import subprocess  # For direct CLI command execution
+import sys
 import time
 from pathlib import Path
 from typing import Optional, List, Set
@@ -110,25 +113,73 @@ class DownloadThread(QThread):
             # Don't emit error signal for cleanup issues to avoid crashing the thread
             logger.error(f"Error cleaning partial files: {e}")
 
-    def _safe_delete_with_retry(self, file_path: Path, max_retries: int = 3, delay: float = 1.0) -> None:
-        """Safely delete a file with retry mechanism for Windows file locking issues"""
+    def _safe_delete_with_retry(self, file_path: Path, max_retries: int = 5, delay: float = 2.0) -> None:
+        """Safely delete a file with retry mechanism for file locking issues across platforms"""
         for attempt in range(max_retries):
             try:
+                # Force garbage collection to release any Python-held file handles
+                gc.collect()
+                
                 if file_path.exists():
                     file_path.unlink(missing_ok=True)
                     logger.info(f"Successfully deleted {file_path.name}")
                 return
             except PermissionError as e:
-                if "being used by another process" in str(e) and attempt < max_retries - 1:
+                if attempt < max_retries - 1:
                     logger.warning(f"File {file_path.name} is locked, retrying in {delay} seconds... (attempt {attempt + 1}/{max_retries})")
                     time.sleep(delay)
-                    delay *= 1.5  # Exponential backoff
+                    delay = min(delay * 1.5, 5.0)  # Exponential backoff, capped at 5 seconds
                 else:
                     logger.error(f"Failed to delete {file_path.name} after {max_retries} attempts: {e}")
                     return
             except Exception as e:
                 logger.error(f"Error deleting {file_path.name}: {e}")
                 return
+
+    def _terminate_process_tree(self, process: subprocess.Popen) -> None:
+        """Terminate a process and all its children across platforms"""
+        pid = process.pid
+        
+        try:
+            if sys.platform == "win32":
+                # Windows: Use taskkill to kill the entire process tree
+                # /T = kill child processes, /F = force kill
+                subprocess.run(
+                    ["taskkill", "/F", "/T", "/PID", str(pid)],
+                    capture_output=True,
+                    creationflags=SUBPROCESS_CREATIONFLAGS,
+                )
+                logger.debug(f"Killed process tree on Windows (PID: {pid})")
+            else:
+                # Unix-like systems: Kill the process group
+                try:
+                    # Try to kill the process group
+                    os.killpg(os.getpgid(pid), signal.SIGTERM)
+                    time.sleep(0.5)
+                    # Force kill if still running
+                    os.killpg(os.getpgid(pid), signal.SIGKILL)
+                except (ProcessLookupError, PermissionError):
+                    # Process already terminated or no permission
+                    pass
+                logger.debug(f"Killed process group on Unix (PID: {pid})")
+        except Exception as e:
+            logger.warning(f"Error killing process tree: {e}")
+            # Fallback to standard termination
+            try:
+                process.terminate()
+                process.wait(timeout=2)
+            except Exception:
+                try:
+                    process.kill()
+                    process.wait()
+                except Exception:
+                    pass
+        
+        # Ensure process is waited on to avoid zombies
+        try:
+            process.wait(timeout=3)
+        except Exception:
+            pass
 
     def cleanup_subtitle_files(self) -> None:
         """Delete subtitle files after they have been merged into the video file"""
@@ -332,31 +383,34 @@ class DownloadThread(QThread):
 
             # Start the process
             # Extra logic moved to src\utils\ytsage_constants.py
+            # Use start_new_session on Unix to enable process group termination
 
-            self.process = subprocess.Popen(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                bufsize=1,  # Line buffered
-                encoding="utf-8",
-                errors="replace",
-                creationflags=SUBPROCESS_CREATIONFLAGS,
-            )
+            popen_kwargs = {
+                "stdout": subprocess.PIPE,
+                "stderr": subprocess.STDOUT,
+                "bufsize": 1,  # Line buffered
+                "encoding": "utf-8",
+                "errors": "replace",
+            }
+            
+            if sys.platform == "win32":
+                popen_kwargs["creationflags"] = SUBPROCESS_CREATIONFLAGS
+            else:
+                # On Unix, start a new session so we can kill the entire process group
+                popen_kwargs["start_new_session"] = True
+
+            self.process = subprocess.Popen(cmd, **popen_kwargs)
 
             # Process output line by line to update progress
             for line in iter(self.process.stdout.readline, ""):  # type: ignore
                 if self.cancelled:
-                    self.process.terminate()
-                    # Wait for process to actually terminate before cleaning up files
-                    try:
-                        self.process.wait(timeout=5)  # Wait up to 5 seconds
-                    except subprocess.TimeoutExpired:
-                        logger.warning("Process didn't terminate gracefully, forcing kill")
-                        self.process.kill()
-                        self.process.wait()
+                    # Kill the entire process tree (yt-dlp + ffmpeg children)
+                    self._terminate_process_tree(self.process)
                     
                     # Add delay before cleanup to allow file handles to be released
-                    time.sleep(1)
+                    # Force garbage collection to help release resources
+                    gc.collect()
+                    time.sleep(2)
                     self.cleanup_partial_files()
                     self.status_signal.emit(_("download.cancelled"))
                     return
