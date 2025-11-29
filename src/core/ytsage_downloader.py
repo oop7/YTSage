@@ -144,9 +144,11 @@ class DownloadThread(QThread):
             if sys.platform == "win32":
                 # Windows: Use taskkill to kill the entire process tree
                 # /T = kill child processes, /F = force kill
+                # Use subprocess.run with no encoding to avoid codec issues
                 subprocess.run(
                     ["taskkill", "/F", "/T", "/PID", str(pid)],
-                    capture_output=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
                     creationflags=SUBPROCESS_CREATIONFLAGS,
                 )
                 logger.debug(f"Killed process tree on Windows (PID: {pid})")
