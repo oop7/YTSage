@@ -337,9 +337,9 @@ class DownloadThread(QThread):
                 cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                text=True,
                 bufsize=1,  # Line buffered
-                universal_newlines=True,
+                encoding="utf-8",
+                errors="replace",
                 creationflags=SUBPROCESS_CREATIONFLAGS,
             )
 
