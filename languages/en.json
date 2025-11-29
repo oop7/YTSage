@@ -333,7 +333,7 @@
     "analyzing_processing_subtitles": "Analyzing (85%)... Processing subtitles",
     "analyzing_updating_table": "Analyzing (95%)... Updating format table",
     "analysis_complete": "Analysis complete!",
-    "analyzing_extracting_ytdlp": "Analyzing (30%)... Extracting info with yt-dlp",
+    "analyzing_extracting_ytdlp": "Analyzing (30%)... Extracting info",
     "analyzing_processing_data": "Analyzing (60%)... Processing data",
     "analyzing_processing_formats_ytdlp": "Analyzing (75%)... Processing formats",
     "analyzing_loading_thumbnail_ytdlp": "Analyzing (85%)... Loading thumbnail",

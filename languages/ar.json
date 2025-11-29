@@ -333,7 +333,7 @@
     "analyzing_processing_subtitles": "التحليل (85%)... جاري معالجة الترجمات",
     "analyzing_updating_table": "التحليل (95%)... جاري تحديث جدول التنسيقات",
     "analysis_complete": "اكتمل التحليل!",
-    "analyzing_extracting_ytdlp": "التحليل (30%)... جاري استخراج المعلومات باستخدام yt-dlp",
+    "analyzing_extracting_ytdlp": "التحليل (30%)... جاري استخراج المعلومات",
     "analyzing_processing_data": "التحليل (60%)... جاري معالجة البيانات",
     "analyzing_processing_formats_ytdlp": "التحليل (75%)... جاري معالجة التنسيقات",
     "analyzing_loading_thumbnail_ytdlp": "التحليل (85%)... جاري تحميل الصورة المصغرة",
