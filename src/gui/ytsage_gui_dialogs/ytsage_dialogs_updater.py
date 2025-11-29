@@ -629,13 +629,13 @@ class UpdaterTabWidget(QWidget):
                 update_target = new_channel
                 
                 if new_channel == "stable" and current_channel == "nightly":
-                    # Get the latest stable version tag
-                    logger.info("Fetching latest stable version tag...")
+                    # Get the latest stable version tag from PyPI (no rate limiting)
+                    logger.info("Fetching latest stable version tag from PyPI...")
                     try:
                         import requests
-                        response = requests.get("https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest", timeout=10)
+                        response = requests.get("https://pypi.org/pypi/yt-dlp/json", timeout=10)
                         response.raise_for_status()
-                        latest_tag = response.json().get("tag_name", "")
+                        latest_tag = response.json()["info"]["version"]
                         if latest_tag:
                             update_target = f"stable@{latest_tag}"
                             logger.info(f"Latest stable version tag: {latest_tag}")
