@@ -183,10 +183,9 @@ jobs:
           Write-Host "FFmpeg binaries found at: $ffmpegBinPath"
           echo "FFMPEG_PATH=$ffmpegBinPath" >> $env:GITHUB_ENV
           
-          # Verify files exist
+          # Verify files exist (only ffmpeg and ffprobe are needed)
           $ffmpegExe = Join-Path $ffmpegBinPath "ffmpeg.exe"
           $ffprobeExe = Join-Path $ffmpegBinPath "ffprobe.exe"
-          $ffplayExe = Join-Path $ffmpegBinPath "ffplay.exe"
           
           if (Test-Path $ffmpegExe) { 
             Write-Host "[OK] ffmpeg.exe found" 
@@ -197,11 +196,6 @@ jobs:
             Write-Host "[OK] ffprobe.exe found" 
           } else { 
             Write-Host "[ERROR] ffprobe.exe missing" 
-          }
-          if (Test-Path $ffplayExe) { 
-            Write-Host "[OK] ffplay.exe found" 
-          } else { 
-            Write-Host "[ERROR] ffplay.exe missing" 
           }
         } else {
           Write-Host "Error: Could not find FFmpeg directory after extraction"
@@ -232,13 +226,13 @@ jobs:
         }
 
         # Copy FFmpeg binaries into dist folder post-build (more reliable than CLI include)
+        # Note: ffplay.exe is excluded as it's not needed by the application
         if ($env:FFMPEG_PATH) {
           $destDir = "dist\YTSage-FFmpeg"
           $ffmpegExe = Join-Path $env:FFMPEG_PATH "ffmpeg.exe"
           $ffprobeExe = Join-Path $env:FFMPEG_PATH "ffprobe.exe"
-          $ffplayExe = Join-Path $env:FFMPEG_PATH "ffplay.exe"
 
-          foreach ($file in @($ffmpegExe, $ffprobeExe, $ffplayExe)) {
+          foreach ($file in @($ffmpegExe, $ffprobeExe)) {
             if (Test-Path $file) {
               $name = Split-Path $file -Leaf
               Copy-Item $file -Destination (Join-Path $destDir $name) -Force
