@@ -160,6 +160,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             QPushButton:pressed {
                 background-color: #800000;
             }
+            QPushButton:disabled {
+                background-color: #3d3d3d;
+                color: #888888;
+            }
             QTableWidget {
                 border: 2px solid #1b2021;
                 border-radius: 4px;
@@ -350,9 +354,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.url_input = QLineEdit()
         self.url_input.setPlaceholderText(_("main_ui.url_placeholder"))
         self.url_input.returnPressed.connect(self.analyze_url)  # Analyze on Enter key
+        self.url_input.textChanged.connect(self._on_url_text_changed)  # Enable/disable analyze button
 
         self.analyze_button = QPushButton(_("buttons.analyze"))
         self.analyze_button.clicked.connect(self.analyze_url)
+        self.analyze_button.setEnabled(False)  # Disabled until URL is entered
 
         self.paste_button = QPushButton(_("buttons.paste_url"))
         self.paste_button.clicked.connect(self.paste_url)
@@ -720,6 +726,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         # Disable analysis-dependent controls until video is analyzed
         self.toggle_analysis_dependent_controls(enabled=False)
+
+    def _on_url_text_changed(self, text: str) -> None:
+        """Enable or disable the Analyze button based on URL input content."""
+        self.analyze_button.setEnabled(bool(text.strip()))
 
     def analyze_url(self) -> None:
         url = self.url_input.text().strip()
@@ -1557,7 +1567,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
     def toggle_download_controls(self, enabled=True) -> None:
         """Enable or disable download-related controls"""
         self.url_input.setEnabled(enabled)
-        self.analyze_button.setEnabled(enabled)
+        # Analyze button should only be enabled if there's text in the URL input
+        if enabled:
+            self.analyze_button.setEnabled(bool(self.url_input.text().strip()))
+        else:
+            self.analyze_button.setEnabled(False)
         self.format_table.setEnabled(enabled)  # Changed from format_scroll_area to format_table
         self.download_btn.setEnabled(enabled)
         if hasattr(self, "subtitle_combo"):
