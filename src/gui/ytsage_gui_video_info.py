@@ -53,7 +53,7 @@ class VideoInfoMixin:
         # Title and info labels
         self.title_label = QLabel()
         self.title_label.setWordWrap(True)
-        self.title_label.setStyleSheet("font-size: 14px; font-weight: bold;")
+        self.title_label.setStyleSheet("font-size: 12px; font-weight: bold;")
 
         # Add basic info labels
         self.channel_label = QLabel()
@@ -73,9 +73,9 @@ class VideoInfoMixin:
             label.setStyleSheet(
                 """
                 QLabel {
-                    color: #cccccc;
-                    font-size: 12px;
-                    padding: 1px 0;
+                    color: #999999;
+                    font-size: 11px;
+                    padding: 0px;
                 }
             """
             )

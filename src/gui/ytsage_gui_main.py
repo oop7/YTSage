@@ -140,11 +140,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 color: #ffffff;
             }
             QLineEdit {
-                padding: 8px;
-                border: 2px solid #1b2021;
-                border-radius: 4px;
+                padding: 12px 15px;
+                border: 2px solid #2a2d2e;
+                border-radius: 6px;
                 background-color: #1b2021;
                 color: #ffffff;
+                font-size: 13px;
+            }
+            QLineEdit:focus {
+                border-color: #ff6b6b;
             }
             QPushButton {
                 padding: 8px 15px;
@@ -351,17 +355,65 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         # URL input section
         url_layout = QHBoxLayout()
+        url_layout.setSpacing(10)
+        
         self.url_input = QLineEdit()
         self.url_input.setPlaceholderText(_("main_ui.url_placeholder"))
         self.url_input.returnPressed.connect(self.analyze_url)  # Analyze on Enter key
         self.url_input.textChanged.connect(self._on_url_text_changed)  # Enable/disable analyze button
+        self.url_input.setMinimumHeight(42)
 
+        # Paste URL button
+        self.paste_button = QPushButton(_("buttons.paste_url"))
+        self.paste_button.clicked.connect(self.paste_url)
+        self.paste_button.setMinimumHeight(42)
+        self.paste_button.setMinimumWidth(115)
+        self.paste_button.setStyleSheet("""
+            QPushButton {
+                padding: 9px 20px;
+                background-color: #1b2021;
+                border: 2px solid #2a2d2e;
+                border-radius: 5px;
+                color: #ffffff;
+                font-weight: 600;
+                font-size: 13px;
+            }
+            QPushButton:hover {
+                background-color: #252829;
+                border-color: #3a3d3e;
+            }
+            QPushButton:pressed {
+                background-color: #1a1d1e;
+            }
+        """)
+
+        # Analyze button with app's red theme
         self.analyze_button = QPushButton(_("buttons.analyze"))
         self.analyze_button.clicked.connect(self.analyze_url)
         self.analyze_button.setEnabled(False)  # Disabled until URL is entered
-
-        self.paste_button = QPushButton(_("buttons.paste_url"))
-        self.paste_button.clicked.connect(self.paste_url)
+        self.analyze_button.setMinimumHeight(42)
+        self.analyze_button.setMinimumWidth(115)
+        self.analyze_button.setStyleSheet("""
+            QPushButton {
+                padding: 9px 20px;
+                background-color: #c90000;
+                border: none;
+                border-radius: 5px;
+                color: white;
+                font-weight: 600;
+                font-size: 13px;
+            }
+            QPushButton:hover {
+                background-color: #a50000;
+            }
+            QPushButton:pressed {
+                background-color: #800000;
+            }
+            QPushButton:disabled {
+                background-color: #3d3d3d;
+                color: #888888;
+            }
+        """)
 
         url_layout.addWidget(self.url_input, 1)
         url_layout.addWidget(self.paste_button)
