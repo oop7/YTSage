@@ -103,6 +103,9 @@ class FormatTableMixin:
 
         # Set selection mode to no selection (since we're using checkboxes)
         self.format_table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
+        
+        # Disable editing to prevent the selection box on double-click
+        self.format_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
 
         self.format_table.setStyleSheet(
             """
