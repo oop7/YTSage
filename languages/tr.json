@@ -366,10 +366,10 @@
   },
   "video_info": {
     "channel": "Kanal",
-    "views": "Görüntülenme",
-    "likes": "Beğeni",
-    "upload_date": "Yükleme tarihi",
-    "duration": "Süre",
+    "views": "👁 Görüntülenme",
+    "likes": "👍 Beğeni",
+    "upload_date": "📅 Yüklenme tarihi",
+    "duration": "⏱ Süre",
     "unknown_channel": "Bilinmeyen kanal",
     "unknown_date": "Bilinmeyen tarih",
     "unknown_title": "Bilinmeyen başlık"

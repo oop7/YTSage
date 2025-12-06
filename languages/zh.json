@@ -366,10 +366,10 @@
   },
   "video_info": {
     "channel": "频道",
-    "views": "观看次数",
-    "likes": "点赞数",
-    "upload_date": "上传日期",
-    "duration": "时长",
+    "views": "👁 观看次数",
+    "likes": "👍 点赞数",
+    "upload_date": "📅 上传日期",
+    "duration": "⏱ 时长",
     "unknown_channel": "未知频道",
     "unknown_date": "未知日期",
     "unknown_title": "未知标题"

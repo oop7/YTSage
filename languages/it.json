@@ -366,10 +366,10 @@
   },
   "video_info": {
     "channel": "Canale",
-    "views": "Visualizzazioni",
-    "likes": "Mi piace",
-    "upload_date": "Data caricamento",
-    "duration": "Durata",
+    "views": "👁 Visualizzazioni",
+    "likes": "👍 Mi piace",
+    "upload_date": "📅 Data di caricamento",
+    "duration": "⏱ Durata",
     "unknown_channel": "Canale sconosciuto",
     "unknown_date": "Data sconosciuta",
     "unknown_title": "Titolo sconosciuto"

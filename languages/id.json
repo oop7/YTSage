@@ -366,10 +366,10 @@
   },
   "video_info": {
     "channel": "Saluran",
-    "views": "Tayangan",
-    "likes": "Suka",
-    "upload_date": "Tanggal upload",
-    "duration": "Durasi",
+    "views": "👁 Tayangan",
+    "likes": "👍 Suka",
+    "upload_date": "📅 Tanggal upload",
+    "duration": "⏱ Durasi",
     "unknown_channel": "Saluran tidak diketahui",
     "unknown_date": "Tanggal tidak diketahui",
     "unknown_title": "Judul tidak diketahui"
