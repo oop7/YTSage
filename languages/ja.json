@@ -212,7 +212,9 @@
     "update_success": "✅ yt-dlpが正常に更新されました！",
     "already_latest": "yt-dlpは最新です（バージョン {version}）",
     "network_error": "❌ 更新中にネットワークエラーが発生しました: {error}",
-    "general_error": "❌ 更新に失敗しました: {error}"
+    "general_error": "❌ 更新に失敗しました: {error}",
+    "update_in_progress_title": "更新中",
+    "update_in_progress_message": "yt-dlpを更新中です。少々お待ちください。"
   },
   "about": {
     "title": "YTSageについて",

@@ -212,7 +212,9 @@
     "update_success": "✅ yt-dlp был успешно обновлен!",
     "already_latest": "yt-dlp актуален (версия {version})",
     "network_error": "❌ Ошибка сети во время обновления: {error}",
-    "general_error": "❌ Обновление не удалось: {error}"
+    "general_error": "❌ Обновление не удалось: {error}",
+    "update_in_progress_title": "Идет обновление",
+    "update_in_progress_message": "yt-dlp обновляется. Пожалуйста, подождите."
   },
   "about": {
     "title": "О YTSage",

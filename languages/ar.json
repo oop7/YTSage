@@ -212,7 +212,9 @@
     "update_success": "✅ تم تحديث yt-dlp بنجاح!",
     "already_latest": "yt-dlp محدث (الإصدار {version})",
     "network_error": "❌ خطأ في الشبكة أثناء التحديث: {error}",
-    "general_error": "❌ فشل التحديث: {error}"
+    "general_error": "❌ فشل التحديث: {error}",
+    "update_in_progress_title": "التحديث قيد التقدم",
+    "update_in_progress_message": "يتم تحديث yt-dlp حاليًا. يرجى الانتظار لحظة."
   },
   "about": {
     "title": "حول YTSage",

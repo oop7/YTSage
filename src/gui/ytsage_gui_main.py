@@ -96,6 +96,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.download_paused = False
         self.current_download = None
         self.download_cancelled = False
+        self.is_updating_ytdlp = False  # Initialize update flag
+        self.is_analyzing = False  # Initialize analysis flag
         self.save_thumbnail = False  # Initialize thumbnail state
         self.thumbnail_url = None  # Add this to store thumbnail URL
         self.all_formats = []  # Initialize all_formats
@@ -784,6 +786,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.analyze_button.setEnabled(bool(text.strip()))
 
     def analyze_url(self) -> None:
+        if self.is_updating_ytdlp:
+            QMessageBox.warning(self, _("update.update_in_progress_title"), _("update.update_in_progress_message"))
+            return
+
         url = self.url_input.text().strip()
         if not url:
             self.signals.update_status.emit(_("main_ui.invalid_url_or_enter"))
@@ -800,6 +806,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.toggle_analysis_dependent_controls(enabled=False)
 
         self.signals.update_status.emit(_("main_ui.analyzing_preparing"))
+        self.is_analyzing = True
         threading.Thread(target=self._analyze_url_thread, args=(url,), daemon=True).start()
 
     def _analyze_url_thread(self, url) -> None:
@@ -821,6 +828,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             # update signal method from QMetaObject.invokeMethod to signals
             self.signals.playlist_info_label_visible.emit(False)
             self.signals.playlist_select_btn_visible.emit(False)
+        finally:
+            self.is_analyzing = False
 
     def paste_url(self) -> None:
         clipboard = QApplication.clipboard()
@@ -878,6 +887,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 self.settings_button.setToolTip(f"Current Path: {self.last_path}\nSpeed Limit: {limit_text}")
 
     def start_download(self) -> None:
+        if self.is_updating_ytdlp:
+            QMessageBox.warning(self, _("update.update_in_progress_title"), _("update.update_in_progress_message"))
+            return
+
         url = self.url_input.text().strip()
         # --- Use self.last_path instead of reading from QLineEdit ---
         path = self.last_path
@@ -1383,16 +1396,24 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
     def _perform_auto_update(self) -> None:
         """Actually perform the auto-update check and update if needed in a background thread."""
+        # Check if a download is currently running or analysis is in progress
+        if (self.current_download and self.current_download.isRunning()) or self.is_analyzing:
+            logger.info("Download or analysis in progress, skipping auto-update check.")
+            return
+
         try:
+            self.is_updating_ytdlp = True  # Set flag
             # Create and start the auto-update thread to avoid blocking the UI
 
             self.auto_update_thread = AutoUpdateThread()
             self.auto_update_thread.update_finished.connect(self._on_auto_update_finished)
             self.auto_update_thread.start()
         except Exception as e:
+            self.is_updating_ytdlp = False  # Reset flag on error
             logger.exception(f"Error starting auto-update thread: {e}")
 
     def _on_auto_update_finished(self, success, message) -> None:
+        self.is_updating_ytdlp = False  # Reset flag
         """Handle auto-update completion."""
         if success:
             logger.info(f"Auto-update completed successfully: {message}")

@@ -212,7 +212,9 @@
     "update_success": "✅ yt-dlp telah berhasil diperbarui!",
     "already_latest": "yt-dlp sudah terbaru (versi {version})",
     "network_error": "❌ Kesalahan jaringan selama pembaruan: {error}",
-    "general_error": "❌ Pembaruan gagal: {error}"
+    "general_error": "❌ Pembaruan gagal: {error}",
+    "update_in_progress_title": "Pembaruan Sedang Berlangsung",
+    "update_in_progress_message": "yt-dlp sedang diperbarui. Mohon tunggu sebentar."
   },
   "about": {
     "title": "Tentang YTSage",

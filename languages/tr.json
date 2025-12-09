@@ -212,7 +212,9 @@
     "update_success": "✅ yt-dlp başarıyla güncellendi!",
     "already_latest": "yt-dlp güncel (sürüm {version})",
     "network_error": "❌ Güncelleme sırasında ağ hatası: {error}",
-    "general_error": "❌ Güncelleme başarısız: {error}"
+    "general_error": "❌ Güncelleme başarısız: {error}",
+    "update_in_progress_title": "Güncelleme Devam Ediyor",
+    "update_in_progress_message": "yt-dlp şu anda güncelleniyor. Lütfen bir dakika bekleyin."
   },
   "about": {
     "title": "YTSage Hakkında",

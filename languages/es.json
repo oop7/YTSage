@@ -225,7 +225,9 @@
     "update_success": "✅ ¡yt-dlp se ha actualizado exitosamente!",
     "already_latest": "yt-dlp está actualizado (versión {version})",
     "network_error": "❌ Error de red durante la actualización: {error}",
-    "general_error": "❌ La actualización falló: {error}"
+    "general_error": "❌ La actualización falló: {error}",
+    "update_in_progress_title": "Actualización en curso",
+    "update_in_progress_message": "yt-dlp se está actualizando actualmente. Por favor espere un momento."
   },
   "settings": {
     "title": "Configuración de Descarga",

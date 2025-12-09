@@ -212,7 +212,9 @@
     "update_success": "✅ yt-dlp 已成功更新！",
     "already_latest": "yt-dlp 是最新版本（版本 {version}）",
     "network_error": "❌ 更新期间网络错误：{error}",
-    "general_error": "❌ 更新失败：{error}"
+    "general_error": "❌ 更新失败：{error}",
+    "update_in_progress_title": "正在更新",
+    "update_in_progress_message": "yt-dlp 正在更新中。请稍候。"
   },
   "about": {
     "title": "关于 YTSage",

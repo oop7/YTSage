@@ -212,7 +212,9 @@
     "update_success": "✅ yt-dlp has been successfully updated!",
     "already_latest": "yt-dlp is up to date (version {version})",
     "network_error": "❌ Network error during update: {error}",
-    "general_error": "❌ Update failed: {error}"
+    "general_error": "❌ Update failed: {error}",
+    "update_in_progress_title": "Update in Progress",
+    "update_in_progress_message": "yt-dlp is currently updating. Please wait a moment."
   },
   "about": {
     "title": "About YTSage",

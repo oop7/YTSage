@@ -212,7 +212,9 @@
     "update_success": "✅ yt-dlp सफलतापूर्वक अपडेट किया गया है!",
     "already_latest": "yt-dlp अप टू डेट है (संस्करण {version})",
     "network_error": "❌ अपडेट के दौरान नेटवर्क त्रुटि: {error}",
-    "general_error": "❌ अपडेट असफल: {error}"
+    "general_error": "❌ अपडेट असफल: {error}",
+    "update_in_progress_title": "अपडेट जारी है",
+    "update_in_progress_message": "yt-dlp अभी अपडेट हो रहा है। कृपया कुछ देर प्रतीक्षा करें।"
   },
   "about": {
     "title": "YTSage के बारे में",
