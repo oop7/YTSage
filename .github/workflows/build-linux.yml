@@ -76,9 +76,34 @@ jobs:
       run: |
         cat > setup_cxfreeze.py <<'PY'
         import os
+        import sys
+        from pathlib import Path
         from cx_Freeze import setup, Executable
 
         version = os.environ.get("VERSION", "0.0.0")
+
+        # Find Qt6 plugins path
+        qt_plugins_path = None
+        try:
+            from PySide6 import QtCore
+            qt_plugins_path = Path(QtCore.__file__).parent / "Qt" / "plugins"
+        except Exception:
+            pass
+
+        # Prepare include_files list
+        include_files_list = [
+            ("src", "src"),
+            ("assets/branding/icons", "lib/assets/branding/icons"),
+            ("assets/Icon", "lib/assets/Icon"),
+            ("assets/sound", "lib/assets/sound"),
+            ("languages", "lib/languages"),
+            ("ytsage.desktop", "share/applications/ytsage.desktop"),
+            ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
+        ]
+
+        # Include Qt6 plugins if found (required for QPA)
+        if qt_plugins_path and qt_plugins_path.exists():
+            include_files_list.append((str(qt_plugins_path), "lib/PySide6/Qt/plugins"))
 
         build_exe_options = dict(
             optimize=2,
@@ -120,15 +145,12 @@ jobs:
                 "test",
                 "tests",
             ],
-            include_files=[
-                ("src", "src"),
-                ("assets/branding/icons", "lib/assets/branding/icons"),
-                ("assets/Icon", "lib/assets/Icon"),
-                ("assets/sound", "lib/assets/sound"),
-                ("languages", "lib/languages"),
-                ("ytsage.desktop", "share/applications/ytsage.desktop"),
-                ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
-            ],
+            include_files=include_files_list,
+            # Bundle all dependencies - avoid system library references
+            bin_includes=[],
+            bin_excludes=[],
+            # Important: include system libs to avoid external dependencies
+            replace_paths=[("*", "")],
         )
 
         executables = [
@@ -150,13 +172,6 @@ jobs:
                     # If ends with .AppImage, use verbatim file name
                     "target_name": f"ytsage-v{version}.AppImage",
                 },
-                # RPM packaging metadata
-                "bdist_rpm": {
-                    "release": "1",
-                    "group": "Applications/Multimedia",
-                },
-                # DEB packaging wraps alien to convert RPM
-                "bdist_deb": {},
             },
             executables=executables,
         )
@@ -196,8 +211,85 @@ jobs:
         # Build AppImage
         python setup_cxfreeze.py bdist_appimage
 
-        # Build RPM
-        python setup_cxfreeze.py bdist_rpm
+        # Build RPM manually with proper spec file
+        version="${{ steps.get_version.outputs.VERSION }}"
+        arch_uname="${ARCH}"
+        
+        # Create custom RPM spec file that doesn't auto-detect dependencies
+        mkdir -p build/rpm/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+        
+        cat > build/rpm/SPECS/ytsage.spec <<SPEC
+        %global __requires_exclude_from ^/opt/ytsage/.*$
+        %global __provides_exclude_from ^/opt/ytsage/.*$
+        %define _build_id_links none
+        %undefine _missing_build_ids_terminate_build
+        
+        Name:           ytsage
+        Version:        ${version//-/.}
+        Release:        1%{?dist}
+        Summary:        YTSage - A modern YouTube downloader
+        License:        MIT
+        URL:            https://github.com/oop7/YTSage
+        AutoReqProv:    no
+        
+        %description
+        YTSage is a modern YouTube downloader with a PySide6 interface.
+        Download videos, extract audio, fetch subtitles, and more.
+        All dependencies are bundled within the package.
+        
+        %install
+        rm -rf %{buildroot}
+        mkdir -p %{buildroot}/opt/ytsage
+        mkdir -p %{buildroot}/usr/bin
+        mkdir -p %{buildroot}/usr/share/applications
+        mkdir -p %{buildroot}/usr/share/pixmaps
+        
+        # Copy application files
+        cp -a ${build_dir}/* %{buildroot}/opt/ytsage/
+        
+        # Create wrapper script
+        cat > %{buildroot}/usr/bin/ytsage <<'WRAPPER'
+        #!/usr/bin/env bash
+        set -euo pipefail
+        APPDIR="/opt/ytsage"
+        cd "\$APPDIR"
+        exec "\$APPDIR/ytsage" "\$@"
+        WRAPPER
+        chmod 0755 %{buildroot}/usr/bin/ytsage
+        
+        # Install desktop file and icon
+        install -m 0644 ytsage.desktop %{buildroot}/usr/share/applications/ytsage.desktop
+        install -m 0644 assets/branding/icons/icon.png %{buildroot}/usr/share/pixmaps/ytsage.png
+        
+        %files
+        /opt/ytsage
+        /usr/bin/ytsage
+        /usr/share/applications/ytsage.desktop
+        /usr/share/pixmaps/ytsage.png
+        
+        %post
+        if command -v update-desktop-database >/dev/null 2>&1; then
+          update-desktop-database -q /usr/share/applications || true
+        fi
+        
+        %postun
+        if command -v update-desktop-database >/dev/null 2>&1; then
+          update-desktop-database -q /usr/share/applications || true
+        fi
+        
+        %changelog
+        * $(date +'%a %b %d %Y') YTSage Maintainers <noreply@example.com> - ${version//-/.}-1
+        - Release ${version}
+        SPEC
+        
+        # Build the RPM
+        rpmbuild -bb build/rpm/SPECS/ytsage.spec \
+          --define "_topdir $(pwd)/build/rpm" \
+          --buildroot "$(pwd)/build/rpm/BUILDROOT"
+        
+        # Copy RPM to dist
+        mkdir -p dist
+        find build/rpm/RPMS -name "*.rpm" -exec cp {} dist/ \;
 
         echo "Post-build directory listing:"
         echo "-- dist --"; ls -lah dist || true
