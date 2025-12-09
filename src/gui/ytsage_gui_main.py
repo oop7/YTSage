@@ -140,7 +140,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 color: #ffffff;
             }
             QLineEdit {
-                padding: 12px 15px;
+                padding: 5px 15px;
                 border: 2px solid #2a2d2e;
                 border-radius: 6px;
                 background-color: #1b2021;
