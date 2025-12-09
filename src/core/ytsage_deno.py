@@ -52,14 +52,26 @@ def verify_deno_sha256(file_path: Path, sha256_url: str) -> bool:
         response.raise_for_status()
         checksum_content = response.text
         
-        # Parse the checksum file - format is:
-        # Algorithm : SHA256
-        # Hash      : <HASH>
-        # Path      : <PATH>
+        # Parse the checksum file
+        # Format can be either:
+        # 1. Standard Unix format: "hash  filename"
+        # 2. Verbose format: "Hash      : <HASH>"
         expected_hash = None
         for line in checksum_content.strip().split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+                
+            # Try standard Unix format first (hash followed by spaces and filename)
+            if len(line) >= 64 and (" " in line or "\t" in line):
+                # Extract first 64 characters as potential hash
+                potential_hash = line.split()[0]
+                if len(potential_hash) == 64 and all(c in "0123456789abcdefABCDEF" for c in potential_hash):
+                    expected_hash = potential_hash
+                    break
+            
+            # Try verbose format
             if line.startswith("Hash"):
-                # Extract hash from "Hash      : <HASH>" format
                 parts = line.split(":", 1)
                 if len(parts) == 2:
                     expected_hash = parts[1].strip()
@@ -67,6 +79,7 @@ def verify_deno_sha256(file_path: Path, sha256_url: str) -> bool:
         
         if not expected_hash:
             logger.error("Could not find SHA256 hash in checksum file")
+            logger.debug(f"Checksum file content: {checksum_content}")
             return False
         
         # Calculate actual hash of downloaded file
