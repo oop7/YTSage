@@ -82,14 +82,6 @@ jobs:
 
         version = os.environ.get("VERSION", "0.0.0")
 
-        # Find Qt6 plugins path
-        qt_plugins_path = None
-        try:
-            from PySide6 import QtCore
-            qt_plugins_path = Path(QtCore.__file__).parent / "Qt" / "plugins"
-        except Exception:
-            pass
-
         # Prepare include_files list
         include_files_list = [
             ("src", "src"),
@@ -100,10 +92,6 @@ jobs:
             ("ytsage.desktop", "share/applications/ytsage.desktop"),
             ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
         ]
-
-        # Include Qt6 plugins if found (required for QPA)
-        if qt_plugins_path and qt_plugins_path.exists():
-            include_files_list.append((str(qt_plugins_path), "lib/PySide6/Qt/plugins"))
 
         build_exe_options = dict(
             optimize=2,
