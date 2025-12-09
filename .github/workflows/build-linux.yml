@@ -214,6 +214,7 @@ jobs:
         # Build RPM manually with proper spec file
         version="${{ steps.get_version.outputs.VERSION }}"
         arch_uname="${ARCH}"
+        build_dir_abs="$(pwd)/${build_dir}"
         
         # Create custom RPM spec file that doesn't auto-detect dependencies
         mkdir -p build/rpm/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
@@ -245,7 +246,7 @@ jobs:
         mkdir -p %{buildroot}/usr/share/pixmaps
         
         # Copy application files
-        cp -a ${build_dir}/* %{buildroot}/opt/ytsage/
+        cp -a ${build_dir_abs}/* %{buildroot}/opt/ytsage/
         
         # Create wrapper script
         cat > %{buildroot}/usr/bin/ytsage <<'WRAPPER'
@@ -258,8 +259,8 @@ jobs:
         chmod 0755 %{buildroot}/usr/bin/ytsage
         
         # Install desktop file and icon
-        install -m 0644 ytsage.desktop %{buildroot}/usr/share/applications/ytsage.desktop
-        install -m 0644 assets/branding/icons/icon.png %{buildroot}/usr/share/pixmaps/ytsage.png
+        install -m 0644 ${build_dir_abs}/../../../ytsage.desktop %{buildroot}/usr/share/applications/ytsage.desktop
+        install -m 0644 ${build_dir_abs}/../../../assets/branding/icons/icon.png %{buildroot}/usr/share/pixmaps/ytsage.png
         
         %files
         /opt/ytsage
