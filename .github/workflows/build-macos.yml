@@ -15,7 +15,7 @@ jobs:
   build-macos:
     strategy:
       matrix:
-        os: [macos-latest, macos-15-large]
+        os: [macos-latest, macos-14-large]
     runs-on: ${{ matrix.os }}
 
     steps:
