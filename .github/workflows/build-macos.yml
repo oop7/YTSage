@@ -13,10 +13,7 @@ env:
 
 jobs:
   build-macos:
-    strategy:
-      matrix:
-        os: [macos-latest, macos-14-large]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
 
     steps:
     - name: Checkout code
