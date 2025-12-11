@@ -92,10 +92,8 @@ ytsage
 
 | Format | Description |
 |--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Zipped application for ARM64 |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Disk image installer for ARM64 |
-| ![macOS x64 APP](https://img.shields.io/badge/macOS-x64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Zipped application for x64 |
-| ![macOS x64 DMG](https://img.shields.io/badge/macOS-x64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Disk image installer for x64 |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Zipped application for Apple Silicon |
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Disk image installer for Apple Silicon |
 
 > [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
 
