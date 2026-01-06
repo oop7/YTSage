@@ -1,9 +1,18 @@
 name: Build Linux Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version name for the release (e.g., 1.0.0)'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version name for the release (e.g., 1.0.0)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -21,12 +30,11 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Extract version from tag
+    - name: Get version
       id: get_version
       shell: bash
       run: |
-        tag="${GITHUB_REF_NAME}"
-        version="${tag#v}"
+        version="${{ inputs.version || github.event.inputs.version }}"
         echo "Extracted version: $version"
         echo "VERSION=$version" >> "$GITHUB_OUTPUT"
 
@@ -372,6 +380,84 @@ jobs:
         mv "$deb_out" artifacts/
         echo "Built native DEB: artifacts/$deb_out"
 
+    - name: Build Flatpak Bundle
+      shell: bash
+      run: |
+        version="${{ steps.get_version.outputs.VERSION }}"
+        
+        # Install flatpak-builder
+        sudo apt-get install -y flatpak-builder
+        flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+        # Define manifest ID
+        APP_ID="io.github.oop7.YTSage"
+        
+        # Create manifest manually
+        cat > ytsage_flatpak.json <<EOF
+        {
+          "app-id": "$APP_ID",
+          "runtime": "org.kde.Platform",
+          "runtime-version": "6.6",
+          "sdk": "org.kde.Sdk",
+          "command": "ytsage",
+          "finish-args": [
+            "--share=ipc",
+            "--socket=x11",
+            "--socket=wayland",
+            "--socket=pulseaudio",
+            "--device=dri",
+            "--share=network",
+            "--filesystem=host",
+            "--env=YTDLP_APP_BIN_PATH=/var/data/yt-dlp"
+          ],
+          "modules": [
+            {
+              "name": "ytsage",
+              "buildsystem": "simple",
+              "build-commands": [
+                "mkdir -p /app/bin /app/share/ytsage",
+                "cp -r dist/ytsage-v${version}-*/* /app/share/ytsage/",
+                "ln -s /app/share/ytsage/ytsage /app/bin/ytsage",
+                "install -D ytsage.desktop /app/share/applications/$APP_ID.desktop",
+                "install -D assets/branding/icons/icon.png /app/share/icons/hicolor/128x128/apps/$APP_ID.png"
+              ],
+              "sources": [
+                {
+                  "type": "dir",
+                  "path": "."
+                }
+              ]
+            }
+          ]
+        }
+        EOF
+
+        # Build the Flatpak
+        # Note: In a real environment, building from source is preferred.
+        # Here we are "bundling" the already built binaries from the previous step (cx_Freeze) for simplicity in CI.
+        # This requires the 'dist/' folder to be populated by the previous 'Create cx_Freeze setup script' + build steps.
+        # Wait, the previous steps built into 'build/exe.linux-...' not 'dist/'. Let's find it.
+        
+        build_dir=$(ls -d build/exe.* 2>/dev/null | head -n1)
+        if [ -z "$build_dir" ]; then
+          echo "Error: build/exe.* directory not found for Flatpak build" >&2
+          exit 1
+        fi
+        
+        # Move build dir to a fixed location for the manifest source to catch
+        mkdir -p dist/ytsage-v${version}-flatpak
+        cp -r "$build_dir"/* "dist/ytsage-v${version}-flatpak/"
+        
+        # Install runtime/sdk
+        flatpak install -y --user flathub org.kde.Platform//6.6 org.kde.Sdk//6.6
+
+        # Build
+        flatpak-builder --user --install-deps-from=flathub --repo=repo --force-clean build-flatpak ytsage_flatpak.json
+        
+        # Bundle
+        flatpak build-bundle repo artifacts/YTSage-v${version}-x86_64.flatpak $APP_ID
+        echo "Built Flatpak: artifacts/YTSage-v${version}-x86_64.flatpak"
+
     - name: Package and prepare release artifacts (.AppImage, .rpm, .deb)
       shell: bash
       run: |
@@ -399,24 +485,25 @@ jobs:
         # DEB is already staged in artifacts by the native packaging step
         ls -1 artifacts/*.deb 2>/dev/null || echo "Warning: No .deb found in artifacts/"
 
+        # Check for Flatpak
+        ls -1 artifacts/*.flatpak 2>/dev/null || echo "Warning: No .flatpak found in artifacts/"
+
         echo "Final artifacts:"
         ls -lh artifacts || true
 
     - name: Create/Update draft release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.ref_name }}
-        name: YTSage ${{ github.ref_name }}
+        tag_name: v${{ steps.get_version.outputs.VERSION }}
+        name: YTSage v${{ steps.get_version.outputs.VERSION }}
         draft: true
         prerelease: false
         append_body: true
         fail_on_unmatched_files: false
         body: |
-          # YTSage ${{ github.ref_name }}
+          # YTSage v${{ steps.get_version.outputs.VERSION }}
 
           **Release Date**: ${{ github.event.head_commit.timestamp }}
-
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
         files: |
           artifacts/*
       env:

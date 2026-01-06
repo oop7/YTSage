@@ -138,7 +138,13 @@ else:  # Linux and other UNIX-like
     APP_THUMBNAILS_DIR: Path = APP_DATA_DIR / "thumbnails"
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
-    YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp"
+    
+    # Check for environment variable override (critical for Flatpak support)
+    _ytdlp_env_path = os.environ.get("YTDLP_APP_BIN_PATH")
+    if _ytdlp_env_path:
+        YTDLP_APP_BIN_PATH: Path = Path(_ytdlp_env_path)
+    else:
+        YTDLP_APP_BIN_PATH: Path = APP_BIN_DIR / "yt-dlp"
 
     SUBPROCESS_CREATIONFLAGS: int = 0
 
@@ -194,3 +200,7 @@ else:
     APP_DATA_DIR.mkdir(parents=True, exist_ok=True)
     APP_LOG_DIR.mkdir(parents=True, exist_ok=True)
     APP_THUMBNAILS_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # Ensure custom yt-dlp directory exists if set
+    if OS_NAME not in ["Windows", "Darwin"]:
+        YTDLP_APP_BIN_PATH.parent.mkdir(parents=True, exist_ok=True)

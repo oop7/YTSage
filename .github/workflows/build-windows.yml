@@ -1,9 +1,18 @@
 name: Build Windows Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version name for the release (e.g., 1.0.0)'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version name for the release (e.g., 1.0.0)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -21,12 +30,11 @@ jobs:
       with:
         fetch-depth: 0
     
-    - name: Extract version from tag
+    - name: Get version
       id: get_version
       shell: powershell
       run: |
-        $tag = "${{ github.ref_name }}"
-        $version = $tag -replace '^v', ''
+        $version = "${{ inputs.version || github.event.inputs.version }}"
         Write-Host "Extracted version: $version"
         echo "VERSION=$version" >> $env:GITHUB_OUTPUT
 
@@ -298,16 +306,14 @@ jobs:
     - name: Create draft release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.ref_name }}
-        name: YTSage ${{ github.ref_name }}
+        tag_name: v${{ steps.get_version.outputs.VERSION }}
+        name: YTSage v${{ steps.get_version.outputs.VERSION }}
         draft: true
         prerelease: false
         body: |
-          # YTSage ${{ github.ref_name }}
+          # YTSage v${{ steps.get_version.outputs.VERSION }}
           
           **Release Date**: ${{ github.event.head_commit.timestamp }}
-          
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
         files: |
           artifacts/*
       env:

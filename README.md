@@ -339,7 +339,8 @@ YTSage/
 │   ├─── 📁 workflows/              # GitHub Actions workflows
 │   │   ├── build-linux.yml        # Linux build workflow
 │   │   ├── build-macos.yml        # macOS build workflow
-│   │   └── build-windows.yml      # Windows build workflow
+│   │   │── build-windows.yml      # Windows build workflow
+|   |   └── release-all.yml          # Master release workflow
 │   └── 📄 CI_CD_README.md        # CI/CD documentation
 ├──  📁 assets/                    # Static assets and resources
 │   ├── 📁 branding/              # Branding assets
