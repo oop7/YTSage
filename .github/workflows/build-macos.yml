@@ -1,9 +1,18 @@
 name: Build macOS Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version name for the release (e.g., 1.0.0)'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version name for the release (e.g., 1.0.0)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -21,12 +30,11 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Extract version from tag
+    - name: Get version
       id: get_version
       shell: bash
       run: |
-        tag="${GITHUB_REF_NAME}"
-        version="${tag#v}"
+        version="${{ inputs.version || github.event.inputs.version }}"
         echo "Extracted version: $version"
         echo "VERSION=$version" >> "$GITHUB_OUTPUT"
 
@@ -240,18 +248,16 @@ jobs:
     - name: Create/Update draft release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.ref_name }}
-        name: YTSage ${{ github.ref_name }}
+        tag_name: v${{ steps.get_version.outputs.VERSION }}
+        name: YTSage v${{ steps.get_version.outputs.VERSION }}
         draft: true
         prerelease: false
         append_body: true
         fail_on_unmatched_files: false
         body: |
-          # YTSage ${{ github.ref_name }}
+          # YTSage v${{ steps.get_version.outputs.VERSION }}
 
           **Release Date**: ${{ github.event.head_commit.timestamp }}
-
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
         files: |
           artifacts/*
       env:

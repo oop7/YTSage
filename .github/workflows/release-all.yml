@@ -1,0 +1,28 @@
+name: Create All Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version name for the release (e.g., 1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  release-windows:
+    uses: ./.github/workflows/build-windows.yml
+    with:
+      version: ${{ inputs.version }}
+    secrets: inherit
+
+  release-linux:
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      version: ${{ inputs.version }}
+    secrets: inherit
+
+  release-macos:
+    uses: ./.github/workflows/build-macos.yml
+    with:
+      version: ${{ inputs.version }}
+    secrets: inherit
