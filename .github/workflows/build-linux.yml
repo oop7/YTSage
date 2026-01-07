@@ -392,6 +392,21 @@ jobs:
         # Define manifest ID
         APP_ID="io.github.oop7.YTSage"
         
+        # Create a specific desktop file for Flatpak
+        # - Exec must be 'ytsage' (in path), not /usr/bin/ytsage
+        # - Icon must match the App ID (io.github.oop7.YTSage)
+        cat > flatpak.desktop <<EOF
+        [Desktop Entry]
+        Type=Application
+        Name=YTSage
+        Comment=YouTube downloader
+        Exec=ytsage 
+        Icon=$APP_ID
+        Terminal=false
+        Categories=AudioVideo;Network;Utility;
+        StartupWMClass=YTSage
+        EOF
+
         # Create manifest manually
         cat > ytsage_flatpak.json <<EOF
         {
@@ -418,7 +433,7 @@ jobs:
                 "mkdir -p /app/bin /app/share/ytsage",
                 "cp -r dist/ytsage-v${version}-*/* /app/share/ytsage/",
                 "ln -s /app/share/ytsage/ytsage /app/bin/ytsage",
-                "install -D ytsage.desktop /app/share/applications/$APP_ID.desktop",
+                "install -D flatpak.desktop /app/share/applications/$APP_ID.desktop",
                 "install -D assets/branding/icons/icon.png /app/share/icons/hicolor/128x128/apps/$APP_ID.png"
               ],
               "sources": [
