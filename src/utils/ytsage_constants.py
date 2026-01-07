@@ -166,7 +166,13 @@ elif OS_NAME == "Darwin":  # macOS
 else:  # Linux
     DENO_DOWNLOAD_URL: str = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip"
     DENO_SHA256_URL: str = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip.sha256sum"
-    DENO_APP_BIN_PATH: Path = APP_BIN_DIR / "deno"
+    
+    # Check for environment variable override (critical for Flatpak support)
+    _deno_env_path = os.environ.get("DENO_APP_BIN_PATH")
+    if _deno_env_path:
+        DENO_APP_BIN_PATH: Path = Path(_deno_env_path)
+    else:
+        DENO_APP_BIN_PATH: Path = APP_BIN_DIR / "deno"
 
 # FFmpeg download links (Essentials build - always latest version)
 FFMPEG_7Z_DOWNLOAD_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z"
@@ -203,4 +209,8 @@ else:
     
     # Ensure custom yt-dlp directory exists if set
     if OS_NAME not in ["Windows", "Darwin"]:
-        YTDLP_APP_BIN_PATH.parent.mkdir(parents=True, exist_ok=True)
+        # Ensure parent directories exist for custom paths
+        if "YTDLP_APP_BIN_PATH" in globals():
+            YTDLP_APP_BIN_PATH.parent.mkdir(parents=True, exist_ok=True)
+        if "DENO_APP_BIN_PATH" in globals():
+            DENO_APP_BIN_PATH.parent.mkdir(parents=True, exist_ok=True)
