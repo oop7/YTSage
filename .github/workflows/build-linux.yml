@@ -423,7 +423,8 @@ jobs:
             "--device=dri",
             "--share=network",
             "--filesystem=host",
-            "--env=YTDLP_APP_BIN_PATH=/var/data/yt-dlp"
+            "--env=YTDLP_APP_BIN_PATH=/var/data/yt-dlp",
+            "--env=DENO_APP_BIN_PATH=/var/data/deno"
           ],
           "modules": [
             {
