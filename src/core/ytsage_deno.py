@@ -171,9 +171,9 @@ class DownloadDenoThread(QThread):
                     self.finished_signal.emit(False, f"Executable '{executable_name}' not found in zip")
                     return
                 
-            # Extract to app bin directory
-            target_dir = DENO_APP_BIN_PATH.parent
-            zip_ref.extract(executable_name, target_dir)
+                # Extract to app bin directory (while zip_ref is open)
+                target_dir = DENO_APP_BIN_PATH.parent
+                zip_ref.extract(executable_name, target_dir)
             
             # Verify the extracted file exists
             exe_path = DENO_APP_BIN_PATH
