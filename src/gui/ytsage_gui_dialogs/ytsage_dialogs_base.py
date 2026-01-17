@@ -178,14 +178,16 @@ class AboutDialog(QDialog):
         info_layout = QHBoxLayout()
         info_layout.setSpacing(15)
 
+        author_link = '<a href="https://github.com/oop7/" style="color: #c90000; text-decoration: none; font-size: 10px;">oop7</a>'
         author_label = QLabel(
-            f"{_('about.author', author='<a href=\'https://github.com/oop7/\' style=\'color: #c90000; text-decoration: none; font-size: 10px;\'>oop7</a>')}"
+            f"{_('about.author', author=author_link)}"
         )
         author_label.setOpenExternalLinks(True)
         info_layout.addWidget(author_label)
 
+        repo_link = '<a href="https://github.com/oop7/YTSage/" style="color: #c90000; text-decoration: none; font-size: 10px;">YTSage</a>'
         repo_label = QLabel(
-            f"{_('about.github', repo='<a href=\'https://github.com/oop7/YTSage/\' style=\'color: #c90000; text-decoration: none; font-size: 10px;\'>YTSage</a>')}"
+            f"{_('about.github', repo=repo_link)}"
         )
         repo_label.setOpenExternalLinks(True)
         info_layout.addWidget(repo_label)
