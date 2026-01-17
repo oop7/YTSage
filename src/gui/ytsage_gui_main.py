@@ -1969,7 +1969,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             # Execute command with hidden console window on Windows
             # Extra logic moved to src\utils\ytsage_constants.py
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60, creationflags=SUBPROCESS_CREATIONFLAGS)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300, creationflags=SUBPROCESS_CREATIONFLAGS)
 
             if result.returncode != 0:
                 logger.error(f"yt-dlp failed: {result.stderr}")
