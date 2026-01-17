@@ -1952,7 +1952,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 url = f"https://www.youtube.com/playlist?list={playlist_id}"
 
             # Build command for basic info extraction
-            cmd = [yt_dlp_path, "--dump-json", "--no-warnings", url]
+            # Use --flat-playlist for fast initial extraction of playlist info + --dump-single-json
+            # This fetches minimal info for all videos quickly without downloading full details for each
+            cmd = [yt_dlp_path, "--dump-single-json", "--flat-playlist", "--no-warnings", url]
 
             # Add cookies if available
             if self.cookie_file_path:
@@ -1998,21 +2000,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
             self.signals.update_status.emit(_("main_ui.analyzing_processing_data"))
 
-            if first_info.get("_type") == "playlist" or len(json_lines) > 1:
+            if first_info.get("_type") == "playlist":
                 # Handle playlist
                 self.is_playlist = True
                 self.playlist_info = first_info
                 self.selected_playlist_items = None
-                self.playlist_entries = []
-
-                # Parse all entries
-                for line in json_lines:
-                    try:
-                        entry = json.loads(line)
-                        if entry.get("_type") != "playlist":  # Skip playlist metadata
-                            self.playlist_entries.append(entry)
-                    except json.JSONDecodeError:
-                        continue
+                self.playlist_entries = first_info.get("entries", [])
 
                 if not self.playlist_entries:
                     logger.error("Playlist contains no valid videos.")
@@ -2021,8 +2014,31 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                     self.signals.playlist_select_btn_visible.emit(False)
                     return
 
-                # Use first video for format information
-                self.video_info = self.playlist_entries[0]
+                # Even with flat-playlist, we need one video's formats to populate the table.
+                # Just use the first video URL to get full details quickly.
+                self.signals.update_status.emit(_("main_ui.analyzing_fetching_first_video"))
+                first_video_entry = self.playlist_entries[0]
+                first_video_url = first_video_entry.get("url")
+                
+                # Fetch full info for just the first video to get formats
+                cmd_single = [yt_dlp_path, "--dump-single-json", "--no-warnings", first_video_url]
+                 # Add cookies & proxy to this single request too
+                if self.cookie_file_path:
+                    cmd_single.extend(["--cookies", str(self.cookie_file_path)])
+                elif self.browser_cookies_option:
+                    cmd_single.extend(["--cookies-from-browser", self.browser_cookies_option])
+                if self.proxy_url:
+                    cmd_single.extend(["--proxy", self.proxy_url])
+                if self.geo_proxy_url:
+                    cmd_single.extend(["--geo-verification-proxy", self.geo_proxy_url])
+                    
+                result_single = subprocess.run(cmd_single, capture_output=True, text=True, timeout=60, creationflags=SUBPROCESS_CREATIONFLAGS)
+                
+                if result_single.returncode == 0:
+                     self.video_info = json.loads(result_single.stdout)
+                else:
+                    # Fallback to whatever minimal info we have, might fail table population
+                     self.video_info = first_video_entry
 
                 # Update playlist info label
                 playlist_text = _("playlist.display_format",
