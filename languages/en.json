@@ -92,6 +92,7 @@
     "sponsorblock_description": "Select which types of video segments to automatically remove during download.\nSponsorBlock uses community-submitted data to identify these segments.",
     "select_subtitles": "Select Subtitles",
     "filter_languages_placeholder": "Filter languages (e.g., en, es)...",
+    "filter_playlist_placeholder": "Filter videos...",
     "no_subtitles_available": "No subtitles available",
     "matching": "matching"
   },
@@ -336,6 +337,7 @@
     "analyzing_updating_table": "Analyzing (95%)... Updating format table",
     "analysis_complete": "Analysis complete!",
     "analyzing_extracting_ytdlp": "Analyzing (30%)... Extracting info",
+    "analyzing_fetching_first_video": "Analyzing... Fetching formats for first video",
     "analyzing_processing_data": "Analyzing (60%)... Processing data",
     "analyzing_processing_formats_ytdlp": "Analyzing (75%)... Processing formats",
     "analyzing_loading_thumbnail_ytdlp": "Analyzing (85%)... Loading thumbnail",

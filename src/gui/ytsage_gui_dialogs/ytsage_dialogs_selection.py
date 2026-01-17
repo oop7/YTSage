@@ -208,6 +208,27 @@ class PlaylistSelectionDialog(QDialog):
         # Main layout
         main_layout = QVBoxLayout(self)
 
+        # Filter Input
+        self.filter_input = QLineEdit()
+        self.filter_input.setPlaceholderText(_("dialogs.filter_playlist_placeholder"))
+        self.filter_input.textChanged.connect(self.filter_list)
+        self.filter_input.setStyleSheet(
+            """
+            QLineEdit {
+                background-color: #363636;
+                border: 2px solid #3d3d3d;
+                border-radius: 4px;
+                padding: 5px;
+                min-height: 30px;
+                color: white;
+            }
+            QLineEdit:focus {
+                border-color: #ff0000;
+            }
+        """
+        )
+        main_layout.addWidget(self.filter_input)
+
         # Top buttons (Select/Deselect All)
         button_layout = QHBoxLayout()
         select_all_btn = QPushButton(_("buttons.select_all"))
@@ -339,6 +360,13 @@ class PlaylistSelectionDialog(QDialog):
                     pass  # Ignore invalid numbers
         return selected_indices
 
+    def filter_list(self, text: str) -> None:
+        """Filter the list of checkboxes based on title."""
+        text = text.lower()
+        for checkbox in self.checkboxes:
+            title = (checkbox.property("full_title") or "").lower()
+            checkbox.setVisible(text in title)
+
     def _populate_list(self, previously_selected_string) -> None:
         """Populates the scroll area with checkboxes for each video."""
         selected_indices = self._parse_selection_string(previously_selected_string)
@@ -356,12 +384,29 @@ class PlaylistSelectionDialog(QDialog):
 
             video_index = index + 1  # yt-dlp uses 1-based indexing
             title = entry.get("title", f"Video {video_index}")
-            # Shorten title if too long
-            display_title = (title[:70] + "...") if len(title) > 73 else title
+            
+            # Format duration
+            duration = entry.get("duration")
+            duration_str = ""
+            if duration:
+                try:
+                    m, s = divmod(int(duration), 60)
+                    h, m = divmod(m, 60)
+                    if h > 0:
+                        duration_str = f" [{h}:{m:02d}:{s:02d}]"
+                    else:
+                        duration_str = f" [{m:02d}:{s:02d}]"
+                except (ValueError, TypeError):
+                    pass
+            
+            # Shorten title if too long but keep enough space for duration
+            max_len = 65
+            display_title = (title[:max_len] + "...") if len(title) > max_len + 3 else title
 
-            checkbox = QCheckBox(f"{video_index}. {display_title}")
+            checkbox = QCheckBox(f"{video_index}. {display_title}{duration_str}")
             checkbox.setChecked(video_index in selected_indices)
             checkbox.setProperty("video_index", video_index)  # Store index
+            checkbox.setProperty("full_title", title) # Store full title for filtering
             checkbox.setStyleSheet(
                 """
                 QCheckBox {
