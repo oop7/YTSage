@@ -335,6 +335,7 @@
     "analyzing_processing_subtitles": "Analiz ediliyor (85%)... Altyazılar işleniyor",
     "analyzing_updating_table": "Analiz ediliyor (95%)... Format tablosu güncelleniyor",
     "analysis_complete": "Analiz tamamlandı!",
+    "analyzing_fetching_first_video": "Analiz ediliyor... İlk video için formatlar alınıyor",
     "analyzing_extracting_ytdlp": "Analiz ediliyor (30%)... Bilgiler çıkarılıyor",
     "analyzing_processing_data": "Analiz ediliyor (60%)... Veriler işleniyor",
     "analyzing_processing_formats_ytdlp": "Analiz ediliyor (75%)... Formatlar işleniyor",

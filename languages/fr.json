@@ -336,6 +336,7 @@
     "analyzing_updating_table": "Analyse (95%)... Mise à jour du tableau des formats",
     "analysis_complete": "Analyse terminée !",
     "analyzing_extracting_ytdlp": "Analyse (30%)... Extraction d'informations",
+    "analyzing_fetching_first_video": "Analyse... Récupération des formats pour la première vidéo",
     "analyzing_processing_data": "Analyse (60%)... Traitement des données",
     "analyzing_processing_formats_ytdlp": "Analyse (75%)... Traitement des formats",
     "analyzing_loading_thumbnail_ytdlp": "Analyse (85%)... Chargement de la miniature",

@@ -335,6 +335,7 @@
     "analyzing_processing_subtitles": "Анализ (85%)... Обработка субтитров",
     "analyzing_updating_table": "Анализ (95%)... Обновление таблицы форматов",
     "analysis_complete": "Анализ завершен!",
+    "analyzing_fetching_first_video": "Анализ... Получение форматов для первого видео",
     "analyzing_extracting_ytdlp": "Анализ (30%)... Извлечение информации",
     "analyzing_processing_data": "Анализ (60%)... Обработка данных",
     "analyzing_processing_formats_ytdlp": "Анализ (75%)... Обработка форматов",

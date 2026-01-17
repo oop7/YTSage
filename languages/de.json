@@ -336,6 +336,7 @@
     "analyzing_updating_table": "Analysiere (95%)... Formattabelle wird aktualisiert",
     "analysis_complete": "Analyse abgeschlossen!",
     "analyzing_extracting_ytdlp": "Analysiere (30%)... Informationen werden extrahiert",
+    "analyzing_fetching_first_video": "Analysiere... Formate für das erste Video werden abgerufen",
     "analyzing_processing_data": "Analysiere (60%)... Daten werden verarbeitet",
     "analyzing_processing_formats_ytdlp": "Analysiere (75%)... Formate werden verarbeitet",
     "analyzing_loading_thumbnail_ytdlp": "Analysiere (85%)... Thumbnail wird geladen",

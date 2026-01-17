@@ -336,6 +336,7 @@
     "analyzing_updating_table": "解析中 (95%)... フォーマットテーブルを更新中",
     "analysis_complete": "解析完了！",
     "analyzing_extracting_ytdlp": "解析中 (30%)... 情報を抽出中",
+    "analyzing_fetching_first_video": "解析中... 最初のビデオの形式を取得しています",
     "analyzing_processing_data": "解析中 (60%)... データを処理中",
     "analyzing_processing_formats_ytdlp": "解析中 (75%)... フォーマットを処理中",
     "analyzing_loading_thumbnail_ytdlp": "解析中 (85%)... サムネイルを読み込み中",

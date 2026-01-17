@@ -335,6 +335,7 @@
     "analyzing_processing_subtitles": "分析中 (85%)... 正在处理字幕",
     "analyzing_updating_table": "分析中 (95%)... 正在更新格式表",
     "analysis_complete": "分析完成！",
+    "analyzing_fetching_first_video": "分析中... 正在获取第一个视频的格式",
     "analyzing_extracting_ytdlp": "分析中 (30%)... 提取信息",
     "analyzing_processing_data": "分析中 (60%)... 正在处理数据",
     "analyzing_processing_formats_ytdlp": "分析中 (75%)... 正在处理格式",

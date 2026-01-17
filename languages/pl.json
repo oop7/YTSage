@@ -335,6 +335,7 @@
     "analyzing_processing_subtitles": "Analizowanie (85%)... Przetwarzanie napisów",
     "analyzing_updating_table": "Analizowanie (95%)... Aktualizowanie tabeli formatów",
     "analysis_complete": "Analiza zakończona!",
+    "analyzing_fetching_first_video": "Analizowanie... Pobieranie formatów dla pierwszego filmu",
     "analyzing_extracting_ytdlp": "Analizowanie (30%)... Wyodrębnianie informacji",
     "analyzing_processing_data": "Analizowanie (60%)... Przetwarzanie danych",
     "analyzing_processing_formats_ytdlp": "Analizowanie (75%)... Przetwarzanie formatów",

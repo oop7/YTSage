@@ -336,6 +336,7 @@
     "analyzing_updating_table": "विश्लेषण (95%)... प्रारूप तालिका अपडेट हो रही है",
     "analysis_complete": "विश्लेषण पूर्ण!",
     "analyzing_extracting_ytdlp": "विश्लेषण (30%)... जानकारी निकाली जा रही है",
+    "analyzing_fetching_first_video": "विश्लेषण कर रहा है... पहले वीडियो के लिए प्रारूप प्राप्त कर रहा है",
     "analyzing_processing_data": "विश्लेषण (60%)... डेटा प्रोसेस हो रहा है",
     "analyzing_processing_formats_ytdlp": "विश्लेषण (75%)... प्रारूप प्रोसेस हो रहे हैं",
     "analyzing_loading_thumbnail_ytdlp": "विश्लेषण (85%)... थंबनेल लोड हो रहा है",
