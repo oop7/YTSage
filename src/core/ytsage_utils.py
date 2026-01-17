@@ -362,8 +362,14 @@ def load_config() -> Dict[str, Any]:
 def save_config(config: Dict[str, Any]) -> bool:
     """Save the application configuration to file."""
     try:
+        # Convert any Path objects to strings for JSON serialization
+        def _convert_path(obj):
+            if isinstance(obj, Path):
+                return str(obj)
+            raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+
         with open(APP_CONFIG_FILE, "w", encoding="utf-8") as f:
-            json.dump(config, f, ensure_ascii=False, indent=2)
+            json.dump(config, f, ensure_ascii=False, indent=2, default=_convert_path)
         return True
     except Exception as e:
         logger.exception(f"Error saving config: {e}")
