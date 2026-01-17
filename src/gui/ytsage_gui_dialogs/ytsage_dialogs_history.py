@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Optional
 
 import requests
 from PIL import Image
-from PySide6.QtCore import Qt, QSize, Signal
+from PySide6.QtCore import Qt, QSize, Signal, QThread, QTimer
 from PySide6.QtGui import QPixmap, QIcon
 from PySide6.QtWidgets import (
     QDialog,
@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (
     QMenu,
     QMessageBox,
     QSizePolicy,
+    QProgressBar,
 )
 
 from src.utils.ytsage_history_manager import HistoryManager
@@ -36,6 +37,46 @@ from src.utils.ytsage_logger import logger
 
 if TYPE_CHECKING:
     from src.gui.ytsage_gui_main import YTSageApp
+
+
+class HistoryLoaderThread(QThread):
+    """Thread to load history and pre-fetch thumbnails."""
+    
+    finished = Signal(list)
+    
+    def run(self):
+        try:
+            # HistoryManager uses get_all_entries, not get_all
+            entries = HistoryManager.get_all_entries()
+            
+            # Pre-fetch thumbnails so UI doesn't freeze
+            for entry in entries:
+                thumbnail_url = entry.get("thumbnail_url")
+                entry_id = entry.get("id", "")
+                
+                if not thumbnail_url or not entry_id:
+                    continue
+                    
+                thumbnail_filename = f"{entry_id}.jpg"
+                thumbnail_path = APP_THUMBNAILS_DIR / thumbnail_filename
+                
+                # If not exists, download it
+                if not thumbnail_path.exists():
+                    try:
+                        response = requests.get(thumbnail_url, timeout=5)
+                        if response.status_code == 200:
+                            APP_THUMBNAILS_DIR.mkdir(parents=True, exist_ok=True)
+                            
+                            image = Image.open(BytesIO(response.content))
+                            image.save(thumbnail_path, "JPEG", quality=95, optimize=True)
+                    except Exception as e:
+                        logger.debug(f"Error caching thumbnail in background: {e}")
+            
+            self.finished.emit(entries)
+            
+        except Exception as e:
+            logger.error(f"Error loading history: {e}")
+            self.finished.emit([])
 
 
 class HistoryEntryWidget(QFrame):
@@ -362,7 +403,23 @@ class HistoryDialog(QDialog):
         self.entry_widgets = []
         
         self.setup_ui()
-        self.load_history()
+        
+        # Show loading state initially
+        self.show_loading_state()
+        
+        # Start loading history in background after a short delay
+        # to ensure the dialog is shown first
+        QTimer.singleShot(100, self.start_loading_history)
+        
+    def start_loading_history(self):
+        """Start the background thread to load history."""
+        self.loader_thread = HistoryLoaderThread()
+        self.loader_thread.finished.connect(self.on_history_loaded)
+        self.loader_thread.start()
+        
+    def on_history_loaded(self, entries):
+        """Called when history is loaded from background thread."""
+        self.load_history_entries(entries)
     
     def setup_ui(self):
         """Setup the dialog UI."""
@@ -466,15 +523,43 @@ class HistoryDialog(QDialog):
             }
         """)
     
-    def load_history(self):
-        """Load and display history entries."""
-        # Clear existing widgets
+    def clear_history_list(self):
+        """Clear existing history widgets."""
         for widget in self.entry_widgets:
             widget.deleteLater()
         self.entry_widgets.clear()
+
+    def show_loading_state(self):
+        """Show loading indicator."""
+        # Clear existing content
+        self.clear_history_list()
         
-        # Get history entries
-        entries = HistoryManager.get_all_entries()
+        loading_widget = QWidget()
+        loading_layout = QVBoxLayout(loading_widget)
+        loading_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        spinner_label = QLabel("⏳")  # Simple spinner icon
+        spinner_label.setStyleSheet("font-size: 48px; color: #c90000;")
+        spinner_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        loading_layout.addWidget(spinner_label)
+        
+        # text_label removed as per user request
+        
+        self.history_layout.addWidget(loading_widget)
+        self.entry_widgets.append(loading_widget)
+        
+        self.status_label.setText("Loading...")
+        self.clear_all_btn.setEnabled(False)
+
+    def load_history(self):
+        """Load and display history entries."""
+        if hasattr(self, 'history_container'):
+             self.show_loading_state()
+             self.start_loading_history()
+
+    def load_history_entries(self, entries):
+        """Populate the history list with entries."""
+        self.clear_history_list()
         
         if not entries:
             self.show_empty_state()
@@ -496,6 +581,7 @@ class HistoryDialog(QDialog):
         else:
             status_text = _("history.entries_count", count=count)
         self.status_label.setText(status_text)
+        self.clear_all_btn.setEnabled(True)
     
     def show_empty_state(self):
         """Show empty state when there's no history."""
