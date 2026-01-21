@@ -103,8 +103,8 @@ class HistoryEntryWidget(QFrame):
                 background-color: #1d1e22;
                 border: 1px solid #2a2d36;
                 border-radius: 8px;
-                padding: 10px;
-                margin: 5px;
+                padding: 4px;
+                margin: 2px;
             }
             QFrame:hover {
                 background-color: #252830;
@@ -113,12 +113,12 @@ class HistoryEntryWidget(QFrame):
         """)
         
         main_layout = QHBoxLayout(self)
-        main_layout.setSpacing(15)
-        main_layout.setContentsMargins(10, 10, 10, 10)
+        main_layout.setSpacing(12)
+        main_layout.setContentsMargins(8, 8, 8, 8)
         
-        # Thumbnail - Larger size to utilize available space
+        # Thumbnail - Standard YouTube 16:9 ratio (e.g., 240x135)
         self.thumbnail_label = QLabel()
-        self.thumbnail_label.setFixedSize(280, 158)  # 16:9 ratio, larger to fill space
+        self.thumbnail_label.setFixedSize(240, 135)
         self.thumbnail_label.setStyleSheet("""
             QLabel {
                 border: 2px solid #3d3d3d;
@@ -206,15 +206,16 @@ class HistoryEntryWidget(QFrame):
         
         # Three-dot menu button
         self.menu_button = QPushButton("⋮")
-        self.menu_button.setFixedSize(40, 40)
+        self.menu_button.setFixedSize(32, 32)
         self.menu_button.setStyleSheet("""
             QPushButton {
                 background-color: #2a2d36;
                 border: none;
-                border-radius: 20px;
+                border-radius: 16px;
                 color: white;
-                font-size: 24px;
+                font-size: 18px;
                 font-weight: bold;
+                padding-bottom: 5px; /* Adjust vertical alignment of dots */
             }
             QPushButton:hover {
                 background-color: #3a3d46;
