@@ -1969,6 +1969,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             if self.geo_proxy_url:
                 cmd.extend(["--geo-verification-proxy", self.geo_proxy_url])
 
+            logger.debug(f"Executing yt-dlp command: {cmd}")
+
             # Execute command with hidden console window on Windows
             # Extra logic moved to src\utils\ytsage_constants.py
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=300, creationflags=SUBPROCESS_CREATIONFLAGS)
