@@ -228,7 +228,7 @@ class HistoryDelegate(QStyledItemDelegate):
 
         # Text Area
         text_x = thumb_rect.right() + 12
-        text_width = card_rect.right() - text_x - 50
+        text_width = card_rect.right() - text_x - 85 # Leave even more space for the larger 60px button
         
         # Title
         title_rect = QRect(text_x, thumb_rect.top(), text_width, 50)
@@ -305,7 +305,18 @@ class HistoryDelegate(QStyledItemDelegate):
         painter.restore()
 
     def get_menu_rect(self, card_rect):
-        return QRect(card_rect.right() - 40, card_rect.top() + 10, 30, 30)
+        # Widen the clickable area significantly (60x50) and shift slightly left
+        # to fix "left side not working" issues.
+        w = 60
+        h = 50
+        margin_right = 5
+        margin_top = 5
+        return QRect(
+            card_rect.right() - w - margin_right, 
+            card_rect.top() + margin_top, 
+            w, 
+            h
+        )
 
     def editorEvent(self, event, model, option, index):
         """Handle mouse clicks."""
