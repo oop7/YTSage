@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, cast
 
 import requests
 from PIL import Image
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
@@ -19,6 +19,26 @@ from src.utils.ytsage_logger import logger
 
 if TYPE_CHECKING:
     from src.gui.ytsage_gui_main import YTSageApp
+
+
+class ThumbnailDownloadThread(QThread):
+    """Thread to download thumbnail image asynchronously."""
+    finished = Signal(bytes)
+    error = Signal(str)
+
+    def __init__(self, url):
+        super().__init__()
+        self.url = url
+
+    def run(self):
+        try:
+            response = requests.get(self.url, timeout=10)
+            if response.status_code == 200:
+                self.finished.emit(response.content)
+            else:
+                self.error.emit(f"HTTP Error: {response.status_code}")
+        except Exception as e:
+            self.error.emit(str(e))
 
 
 class VideoInfoMixin:
@@ -368,14 +388,21 @@ class VideoInfoMixin:
     def download_thumbnail(self, url) -> None:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
 
-        try:
-            # Store both thumbnail URL and video URL
-            self.thumbnail_url = url
-            self.video_url = self.url_input.text()  # Get actual video URL
+        # Store both thumbnail URL and video URL
+        self.thumbnail_url = url
+        self.video_url = self.url_input.text()  # Get actual video URL
 
-            # Download thumbnail but don't save yet
-            response = requests.get(url)
-            self.thumbnail_image = Image.open(BytesIO(response.content))
+        # Create and start loader thread
+        # Keep reference to avoid garbage collection
+        self.thumbnail_thread = ThumbnailDownloadThread(url)
+        self.thumbnail_thread.finished.connect(self._on_thumbnail_downloaded)
+        self.thumbnail_thread.error.connect(lambda e: logger.error(f"Error loading thumbnail: {e}"))
+        self.thumbnail_thread.start()
+
+    def _on_thumbnail_downloaded(self, content: bytes) -> None:
+        self = cast("YTSageApp", self)
+        try:
+            self.thumbnail_image = Image.open(BytesIO(content))
 
             # Display thumbnail
             image = self.thumbnail_image.resize((320, 180), Image.Resampling.LANCZOS)
@@ -385,7 +412,7 @@ class VideoInfoMixin:
             pixmap.loadFromData(img_byte_arr.getvalue())
             self.thumbnail_label.setPixmap(pixmap)
         except Exception as e:
-            logger.exception(f"Error loading thumbnail: {e}")
+            logger.exception(f"Error processing thumbnail image: {e}")
 
     def download_thumbnail_file(self, video_url, path) -> bool:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
