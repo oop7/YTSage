@@ -50,6 +50,7 @@ class HistoryManager:
     _lock = threading.RLock()
     # Define DB file next to the old JSON file
     _db_file = APP_DATA_DIR / "ytsage_history.db"
+    _connection = None
     _initialized = False
 
     @classmethod
@@ -67,36 +68,46 @@ class HistoryManager:
                 # Ensure directory exists
                 cls._db_file.parent.mkdir(parents=True, exist_ok=True)
                 
-                with sqlite3.connect(cls._db_file, check_same_thread=False) as conn:
-                    cursor = conn.cursor()
-                    
-                    # Create table
-                    cursor.execute("""
-                        CREATE TABLE IF NOT EXISTS history (
-                            id TEXT PRIMARY KEY,
-                            title TEXT,
-                            url TEXT,
-                            channel TEXT,
-                            file_path TEXT,
-                            download_date TEXT,
-                            file_size INTEGER,
-                            thumbnail_url TEXT,
-                            format_id TEXT,
-                            resolution TEXT,
-                            is_audio_only INTEGER,
-                            duration TEXT,
-                            options TEXT,
-                            timestamp REAL
-                        )
-                    """)
-                    
-                    # Index for faster sorting by date
-                    cursor.execute("""
-                        CREATE INDEX IF NOT EXISTS idx_timestamp 
-                        ON history (timestamp DESC)
-                    """)
-                    
-                    conn.commit()
+                # We use a persistent connection to avoid churn
+                if cls._connection is None:
+                    cls._connection = sqlite3.connect(cls._db_file, check_same_thread=False)
+                    cls._connection.row_factory = sqlite3.Row
+                
+                cursor = cls._connection.cursor()
+                
+                # Create table
+                cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS history (
+                        id TEXT PRIMARY KEY,
+                        title TEXT,
+                        url TEXT,
+                        channel TEXT,
+                        file_path TEXT,
+                        download_date TEXT,
+                        file_size INTEGER,
+                        thumbnail_url TEXT,
+                        format_id TEXT,
+                        resolution TEXT,
+                        is_audio_only INTEGER,
+                        duration TEXT,
+                        options TEXT,
+                        timestamp REAL
+                    )
+                """)
+                
+                # Index for faster sorting by date
+                cursor.execute("""
+                    CREATE INDEX IF NOT EXISTS idx_timestamp 
+                    ON history (timestamp DESC)
+                """)
+                
+                # Indexes for faster search (title, channel, url)
+                # This prevents full table scans during search
+                cursor.execute("CREATE INDEX IF NOT EXISTS idx_title ON history (title)")
+                cursor.execute("CREATE INDEX IF NOT EXISTS idx_channel ON history (channel)")
+                cursor.execute("CREATE INDEX IF NOT EXISTS idx_url ON history (url)")
+                
+                cls._connection.commit()
             
                 # If we just created the DB and have a JSON file, migrate
                 if not db_exists and legacy_json_exists:
@@ -117,66 +128,74 @@ class HistoryManager:
                 
             if isinstance(data, list):
                 count = 0
-                with sqlite3.connect(cls._db_file, check_same_thread=False) as conn:
-                    cursor = conn.cursor()
-                    for entry in data:
-                        try:
-                            # Safely extract download_options logic if complex
-                            options_json = json.dumps(entry.get("download_options", {}))
-                            
-                            # Construct timestamp from isoformat if missing
-                            ts = entry.get("timestamp")
-                            if not ts and "download_date" in entry:
-                                try:
-                                    dt = datetime.fromisoformat(entry["download_date"])
-                                    ts = dt.timestamp()
-                                except Exception:
-                                    ts = time.time()
-                            
-                            cursor.execute("""
-                                INSERT OR IGNORE INTO history (
-                                    id, title, url, channel, file_path, download_date,
-                                    file_size, thumbnail_url, format_id, resolution,
-                                    is_audio_only, duration, options, timestamp
-                                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                            """, (
-                                entry.get("id", str(int(time.time()*1000))),
-                                entry.get("title", ""),
-                                entry.get("url", ""),
-                                entry.get("channel", "Unknown"),
-                                entry.get("file_path", ""),
-                                entry.get("download_date", ""),
-                                entry.get("file_size", 0),
-                                entry.get("thumbnail_url", ""),
-                                entry.get("format_id", ""),
-                                entry.get("resolution", ""),
-                                1 if entry.get("is_audio_only") else 0,
-                                entry.get("duration", ""),
-                                options_json,
-                                ts or time.time()
-                            ))
-                            count += 1
-                        except Exception as e:
-                            logger.error(f"Skipped invalid entry during migration: {e}")
-                    
-                    conn.commit()
-                
-                logger.info(f"Successfully migrated {count} history entries.")
-                
-                # Rename old JSON to .bak to avoid re-migration, or keep as backup
+                # Use the persistent connection
+                conn = cls._get_connection()
                 try:
-                    APP_HISTORY_FILE.rename(APP_HISTORY_FILE.with_suffix(".json.bak"))
+                    with conn: # Transaction
+                        cursor = conn.cursor()
+                        for entry in data:
+                            try:
+                                # Safely extract download_options logic if complex
+                                options_json = json.dumps(entry.get("download_options", {}))
+                                
+                                # Construct timestamp from isoformat if missing
+                                ts = entry.get("timestamp")
+                                if not ts and "download_date" in entry:
+                                    try:
+                                        dt = datetime.fromisoformat(entry["download_date"])
+                                        ts = dt.timestamp()
+                                    except Exception:
+                                        ts = time.time()
+                                
+                                cursor.execute("""
+                                    INSERT OR IGNORE INTO history (
+                                        id, title, url, channel, file_path, download_date,
+                                        file_size, thumbnail_url, format_id, resolution,
+                                        is_audio_only, duration, options, timestamp
+                                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                """, (
+                                    entry.get("id", str(int(time.time()*1000))),
+                                    entry.get("title", ""),
+                                    entry.get("url", ""),
+                                    entry.get("channel", "Unknown"),
+                                    entry.get("file_path", ""),
+                                    entry.get("download_date", ""),
+                                    entry.get("file_size", 0),
+                                    entry.get("thumbnail_url", ""),
+                                    entry.get("format_id", ""),
+                                    entry.get("resolution", ""),
+                                    1 if entry.get("is_audio_only") else 0,
+                                    entry.get("duration", ""),
+                                    options_json,
+                                    ts or time.time()
+                                ))
+                                count += 1
+                            except Exception as e:
+                                logger.error(f"Skipped invalid entry during migration: {e}")
+                    
+                    logger.info(f"Successfully migrated {count} history entries.")
+                    
+                    # Rename old JSON to .bak to avoid re-migration, or keep as backup
+                    try:
+                        APP_HISTORY_FILE.rename(APP_HISTORY_FILE.with_suffix(".json.bak"))
+                    except Exception as e:
+                        logger.warning(f"Could not rename legacy history file: {e}")
+                        
                 except Exception as e:
-                    logger.warning(f"Could not rename legacy history file: {e}")
+                     logger.error(f"Migration transaction failed: {e}")
                     
         except Exception as e:
             logger.error(f"Migration failed: {e}")
 
     @classmethod
     def _get_connection(cls):
-        """Get a database connection."""
+        """Get the persistent database connection."""
         cls._init_db()
-        return sqlite3.connect(cls._db_file, check_same_thread=False)
+        if cls._connection is None:
+             # Should be created in _init_db, but just in case
+             cls._connection = sqlite3.connect(cls._db_file, check_same_thread=False)
+             cls._connection.row_factory = sqlite3.Row
+        return cls._connection
 
     @classmethod
     def get_all_entries(cls, limit: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -192,32 +211,33 @@ class HistoryManager:
         entries = []
         try:
             with cls._lock:  # Lock for simple concurrency safety
-                with cls._get_connection() as conn:
-                    # Return dict-like rows
-                    conn.row_factory = sqlite3.Row
-                    cursor = conn.cursor()
+                # Use persistent connection
+                conn = cls._get_connection()
+                # conn.row_factory is already set in _init_db/_get_connection
+                
+                cursor = conn.cursor()
+                
+                query = "SELECT * FROM history ORDER BY timestamp DESC"
+                params = ()
+                
+                if limit is not None:
+                    query += " LIMIT ?"
+                    params = (limit,)
                     
-                    query = "SELECT * FROM history ORDER BY timestamp DESC"
-                    params = ()
-                    
-                    if limit is not None:
-                        query += " LIMIT ?"
-                        params = (limit,)
-                        
-                    cursor.execute(query, params)
-                    rows = cursor.fetchall()
-                    
-                    for row in rows:
-                        entry = dict(row)
-                        # Convert boolean back
-                        entry["is_audio_only"] = bool(entry["is_audio_only"])
-                        # Parse options JSON
-                        try:
-                            entry["download_options"] = json.loads(entry["options"]) if entry["options"] else {}
-                        except json.JSONDecodeError:
-                            entry["download_options"] = {}
-                        del entry["options"] # Remove internal column
-                        entries.append(entry)
+                cursor.execute(query, params)
+                rows = cursor.fetchall()
+                
+                for row in rows:
+                    entry = dict(row)
+                    # Convert boolean back
+                    entry["is_audio_only"] = bool(entry["is_audio_only"])
+                    # Parse options JSON
+                    try:
+                        entry["download_options"] = json.loads(entry["options"]) if entry["options"] else {}
+                    except json.JSONDecodeError:
+                        entry["download_options"] = {}
+                    del entry["options"] # Remove internal column
+                    entries.append(entry)
                         
         except Exception as e:
             logger.error(f"Error fetching history: {e}")
@@ -237,21 +257,20 @@ class HistoryManager:
         """
         try:
             with cls._lock:
-                with cls._get_connection() as conn:
-                    conn.row_factory = sqlite3.Row
-                    cursor = conn.cursor()
-                    cursor.execute("SELECT * FROM history WHERE id = ?", (entry_id,))
-                    row = cursor.fetchone()
-                    
-                    if row:
-                        entry = dict(row)
-                        entry["is_audio_only"] = bool(entry["is_audio_only"])
-                        try:
-                            entry["download_options"] = json.loads(entry["options"]) if entry["options"] else {}
-                        except json.JSONDecodeError:
-                            entry["download_options"] = {}
-                        del entry["options"]
-                        return entry
+                conn = cls._get_connection()
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM history WHERE id = ?", (entry_id,))
+                row = cursor.fetchone()
+                
+                if row:
+                    entry = dict(row)
+                    entry["is_audio_only"] = bool(entry["is_audio_only"])
+                    try:
+                        entry["download_options"] = json.loads(entry["options"]) if entry["options"] else {}
+                    except json.JSONDecodeError:
+                        entry["download_options"] = {}
+                    del entry["options"]
+                    return entry
             return None
         except Exception as e:
             logger.error(f"Error fetching entry {entry_id}: {e}")
@@ -299,32 +318,32 @@ class HistoryManager:
         
         try:
             with cls._lock:
-                with cls._get_connection() as conn:
-                    cursor = conn.cursor()
-                    
-                    cursor.execute("""
-                        INSERT INTO history (
-                            id, title, url, channel, file_path, download_date,
-                            file_size, thumbnail_url, format_id, resolution,
-                            is_audio_only, duration, options, timestamp
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """, (
-                        unique_id,
-                        title,
-                        url,
-                        channel,
-                        str(file_path),
-                        download_date,
-                        file_size,
-                        thumbnail_url,
-                        format_id,
-                        resolution,
-                        1 if is_audio_only else 0,
-                        duration,
-                        json.dumps(download_options),
-                        timestamp
-                    ))
-                    conn.commit()
+                conn = cls._get_connection()
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    INSERT INTO history (
+                        id, title, url, channel, file_path, download_date,
+                        file_size, thumbnail_url, format_id, resolution,
+                        is_audio_only, duration, options, timestamp
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    unique_id,
+                    title,
+                    url,
+                    channel,
+                    str(file_path),
+                    download_date,
+                    file_size,
+                    thumbnail_url,
+                    format_id,
+                    resolution,
+                    1 if is_audio_only else 0,
+                    duration,
+                    json.dumps(download_options),
+                    timestamp
+                ))
+                conn.commit()
             
             logger.info(f"Added history entry: {title}")
             return unique_id
@@ -338,13 +357,13 @@ class HistoryManager:
         """Remove an entry from history by ID."""
         try:
             with cls._lock:
-                with cls._get_connection() as conn:
-                    cursor = conn.cursor()
-                    cursor.execute("DELETE FROM history WHERE id = ?", (entry_id,))
-                    if cursor.rowcount > 0:
-                        conn.commit()
-                        logger.info(f"Removed history entry: {entry_id}")
-                        return True
+                conn = cls._get_connection()
+                cursor = conn.cursor()
+                cursor.execute("DELETE FROM history WHERE id = ?", (entry_id,))
+                if cursor.rowcount > 0:
+                    conn.commit()
+                    logger.info(f"Removed history entry: {entry_id}")
+                    return True
             return False
         except Exception as e:
             logger.error(f"Error removing history entry: {e}")
@@ -355,11 +374,11 @@ class HistoryManager:
         """Clear all history entries."""
         try:
             with cls._lock:
-                with cls._get_connection() as conn:
-                    cursor = conn.cursor()
-                    cursor.execute("DELETE FROM history")
-                    count = cursor.rowcount
-                    conn.commit()
+                conn = cls._get_connection()
+                cursor = conn.cursor()
+                cursor.execute("DELETE FROM history")
+                count = cursor.rowcount
+                conn.commit()
             logger.info("History cleared")
             return count
         except Exception as e:
@@ -384,25 +403,24 @@ class HistoryManager:
         try:
             search_pattern = f"%{query}%"
             with cls._lock:
-                with cls._get_connection() as conn:
-                    conn.row_factory = sqlite3.Row
-                    cursor = conn.cursor()
-                    cursor.execute("""
-                        SELECT * FROM history 
-                        WHERE title LIKE ? OR channel LIKE ? OR url LIKE ?
-                        ORDER BY timestamp DESC
-                    """, (search_pattern, search_pattern, search_pattern))
-                    rows = cursor.fetchall()
-                    
-                    for row in rows:
-                        entry = dict(row)
-                        entry["is_audio_only"] = bool(entry["is_audio_only"])
-                        try:
-                            entry["download_options"] = json.loads(entry["options"]) if entry["options"] else {}
-                        except json.JSONDecodeError:
-                            entry["download_options"] = {}
-                        del entry["options"]
-                        entries.append(entry)
+                conn = cls._get_connection()
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT * FROM history 
+                    WHERE title LIKE ? OR channel LIKE ? OR url LIKE ?
+                    ORDER BY timestamp DESC
+                """, (search_pattern, search_pattern, search_pattern))
+                rows = cursor.fetchall()
+                
+                for row in rows:
+                    entry = dict(row)
+                    entry["is_audio_only"] = bool(entry["is_audio_only"])
+                    try:
+                        entry["download_options"] = json.loads(entry["options"]) if entry["options"] else {}
+                    except json.JSONDecodeError:
+                        entry["download_options"] = {}
+                    del entry["options"]
+                    entries.append(entry)
                         
         except Exception as e:
             logger.error(f"Error searching history: {e}")
