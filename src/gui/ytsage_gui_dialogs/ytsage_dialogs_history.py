@@ -42,14 +42,18 @@ if TYPE_CHECKING:
 class HistoryLoaderThread(QThread):
     """Thread to load history and pre-fetch thumbnails."""
     
-    finished = Signal(list)
+    entries_loaded = Signal(list)
+    thumbnail_loaded = Signal(str)
     
     def run(self):
         try:
             # HistoryManager uses get_all_entries, not get_all
             entries = HistoryManager.get_all_entries()
             
-            # Pre-fetch thumbnails so UI doesn't freeze
+            # Emit entries immediately so UI shows up
+            self.entries_loaded.emit(entries)
+            
+            # Pre-fetch thumbnails in background
             for entry in entries:
                 thumbnail_url = entry.get("thumbnail_url")
                 entry_id = entry.get("id", "")
@@ -69,14 +73,13 @@ class HistoryLoaderThread(QThread):
                             
                             image = Image.open(BytesIO(response.content))
                             image.save(thumbnail_path, "JPEG", quality=95, optimize=True)
+                            self.thumbnail_loaded.emit(entry_id)
                     except Exception as e:
                         logger.debug(f"Error caching thumbnail in background: {e}")
             
-            self.finished.emit(entries)
-            
         except Exception as e:
             logger.error(f"Error loading history: {e}")
-            self.finished.emit([])
+            self.entries_loaded.emit([])
 
 
 class HistoryEntryWidget(QFrame):
@@ -246,40 +249,13 @@ class HistoryEntryWidget(QFrame):
             except Exception as e:
                 logger.debug(f"Error loading cached thumbnail: {e}")
         
-        # Download thumbnail
-        try:
-            response = requests.get(thumbnail_url, timeout=5)
-            response.raise_for_status()
-            
-            image = Image.open(BytesIO(response.content))
-            
-            # Don't resize, keep original quality and just save at higher quality
-            # The QPixmap scaling will handle the display size with high quality
-            
-            # Save to cache with higher quality
-            try:
-                APP_THUMBNAILS_DIR.mkdir(parents=True, exist_ok=True)
-                image.save(thumbnail_path, "JPEG", quality=95, optimize=True)
-            except Exception as e:
-                logger.debug(f"Error caching thumbnail: {e}")
-            
-            # Convert to QPixmap
-            image_bytes = BytesIO()
-            image.save(image_bytes, format="JPEG", quality=95)
-            image_bytes.seek(0)
-            
-            pixmap = QPixmap()
-            pixmap.loadFromData(image_bytes.read())
-            
-            if not pixmap.isNull():
-                # Don't scale here, let setScaledContents handle it
-                self.thumbnail_label.setPixmap(pixmap)
-            else:
-                self.set_placeholder_thumbnail()
-                
-        except Exception as e:
-            logger.debug(f"Error downloading thumbnail: {e}")
-            self.set_placeholder_thumbnail()
+        # If not in cache, just set placeholder. 
+        # Background thread will download it and notify parent to reload.
+        self.set_placeholder_thumbnail()
+
+    def reload_thumbnail(self):
+        """Reload thumbnail from cache (called when background download finishes)."""
+        self.load_thumbnail()
     
     def set_placeholder_thumbnail(self):
         """Set a placeholder when thumbnail is not available."""
@@ -401,6 +377,7 @@ class HistoryDialog(QDialog):
         super().__init__(parent)
         self.parent_app = parent
         self.entry_widgets = []
+        self.entry_widgets_map = {}  # Map entry_id -> widget
         
         self.setup_ui()
         
@@ -414,12 +391,18 @@ class HistoryDialog(QDialog):
     def start_loading_history(self):
         """Start the background thread to load history."""
         self.loader_thread = HistoryLoaderThread()
-        self.loader_thread.finished.connect(self.on_history_loaded)
+        self.loader_thread.entries_loaded.connect(self.on_history_loaded)
+        self.loader_thread.thumbnail_loaded.connect(self.update_entry_thumbnail)
         self.loader_thread.start()
         
     def on_history_loaded(self, entries):
         """Called when history is loaded from background thread."""
         self.load_history_entries(entries)
+
+    def update_entry_thumbnail(self, entry_id: str):
+        """Called when a thumbnail is downloaded in the background."""
+        if entry_id in self.entry_widgets_map:
+            self.entry_widgets_map[entry_id].reload_thumbnail()
     
     def setup_ui(self):
         """Setup the dialog UI."""
@@ -528,6 +511,7 @@ class HistoryDialog(QDialog):
         for widget in self.entry_widgets:
             widget.deleteLater()
         self.entry_widgets.clear()
+        self.entry_widgets_map.clear()
 
     def show_loading_state(self):
         """Show loading indicator."""
@@ -572,6 +556,11 @@ class HistoryDialog(QDialog):
             widget.redownload_requested.connect(self.handle_redownload)
             
             self.history_layout.addWidget(widget)
+            
+            # Map widget by ID for updates
+            entry_id = entry.get("id")
+            if entry_id:
+                self.entry_widgets_map[entry_id] = widget
             self.entry_widgets.append(widget)
         
         # Update status
