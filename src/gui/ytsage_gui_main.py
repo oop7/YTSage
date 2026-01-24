@@ -8,7 +8,7 @@ import markdown
 import pyglet
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
@@ -53,7 +53,51 @@ from src.utils.ytsage_localization import LocalizationManager, _
 from src.utils.ytsage_history_manager import HistoryManager
 
 
+class UpdateCheckThread(QThread):
+    update_available = Signal(str, str, str)  # version, url, changelog
+
+    def __init__(self, current_version):
+        super().__init__()
+        self.current_version = current_version
+
+    def run(self):
+        try:
+            # Get the latest version info from PyPI (no rate limiting unlike GitHub API)
+            response = requests.get(
+                "https://pypi.org/pypi/ytsage/json",
+                timeout=10,
+            )
+            response.raise_for_status()
+
+            pypi_data = response.json()
+            latest_version = pypi_data["info"]["version"]
+
+            # Compare versions
+            if version.parse(latest_version) > version.parse(self.current_version):
+                release_url = "https://github.com/oop7/YTSage/releases/latest"
+                
+                # Try to fetch changelog from GitHub (with fallback if rate-limited)
+                changelog = "View the full changelog on the [GitHub Releases](https://github.com/oop7/YTSage/releases) page."
+                try:
+                    gh_response = requests.get(
+                        "https://api.github.com/repos/oop7/YTSage/releases/latest",
+                        headers={"Accept": "application/vnd.github.v3+json"},
+                        timeout=5,
+                    )
+                    if gh_response.status_code == 200:
+                        gh_data = gh_response.json()
+                        changelog = gh_data.get("body", changelog)
+                except Exception:
+                    # Silently fallback to static message if GitHub API fails
+                    pass
+                
+                self.update_available.emit(latest_version, release_url, changelog)
+        except Exception as e:
+            logger.debug(f"Failed to check for updates: {e}")
+
+
 class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from mixins
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -1161,39 +1205,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
                 self.signals.update_status.emit(_("download.resumed"))
 
     def check_for_updates(self) -> None:
-        try:
-            # Get the latest version info from PyPI (no rate limiting unlike GitHub API)
-            response = requests.get(
-                "https://pypi.org/pypi/ytsage/json",
-                timeout=10,
-            )
-            response.raise_for_status()
-
-            pypi_data = response.json()
-            latest_version = pypi_data["info"]["version"]
-
-            # Compare versions
-            if version.parse(latest_version) > version.parse(self.version):
-                release_url = "https://github.com/oop7/YTSage/releases/latest"
-                
-                # Try to fetch changelog from GitHub (with fallback if rate-limited)
-                changelog = "View the full changelog on the [GitHub Releases](https://github.com/oop7/YTSage/releases) page."
-                try:
-                    gh_response = requests.get(
-                        "https://api.github.com/repos/oop7/YTSage/releases/latest",
-                        headers={"Accept": "application/vnd.github.v3+json"},
-                        timeout=5,
-                    )
-                    if gh_response.status_code == 200:
-                        gh_data = gh_response.json()
-                        changelog = gh_data.get("body", changelog)
-                except Exception:
-                    # Silently fallback to static message if GitHub API fails (rate limit, etc.)
-                    pass
-                
-                self.show_update_dialog(latest_version, release_url, changelog)
-        except Exception as e:
-            logger.exception(f"Failed to check for updates: {e}")
+        """Starts the update check in a background thread."""
+        self.update_thread = UpdateCheckThread(self.version)
+        self.update_thread.update_available.connect(self.show_update_dialog)
+        self.update_thread.start()
 
     def show_update_dialog(self, latest_version, release_url, changelog) -> None:  # Added changelog parameter
         msg = QDialog(self)
