@@ -31,7 +31,7 @@ from src.core.ytsage_deno import check_deno_installed, get_deno_path
 class LogWindow(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("yt-dlp Log")
+        self.setWindowTitle(_("dialogs.ytdlp_log_title"))
         self.setMinimumSize(700, 500)
 
         layout = QVBoxLayout(self)
