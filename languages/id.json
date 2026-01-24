@@ -93,7 +93,8 @@
     "select_subtitles": "Pilih subtitle",
     "filter_languages_placeholder": "Filter bahasa (misalnya: id, en)...",
     "no_subtitles_available": "Tidak ada subtitle yang tersedia",
-    "matching": "yang cocok"
+    "matching": "yang cocok",
+    "ytdlp_log_title": "Log yt-dlp"
   },
   "tabs": {
     "cookies": "Masuk dengan cookies",
@@ -124,7 +125,10 @@
     "browser_selected_title": "Cookies Browser Diterapkan",
     "browser_applied_message": "Cookies browser akan diekstrak dari: {browser}",
     "cleared_title": "Cookies Dihapus",
-    "cleared_message": "Pengaturan cookie telah dihapus"
+    "cleared_message": "Pengaturan cookie telah dihapus",
+    "active_browser": "✓ Aktif: cookie browser ({browser})",
+    "active_file": "✓ Aktif: file cookie ({file})",
+    "none_active": "○ Tidak ada cookie aktif"
   },
   "custom_command": {
     "help_text": "Masukkan perintah yt-dlp khusus Anda di bawah. URL saat ini akan ditambahkan secara otomatis.<br><br>Untuk daftar lengkap opsi dan contoh penggunaan <a href=\"{docs_url}\">klik di sini untuk melihat dokumentasi resmi yt-dlp</a>.<br><br>Catatan: Jalur unduhan dan template nama file ditangani secara otomatis.",
@@ -137,7 +141,14 @@
     "full_command": "🔧 Perintah lengkap: {command}",
     "command_success": "✅ Perintah khusus berhasil dijalankan!",
     "command_failed": "❌ Perintah gagal dengan kode keluar {code}",
-    "command_error": "❌ Kesalahan menjalankan perintah khusus: {error}"
+    "command_error": "❌ Kesalahan menjalankan perintah khusus: {error}",
+    "error_no_url": "❌ Error: Tidak ada URL yang diberikan. Masukkan URL di jendela utama.",
+    "error_no_command": "❌ Error: Tidak ada perintah yang diberikan. Masukkan argumen yt-dlp.",
+    "executing": "🚀 Menjalankan perintah yt-dlp kustom",
+    "url_label": "📍 URL: {url}",
+    "args_label": "⚙️  Argumen: {command}",
+    "download_path_label": "📁 Lokasi unduhan: {path}",
+    "separator": "=================================================="
   },
   "proxy": {
     "help_text": "Konfigurasi pengaturan proxy untuk unduhan. Biarkan kosong untuk koneksi langsung.",
@@ -159,7 +170,15 @@
     "invalid_main_url": "Format URL proxy utama tidak valid",
     "invalid_geo_url": "Format URL proxy geografis tidak valid",
     "main_configured": "Proxy utama dikonfigurasi",
-    "geo_configured": "Proxy geografis dikonfigurasi"
+    "geo_configured": "Proxy geografis dikonfigurasi",
+    "set_title": "Proxy diatur",
+    "set_message": "Proxy utama diatur dan disimpan: {proxy}",
+    "geo_set_title": "Proxy geo diatur",
+    "geo_set_message": "Proxy verifikasi geo diatur dan disimpan: {proxy}",
+    "cleared_title": "Pengaturan proxy dibersihkan",
+    "cleared_message": "Semua pengaturan proxy telah dibersihkan dan disimpan.",
+    "saved_main": "Proxy utama tersimpan: {proxy}",
+    "saved_geo": "Proxy geo tersimpan: {proxy}"
   },
   "download": {
     "preparing": "Mempersiapkan unduhan...",
@@ -347,7 +366,11 @@
     "zero_selected": "0 dipilih",
     "analyze_first_tooltip": "Silakan analisis video terlebih dahulu",
     "audio_mode_disabled": "Tidak tersedia dalam mode audio saja",
-    "select_subtitles_first": "Silakan pilih subtitle terlebih dahulu"
+    "select_subtitles_first": "Silakan pilih subtitle terlebih dahulu",
+    "settings_tooltip": "Path saat ini: {path}\nBatas kecepatan: {speed_limit}",
+    "speed_limit_none": "Tidak ada",
+    "open_folder_error": "Tidak dapat membuka folder: {error}",
+    "time_range_set": "Bagian disetel: {section}"
   },
   "sponsorblock": {
     "sponsor": "Sponsor",
@@ -446,7 +469,8 @@
     "next_check": "Pemeriksaan berikutnya: {time}",
     "next_check_error": "Pemeriksaan berikutnya: Kesalahan perhitungan",
     "checking": "🔄 Memeriksa...",
-    "check_now": "🔍 Periksa pembaruan sekarang"
+    "check_now": "🔍 Periksa pembaruan sekarang",
+    "current_version": "Versi yt-dlp saat ini: {version}"
   },
   "url_validation": {
     "empty_url": "URL tidak boleh kosong",
@@ -477,6 +501,7 @@
     "clear_confirm_message": "Apakah Anda yakin? Ini tidak dapat dibatalkan.",
     "no_history": "Belum ada riwayat",
     "no_history_description": "Unduhan Anda akan muncul di sini",
+    "loading": "Memuat riwayat...",
     "search_placeholder": "Cari...",
     "open_location": "Buka Lokasi",
     "redownload": "Unduh Lagi",
@@ -495,7 +520,47 @@
     "one_entry": "1 unduhan",
     "redownload_confirm_title": "Unduh Lagi?",
     "redownload_confirm_message": "Unduh lagi?\n\n{title}",
-    "redownload_started": "Unduhan dimulai"
+    "redownload_started": "Unduhan dimulai",
+    "no_url_error": "Tidak ada URL pada entri riwayat",
+    "redownload_failed": "Gagal memulai unduh ulang: {error}"
+  },
+  "ffmpeg": {
+    "installation_title": "Instalasi FFmpeg",
+    "installation_message": "YTSage membutuhkan FFmpeg untuk memproses video.\n\nPilih opsi instalasi di bawah:",
+    "install_button": "Instal FFmpeg",
+    "manual_guide": "Panduan manual",
+    "installation_failed": "Instalasi FFmpeg mengalami masalah.",
+    "already_installed": "FFmpeg sudah terinstal!",
+    "installation_complete": "Instalasi selesai. Anda dapat menutup dialog ini dan melanjutkan menggunakan YTSage.",
+    "installing": "Menginstal FFmpeg... Harap tunggu",
+    "install_success": "FFmpeg berhasil diinstal!",
+    "installation_complete_close": "Instalasi selesai. Anda sekarang dapat menutup dialog ini dan melanjutkan menggunakan YTSage.",
+    "try_manual": "Silakan coba gunakan panduan instalasi manual sebagai gantinya."
+  },
+  "ytdlp_setup": {
+    "required_title": "Pengaturan yt-dlp diperlukan",
+    "description": "YTSage memerlukan yt-dlp untuk mengunduh video.<br><br>yt-dlp tidak ditemukan di direktori lokal aplikasi. YTSage perlu menyiapkan yt-dlp untuk sistem {os_name} Anda.<br><br>Silakan pilih opsi di bawah:",
+    "option_auto": "Unduh otomatis (disarankan)",
+    "option_manual": "Pilih path secara manual",
+    "setup_button": "Siapkan yt-dlp",
+    "downloading": "Mengunduh yt-dlp...",
+    "success": "yt-dlp berhasil diinstal!",
+    "error": "Error: {error}",
+    "download_failed_title": "Unduhan gagal",
+    "download_failed_message": "Gagal mengunduh yt-dlp: {error}",
+    "select_executable_title": "Pilih executable yt-dlp",
+    "copied_to": "yt-dlp berhasil disalin ke {path}",
+    "setup_error_title": "Kesalahan pengaturan",
+    "copy_error": "Kesalahan menyalin yt-dlp ke direktori aplikasi: {error}",
+    "invalid_executable_title": "Executable tidak valid",
+    "invalid_executable_message": "File yang dipilih tidak tampak sebagai executable yt-dlp yang valid.",
+    "verify_error": "Kesalahan memverifikasi executable yt-dlp: {error}",
+    "setup_failed_title": "Pengaturan gagal",
+    "setup_failed_message": "Gagal menyiapkan yt-dlp. Beberapa fitur mungkin tidak berfungsi dengan benar.",
+    "success_dialog_title": "Pengaturan yt-dlp",
+    "success_dialog_message": "yt-dlp berhasil dikonfigurasi di:\n{path}",
+    "file_filter_windows": "File executable (*.exe)",
+    "file_filter_all": "Semua file (*)"
   },
   "ffmpeg_updater": {
     "title": "Pemeriksa Versi FFmpeg",

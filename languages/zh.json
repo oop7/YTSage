@@ -93,7 +93,8 @@
     "select_subtitles": "选择字幕",
     "filter_languages_placeholder": "过滤语言（例如：en, zh）...",
     "no_subtitles_available": "无可用字幕",
-    "matching": "匹配"
+    "matching": "匹配",
+    "ytdlp_log_title": "yt-dlp 日志"
   },
   "tabs": {
     "cookies": "使用 Cookie 登录",
@@ -159,7 +160,13 @@
     "invalid_main_url": "主代理网址格式无效",
     "invalid_geo_url": "地理代理网址格式无效",
     "main_configured": "主代理已配置",
-    "geo_configured": "地理代理已配置"
+    "geo_configured": "地理代理已配置",
+    "set_title": "已设置代理",
+    "set_message": "主代理已设置并保存: {proxy}",
+    "geo_set_title": "已设置地理代理",
+    "geo_set_message": "地理验证代理已设置并保存: {proxy}",
+    "cleared_title": "代理设置已清除",
+    "cleared_message": "所有代理设置已清除并保存。"
   },
   "download": {
     "preparing": "正在准备下载...",
@@ -347,7 +354,11 @@
     "zero_selected": "已选择 0 个",
     "analyze_first_tooltip": "请先分析视频",
     "audio_mode_disabled": "在纯音频模式下不可用",
-    "select_subtitles_first": "请先选择字幕"
+    "select_subtitles_first": "请先选择字幕",
+    "settings_tooltip": "当前路径: {path}\n速度限制: {speed_limit}",
+    "speed_limit_none": "无",
+    "open_folder_error": "无法打开文件夹: {error}",
+    "time_range_set": "已设置区间: {section}"
   },
   "sponsorblock": {
     "sponsor": "赞助商",
@@ -446,7 +457,8 @@
     "next_check": "下次检查: {time}",
     "next_check_error": "下次检查: 计算错误",
     "checking": "🔄 检查中...",
-    "check_now": "🔍 立即检查更新"
+    "check_now": "🔍 立即检查更新",
+    "current_version": "当前 yt-dlp 版本：{version}"
   },
   "url_validation": {
     "empty_url": "URL不能为空",
@@ -495,7 +507,41 @@
     "one_entry": "1 个下载",
     "redownload_confirm_title": "重新下载？",
     "redownload_confirm_message": "重新下载？\n\n{title}",
-    "redownload_started": "已开始下载"
+    "redownload_started": "已开始下载",
+    "no_url_error": "历史记录中未找到 URL",
+    "redownload_failed": "无法开始重新下载: {error}"
+  },
+  "ffmpeg": {
+    "installation_title": "FFmpeg 安装",
+    "installation_message": "YTSage 需要 FFmpeg 来处理视频。\n\n请选择下面的安装选项：",
+    "install_button": "安装 FFmpeg",
+    "manual_guide": "手动指南",
+    "installation_failed": "FFmpeg 安装遇到问题。"
+  },
+  "ytdlp_setup": {
+    "required_title": "需要设置 yt-dlp",
+    "description": "YTSage 需要 yt-dlp 来下载视频。<br><br>在应用本地目录中未找到 yt-dlp。YTSage 需要为你的 {os_name} 系统设置 yt-dlp。<br><br>请选择下面的选项：",
+    "option_auto": "自动下载（推荐）",
+    "option_manual": "手动选择路径",
+    "setup_button": "设置 yt-dlp",
+    "downloading": "正在下载 yt-dlp...",
+    "success": "yt-dlp 已成功安装！",
+    "error": "错误：{error}",
+    "download_failed_title": "下载失败",
+    "download_failed_message": "无法下载 yt-dlp：{error}",
+    "select_executable_title": "选择 yt-dlp 可执行文件",
+    "copied_to": "yt-dlp 已成功复制到 {path}",
+    "setup_error_title": "设置错误",
+    "copy_error": "将 yt-dlp 复制到应用目录时出错：{error}",
+    "invalid_executable_title": "无效的可执行文件",
+    "invalid_executable_message": "所选文件似乎不是有效的 yt-dlp 可执行文件。",
+    "verify_error": "验证 yt-dlp 可执行文件时出错：{error}",
+    "setup_failed_title": "设置失败",
+    "setup_failed_message": "无法设置 yt-dlp。某些功能可能无法正常工作。",
+    "success_dialog_title": "yt-dlp 设置",
+    "success_dialog_message": "yt-dlp 已成功配置到：\n{path}",
+    "file_filter_windows": "可执行文件 (*.exe)",
+    "file_filter_all": "所有文件 (*)"
   },
   "ffmpeg_updater": {
     "title": "FFmpeg 版本检查器",
