@@ -250,24 +250,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.paste_button.clicked.connect(self.paste_url)
         self.paste_button.setMinimumHeight(42)
         self.paste_button.setMinimumWidth(115)
-        self.paste_button.setStyleSheet("""
-            QPushButton {
-                padding: 9px 20px;
-                background-color: #1b2021;
-                border: 2px solid #2a2d2e;
-                border-radius: 5px;
-                color: #ffffff;
-                font-weight: 600;
-                font-size: 13px;
-            }
-            QPushButton:hover {
-                background-color: #252829;
-                border-color: #3a3d3e;
-            }
-            QPushButton:pressed {
-                background-color: #1a1d1e;
-            }
-        """)
+        self.paste_button.setStyleSheet(StyleSheet.PASTE_BUTTON)
 
         # Analyze button with app's red theme
         self.analyze_button = QPushButton(_("buttons.analyze"))
@@ -275,27 +258,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.analyze_button.setEnabled(False)  # Disabled until URL is entered
         self.analyze_button.setMinimumHeight(42)
         self.analyze_button.setMinimumWidth(115)
-        self.analyze_button.setStyleSheet("""
-            QPushButton {
-                padding: 9px 20px;
-                background-color: #c90000;
-                border: none;
-                border-radius: 5px;
-                color: white;
-                font-weight: 600;
-                font-size: 13px;
-            }
-            QPushButton:hover {
-                background-color: #a50000;
-            }
-            QPushButton:pressed {
-                background-color: #800000;
-            }
-            QPushButton:disabled {
-                background-color: #3d3d3d;
-                color: #888888;
-            }
-        """)
+        self.analyze_button.setStyleSheet(StyleSheet.ANALYZE_BUTTON)
 
         url_layout.addWidget(self.url_input, 1)
         url_layout.addWidget(self.paste_button)
@@ -325,24 +288,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.playlist_select_btn = QPushButton(_("buttons.select_videos"))
         self.playlist_select_btn.clicked.connect(self.open_playlist_selection_dialog)
         self.playlist_select_btn.setVisible(False)
-        self.playlist_select_btn.setStyleSheet(
-            """
-            QPushButton {
-                padding: 6px 12px; 
-                background-color: #1d1e22;
-                border: 1px solid #c90000;
-                border-radius: 4px;
-                color: white;
-                font-weight: normal;
-                text-align: left;
-                padding-left: 10px;
-            }
-            QPushButton:hover { 
-                background-color: #2a2d36;
-                border-color: #a50000;
-            }
-        """
-        )
+        self.playlist_select_btn.setStyleSheet(StyleSheet.PLAYLIST_BUTTON)
         layout.addWidget(self.playlist_select_btn)
         # --- End Playlist Info Section ---
 
@@ -365,86 +311,20 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.video_button = QPushButton(_("buttons.video"))
         self.video_button.setCheckable(True)
         self.video_button.setChecked(True)  # Set video as default
-        self.video_button.setStyleSheet(
-            """
-            QPushButton {
-                padding: 8px 15px;
-                background-color: #1d1e22;
-                border: none;
-                border-radius: 4px;
-                color: white;
-                font-weight: bold;
-            }
-            QPushButton:checked {
-                background-color: #c90000;
-            }
-            QPushButton:hover {
-                background-color: #2a2d36;
-            }
-            QPushButton:checked:hover {
-                background-color: #a50000;
-            }
-        """
-        )
+        self.video_button.setStyleSheet(StyleSheet.FORMAT_TOGGLE_BUTTON)
         self.format_buttons.addButton(self.video_button)
         self.format_layout.addWidget(self.video_button)
 
         # Audio button
         self.audio_button = QPushButton(_("buttons.audio_only"))
         self.audio_button.setCheckable(True)
-        self.audio_button.setStyleSheet(
-            """
-            QPushButton {
-                padding: 8px 15px;
-                background-color: #1d1e22;
-                border: none;
-                border-radius: 4px;
-                color: white;
-                font-weight: bold;
-            }
-            QPushButton:checked {
-                background-color: #c90000;
-            }
-            QPushButton:hover {
-                background-color: #2a2d36;
-            }
-            QPushButton:checked:hover {
-                background-color: #a50000;
-            }
-        """
-        )
+        self.audio_button.setStyleSheet(StyleSheet.FORMAT_TOGGLE_BUTTON)
         self.format_buttons.addButton(self.audio_button)
         self.format_layout.addWidget(self.audio_button)
 
         # Add Merge Subtitles checkbox (Moved here)
         self.merge_subs_checkbox = QCheckBox(_("main_ui.merge_subtitles"))
-        self.merge_subs_checkbox.setStyleSheet(
-            """
-            QCheckBox {
-                color: #ffffff;
-                padding: 5px;
-                margin-left: 20px; /* Consistent margin */
-            }
-            QCheckBox::indicator {
-                width: 18px;
-                height: 18px;
-                border-radius: 9px;
-            }
-            QCheckBox::indicator:unchecked {
-                border: 2px solid #666666;
-                background: #1d1e22;
-                border-radius: 9px;
-            }
-            QCheckBox::indicator:checked {
-                border: 2px solid #c90000;
-                background: #c90000;
-                border-radius: 9px;
-            }
-            /* Add disabled state styling if needed */
-             QCheckBox:disabled { color: #888888; }
-             QCheckBox::indicator:disabled { border-color: #555555; background: #444444; }
-        """
-        )
+        self.merge_subs_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         # Initially disable it, will be enabled if subtitles are selected later
         self.merge_subs_checkbox.setEnabled(False)
         self.format_layout.addWidget(self.merge_subs_checkbox)
@@ -453,60 +333,21 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.save_thumbnail_checkbox = QCheckBox(_("main_ui.save_thumbnail"))
         self.save_thumbnail_checkbox.setChecked(False)
         self.save_thumbnail_checkbox.stateChanged.connect(self.toggle_save_thumbnail)
-        self.save_thumbnail_checkbox.setStyleSheet(
-            """
-            QCheckBox {
-                color: #ffffff;
-                padding: 5px;
-                margin-left: 20px;
-            }
-            QCheckBox::indicator { width: 18px; height: 18px; border-radius: 9px; }
-            QCheckBox::indicator:unchecked { border: 2px solid #666666; background: #1d1e22; border-radius: 9px; }
-            QCheckBox::indicator:checked { border: 2px solid #c90000; background: #c90000; border-radius: 9px; }
-             QCheckBox:disabled { color: #888888; }
-             QCheckBox::indicator:disabled { border-color: #555555; background: #444444; }
-        """
-        )
+        self.save_thumbnail_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         self.format_layout.addWidget(self.save_thumbnail_checkbox)
 
         # Add Save Description Checkbox (Moved here)
         self.save_description_checkbox = QCheckBox(_("main_ui.save_description"))
         self.save_description_checkbox.setChecked(False)
         self.save_description_checkbox.stateChanged.connect(self.toggle_save_description)
-        self.save_description_checkbox.setStyleSheet(
-            """
-            QCheckBox {
-                color: #ffffff;
-                padding: 5px;
-                margin-left: 20px;
-            }
-            QCheckBox::indicator { width: 18px; height: 18px; border-radius: 9px; }
-            QCheckBox::indicator:unchecked { border: 2px solid #666666; background: #1d1e22; border-radius: 9px; }
-            QCheckBox::indicator:checked { border: 2px solid #c90000; background: #c90000; border-radius: 9px; }
-             QCheckBox:disabled { color: #888888; }
-             QCheckBox::indicator:disabled { border-color: #555555; background: #444444; }
-        """
-        )
+        self.save_description_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         self.format_layout.addWidget(self.save_description_checkbox)
 
         # Add Embed Chapters Checkbox
         self.embed_chapters_checkbox = QCheckBox(_("main_ui.embed_chapters"))
         self.embed_chapters_checkbox.setChecked(False)
         self.embed_chapters_checkbox.stateChanged.connect(self.toggle_embed_chapters)
-        self.embed_chapters_checkbox.setStyleSheet(
-            """
-            QCheckBox {
-                color: #ffffff;
-                padding: 5px;
-                margin-left: 20px;
-            }
-            QCheckBox::indicator { width: 18px; height: 18px; border-radius: 9px; }
-            QCheckBox::indicator:unchecked { border: 2px solid #666666; background: #1d1e22; border-radius: 9px; }
-            QCheckBox::indicator:checked { border: 2px solid #c90000; background: #c90000; border-radius: 9px; }
-             QCheckBox:disabled { color: #888888; }
-             QCheckBox::indicator:disabled { border-color: #555555; background: #444444; }
-        """
-        )
+        self.embed_chapters_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         self.format_layout.addWidget(self.embed_chapters_checkbox)
 
         self.format_layout.addStretch()
@@ -567,36 +408,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Progress section with improved styling
         progress_layout = QVBoxLayout()
         self.progress_bar = QProgressBar()
-        self.progress_bar.setStyleSheet(
-            """
-            QProgressBar {
-                border: 2px solid #3d3d3d;
-                border-radius: 4px;
-                text-align: center;
-                color: white;
-                background-color: #363636;
-                height: 25px;
-            }
-            QProgressBar::chunk {
-                background-color: #ff0000;
-                border-radius: 2px;
-            }
-        """
-        )
+        self.progress_bar.setStyleSheet(StyleSheet.PROGRESS_BAR)
         progress_layout.addWidget(self.progress_bar)
 
         # Add download details label with improved styling
         self.download_details_label = QLabel()
         self.download_details_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.download_details_label.setStyleSheet(
-            """
-            QLabel {
-                color: #cccccc;
-                font-size: 12px;
-                padding: 5px;
-            }
-        """
-        )
+        self.download_details_label.setStyleSheet(StyleSheet.STATUS_LABEL)
         progress_layout.addWidget(self.download_details_label)
 
         # Create a horizontal layout for status label and open folder button
@@ -604,40 +422,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         
         self.status_label = QLabel(_("app.ready"))
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.status_label.setStyleSheet(
-            """
-            QLabel {
-                color: #cccccc;
-                font-size: 12px;
-                padding: 5px;
-            }
-        """
-        )
+        self.status_label.setStyleSheet(StyleSheet.STATUS_LABEL)
         status_layout.addWidget(self.status_label)
 
         # Add "Open Folder" button (initially hidden)
         self.open_folder_btn = QPushButton("📁")
         self.open_folder_btn.setToolTip(_("buttons.open_folder"))
         self.open_folder_btn.setFixedSize(30, 30)
-        self.open_folder_btn.setStyleSheet(
-            """
-            QPushButton {
-                background-color: #2a2d2e;
-                color: #cccccc;
-                border: 1px solid #404040;
-                border-radius: 5px;
-                font-size: 16px;
-                padding: 2px;
-            }
-            QPushButton:hover {
-                background-color: #3a3d3e;
-                border: 1px solid #505050;
-            }
-            QPushButton:pressed {
-                background-color: #1a1d1e;
-            }
-        """
-        )
+        self.open_folder_btn.setStyleSheet(StyleSheet.OPEN_FOLDER_BUTTON)
         self.open_folder_btn.clicked.connect(self.open_download_folder)
         self.open_folder_btn.setVisible(False)  # Hidden by default
         status_layout.addWidget(self.open_folder_btn)
@@ -1092,17 +884,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             f"</div>"
         )
         message_label.setWordWrap(True)
-        message_label.setStyleSheet(
-            """
-            QLabel {
-                background-color: #1d1e22;
-                border: 1px solid #3d3d3d;
-                border-radius: 6px;
-                padding: 15px;
-                margin: 5px 0;
-            }
-        """
-        )
+        message_label.setStyleSheet(StyleSheet.UPDATE_DIALOG_MESSAGE)
         layout.addWidget(message_label)
 
         # Changelog Section
@@ -1126,34 +908,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             logger.warning(f"Error converting changelog markdown to HTML: {e}", exc_info=True)
             changelog_text.setPlainText(changelog)  # Fallback to plain text
 
-        changelog_text.setStyleSheet(
-            """
-            QTextEdit {
-                background-color: #1d1e22;
-                border: 2px solid #3d3d3d;
-                border-radius: 6px;
-                color: #ffffff;
-                padding: 10px;
-                font-family: 'Segoe UI', Arial, sans-serif;
-                font-size: 12px;
-                line-height: 1.4;
-            }
-            QScrollBar:vertical {
-                border: none;
-                background: #1d1e22;
-                width: 12px;
-                border-radius: 6px;
-            }
-            QScrollBar::handle:vertical {
-                background: #404040;
-                min-height: 20px;
-                border-radius: 6px;
-            }
-            QScrollBar::handle:vertical:hover {
-                background: #505050;
-            }
-        """
-        )
+        changelog_text.setStyleSheet(StyleSheet.UPDATE_DIALOG_CHANGELOG)
         changelog_text.setMaximumHeight(180)  # Limit height
         layout.addWidget(changelog_text)
 
@@ -1163,50 +918,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
 
         download_btn = QPushButton(_('update_dialog.download_update'))
         download_btn.clicked.connect(lambda: self.open_release_page(release_url))
-        download_btn.setStyleSheet(
-            """
-            QPushButton {
-                padding: 10px 20px;
-                background-color: #c90000;
-                border: none;
-                border-radius: 6px;
-                color: white;
-                font-weight: bold;
-                font-size: 13px;
-                min-width: 140px;
-            }
-            QPushButton:hover {
-                background-color: #a50000;
-            }
-            QPushButton:pressed {
-                background-color: #800000;
-            }
-        """
-        )
+        download_btn.setStyleSheet(StyleSheet.UPDATE_DIALOG_DOWNLOAD_BTN)
 
         remind_btn = QPushButton(_('update_dialog.remind_later'))
         remind_btn.clicked.connect(msg.close)
-        remind_btn.setStyleSheet(
-            """
-            QPushButton {
-                padding: 10px 20px;
-                background-color: #3d3d3d;
-                border: 1px solid #555555;
-                border-radius: 6px;
-                color: white;
-                font-weight: bold;
-                font-size: 13px;
-                min-width: 140px;
-            }
-            QPushButton:hover {
-                background-color: #4d4d4d;
-                border-color: #666666;
-            }
-            QPushButton:pressed {
-                background-color: #2d2d2d;
-            }
-        """
-        )
+        remind_btn.setStyleSheet(StyleSheet.UPDATE_DIALOG_REMIND_BTN)
 
         button_layout.addStretch()
         button_layout.addWidget(download_btn)
@@ -1214,19 +930,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         layout.addLayout(button_layout)
 
         # Style the dialog with improved theme matching
-        msg.setStyleSheet(
-            """
-            QDialog {
-                background-color: #15181b;
-                border: 1px solid #3d3d3d;
-                border-radius: 8px;
-            }
-            QLabel {
-                color: #ffffff;
-                font-size: 12px;
-            }
-        """
-        )
+        msg.setStyleSheet(StyleSheet.UPDATE_DIALOG_MAIN)
 
         msg.show()
 
@@ -1419,30 +1123,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         msg_box.setWindowIcon(self.windowIcon())
 
         # Style the dialog
-        msg_box.setStyleSheet(
-            """
-            QMessageBox {
-                background-color: #2b2b2b;
-            }
-            QLabel {
-                color: #ffffff;
-            }
-            QPushButton {
-                padding: 8px 15px;
-                background-color: #ff0000;
-                border: none;
-                border-radius: 4px;
-                color: white;
-                font-weight: bold;
-                min-width: 80px;
-            }
-            QPushButton:hover {
-                background-color: #cc0000;
-            }
-        """
-        )
+        msg_box.setStyleSheet(StyleSheet.FILE_EXISTS_DIALOG)
 
         msg_box.exec()
+
 
     # --- Add Toggle Methods Here ---
     def toggle_save_thumbnail(self, state) -> None:
@@ -1693,22 +1377,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             self.force_keyframes = dialog.get_force_keyframes()
 
             if self.download_section:
-                self.time_range_btn.setStyleSheet(
-                    """
-                    QPushButton {
-                        padding: 8px 15px;
-                        background-color: #c90000;
-                        border: none;
-                        border-radius: 4px;
-                        color: white;
-                        font-weight: bold;
-                        border: 2px solid white;
-                    }
-                    QPushButton:hover {
-                        background-color: #a50000;
-                    }
-                """
-                )
+                self.time_range_btn.setStyleSheet(StyleSheet.TIME_RANGE_BTN_ACTIVE)
                 self.time_range_btn.setToolTip(f"Section set: {self.download_section}")
             else:
                 # Reset to default style if no section is selected
@@ -1726,28 +1395,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             success_dialog.setWindowTitle("yt-dlp Setup")
             success_dialog.setText(f"yt-dlp has been successfully configured at:\n{yt_dlp_path}")
             success_dialog.setWindowIcon(self.windowIcon())
-            success_dialog.setStyleSheet(
-                """
-                QMessageBox {
-                    background-color: #15181b;
-                    color: #ffffff;
-                }
-                QLabel {
-                    color: #ffffff;
-                }
-                QPushButton {
-                    padding: 8px 15px;
-                    background-color: #c90000;
-                    border: none;
-                    border-radius: 4px;
-                    color: white;
-                    font-weight: bold;
-                }
-                QPushButton:hover {
-                    background-color: #a50000;
-                }
-            """
-            )
+            success_dialog.setStyleSheet(StyleSheet.SETUP_SUCCESS_DIALOG)
             success_dialog.exec()
 
     def show_deno_setup_dialog(self) -> None:
@@ -1759,28 +1407,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
             success_dialog.setWindowTitle(_("deno.setup_required"))
             success_dialog.setText(f"{_('deno.success')}\n{deno_path}")
             success_dialog.setWindowIcon(self.windowIcon())
-            success_dialog.setStyleSheet(
-                """
-                QMessageBox {
-                    background-color: #15181b;
-                    color: #ffffff;
-                }
-                QLabel {
-                    color: #ffffff;
-                }
-                QPushButton {
-                    padding: 8px 15px;
-                    background-color: #c90000;
-                    border: none;
-                    border-radius: 4px;
-                    color: white;
-                    font-weight: bold;
-                }
-                QPushButton:hover {
-                    background-color: #a50000;
-                }
-            """
-            )
+            success_dialog.setStyleSheet(StyleSheet.SETUP_SUCCESS_DIALOG)
             success_dialog.exec()
 
     def _analyze_url_with_subprocess(self, url) -> None:
