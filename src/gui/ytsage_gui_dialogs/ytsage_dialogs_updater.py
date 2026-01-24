@@ -9,7 +9,7 @@ import threading
 from typing import Optional, Tuple, TYPE_CHECKING, cast
 
 import requests
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QThread, Slot
 from PySide6.QtWidgets import (
     QCheckBox,
     QGroupBox,
@@ -155,6 +155,32 @@ def check_ffmpeg_version() -> Tuple[bool, str, str]:
     except Exception as e:
         logger.exception(f"Error checking FFmpeg version: {e}")
         return False, "Error", "Error"
+
+
+class FFmpegCheckThread(QThread):
+    finished = Signal(bool, str, str)
+    error = Signal(str)
+
+    def run(self):
+        try:
+            update_available, current_version, latest_version = check_ffmpeg_version()
+            self.finished.emit(update_available, current_version, latest_version)
+        except Exception as e:
+            logger.exception(f"Error checking FFmpeg version: {e}")
+            self.error.emit(str(e))
+
+
+class DenoCheckThread(QThread):
+    finished = Signal(bool, str, str)
+    error = Signal(str)
+
+    def run(self):
+        try:
+            update_available, current_version, latest_version = check_deno_update()
+            self.finished.emit(update_available, current_version, latest_version)
+        except Exception as e:
+            logger.exception(f"Error checking Deno version: {e}")
+            self.error.emit(str(e))
 
 
 class UpdaterTabWidget(QWidget):
@@ -754,22 +780,20 @@ class UpdaterTabWidget(QWidget):
             "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
         )
         
-        # Run check in background thread
-        def check_thread():
-            try:
-                update_available, current_version, latest_version = check_ffmpeg_version()
-                
-                # Update UI in main thread
-                self.check_button.setEnabled(True)
-                self._update_check_results(update_available, current_version, latest_version)
-                
-            except Exception as e:
-                logger.exception(f"Error checking FFmpeg version: {e}")
-                self.check_button.setEnabled(True)
-                self._show_check_error(str(e))
-        
-        thread = threading.Thread(target=check_thread, daemon=True)
-        thread.start()
+        self.ffmpeg_check_thread = FFmpegCheckThread()
+        self.ffmpeg_check_thread.finished.connect(self._on_ffmpeg_check_finished)
+        self.ffmpeg_check_thread.error.connect(self._on_ffmpeg_check_error)
+        self.ffmpeg_check_thread.start()
+
+    @Slot(bool, str, str)
+    def _on_ffmpeg_check_finished(self, update_available, current_version, latest_version):
+        self.check_button.setEnabled(True)
+        self._update_check_results(update_available, current_version, latest_version)
+
+    @Slot(str)
+    def _on_ffmpeg_check_error(self, error):
+        self.check_button.setEnabled(True)
+        self._show_check_error(error)
     
     def _update_check_results(self, update_available: bool, current_version: str, latest_version: str) -> None:
         """Handle completion of version check."""
@@ -819,22 +843,20 @@ class UpdaterTabWidget(QWidget):
             "background-color: #2a2d36; border-radius: 4px; margin: 5px 0;"
         )
         
-        # Run check in background thread
-        def check_thread():
-            try:
-                update_available, current_version, latest_version = check_deno_update()
-                
-                # Update UI in main thread
-                self.deno_check_button.setEnabled(True)
-                self._update_deno_check_results(update_available, current_version, latest_version)
-                
-            except Exception as e:
-                logger.exception(f"Error checking Deno version: {e}")
-                self.deno_check_button.setEnabled(True)
-                self._show_deno_check_error(str(e))
-        
-        thread = threading.Thread(target=check_thread, daemon=True)
-        thread.start()
+        self.deno_check_thread = DenoCheckThread()
+        self.deno_check_thread.finished.connect(self._on_deno_check_finished)
+        self.deno_check_thread.error.connect(self._on_deno_check_error)
+        self.deno_check_thread.start()
+
+    @Slot(bool, str, str)
+    def _on_deno_check_finished(self, update_available, current_version, latest_version):
+        self.deno_check_button.setEnabled(True)
+        self._update_deno_check_results(update_available, current_version, latest_version)
+
+    @Slot(str)
+    def _on_deno_check_error(self, error):
+        self.deno_check_button.setEnabled(True)
+        self._show_deno_check_error(error)
     
     def _update_deno_check_results(self, update_available: bool, current_version: str, latest_version: str) -> None:
         """Handle completion of Deno version check."""
