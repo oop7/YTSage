@@ -492,6 +492,32 @@ class UpdaterTabWidget(QWidget):
 
         # Enable/Disable auto-update checkbox
         self.auto_update_enabled = QCheckBox(_("settings.enable_auto_updates"))
+        self.auto_update_enabled.setStyleSheet(
+            """
+            QCheckBox {
+                color: #ffffff;
+                spacing: 5px;
+                padding: 3px;
+            }
+            QCheckBox::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #1d1e22;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+                border-radius: 9px;
+            }
+            QCheckBox:disabled { color: #888888; }
+            QCheckBox::indicator:disabled { border-color: #555555; background: #444444; }
+            """
+        )
         auto_update_layout.addWidget(self.auto_update_enabled)
 
         # Frequency options

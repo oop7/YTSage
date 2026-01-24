@@ -189,9 +189,12 @@ class DownloadThread(QThread):
 
         def safe_delete(path: Path) -> bool:
             try:
-                path.unlink(missing_ok=True)
-                logger.debug(f"Deleted subtitle file: {path.name}")
-                return True
+                # Check if file exists before trying to delete
+                if path.exists():
+                    path.unlink(missing_ok=True)
+                    logger.debug(f"Deleted subtitle file: {path.name}")
+                    return True
+                return False
             except Exception as e:
                 logger.exception(f"Error deleting subtitle file {path}: {e}")
                 return False
@@ -410,8 +413,6 @@ class DownloadThread(QThread):
                     self._terminate_process_tree(self.process)
                     
                     # Add delay before cleanup to allow file handles to be released
-                    # Force garbage collection to help release resources
-                    gc.collect()
                     time.sleep(2)
                     self.cleanup_partial_files()
                     self.status_signal.emit(_("download.cancelled"))
@@ -622,6 +623,14 @@ class DownloadThread(QThread):
         if "Downloading webpage" in line or "Extracting URL" in line:
             self.status_signal.emit(_("download.fetching_info"))
             self.progress_signal.emit(0)
+        elif "[download] Destination:" in line:
+             # Extract the destination filename
+            match = re.search(r"Destination: (.+)", line)
+            if match:
+                dest_path = match.group(1).strip()
+                self.current_filename = Path(dest_path).name
+                self.last_file_path = dest_path
+                logger.debug(f"Captured destination filename: {self.current_filename}")
         elif "Downloading API JSON" in line:
             self.status_signal.emit(_("download.processing_playlist"))
             self.progress_signal.emit(0)

@@ -51,6 +51,7 @@ from src.utils.ytsage_logger import logger
 from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import LocalizationManager, _
 from src.utils.ytsage_history_manager import HistoryManager
+from src.gui.ytsage_stylesheet import StyleSheet
 
 
 class UpdateCheckThread(QThread):
@@ -105,30 +106,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         saved_language = ConfigManager.get("language") or "en"
         LocalizationManager.initialize(saved_language)
 
-        # Check for FFmpeg before proceeding
-        if not check_ffmpeg():
-            self.show_ffmpeg_dialog()
-
-        # Check for yt-dlp in our app's bin directory or system PATH
-        ytdlp_path = get_yt_dlp_path()
-        if ytdlp_path == "yt-dlp":  # Not found in app dir or PATH
-            self.show_ytdlp_setup_dialog()
-        else:
-            logger.info(f"Using yt-dlp from: {ytdlp_path}")
-
-        # Check for Deno in our app's bin directory
-        deno_path = get_deno_path()
-        if deno_path == "deno":  # Not found in app dir
-            self.show_deno_setup_dialog()
-        else:
-            logger.info(f"Using Deno from: {deno_path}")
-
         self.version = APP_VERSION
-        self.check_for_updates()
-
-        # Check for auto-updates if enabled
-        self.check_auto_update_ytdlp()
-
         load_saved_path(self)
         # Load custom icon
         if ICON_PATH.exists():
@@ -176,178 +154,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         self.analysis_completed = False
 
         self.init_ui()
-        self.setStyleSheet(
-            """
-            QMainWindow {
-                background-color: #15181b;
-            }
-            QWidget {
-                background-color: #15181b;
-                color: #ffffff;
-            }
-            QLineEdit {
-                padding: 5px 15px;
-                border: 2px solid #2a2d2e;
-                border-radius: 6px;
-                background-color: #1b2021;
-                color: #ffffff;
-                font-size: 13px;
-            }
-            QLineEdit:focus {
-                border-color: #ff6b6b;
-            }
-            QPushButton {
-                padding: 8px 15px;
-                background-color: #c90000;
-                border: none;
-                border-radius: 4px;
-                color: white;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #a50000;
-            }
-            QPushButton:pressed {
-                background-color: #800000;
-            }
-            QPushButton:disabled {
-                background-color: #3d3d3d;
-                color: #888888;
-            }
-            QTableWidget {
-                border: 2px solid #1b2021;
-                border-radius: 4px;
-                background-color: #1b2021;
-                gridline-color: #1b2021;
-            }
-            QHeaderView::section {
-                background-color: #15181b;
-                padding: 5px;
-                border: 1px solid #1b2021;
-                color: #ffffff;
-            }
-            QProgressBar {
-                border: 2px solid #1b2021;
-                border-radius: 4px;
-                text-align: center;
-                color: white;
-            }
-            QProgressBar::chunk {
-                background-color: #c90000;
-                border-radius: 2px;
-            }
-            QLabel {
-                color: #ffffff;
-            }
-            /* Style for filter buttons */
-            QPushButton.filter-btn {
-                background-color: #1b2021;
-                padding: 5px 10px;
-                margin: 0 5px;
-            }
-            QPushButton.filter-btn:checked {
-                background-color: #c90000;
-            }
-            QPushButton.filter-btn:hover {
-                background-color: #444444;
-            }
-            QPushButton.filter-btn:checked:hover {
-                background-color: #a50000;
-            }
-            /* Modern Scrollbar Styling */
-            QScrollBar:vertical {
-                border: none;
-                background: #15181b;
-                width: 14px;
-                margin: 15px 0 15px 0;
-                border-radius: 7px;
-            }
-            QScrollBar::handle:vertical {
-                background: #404040;
-                min-height: 30px;
-                border-radius: 7px;
-            }
-            QScrollBar::handle:vertical:hover {
-                background: #505050;
-            }
-            QScrollBar::sub-line:vertical {
-                border: none;
-                background: #15181b;
-                height: 15px;
-                border-top-left-radius: 7px;
-                border-top-right-radius: 7px;
-                subcontrol-position: top;
-                subcontrol-origin: margin;
-            }
-            QScrollBar::add-line:vertical {
-                border: none;
-                background: #15181b;
-                height: 15px;
-                border-bottom-left-radius: 7px;
-                border-bottom-right-radius: 7px;
-                subcontrol-position: bottom;
-                subcontrol-origin: margin;
-            }
-            QScrollBar::sub-line:vertical:hover,
-            QScrollBar::add-line:vertical:hover {
-                background: #404040;
-            }
-            QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
-                background: none;
-                width: 0;
-                height: 0;
-            }
-            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-                background: none;
-            }
-            /* Horizontal Scrollbar */
-            QScrollBar:horizontal {
-                border: none;
-                background: #15181b;
-                height: 14px;
-                margin: 0 15px 0 15px;
-                border-radius: 7px;
-            }
-            QScrollBar::handle:horizontal {
-                background: #404040;
-                min-width: 30px;
-                border-radius: 7px;
-            }
-            QScrollBar::handle:horizontal:hover {
-                background: #505050;
-            }
-            QScrollBar::sub-line:horizontal {
-                border: none;
-                background: #15181b;
-                width: 15px;
-                border-top-left-radius: 7px;
-                border-bottom-left-radius: 7px;
-                subcontrol-position: left;
-                subcontrol-origin: margin;
-            }
-            QScrollBar::add-line:horizontal {
-                border: none;
-                background: #15181b;
-                width: 15px;
-                border-top-right-radius: 7px;
-                border-bottom-right-radius: 7px;
-                subcontrol-position: right;
-                subcontrol-origin: margin;
-            }
-            QScrollBar::sub-line:horizontal:hover,
-            QScrollBar::add-line:horizontal:hover {
-                background: #404040;
-            }
-            QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal {
-                background: none;
-                width: 0;
-                height: 0;
-            }
-            QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
-                background: none;
-            }
-        """
-        )
+        
+        # Defer heavy start-up tasks to ensure UI renders immediately
+        QTimer.singleShot(100, self._perform_startup_checks)
+
+        self.setStyleSheet(StyleSheet.MAIN)
         self.signals.update_progress.connect(self.update_progress_bar)
 
         # After adding format buttons
@@ -361,7 +172,32 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin):  # Inherit from 
         # Initialize UI state based on current mode
         self.handle_mode_change()
 
-    # Init_sound method is removed, serve no purpose.
+
+    def _perform_startup_checks(self):
+        """Perform potentially blocking startup checks after UI is shown."""
+        
+        # Check for FFmpeg before proceeding
+        if not check_ffmpeg():
+            self.show_ffmpeg_dialog()
+
+        # Check for yt-dlp in our app's bin directory or system PATH
+        ytdlp_path = get_yt_dlp_path()
+        if ytdlp_path == "yt-dlp":  # Not found in app dir or PATH
+            self.show_ytdlp_setup_dialog()
+        else:
+            logger.info(f"Using yt-dlp from: {ytdlp_path}")
+
+        # Check for Deno in our app's bin directory
+        deno_path = get_deno_path()
+        if deno_path == "deno":  # Not found in app dir
+            self.show_deno_setup_dialog()
+        else:
+            logger.info(f"Using Deno from: {deno_path}")
+
+        self.check_for_updates()
+
+        # Check for auto-updates if enabled
+        QTimer.singleShot(2000, self.check_auto_update_ytdlp) # Further delay auto-update check
 
     def play_notification_sound(self) -> None:
         """Play notification sound asynchronously (non-blocking)."""
