@@ -5,11 +5,11 @@ import webbrowser
 from pathlib import Path
 
 import markdown
-import pyglet
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal, QUrl
 from PySide6.QtGui import QIcon
+from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PySide6.QtWidgets import (
     QApplication,
     QButtonGroup,
@@ -154,6 +154,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         # Track if video analysis is completed
         self.analysis_completed = False
 
+        # Initialize audio player
+        self.player = QMediaPlayer()
+        self.audio_output = QAudioOutput()
+        self.player.setAudioOutput(self.audio_output)
+
         self.init_ui()
         
         # Defer heavy start-up tasks to ensure UI renders immediately
@@ -208,10 +213,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 logger.warning(f"Notification sound file not found at: {SOUND_PATH}")
                 return
 
-            # Play the sound using pyglet
-            # no need for the thread, as .play() is async
-            sound = pyglet.media.load(str(SOUND_PATH), streaming=False)
-            sound.play()
+            # Play the sound using QtMultimedia
+            self.player.setSource(QUrl.fromLocalFile(str(SOUND_PATH)))
+            self.player.play()
             logger.debug("Notification sound played")
         except Exception as e:
             logger.exception(f"Error playing notification sound: {e}")
