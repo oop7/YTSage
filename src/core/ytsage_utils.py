@@ -107,9 +107,10 @@ def update_version_cache(tool_name: str, version_info: str, path: Optional[str],
 
 def load_version_cache_from_config() -> None:
     """Load cached version info from config file."""
+    from src.utils.ytsage_config_manager import ConfigManager
+    
     try:
-        config = load_config()
-        cached_versions = config.get("cached_versions", {})
+        cached_versions = ConfigManager.get("cached_versions") or {}
 
         for tool_name, cache_data in cached_versions.items():
             if tool_name in _version_cache:
@@ -120,10 +121,10 @@ def load_version_cache_from_config() -> None:
 
 def save_version_cache_to_config() -> None:
     """Save version cache to config file."""
+    from src.utils.ytsage_config_manager import ConfigManager
+    
     try:
-        config = load_config()
-        config["cached_versions"] = _version_cache.copy()
-        save_config(config)
+        ConfigManager.set("cached_versions", _version_cache.copy())
     except Exception as e:
         logger.exception(f"Error saving version cache: {e}")
 
@@ -323,57 +324,7 @@ def get_ffmpeg_version_direct() -> str:
 # get_app_data_dir() moved to src\utils\ytsage_constants.py
 # get_config_file_path() moved to src\utils\ytsage_constants.py
 # ensure_app_data_dir() moved to src\utils\ytsage_constants.py
-
-
-def load_config() -> Dict[str, Any]:
-    """Load the application configuration from file."""
-    default_config: Dict[str, Any] = {
-        "download_path": str(USER_HOME_DIR / "Downloads"),
-        "speed_limit_value": None,
-        "speed_limit_unit_index": 0,
-        "cookie_file_path": None,
-        "last_used_cookie_file": None,
-        "auto_update_ytdlp": True,  # Enable auto-update by default
-        "auto_update_frequency": "daily",  # daily, weekly, or startup
-        "last_update_check": 0,  # timestamp of last check
-        "cached_versions": {
-            "ytdlp": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
-            "ffmpeg": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
-        },
-    }
-
-    try:
-        if APP_CONFIG_FILE.exists():
-            with open(APP_CONFIG_FILE, "r", encoding="utf-8") as f:
-                config = json.load(f)
-                # Merge with defaults to ensure all keys exist
-                for key, value in default_config.items():
-                    if key not in config:
-                        config[key] = value
-                return config
-    except (json.JSONDecodeError, UnicodeError, Exception) as e:
-        logger.exception(f"Error reading config file: {e}")
-        # If config file is corrupted, create a new one with defaults
-        save_config(default_config)
-
-    return default_config
-
-
-def save_config(config: Dict[str, Any]) -> bool:
-    """Save the application configuration to file."""
-    try:
-        # Convert any Path objects to strings for JSON serialization
-        def _convert_path(obj):
-            if isinstance(obj, Path):
-                return str(obj)
-            raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
-
-        with open(APP_CONFIG_FILE, "w", encoding="utf-8") as f:
-            json.dump(config, f, ensure_ascii=False, indent=2, default=_convert_path)
-        return True
-    except Exception as e:
-        logger.exception(f"Error saving config: {e}")
-        return False
+# load_config() and save_config() removed - use ConfigManager instead
 
 
 def check_ffmpeg() -> bool:
@@ -599,15 +550,15 @@ def update_yt_dlp() -> bool:
 
 def should_check_for_auto_update() -> bool:
     """Check if auto-update should be performed based on user settings."""
+    from src.utils.ytsage_config_manager import ConfigManager
+    
     try:
-        config = load_config()
-
         # Check if auto-update is enabled
-        if not config.get("auto_update_ytdlp", False):
+        if not ConfigManager.get("auto_update_ytdlp"):
             return False
 
-        frequency: str = config.get("auto_update_frequency", "daily")
-        last_check: float = config.get("last_update_check", 0)
+        frequency: str = ConfigManager.get("auto_update_frequency") or "daily"
+        last_check: float = ConfigManager.get("last_update_check") or 0
         current_time: float = time.time()
 
         # Calculate time since last check
@@ -629,6 +580,8 @@ def should_check_for_auto_update() -> bool:
 
 def check_and_update_ytdlp_auto() -> bool:
     """Perform automatic yt-dlp update check and update if needed."""
+    from src.utils.ytsage_config_manager import ConfigManager
+    
     try:
         logger.info("Performing automatic yt-dlp update check...")
 
@@ -659,9 +612,7 @@ def check_and_update_ytdlp_auto() -> bool:
                 if update_yt_dlp():
                     logger.info("Auto-update completed successfully!")
                     # Update the last check timestamp
-                    config = load_config()
-                    config["last_update_check"] = time.time()
-                    save_config(config)
+                    ConfigManager.set("last_update_check", time.time())
                     return True
                 else:
                     logger.info("Auto-update failed")
@@ -669,9 +620,7 @@ def check_and_update_ytdlp_auto() -> bool:
             else:
                 logger.info("yt-dlp is already up to date")
                 # Still update the timestamp even if no update was needed
-                config = load_config()
-                config["last_update_check"] = time.time()
-                save_config(config)
+                ConfigManager.set("last_update_check", time.time())
                 return True
 
         except requests.RequestException as e:

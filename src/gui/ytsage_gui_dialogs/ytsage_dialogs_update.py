@@ -14,9 +14,10 @@ from packaging import version
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushButton, QVBoxLayout
 
-from src.core.ytsage_utils import get_ytdlp_version, load_config, save_config
+from src.core.ytsage_utils import get_ytdlp_version
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
 from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH, YTDLP_DOWNLOAD_URL
+from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import LocalizationManager
 
 # Shorthand for localization
@@ -407,9 +408,7 @@ class AutoUpdateThread(QThread):
                     if success:
                         logger.info("AutoUpdateThread: Auto-update completed successfully!")
                         # Update the last check timestamp
-                        config = load_config()
-                        config["last_update_check"] = time.time()
-                        save_config(config)
+                        ConfigManager.set("last_update_check", time.time())
                         self.update_finished.emit(
                             True,
                             f"Successfully updated yt-dlp from {current_version} to {latest_version}",
@@ -420,9 +419,7 @@ class AutoUpdateThread(QThread):
                 else:
                     logger.info("AutoUpdateThread: yt-dlp is already up to date")
                     # Still update the timestamp even if no update was needed
-                    config = load_config()
-                    config["last_update_check"] = time.time()
-                    save_config(config)
+                    ConfigManager.set("last_update_check", time.time())
                     self.update_finished.emit(
                         True,
                         f"yt-dlp is already up to date (version {current_version})",
