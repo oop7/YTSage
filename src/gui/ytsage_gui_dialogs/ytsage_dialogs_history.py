@@ -435,7 +435,7 @@ class HistoryDialog(QDialog):
         layout.addWidget(self.status_label)
 
     def show_loading_state(self):
-        self.status_label.setText("Loading history...")
+        self.status_label.setText(_("history.loading"))
         self.clear_btn.setEnabled(False)
 
     def start_loading_history(self):
@@ -517,7 +517,7 @@ class HistoryDialog(QDialog):
         
         path = Path(path_str)
         if not path.exists():
-            QMessageBox.warning(self, "Error", f"File not found: {path}")
+            QMessageBox.warning(self, _("main_ui.error_title"), _("history.file_not_found_message", path=path))
             return
             
         try:
