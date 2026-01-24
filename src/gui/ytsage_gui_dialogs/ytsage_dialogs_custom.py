@@ -675,13 +675,17 @@ class CustomOptionsDialog(QDialog):
     def _update_cookies_active_status(self) -> None:
         """Update the status indicator showing if cookies are currently active"""
         if hasattr(self._parent, "browser_cookies_option") and self._parent.browser_cookies_option:
-            self.cookies_active_status.setText(f"✓ Active: Browser cookies ({self._parent.browser_cookies_option})")
+            self.cookies_active_status.setText(
+                _("cookies.active_browser", browser=self._parent.browser_cookies_option)
+            )
             self.cookies_active_status.setStyleSheet("color: #00cc00; font-weight: bold;")
         elif hasattr(self._parent, "cookie_file_path") and self._parent.cookie_file_path:
-            self.cookies_active_status.setText(f"✓ Active: Cookie file ({self._parent.cookie_file_path.name})")
+            self.cookies_active_status.setText(
+                _("cookies.active_file", file=self._parent.cookie_file_path.name)
+            )
             self.cookies_active_status.setStyleSheet("color: #00cc00; font-weight: bold;")
         else:
-            self.cookies_active_status.setText("○ No cookies active")
+            self.cookies_active_status.setText(_("cookies.none_active"))
             self.cookies_active_status.setStyleSheet("color: #888888; font-style: italic;")
 
     def _initialize_proxy_settings(self) -> None:
@@ -854,9 +858,9 @@ class CustomOptionsDialog(QDialog):
             if saved_main or saved_geo:
                 status_parts = []
                 if saved_main:
-                    status_parts.append(f"Saved main proxy: {saved_main}")
+                    status_parts.append(_("proxy.saved_main", proxy=saved_main))
                 if saved_geo:
-                    status_parts.append(f"Saved geo proxy: {saved_geo}")
+                    status_parts.append(_("proxy.saved_geo", proxy=saved_geo))
                 self.proxy_status.setText(" | ".join(status_parts))
                 self.proxy_status.setStyleSheet("color: #888888; font-style: italic;")
             else:
@@ -866,10 +870,10 @@ class CustomOptionsDialog(QDialog):
         issues = []
         
         if main_proxy and not self.validate_proxy_url(main_proxy):
-            issues.append("Invalid main proxy URL format")
+            issues.append(_("proxy.invalid_main_url"))
             
         if geo_proxy and not self.validate_proxy_url(geo_proxy):
-            issues.append("Invalid geo proxy URL format")
+            issues.append(_("proxy.invalid_geo_url"))
         
         if issues:
             self.proxy_status.setText(" | ".join(issues))
@@ -877,9 +881,9 @@ class CustomOptionsDialog(QDialog):
         else:
             status_parts = []
             if main_proxy:
-                status_parts.append("Main proxy configured")
+                status_parts.append(_("proxy.main_configured"))
             if geo_proxy:
-                status_parts.append("Geo proxy configured")
+                status_parts.append(_("proxy.geo_configured"))
             
             self.proxy_status.setText(" | ".join(status_parts))
             self.proxy_status.setStyleSheet("color: #00cc00; font-style: italic;")
@@ -887,24 +891,24 @@ class CustomOptionsDialog(QDialog):
     def run_custom_command(self) -> None:
         url = self._parent.url_input.text().strip()
         if not url:
-            self.log_output.append("❌ Error: No URL provided. Please enter a URL in the main window.")
+            self.log_output.append(_("custom_command.error_no_url"))
             return
 
         command = self.command_input.toPlainText().strip()
         if not command:
-            self.log_output.append("❌ Error: No command provided. Please enter yt-dlp arguments.")
+            self.log_output.append(_("custom_command.error_no_command"))
             return
 
         # Get download path from parent
         path = self._parent.last_path
 
         self.log_output.clear()
-        self.log_output.append("🚀 Executing custom yt-dlp command")
-        self.log_output.append(f"📍 URL: {url}")
-        self.log_output.append(f"⚙️  Arguments: {command}")
+        self.log_output.append(_("custom_command.executing"))
+        self.log_output.append(_("custom_command.url_label", url=url))
+        self.log_output.append(_("custom_command.args_label", command=command))
         if path:
-            self.log_output.append(f"📁 Download path: {path}")
-        self.log_output.append("=" * 50)
+            self.log_output.append(_("custom_command.download_path_label", path=path))
+        self.log_output.append(_("custom_command.separator"))
         self.run_btn.setEnabled(False)
         self.run_btn.setText(_("command.running"))
 
