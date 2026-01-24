@@ -93,7 +93,8 @@
     "select_subtitles": "Altyazı seç",
     "filter_languages_placeholder": "Dilleri filtrele (örn: tr, en)...",
     "no_subtitles_available": "Altyazı mevcut değil",
-    "matching": "eşleşen"
+    "matching": "eşleşen",
+    "ytdlp_log_title": "yt-dlp Günlüğü"
   },
   "tabs": {
     "cookies": "Çerezlerle giriş yap",
@@ -124,7 +125,10 @@
     "browser_selected_title": "Tarayıcı Çerezleri Uygulandı",
     "browser_applied_message": "Tarayıcı çerezleri şuradan çıkarılacak: {browser}",
     "cleared_title": "Çerezler Temizlendi",
-    "cleared_message": "Çerez ayarları temizlendi"
+    "cleared_message": "Çerez ayarları temizlendi",
+    "active_browser": "✓ Etkin: Tarayıcı çerezleri ({browser})",
+    "active_file": "✓ Etkin: Çerez dosyası ({file})",
+    "none_active": "○ Etkin çerez yok"
   },
   "custom_command": {
     "help_text": "Özel yt-dlp komutunuzu aşağıya girin. Mevcut URL otomatik olarak eklenecektir.<br><br>Seçeneklerin tam listesi ve kullanım örnekleri için <a href=\"{docs_url}\">resmi yt-dlp belgelerini görmek için buraya tıklayın</a>.<br><br>Not: İndirme yolu ve dosya adı şablonu otomatik olarak işlenir.",
@@ -137,7 +141,14 @@
     "full_command": "🔧 Tam komut: {command}",
     "command_success": "✅ Özel komut başarıyla çalıştırıldı!",
     "command_failed": "❌ Komut {code} çıkış koduyla başarısız oldu",
-    "command_error": "❌ Özel komut çalıştırma hatası: {error}"
+    "command_error": "❌ Özel komut çalıştırılırken hata: {error}",
+    "error_no_url": "❌ Hata: URL sağlanmadı. Lütfen ana pencerede bir URL girin.",
+    "error_no_command": "❌ Hata: Komut sağlanmadı. Lütfen yt-dlp argümanlarını girin.",
+    "executing": "🚀 Özel yt-dlp komutu çalıştırılıyor",
+    "url_label": "📍 URL: {url}",
+    "args_label": "⚙️  Argümanlar: {command}",
+    "download_path_label": "📁 İndirme yolu: {path}",
+    "separator": "=================================================="
   },
   "proxy": {
     "help_text": "İndirmeler için proxy ayarlarını yapılandırın. Doğrudan bağlantı için boş bırakın.",
@@ -159,7 +170,13 @@
     "invalid_main_url": "Geçersiz ana proxy URL formatı",
     "invalid_geo_url": "Geçersiz coğrafi proxy URL formatı",
     "main_configured": "Ana proxy yapılandırıldı",
-    "geo_configured": "Coğrafi proxy yapılandırıldı"
+    "geo_configured": "Coğrafi proxy yapılandırıldı",
+    "set_title": "Proxy ayarlandı",
+    "set_message": "Ana proxy ayarlandı ve kaydedildi: {proxy}",
+    "geo_set_title": "Coğrafi proxy ayarlandı",
+    "geo_set_message": "Coğrafi doğrulama proxy'si ayarlandı ve kaydedildi: {proxy}",
+    "cleared_title": "Proxy ayarları temizlendi",
+    "cleared_message": "Tüm proxy ayarları temizlendi ve kaydedildi."
   },
   "download": {
     "preparing": "İndirme hazırlanıyor...",
@@ -347,7 +364,11 @@
     "zero_selected": "0 seçildi",
     "analyze_first_tooltip": "Lütfen önce videoyu analiz edin",
     "audio_mode_disabled": "Yalnızca ses modunda kullanılamaz",
-    "select_subtitles_first": "Lütfen önce altyazıları seçin"
+    "select_subtitles_first": "Lütfen önce altyazıları seçin",
+    "settings_tooltip": "Mevcut Yol: {path}\nHız Sınırı: {speed_limit}",
+    "speed_limit_none": "Yok",
+    "open_folder_error": "Klasör açılamadı: {error}",
+    "time_range_set": "Bölüm ayarlandı: {section}"
   },
   "sponsorblock": {
     "sponsor": "Sponsor",
@@ -446,7 +467,8 @@
     "next_check": "Sonraki kontrol: {time}",
     "next_check_error": "Sonraki kontrol: Hesaplama hatası",
     "checking": "🔄 Kontrol ediliyor...",
-    "check_now": "🔍 Şimdi güncellemeleri kontrol et"
+    "check_now": "🔍 Şimdi güncellemeleri kontrol et",
+    "current_version": "Mevcut yt-dlp sürümü: {version}"
   },
   "url_validation": {
     "empty_url": "URL boş olamaz",
@@ -495,7 +517,41 @@
     "one_entry": "1 indirme",
     "redownload_confirm_title": "Tekrar İndir?",
     "redownload_confirm_message": "Tekrar indir?\n\n{title}",
-    "redownload_started": "İndirme başladı"
+    "redownload_started": "İndirme başladı",
+    "no_url_error": "Geçmiş kaydında URL bulunamadı",
+    "redownload_failed": "Yeniden indirme başlatılamadı: {error}"
+  },
+  "ffmpeg": {
+    "installation_title": "FFmpeg Kurulumu",
+    "installation_message": "YTSage, videoları işlemek için FFmpeg'e ihtiyaç duyar.\n\nAşağıdan bir kurulum seçeneği seçin:",
+    "install_button": "FFmpeg Kur",
+    "manual_guide": "Manuel Kılavuz",
+    "installation_failed": "FFmpeg kurulumu bir sorunla karşılaştı."
+  },
+  "ytdlp_setup": {
+    "required_title": "yt-dlp Kurulumu Gerekli",
+    "description": "YTSage, video indirmek için yt-dlp'ye ihtiyaç duyar.<br><br>yt-dlp uygulamanın yerel dizininde bulunamadı. YTSage'in {os_name} sisteminiz için yt-dlp'yi kurması gerekiyor.<br><br>Lütfen aşağıdan bir seçenek seçin:",
+    "option_auto": "Otomatik indir (Önerilen)",
+    "option_manual": "Yolu manuel seç",
+    "setup_button": "yt-dlp Kur",
+    "downloading": "yt-dlp indiriliyor...",
+    "success": "yt-dlp başarıyla yüklendi!",
+    "error": "Hata: {error}",
+    "download_failed_title": "İndirme Başarısız",
+    "download_failed_message": "yt-dlp indirilemedi: {error}",
+    "select_executable_title": "yt-dlp çalıştırılabilir dosyasını seç",
+    "copied_to": "yt-dlp başarıyla {path} konumuna kopyalandı",
+    "setup_error_title": "Kurulum Hatası",
+    "copy_error": "yt-dlp uygulama dizinine kopyalanırken hata: {error}",
+    "invalid_executable_title": "Geçersiz Çalıştırılabilir",
+    "invalid_executable_message": "Seçilen dosya geçerli bir yt-dlp çalıştırılabilir dosyası değil.",
+    "verify_error": "yt-dlp çalıştırılabilir dosyası doğrulanırken hata: {error}",
+    "setup_failed_title": "Kurulum Başarısız",
+    "setup_failed_message": "yt-dlp kurulumu başarısız oldu. Bazı özellikler düzgün çalışmayabilir.",
+    "success_dialog_title": "yt-dlp Kurulumu",
+    "success_dialog_message": "yt-dlp başarıyla şu konuma yapılandırıldı:\n{path}",
+    "file_filter_windows": "Çalıştırılabilir Dosyalar (*.exe)",
+    "file_filter_all": "Tüm Dosyalar (*)"
   },
   "ffmpeg_updater": {
     "title": "FFmpeg Sürüm Denetçisi",

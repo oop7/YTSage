@@ -93,7 +93,8 @@
     "select_subtitles": "Selecionar Legendas",
     "filter_languages_placeholder": "Filtrar idiomas (ex., en, pt)...",
     "no_subtitles_available": "Nenhuma legenda disponível",
-    "matching": "correspondendo"
+    "matching": "correspondendo",
+    "ytdlp_log_title": "Log do yt-dlp"
   },
   "tabs": {
     "cookies": "Entrar com Cookies",
@@ -124,7 +125,10 @@
     "browser_selected_title": "Cookies do Navegador Aplicados",
     "browser_applied_message": "Os cookies do navegador serão extraídos de: {browser}",
     "cleared_title": "Cookies Limpos",
-    "cleared_message": "As configurações de cookies foram limpas"
+    "cleared_message": "As configurações de cookies foram limpas",
+    "active_browser": "✓ Ativos: cookies do navegador ({browser})",
+    "active_file": "✓ Ativo: arquivo de cookies ({file})",
+    "none_active": "○ Nenhum cookie ativo"
   },
   "custom_command": {
     "help_text": "Digite seu comando yt-dlp personalizado abaixo. A URL atual será anexada automaticamente.<br><br>Para a lista completa de opções e exemplos de uso, <a href=\"{docs_url}\">clique aqui para ver a documentação oficial do yt-dlp</a>.<br><br>Nota: O caminho de download e modelo de nome de arquivo serão tratados automaticamente.",
@@ -137,7 +141,14 @@
     "full_command": "🔧 Comando completo: {command}",
     "command_success": "✅ Comando personalizado executado com sucesso!",
     "command_failed": "❌ Comando falhou com código de saída {code}",
-    "command_error": "❌ Erro ao executar comando personalizado: {error}"
+    "command_error": "❌ Erro ao executar comando personalizado: {error}",
+    "error_no_url": "❌ Erro: nenhuma URL fornecida. Insira uma URL na janela principal.",
+    "error_no_command": "❌ Erro: nenhum comando fornecido. Insira os argumentos do yt-dlp.",
+    "executing": "🚀 Executando comando personalizado do yt-dlp",
+    "url_label": "📍 URL: {url}",
+    "args_label": "⚙️  Argumentos: {command}",
+    "download_path_label": "📁 Caminho de download: {path}",
+    "separator": "=================================================="
   },
   "proxy": {
     "help_text": "Configure as definições de proxy para download. Deixe vazio para usar conexão direta.",
@@ -159,7 +170,15 @@
     "invalid_main_url": "Formato de URL do proxy principal inválido",
     "invalid_geo_url": "Formato de URL do proxy geográfico inválido",
     "main_configured": "Proxy principal configurado",
-    "geo_configured": "Proxy geográfico configurado"
+    "geo_configured": "Proxy geográfico configurado",
+    "set_title": "Proxy definido",
+    "set_message": "Proxy principal definido e salvo: {proxy}",
+    "geo_set_title": "Proxy geo definido",
+    "geo_set_message": "Proxy de verificação geo definido e salvo: {proxy}",
+    "cleared_title": "Configurações de proxy limpas",
+    "cleared_message": "Todas as configurações de proxy foram limpas e salvas.",
+    "saved_main": "Proxy principal salvo: {proxy}",
+    "saved_geo": "Proxy geo salvo: {proxy}"
   },
   "download": {
     "preparing": "Preparando download...",
@@ -347,7 +366,11 @@
     "zero_selected": "0 selecionados",
     "analyze_first_tooltip": "Por favor analise o vídeo primeiro",
     "audio_mode_disabled": "Não disponível no modo apenas áudio",
-    "select_subtitles_first": "Por favor selecione legendas primeiro"
+    "select_subtitles_first": "Por favor selecione legendas primeiro",
+    "settings_tooltip": "Caminho atual: {path}\nLimite de velocidade: {speed_limit}",
+    "speed_limit_none": "Nenhum",
+    "open_folder_error": "Não foi possível abrir a pasta: {error}",
+    "time_range_set": "Seção definida: {section}"
   },
   "sponsorblock": {
     "sponsor": "Patrocinador",
@@ -446,7 +469,8 @@
     "next_check": "Próxima verificação: {time}",
     "next_check_error": "Próxima verificação: Erro ao calcular",
     "checking": "🔄 Verificando...",
-    "check_now": "🔍 Verificar atualizações agora"
+    "check_now": "🔍 Verificar atualizações agora",
+    "current_version": "Versão atual do yt-dlp: {version}"
   },
   "url_validation": {
     "empty_url": "O URL não pode estar vazio",
@@ -477,6 +501,7 @@
     "clear_confirm_message": "Tem certeza? Isto não pode ser desfeito.",
     "no_history": "Nenhum histórico ainda",
     "no_history_description": "Seus downloads aparecerão aqui",
+    "loading": "Carregando histórico...",
     "search_placeholder": "Pesquisar...",
     "open_location": "Abrir Local",
     "redownload": "Baixar Novamente",
@@ -495,7 +520,47 @@
     "one_entry": "1 download",
     "redownload_confirm_title": "Baixar Novamente?",
     "redownload_confirm_message": "Baixar novamente?\n\n{title}",
-    "redownload_started": "Download iniciado"
+    "redownload_started": "Download iniciado",
+    "no_url_error": "Nenhuma URL encontrada no item do histórico",
+    "redownload_failed": "Falha ao iniciar o novo download: {error}"
+  },
+  "ffmpeg": {
+    "installation_title": "Instalação do FFmpeg",
+    "installation_message": "O YTSage precisa do FFmpeg para processar vídeos.\n\nEscolha uma opção de instalação abaixo:",
+    "install_button": "Instalar FFmpeg",
+    "manual_guide": "Guia manual",
+    "installation_failed": "A instalação do FFmpeg encontrou um problema.",
+    "already_installed": "O FFmpeg já está instalado!",
+    "installation_complete": "Instalação concluída. Você pode fechar este diálogo e continuar usando o YTSage.",
+    "installing": "Instalando FFmpeg... Aguarde",
+    "install_success": "FFmpeg instalado com sucesso!",
+    "installation_complete_close": "Instalação concluída. Agora você pode fechar este diálogo e continuar usando o YTSage.",
+    "try_manual": "Tente usar o guia de instalação manual."
+  },
+  "ytdlp_setup": {
+    "required_title": "Configuração do yt-dlp necessária",
+    "description": "O YTSage precisa do yt-dlp para baixar vídeos.<br><br>O yt-dlp não foi encontrado no diretório local do aplicativo. O YTSage precisa configurar o yt-dlp para o seu sistema {os_name}.<br><br>Escolha uma opção abaixo:",
+    "option_auto": "Baixar automaticamente (recomendado)",
+    "option_manual": "Selecionar caminho manualmente",
+    "setup_button": "Configurar yt-dlp",
+    "downloading": "Baixando yt-dlp...",
+    "success": "yt-dlp foi instalado com sucesso!",
+    "error": "Erro: {error}",
+    "download_failed_title": "Falha no download",
+    "download_failed_message": "Falha ao baixar yt-dlp: {error}",
+    "select_executable_title": "Selecionar executável do yt-dlp",
+    "copied_to": "yt-dlp copiado com sucesso para {path}",
+    "setup_error_title": "Erro de configuração",
+    "copy_error": "Erro ao copiar yt-dlp para o diretório do aplicativo: {error}",
+    "invalid_executable_title": "Executável inválido",
+    "invalid_executable_message": "O arquivo selecionado não parece ser um executável válido do yt-dlp.",
+    "verify_error": "Erro ao verificar o executável do yt-dlp: {error}",
+    "setup_failed_title": "Configuração falhou",
+    "setup_failed_message": "Falha ao configurar o yt-dlp. Alguns recursos podem não funcionar corretamente.",
+    "success_dialog_title": "Configuração do yt-dlp",
+    "success_dialog_message": "yt-dlp foi configurado com sucesso em:\n{path}",
+    "file_filter_windows": "Arquivos executáveis (*.exe)",
+    "file_filter_all": "Todos os arquivos (*)"
   },
   "ffmpeg_updater": {
     "title": "Verificador de Versão FFmpeg",

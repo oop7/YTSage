@@ -93,7 +93,8 @@
     "select_subtitles": "字幕を選択",
     "filter_languages_placeholder": "言語でフィルタ (例: ja, en)...",
     "no_subtitles_available": "利用可能な字幕がありません",
-    "matching": "一致"
+    "matching": "一致",
+    "ytdlp_log_title": "yt-dlpログ"
   },
   "tabs": {
     "cookies": "Cookieでログイン",
@@ -124,7 +125,10 @@
     "browser_selected_title": "ブラウザCookieが適用されました",
     "browser_applied_message": "ブラウザCookieが抽出されます: {browser}",
     "cleared_title": "Cookieがクリアされました",
-    "cleared_message": "Cookie設定がクリアされました"
+    "cleared_message": "Cookie設定がクリアされました",
+    "active_browser": "✓ 有効: ブラウザーのCookie ({browser})",
+    "active_file": "✓ 有効: Cookieファイル ({file})",
+    "none_active": "○ 有効なCookieはありません"
   },
   "custom_command": {
     "help_text": "以下にカスタムyt-dlpコマンドを入力してください。現在のURLは自動的に追加されます。<br><br>オプションの完全なリストと使用例については、<a href=\"{docs_url}\">こちらをクリックしてyt-dlp公式ドキュメントを参照してください</a>。<br><br>注: ダウンロードパスとファイル名テンプレートは自動的に処理されます。",
@@ -137,7 +141,14 @@
     "full_command": "🔧 完全なコマンド: {command}",
     "command_success": "✅ カスタムコマンドが正常に実行されました！",
     "command_failed": "❌ コマンドが終了コード{code}で失敗しました",
-    "command_error": "❌ カスタムコマンドの実行エラー: {error}"
+    "command_error": "❌ カスタムコマンドの実行エラー: {error}",
+    "error_no_url": "❌ エラー: URL が指定されていません。メインウィンドウで URL を入力してください。",
+    "error_no_command": "❌ エラー: コマンドが指定されていません。yt-dlp の引数を入力してください。",
+    "executing": "🚀 カスタム yt-dlp コマンドを実行中",
+    "url_label": "📍 URL: {url}",
+    "args_label": "⚙️  引数: {command}",
+    "download_path_label": "📁 ダウンロード先: {path}",
+    "separator": "=================================================="
   },
   "proxy": {
     "help_text": "ダウンロード用のプロキシ設定を構成します。直接接続の場合は空白のままにしてください。",
@@ -159,7 +170,15 @@
     "invalid_main_url": "メインプロキシのURL形式が無効です",
     "invalid_geo_url": "地域プロキシのURL形式が無効です",
     "main_configured": "メインプロキシが設定されました",
-    "geo_configured": "地域プロキシが設定されました"
+    "geo_configured": "地域プロキシが設定されました",
+    "set_title": "プロキシを設定しました",
+    "set_message": "メインプロキシを設定して保存しました: {proxy}",
+    "geo_set_title": "ジオプロキシを設定しました",
+    "geo_set_message": "ジオ検証プロキシを設定して保存しました: {proxy}",
+    "cleared_title": "プロキシ設定をクリアしました",
+    "cleared_message": "すべてのプロキシ設定をクリアして保存しました。",
+    "saved_main": "保存されたメインプロキシ: {proxy}",
+    "saved_geo": "保存されたジオプロキシ: {proxy}"
   },
   "download": {
     "preparing": "ダウンロードを準備中...",
@@ -347,7 +366,11 @@
     "zero_selected": "0個選択",
     "analyze_first_tooltip": "最初に動画を分析してください",
     "audio_mode_disabled": "音声のみモードでは利用できません",
-    "select_subtitles_first": "最初に字幕を選択してください"
+    "select_subtitles_first": "最初に字幕を選択してください",
+    "settings_tooltip": "現在のパス: {path}\n速度制限: {speed_limit}",
+    "speed_limit_none": "なし",
+    "open_folder_error": "フォルダーを開けませんでした: {error}",
+    "time_range_set": "セクション設定: {section}"
   },
   "sponsorblock": {
     "sponsor": "スポンサー",
@@ -446,7 +469,8 @@
     "next_check": "次回確認: {time}",
     "next_check_error": "次回確認: 計算エラー",
     "checking": "🔄 確認中...",
-    "check_now": "🔍 今すぐ更新を確認"
+    "check_now": "🔍 今すぐ更新を確認",
+    "current_version": "現在のyt-dlpバージョン: {version}"
   },
   "url_validation": {
     "empty_url": "URLを空にすることはできません",
@@ -477,6 +501,7 @@
     "clear_confirm_message": "本当によろしいですか？この操作は取り消せません。",
     "no_history": "まだ履歴がありません",
     "no_history_description": "ダウンロードがここに表示されます",
+    "loading": "履歴を読み込み中...",
     "search_placeholder": "検索...",
     "open_location": "場所を開く",
     "redownload": "再ダウンロード",
@@ -495,7 +520,47 @@
     "one_entry": "1 件",
     "redownload_confirm_title": "再ダウンロード？",
     "redownload_confirm_message": "再ダウンロードしますか？\n\n{title}",
-    "redownload_started": "ダウンロード開始"
+    "redownload_started": "ダウンロード開始",
+    "no_url_error": "履歴エントリにURLがありません",
+    "redownload_failed": "再ダウンロードの開始に失敗しました: {error}"
+  },
+  "ffmpeg": {
+    "installation_title": "FFmpegのインストール",
+    "installation_message": "YTSageは動画処理にFFmpegが必要です。\n\n以下のインストールオプションを選択してください:",
+    "install_button": "FFmpegをインストール",
+    "manual_guide": "手動ガイド",
+    "installation_failed": "FFmpegのインストール中に問題が発生しました。",
+    "already_installed": "FFmpegはすでにインストールされています！",
+    "installation_complete": "インストール完了。このダイアログを閉じてYTSageを続けて使用できます。",
+    "installing": "FFmpegをインストール中... お待ちください",
+    "install_success": "FFmpegが正常にインストールされました！",
+    "installation_complete_close": "インストール完了。今すぐこのダイアログを閉じてYTSageを続けて使用できます。",
+    "try_manual": "代わりに手動インストールガイドをお試しください。"
+  },
+  "ytdlp_setup": {
+    "required_title": "yt-dlpのセットアップが必要です",
+    "description": "YTSageは動画のダウンロードにyt-dlpが必要です。<br><br>アプリのローカルディレクトリにyt-dlpが見つかりませんでした。{os_name}システム用にyt-dlpをセットアップする必要があります。<br><br>以下のオプションを選択してください:",
+    "option_auto": "自動でダウンロード（推奨）",
+    "option_manual": "パスを手動で選択",
+    "setup_button": "yt-dlpをセットアップ",
+    "downloading": "yt-dlpをダウンロード中...",
+    "success": "yt-dlpが正常にインストールされました！",
+    "error": "エラー: {error}",
+    "download_failed_title": "ダウンロード失敗",
+    "download_failed_message": "yt-dlpのダウンロードに失敗しました: {error}",
+    "select_executable_title": "yt-dlp実行ファイルを選択",
+    "copied_to": "yt-dlpを{path}にコピーしました",
+    "setup_error_title": "セットアップエラー",
+    "copy_error": "yt-dlpをアプリディレクトリにコピーできません: {error}",
+    "invalid_executable_title": "無効な実行ファイル",
+    "invalid_executable_message": "選択されたファイルは有効なyt-dlp実行ファイルではありません。",
+    "verify_error": "yt-dlp実行ファイルの検証に失敗しました: {error}",
+    "setup_failed_title": "セットアップ失敗",
+    "setup_failed_message": "yt-dlpのセットアップに失敗しました。いくつかの機能が正しく動作しない可能性があります。",
+    "success_dialog_title": "yt-dlpセットアップ",
+    "success_dialog_message": "yt-dlpの設定に成功しました:\n{path}",
+    "file_filter_windows": "実行ファイル (*.exe)",
+    "file_filter_all": "すべてのファイル (*)"
   },
   "ffmpeg_updater": {
     "title": "FFmpegバージョンチェッカー",
