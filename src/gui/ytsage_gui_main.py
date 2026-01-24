@@ -7,7 +7,7 @@ from pathlib import Path
 import markdown
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal, QUrl
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal, QUrl, QPropertyAnimation, QEasingCurve
 from PySide6.QtGui import QIcon
 from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PySide6.QtWidgets import (
@@ -464,6 +464,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.progress_bar.setFormat("%p%")  # Display as percentage
         self.progress_bar.setStyleSheet(StyleSheet.PROGRESS_BAR)
         progress_layout.addWidget(self.progress_bar)
+        
+        # Setup smooth animation for progress bar
+        self._progress_animation = QPropertyAnimation(self.progress_bar, b"value")
+        self._progress_animation.setDuration(150)  # 150ms smooth transition
+        self._progress_animation.setEasingCurve(QEasingCurve.Type.OutCubic)
 
         # Add download details label with improved styling
         self.download_details_label = QLabel()
@@ -828,7 +833,19 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         try:
             # Scale float percentage (0-100) to progress bar range (0-10000) for precision
             scaled_value = int(float(value) * 100)
-            self.progress_bar.setValue(scaled_value)
+            
+            # Use smooth animation for progress updates
+            if self._progress_animation.state() == QPropertyAnimation.State.Running:
+                self._progress_animation.stop()
+            
+            current_value = self.progress_bar.value()
+            # Only animate if there's a meaningful change (avoid micro-animations)
+            if abs(scaled_value - current_value) > 10:  # More than 0.1% change
+                self._progress_animation.setStartValue(current_value)
+                self._progress_animation.setEndValue(scaled_value)
+                self._progress_animation.start()
+            else:
+                self.progress_bar.setValue(scaled_value)
         except Exception as e:
             logger.exception(f"Progress bar update error: {e}")
 
