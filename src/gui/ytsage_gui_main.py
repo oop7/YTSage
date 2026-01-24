@@ -950,6 +950,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
     def closeEvent(self, event) -> None:
         """Handle application close event to ensure proper cleanup of background threads."""
         try:
+            # Stop the analysis thread if it's running
+            if hasattr(self, "_analysis_thread") and self._analysis_thread is not None and self._analysis_thread.isRunning():
+                logger.info("Stopping analysis thread...")
+                self._analysis_thread.cancel()
+                if not self._analysis_thread.wait(2000):  # Wait up to 2 seconds
+                    logger.warning("Force terminating analysis thread...")
+                    self._analysis_thread.terminate()
+                    self._analysis_thread.wait(1000)
+
             # Stop the auto-update thread if it's running
             if hasattr(self, "auto_update_thread") and self.auto_update_thread.isRunning():
                 logger.info("Stopping auto-update thread...")
