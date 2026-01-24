@@ -573,7 +573,7 @@ class AutoUpdateSettingsDialog(QDialog):
 
             # Update status labels
             current_version = get_ytdlp_version()
-            self.current_version_label.setText(f"Current yt-dlp version: {current_version}")
+            self.current_version_label.setText(_("auto_update.current_version", version=current_version))
 
             last_check = settings["last_check"]
             if last_check > 0:
