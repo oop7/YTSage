@@ -460,6 +460,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         # Progress section with improved styling
         progress_layout = QVBoxLayout()
         self.progress_bar = QProgressBar()
+        self.progress_bar.setRange(0, 10000)  # Use 0-10000 range for 0.01% precision
+        self.progress_bar.setFormat("%p%")  # Display as percentage
         self.progress_bar.setStyleSheet(StyleSheet.PROGRESS_BAR)
         progress_layout.addWidget(self.progress_bar)
 
@@ -603,7 +605,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         # Show preparation message
         self.status_label.setText(_('download.preparing'))
-        self.progress_bar.setValue(0)
+        self.progress_bar.setValue(0)  # Reset progress (range is 0-10000)
         self.open_folder_btn.setVisible(False)  # Hide the open folder button on new download
 
         # Get resolution for filename
@@ -703,7 +705,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(True)
         self.pause_btn.setVisible(False)
         self.cancel_btn.setVisible(False)
-        self.progress_bar.setValue(100)
+        self.progress_bar.setValue(10000)  # 100% in 0-10000 range
 
         # Set completion message based on the file type of last downloaded file
         if self.download_thread and self.download_thread.current_filename:
@@ -824,9 +826,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
     def update_progress_bar(self, value) -> None:
         try:
-            # Ensure the value is an integer
-            int_value = int(value)
-            self.progress_bar.setValue(int_value)
+            # Scale float percentage (0-100) to progress bar range (0-10000) for precision
+            scaled_value = int(float(value) * 100)
+            self.progress_bar.setValue(scaled_value)
         except Exception as e:
             logger.exception(f"Progress bar update error: {e}")
 
@@ -1110,7 +1112,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(True)
         self.pause_btn.setVisible(False)
         self.cancel_btn.setVisible(False)
-        self.progress_bar.setValue(100)
+        self.progress_bar.setValue(10000)  # 100% in 0-10000 range
 
         # Determine file type based on extension
         ext = Path(filename).suffix.lower()
@@ -1212,7 +1214,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         # Clear progress/status when controls are re-enabled
         if enabled:
-            self.progress_bar.setValue(0)
+            self.progress_bar.setValue(0)  # Reset progress (range is 0-10000)
             self.status_label.setText(_("status.ready"))
             self.download_details_label.setText("")  # Clear details label
 
