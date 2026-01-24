@@ -430,7 +430,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         # --- Rename Path Button to Settings Button ---
         self.settings_button = QPushButton(_("buttons.download_settings"))  # Renamed button
         self.settings_button.clicked.connect(self.show_download_settings_dialog)  # Renamed method
-        self.settings_button.setToolTip(f"Current Path: {self.last_path}\nSpeed Limit: None")  # Update initial tooltip
+        self.settings_button.setToolTip(
+            _(
+                "main_ui.settings_tooltip",
+                path=self.last_path,
+                speed_limit=_("main_ui.speed_limit_none"),
+            )
+        )  # Update initial tooltip
         # --- End Settings Button ---
 
         self.download_btn = QPushButton(_("buttons.download"))
@@ -568,10 +574,16 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
             # Update Tooltip if anything changed
             if path_changed or limit_changed or format_changed or audio_format_changed:
-                limit_text = "None"
+                limit_text = _("main_ui.speed_limit_none")
                 if self.speed_limit_value:
                     limit_text = f"{self.speed_limit_value} {['KB/s', 'MB/s'][self.speed_limit_unit_index]}"
-                self.settings_button.setToolTip(f"Current Path: {self.last_path}\nSpeed Limit: {limit_text}")
+                self.settings_button.setToolTip(
+                    _(
+                        "main_ui.settings_tooltip",
+                        path=self.last_path,
+                        speed_limit=limit_text,
+                    )
+                )
 
     def start_download(self) -> None:
         if self.is_updating_ytdlp:
@@ -820,7 +832,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                     
         except Exception as e:
             logger.exception(f"Error opening download folder: {e}")
-            QMessageBox.warning(self, "Error", f"Could not open folder: {str(e)}")
+            QMessageBox.warning(self, _("main_ui.error_title"), _("main_ui.open_folder_error", error=str(e)))
 
     def download_error(self, error_message) -> None:
         self.toggle_download_controls(True)
@@ -1069,24 +1081,24 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 logger.info(f"Main proxy set: {self.proxy_url}")
                 QMessageBox.information(
                     self,
-                    "Proxy Set",
-                    f"Main proxy set and saved: {proxy_url}",
+                    _("proxy.set_title"),
+                    _("proxy.set_message", proxy=proxy_url),
                 )
 
             if geo_proxy_url:
                 logger.info(f"Geo-verification proxy set: {self.geo_proxy_url}")
                 QMessageBox.information(
                     self,
-                    "Geo Proxy Set",
-                    f"Geo-verification proxy set and saved: {geo_proxy_url}",
+                    _("proxy.geo_set_title"),
+                    _("proxy.geo_set_message", proxy=geo_proxy_url),
                 )
 
             # Show a combined message if both are cleared
             if not proxy_url and not geo_proxy_url and (ConfigManager.get("proxy_url") or ConfigManager.get("geo_proxy_url")):
                 QMessageBox.information(
                     self,
-                    "Proxy Settings Cleared",
-                    "All proxy settings have been cleared and saved.",
+                    _("proxy.cleared_title"),
+                    _("proxy.cleared_message"),
                 )
 
     def show_about_dialog(self) -> None:  # ADDED METHOD HERE
@@ -1119,10 +1131,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 # Trigger analysis
                 self.analyze_url()
             else:
-                QMessageBox.warning(self, "Error", "No URL found in history entry")
+                QMessageBox.warning(self, _("main_ui.error_title"), _("history.no_url_error"))
         except Exception as e:
             logger.error(f"Error handling redownload from history: {e}", exc_info=True)
-            QMessageBox.warning(self, "Error", f"Failed to start redownload: {str(e)}")
+            QMessageBox.warning(self, _("main_ui.error_title"), _("history.redownload_failed", error=str(e)))
 
     def file_already_exists(self, filename) -> None:
         """Handle case when file already exists - simplified version"""
@@ -1378,8 +1390,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 logger.info(f"Selected cookie file: {self.cookie_file_path}")
                 QMessageBox.information(
                     self,
-                    "Cookie File Selected",
-                    f"Cookie file selected: {self.cookie_file_path}",
+                    _("main_ui.cookie_file_selected_title"),
+                    _("main_ui.cookie_file_selected_message", path=self.cookie_file_path),
                 )
             elif browser_cookies:
                 self.browser_cookies_option = browser_cookies
@@ -1387,8 +1399,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 logger.info(f"Selected browser cookies: {self.browser_cookies_option}")
                 QMessageBox.information(
                     self,
-                    "Browser Cookies Selected",
-                    f"Browser cookies will be extracted from: {browser_cookies}",
+                    _("main_ui.browser_cookies_selected_title"),
+                    _("main_ui.browser_cookies_selected_message", browser=browser_cookies),
                 )
             else:
                 self.cookie_file_path = None  # Clear path if dialog accepted but no file selected
@@ -1414,7 +1426,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
             if self.download_section:
                 self.time_range_btn.setStyleSheet(StyleSheet.TIME_RANGE_BTN_ACTIVE)
-                self.time_range_btn.setToolTip(f"Section set: {self.download_section}")
+                self.time_range_btn.setToolTip(_("main_ui.time_range_set", section=self.download_section))
             else:
                 # Reset to default style if no section is selected
                 self.download_section = None
@@ -1428,8 +1440,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         if yt_dlp_path != "yt-dlp":
             success_dialog = QMessageBox(self)
             success_dialog.setIcon(QMessageBox.Icon.Information)
-            success_dialog.setWindowTitle("yt-dlp Setup")
-            success_dialog.setText(f"yt-dlp has been successfully configured at:\n{yt_dlp_path}")
+            success_dialog.setWindowTitle(_("ytdlp_setup.success_dialog_title"))
+            success_dialog.setText(_("ytdlp_setup.success_dialog_message", path=yt_dlp_path))
             success_dialog.setWindowIcon(self.windowIcon())
             success_dialog.setStyleSheet(StyleSheet.SETUP_SUCCESS_DIALOG)
             success_dialog.exec()
