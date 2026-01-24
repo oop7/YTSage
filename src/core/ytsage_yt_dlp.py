@@ -32,6 +32,7 @@ from src.utils.ytsage_constants import (
     YTDLP_SHA256_URL,
 )
 from src.core.ytsage_ffmpeg import get_file_sha256
+from src.utils.ytsage_localization import _
 
 # YTDLP_URLS moved to src\utils\ytsage_constants.py
 # get_ytdlp_install_dir() moved to src\utils\ytsage_constants.py
@@ -162,7 +163,7 @@ class YtdlpSetupDialog(QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("yt-dlp Setup Required")
+        self.setWindowTitle(_("ytdlp_setup.required_title"))
         self.setMinimumWidth(520)
         self.setMinimumHeight(350)
         self.resize(520, 380)
@@ -253,7 +254,7 @@ class YtdlpSetupDialog(QDialog):
         layout.setContentsMargins(25, 25, 25, 25)
 
         # Header title
-        title_label = QLabel("yt-dlp Setup Required")
+        title_label = QLabel(_("ytdlp_setup.required_title"))
         title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff; padding: 5px 0;")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
@@ -262,10 +263,7 @@ class YtdlpSetupDialog(QDialog):
         # os_name logic moved to src\utils\ytsage_constants.py
 
         info_label = QLabel(
-            f"YTSage requires yt-dlp to download videos.<br><br>"
-            f"yt-dlp was not found in the app's local directory. "
-            f"YTSage needs to set up yt-dlp for your {OS_FULL_NAME} system.<br><br>"
-            f"Please choose an option below:"
+            _("ytdlp_setup.description", os_name=OS_FULL_NAME)
         )
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label.setWordWrap(True)
@@ -278,9 +276,9 @@ class YtdlpSetupDialog(QDialog):
         option_layout.setSpacing(8)
         option_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.auto_radio = QRadioButton("Download automatically (Recommended)")
+        self.auto_radio = QRadioButton(_("ytdlp_setup.option_auto"))
         self.auto_radio.setChecked(True)
-        self.manual_radio = QRadioButton("Select path manually")
+        self.manual_radio = QRadioButton(_("ytdlp_setup.option_manual"))
 
         option_layout.addWidget(self.auto_radio)
         option_layout.addWidget(self.manual_radio)
@@ -326,10 +324,10 @@ class YtdlpSetupDialog(QDialog):
         button_layout.setSpacing(15)
         button_layout.setContentsMargins(0, 10, 0, 0)  # Add top margin for buttons
 
-        self.setup_button = QPushButton("Setup yt-dlp")
+        self.setup_button = QPushButton(_("ytdlp_setup.setup_button"))
         self.setup_button.clicked.connect(self.setup_ytdlp)
 
-        self.cancel_button = QPushButton("Cancel")
+        self.cancel_button = QPushButton(_("buttons.cancel"))
         self.cancel_button.clicked.connect(self.reject)
 
         button_layout.addWidget(self.setup_button)
@@ -347,7 +345,7 @@ class YtdlpSetupDialog(QDialog):
     def download_ytdlp(self) -> None:
         self.progress_bar.setVisible(True)
         self.progress_bar.setValue(0)
-        self.status_label.setText("Downloading yt-dlp...")
+        self.status_label.setText(_("ytdlp_setup.downloading"))
         self.setup_button.setEnabled(False)
         self.cancel_button.setEnabled(False)
 
@@ -364,15 +362,15 @@ class YtdlpSetupDialog(QDialog):
         self.cancel_button.setEnabled(True)
 
         if success:
-            self.status_label.setText("yt-dlp was successfully installed!")
+            self.status_label.setText(_("ytdlp_setup.success"))
             self.setup_complete.emit(result)
             self.accept()
         else:
-            self.status_label.setText(f"Error: {result}")
+            self.status_label.setText(_("ytdlp_setup.error", error=result))
             error_dialog = QMessageBox(self)
             error_dialog.setIcon(QMessageBox.Icon.Critical)
-            error_dialog.setWindowTitle("Download Failed")
-            error_dialog.setText(f"Failed to download yt-dlp: {result}")
+            error_dialog.setWindowTitle(_("ytdlp_setup.download_failed_title"))
+            error_dialog.setText(_("ytdlp_setup.download_failed_message", error=result))
             # Set the window icon to match the main dialog
             error_dialog.setWindowIcon(self.windowIcon())
             error_dialog.setStyleSheet(
@@ -401,9 +399,9 @@ class YtdlpSetupDialog(QDialog):
 
     def select_ytdlp_path(self) -> None:
         if OS_NAME == "Windows":
-            file_filter = "Executable Files (*.exe)"
+            file_filter = _("ytdlp_setup.file_filter_windows")
         else:
-            file_filter = "All Files (*)"
+            file_filter = _("ytdlp_setup.file_filter_all")
 
         # Apply style to QFileDialog
         file_dialog = QFileDialog(self)
@@ -431,7 +429,9 @@ class YtdlpSetupDialog(QDialog):
         """
         )
 
-        file_path, _ = file_dialog.getOpenFileName(self, "Select yt-dlp executable", "", file_filter)
+        file_path, _ = file_dialog.getOpenFileName(
+            self, _("ytdlp_setup.select_executable_title"), "", file_filter
+        )
 
         if file_path:
             logger.debug(f"User selected file: {file_path}")
@@ -465,7 +465,7 @@ class YtdlpSetupDialog(QDialog):
                             logger.debug(f"Permissions set on Unix system")
 
                         # Return the path of the copied file
-                        self.status_label.setText(f"yt-dlp successfully copied to {target_path}")
+                        self.status_label.setText(_("ytdlp_setup.copied_to", path=target_path))
                         logger.debug(f"Emitting setup_complete signal with path: {target_path}")
                         self.setup_complete.emit(target_path)
                         self.accept()
@@ -473,8 +473,8 @@ class YtdlpSetupDialog(QDialog):
                         logger.debug(f"Error copying file: {copy_error}", exc_info=True)
                         error_dialog = QMessageBox(self)
                         error_dialog.setIcon(QMessageBox.Icon.Critical)
-                        error_dialog.setWindowTitle("Setup Error")
-                        error_dialog.setText(f"Error copying yt-dlp to app directory: {copy_error}")
+                        error_dialog.setWindowTitle(_("ytdlp_setup.setup_error_title"))
+                        error_dialog.setText(_("ytdlp_setup.copy_error", error=copy_error))
                         error_dialog.setStyleSheet(
                             """
                             QMessageBox {
@@ -502,8 +502,8 @@ class YtdlpSetupDialog(QDialog):
                     logger.debug(f"File verification failed with return code: {result.returncode}")
                     error_dialog = QMessageBox(self)
                     error_dialog.setIcon(QMessageBox.Icon.Warning)
-                    error_dialog.setWindowTitle("Invalid Executable")
-                    error_dialog.setText("The selected file does not appear to be a valid yt-dlp executable.")
+                    error_dialog.setWindowTitle(_("ytdlp_setup.invalid_executable_title"))
+                    error_dialog.setText(_("ytdlp_setup.invalid_executable_message"))
                     error_dialog.setStyleSheet(
                         """
                         QMessageBox {
@@ -531,8 +531,8 @@ class YtdlpSetupDialog(QDialog):
                 logger.debug(f"Exception during verification: {e}", exc_info=True)
                 error_dialog = QMessageBox(self)
                 error_dialog.setIcon(QMessageBox.Icon.Critical)
-                error_dialog.setWindowTitle("Error")
-                error_dialog.setText(f"Error verifying yt-dlp executable: {e}")
+                error_dialog.setWindowTitle(_("main_ui.error_title"))
+                error_dialog.setText(_("ytdlp_setup.verify_error", error=e))
                 error_dialog.setStyleSheet(
                     """
                     QMessageBox {
@@ -678,8 +678,8 @@ def setup_ytdlp(parent_widget=None):
             if parent_widget:
                 error_dialog = QMessageBox(parent_widget)
                 error_dialog.setIcon(QMessageBox.Icon.Warning)
-                error_dialog.setWindowTitle("Setup Failed")
-                error_dialog.setText("Failed to set up yt-dlp. Some features may not work correctly.")
+                error_dialog.setWindowTitle(_("ytdlp_setup.setup_failed_title"))
+                error_dialog.setText(_("ytdlp_setup.setup_failed_message"))
                 # Set the window icon to match the parent
                 error_dialog.setWindowIcon(parent_widget.windowIcon())
                 error_dialog.setStyleSheet(
