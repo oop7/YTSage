@@ -483,10 +483,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
         <td>Markdown Rendering</td>
     </tr>
     <tr>
-        <td><a href="https://pyglet.org/">pyglet</a></td>
-        <td>Audio Playback</td>
-    </tr>
-    <tr>
         <td><a href="https://github.com/Delgan/loguru">loguru</a></td>
         <td>Logging</td>
     </tr>
