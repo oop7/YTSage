@@ -409,7 +409,10 @@
     "ytdlp_failed": "त्रुटि: yt-dlp असफल: {error}",
     "parse_failed": "त्रुटि: yt-dlp आउटपुट पार्स करने में विफल: {error}",
     "analysis_failed": "त्रुटि: विश्लेषण विफल: {error}",
-    "generic_error": "त्रुटि: {error}"
+    "generic_error": "त्रुटि: {error}",
+    "download_failed_return_code_conflict": "डाउनलोड {return_code} रिटर्न कोड के साथ विफल हुआ। यह कई yt-dlp इंस्टॉलेशन के टकराव के कारण हो सकता है। किसी भी सिस्टम-इंस्टॉल्ड yt-dlp (जैसे snap या apt) को हटाकर ऐप को रीस्टार्ट करें।",
+    "download_failed_return_code": "डाउनलोड {return_code} रिटर्न कोड के साथ विफल हुआ",
+    "direct_command_error": "सीधे कमांड में त्रुटि: {error}"
   },
   "update_dialog": {
     "title": "अपडेट उपलब्ध",

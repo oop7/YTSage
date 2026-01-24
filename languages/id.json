@@ -409,7 +409,10 @@
     "ytdlp_failed": "Kesalahan: yt-dlp gagal: {error}",
     "parse_failed": "Kesalahan: Gagal mengurai output yt-dlp: {error}",
     "analysis_failed": "Kesalahan: Analisis gagal: {error}",
-    "generic_error": "Kesalahan: {error}"
+    "generic_error": "Kesalahan: {error}",
+    "download_failed_return_code_conflict": "Unduhan gagal dengan kode pengembalian {return_code}. Ini mungkin karena konflik dengan beberapa instalasi yt-dlp. Coba uninstall yt-dlp yang terpasang di sistem (mis. melalui snap atau apt) lalu mulai ulang aplikasi.",
+    "download_failed_return_code": "Unduhan gagal dengan kode pengembalian {return_code}",
+    "direct_command_error": "Error pada perintah langsung: {error}"
   },
   "update_dialog": {
     "title": "Pembaruan Tersedia",

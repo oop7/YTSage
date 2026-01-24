@@ -409,7 +409,10 @@
     "ytdlp_failed": "Fehler: yt-dlp fehlgeschlagen: {error}",
     "parse_failed": "Fehler: Fehler beim Parsen der yt-dlp-Ausgabe: {error}",
     "analysis_failed": "Fehler: Analyse fehlgeschlagen: {error}",
-    "generic_error": "Fehler: {error}"
+    "generic_error": "Fehler: {error}",
+    "download_failed_return_code_conflict": "Download fehlgeschlagen mit Rückgabecode {return_code}. Dies kann an einem Konflikt mit mehreren yt-dlp-Installationen liegen. Deinstalliere ggf. eine systemweit installierte yt-dlp-Version (z. B. über snap oder apt) und starte die Anwendung neu.",
+    "download_failed_return_code": "Download fehlgeschlagen mit Rückgabecode {return_code}",
+    "direct_command_error": "Fehler im direkten Befehl: {error}"
   },
   "update_dialog": {
     "title": "Update verfügbar",

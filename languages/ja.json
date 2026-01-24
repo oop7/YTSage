@@ -409,7 +409,10 @@
     "ytdlp_failed": "エラー: yt-dlpが失敗しました: {error}",
     "parse_failed": "エラー: yt-dlp出力の解析に失敗しました: {error}",
     "analysis_failed": "エラー: 解析が失敗しました: {error}",
-    "generic_error": "エラー: {error}"
+    "generic_error": "エラー: {error}",
+    "download_failed_return_code_conflict": "ダウンロードは戻りコード {return_code} で失敗しました。複数の yt-dlp インストールの競合が原因の可能性があります。システムにインストールされた yt-dlp（例: snap や apt）をアンインストールしてアプリを再起動してください。",
+    "download_failed_return_code": "ダウンロードは戻りコード {return_code} で失敗しました",
+    "direct_command_error": "直接コマンドのエラー: {error}"
   },
   "update_dialog": {
     "title": "アップデートが利用可能です",

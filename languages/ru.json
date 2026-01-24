@@ -409,7 +409,10 @@
     "ytdlp_failed": "Ошибка: yt-dlp завершился с ошибкой: {error}",
     "parse_failed": "Ошибка: Не удалось разобрать вывод yt-dlp: {error}",
     "analysis_failed": "Ошибка: Анализ не удался: {error}",
-    "generic_error": "Ошибка: {error}"
+    "generic_error": "Ошибка: {error}",
+    "download_failed_return_code_conflict": "Загрузка завершилась ошибкой с кодом {return_code}. Это может быть из-за конфликта нескольких установок yt-dlp. Попробуйте удалить системно установленный yt-dlp (например, через snap или apt) и перезапустите приложение.",
+    "download_failed_return_code": "Загрузка не удалась, код {return_code}",
+    "direct_command_error": "Ошибка в прямой команде: {error}"
   },
   "update_dialog": {
     "title": "Доступно обновление",

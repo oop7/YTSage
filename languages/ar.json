@@ -409,7 +409,10 @@
     "ytdlp_failed": "خطأ: فشل yt-dlp: {error}",
     "parse_failed": "خطأ: فشل تحليل مخرجات yt-dlp: {error}",
     "analysis_failed": "خطأ: فشل التحليل: {error}",
-    "generic_error": "خطأ: {error}"
+    "generic_error": "خطأ: {error}",
+    "download_failed_return_code_conflict": "فشل التنزيل برمز الإرجاع {return_code}. قد يكون ذلك بسبب تعارض بين عدة عمليات تثبيت لـ yt-dlp. جرّب إزالة أي تثبيت لنظام التشغيل (مثل snap أو apt) ثم أعد تشغيل التطبيق.",
+    "download_failed_return_code": "فشل التنزيل برمز الإرجاع {return_code}",
+    "direct_command_error": "خطأ في الأمر المباشر: {error}"
   },
   "update_dialog": {
     "title": "تحديث متاح",

@@ -409,7 +409,10 @@
     "ytdlp_failed": "Hata: yt-dlp başarısız oldu: {error}",
     "parse_failed": "Hata: yt-dlp çıktısı ayrıştırılamadı: {error}",
     "analysis_failed": "Hata: Analiz başarısız oldu: {error}",
-    "generic_error": "Hata: {error}"
+    "generic_error": "Hata: {error}",
+    "download_failed_return_code_conflict": "İndirme {return_code} dönüş koduyla başarısız oldu. Bunun nedeni birden fazla yt-dlp kurulumunun çakışması olabilir. Sistem kurulumlu yt-dlp'yi (örn. snap veya apt) kaldırıp uygulamayı yeniden başlatmayı deneyin.",
+    "download_failed_return_code": "İndirme {return_code} dönüş koduyla başarısız oldu",
+    "direct_command_error": "Doğrudan komutta hata: {error}"
   },
   "update_dialog": {
     "title": "Güncelleme Mevcut",

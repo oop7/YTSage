@@ -392,7 +392,10 @@
     "ytdlp_failed": "Error: yt-dlp falló: {error}",
     "parse_failed": "Error: Falló al analizar salida de yt-dlp: {error}",
     "analysis_failed": "Error: Análisis falló: {error}",
-    "generic_error": "Error: {error}"
+    "generic_error": "Error: {error}",
+    "download_failed_return_code_conflict": "La descarga falló con el código de salida {return_code}. Esto puede deberse a un conflicto con varias instalaciones de yt-dlp. Intenta desinstalar cualquier yt-dlp instalado en el sistema (p. ej., mediante snap o apt) y reinicia la aplicación.",
+    "download_failed_return_code": "La descarga falló con el código de salida {return_code}",
+    "direct_command_error": "Error en el comando directo: {error}"
   },
   "update_dialog": {
     "title": "Actualización disponible",

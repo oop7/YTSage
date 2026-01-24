@@ -511,10 +511,12 @@ class DownloadThread(QThread):
                     # Provide more descriptive error message for possible yt-dlp conflicts
                     if return_code == 1:
                         self.error_signal.emit(
-                            f"Download failed with return code {return_code}. This may be due to a conflict with multiple yt-dlp installations. Try uninstalling any system-installed yt-dlp (e.g. through snap or apt) and restart the application."
+                            _("errors.download_failed_return_code_conflict", return_code=return_code)
                         )
                     else:
-                        self.error_signal.emit(f"Download failed with return code {return_code}")
+                        self.error_signal.emit(
+                            _("errors.download_failed_return_code", return_code=return_code)
+                        )
                     
                     # Add delay before cleanup to allow file handles to be released
                     time.sleep(1)
@@ -522,7 +524,7 @@ class DownloadThread(QThread):
 
         except Exception as e:
             logger.exception(f"Error in direct command: {e}")
-            self.error_signal.emit(f"Error in direct command: {e}")
+            self.error_signal.emit(_("errors.direct_command_error", error=str(e)))
             # Add delay before cleanup to allow file handles to be released
             time.sleep(1)
             self.cleanup_partial_files()

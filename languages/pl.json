@@ -409,7 +409,10 @@
     "ytdlp_failed": "Błąd: yt-dlp nie powiodło się: {error}",
     "parse_failed": "Błąd: Nie udało się przeanalizować wyjścia yt-dlp: {error}",
     "analysis_failed": "Błąd: Analiza nie powiodła się: {error}",
-    "generic_error": "Błąd: {error}"
+    "generic_error": "Błąd: {error}",
+    "download_failed_return_code_conflict": "Pobieranie nie powiodło się z kodem {return_code}. Może to wynikać z konfliktu wielu instalacji yt-dlp. Spróbuj odinstalować systemowo zainstalowane yt-dlp (np. przez snap lub apt) i uruchom aplikację ponownie.",
+    "download_failed_return_code": "Pobieranie nie powiodło się z kodem {return_code}",
+    "direct_command_error": "Błąd w bezpośrednim poleceniu: {error}"
   },
   "update_dialog": {
     "title": "Dostępna aktualizacja",
