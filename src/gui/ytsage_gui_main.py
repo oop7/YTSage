@@ -54,46 +54,86 @@ from src.utils.ytsage_localization import LocalizationManager, _
 from src.utils.ytsage_history_manager import HistoryManager
 from src.gui.ytsage_stylesheet import StyleSheet
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 
 class UpdateCheckThread(QThread):
+    """Background thread for checking application updates with parallel network requests."""
+    
     update_available = Signal(str, str, str)  # version, url, changelog
+
+    # Reduced timeouts for faster failure detection
+    PYPI_TIMEOUT = 8
+    GITHUB_TIMEOUT = 5
 
     def __init__(self, current_version):
         super().__init__()
         self.current_version = current_version
 
-    def run(self):
+    def _fetch_pypi_version(self) -> tuple[str | None, str | None]:
+        """Fetch latest version from PyPI. Returns (version, error)."""
         try:
-            # Get the latest version info from PyPI (no rate limiting unlike GitHub API)
             response = requests.get(
                 "https://pypi.org/pypi/ytsage/json",
-                timeout=10,
+                timeout=self.PYPI_TIMEOUT,
             )
             response.raise_for_status()
-
             pypi_data = response.json()
-            latest_version = pypi_data["info"]["version"]
+            return pypi_data["info"]["version"], None
+        except requests.Timeout:
+            return None, "PyPI request timed out"
+        except requests.RequestException as e:
+            return None, f"PyPI request failed: {e}"
+        except Exception as e:
+            return None, f"Error parsing PyPI response: {e}"
 
-            # Compare versions
-            if version.parse(latest_version) > version.parse(self.current_version):
-                release_url = "https://github.com/oop7/YTSage/releases/latest"
+    def _fetch_github_changelog(self) -> str:
+        """Fetch changelog from GitHub. Returns changelog text or fallback message."""
+        fallback = "View the full changelog on the [GitHub Releases](https://github.com/oop7/YTSage/releases) page."
+        try:
+            response = requests.get(
+                "https://api.github.com/repos/oop7/YTSage/releases/latest",
+                headers={"Accept": "application/vnd.github.v3+json"},
+                timeout=self.GITHUB_TIMEOUT,
+            )
+            if response.status_code == 200:
+                gh_data = response.json()
+                return gh_data.get("body", fallback) or fallback
+            return fallback
+        except Exception:
+            # Silently fallback if GitHub API fails (rate limiting, network issues, etc.)
+            return fallback
+
+    def run(self):
+        """Check for updates using parallel network requests for better performance."""
+        try:
+            # Use ThreadPoolExecutor to make both requests in parallel
+            # This reduces total wait time from potentially 15s to ~8s max
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                # Submit both tasks
+                pypi_future = executor.submit(self._fetch_pypi_version)
+                github_future = executor.submit(self._fetch_github_changelog)
+
+                # Get PyPI result (this is required)
+                latest_version, error = pypi_future.result()
                 
-                # Try to fetch changelog from GitHub (with fallback if rate-limited)
-                changelog = "View the full changelog on the [GitHub Releases](https://github.com/oop7/YTSage/releases) page."
-                try:
-                    gh_response = requests.get(
-                        "https://api.github.com/repos/oop7/YTSage/releases/latest",
-                        headers={"Accept": "application/vnd.github.v3+json"},
-                        timeout=5,
-                    )
-                    if gh_response.status_code == 200:
-                        gh_data = gh_response.json()
-                        changelog = gh_data.get("body", changelog)
-                except Exception:
-                    # Silently fallback to static message if GitHub API fails
-                    pass
+                if error:
+                    logger.debug(f"Update check failed: {error}")
+                    return
                 
-                self.update_available.emit(latest_version, release_url, changelog)
+                if not latest_version:
+                    logger.debug("No version returned from PyPI")
+                    return
+
+                # Compare versions
+                if version.parse(latest_version) > version.parse(self.current_version):
+                    release_url = "https://github.com/oop7/YTSage/releases/latest"
+                    
+                    # Get GitHub changelog (may already be complete due to parallel execution)
+                    changelog = github_future.result()
+                    
+                    self.update_available.emit(latest_version, release_url, changelog)
+
         except Exception as e:
             logger.debug(f"Failed to check for updates: {e}")
 
