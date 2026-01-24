@@ -11,6 +11,7 @@ from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLa
 
 from src.core.ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
 from src.utils.ytsage_constants import ICON_PATH
+from src.utils.ytsage_localization import _
 
 
 class FFmpegInstallThread(QThread):
@@ -30,7 +31,7 @@ class FFmpegInstallThread(QThread):
 class FFmpegCheckDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("FFmpeg Installation")
+        self.setWindowTitle(_("ffmpeg.installation_title"))
         self.setMinimumWidth(500)
         self.setMinimumHeight(280)
         self.resize(500, 300)
@@ -50,13 +51,13 @@ class FFmpegCheckDialog(QDialog):
         layout.setContentsMargins(20, 20, 20, 20)
 
         # Header with title and improved spacing
-        header_text = QLabel("FFmpeg Installation")
+        header_text = QLabel(_("ffmpeg.installation_title"))
         header_text.setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff; padding: 5px 0;")
         header_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(header_text)
 
         # Message
-        self.message_label = QLabel("YTSage needs FFmpeg to process videos.\n\n" "Choose an installation option below:")
+        self.message_label = QLabel(_("ffmpeg.installation_message"))
         self.message_label.setWordWrap(True)
         self.message_label.setStyleSheet("font-size: 13px; color: #cccccc; padding: 10px 0; line-height: 1.4;")
         self.message_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -93,17 +94,17 @@ class FFmpegCheckDialog(QDialog):
         button_layout.setSpacing(12)
 
         # Install button
-        self.install_btn = QPushButton("Install FFmpeg")
+        self.install_btn = QPushButton(_("ffmpeg.install_button"))
         self.install_btn.clicked.connect(self.start_installation)
         button_layout.addWidget(self.install_btn)
 
         # Manual install button
-        self.manual_btn = QPushButton("Manual Guide")
+        self.manual_btn = QPushButton(_("ffmpeg.manual_guide"))
         self.manual_btn.clicked.connect(lambda: webbrowser.open("https://github.com/oop7/ffmpeg-install-guide"))
         button_layout.addWidget(self.manual_btn)
 
         # Close button
-        self.close_btn = QPushButton("Close")
+        self.close_btn = QPushButton(_("buttons.close"))
         self.close_btn.clicked.connect(self.close)
         button_layout.addWidget(self.close_btn)
 
@@ -153,15 +154,15 @@ class FFmpegCheckDialog(QDialog):
 
         # Check if FFmpeg is already installed
         if check_ffmpeg_installed():
-            self.message_label.setText("FFmpeg is already installed!")
-            self.progress_label.setText("Installation complete. You can close this dialog and continue using YTSage.")
+            self.message_label.setText(_("ffmpeg.already_installed"))
+            self.progress_label.setText(_("ffmpeg.installation_complete"))
             self.progress_label.show()
             self.install_btn.hide()
             self.manual_btn.hide()
             self.close_btn.setEnabled(True)
             return
 
-        self.message_label.setText("Installing FFmpeg... Please wait")
+        self.message_label.setText(_("ffmpeg.installing"))
         self.progress_messages = []  # Clear previous messages
         self.progress_label.show()
 
@@ -181,13 +182,13 @@ class FFmpegCheckDialog(QDialog):
 
     def installation_finished(self, success) -> None:
         if success:
-            self.message_label.setText("FFmpeg has been installed successfully!")
-            self.progress_label.setText("Installation complete. You can now close this dialog and continue using YTSage.")
+            self.message_label.setText(_("ffmpeg.install_success"))
+            self.progress_label.setText(_("ffmpeg.installation_complete_close"))
             self.install_btn.hide()
             self.manual_btn.hide()
         else:
-            self.message_label.setText("FFmpeg installation encountered an issue.")
-            self.progress_label.setText("Please try using the manual installation guide instead.")
+            self.message_label.setText(_("ffmpeg.installation_failed"))
+            self.progress_label.setText(_("ffmpeg.try_manual"))
             self.install_btn.setEnabled(True)
             self.manual_btn.setEnabled(True)
 
