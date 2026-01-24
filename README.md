@@ -397,6 +397,7 @@ YTSage/
     │   ├── 📄 ytsage_gui_format_table.py # Format table functionality
     │   ├── 📄 ytsage_gui_main.py # Main application window
     │   ├── 📄 ytsage_gui_video_info.py # Video information display
+    |   ├── 📄 ytsage_stylesheet.py # Stylesheet definitions
     │   └── 📁 ytsage_gui_dialogs/ # Dialog classes
     │       ├── 📄 __init__.py    # Dialogs package init
     │       ├── 📄 ytsage_dialogs_base.py     # Basic dialogs
