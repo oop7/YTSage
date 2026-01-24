@@ -182,6 +182,30 @@ FFMPEG_ZIP_SHA256_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essen
 FFMPEG_7Z_VERSION_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z.ver"
 FFMPEG_ZIP_VERSION_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip.ver"
 
+# =============================================================================
+# File Extension Constants
+# =============================================================================
+# Centralized file extension definitions to avoid duplication across modules
+# Use these constants for file type detection throughout the application
+
+# Video file extensions (container formats that typically contain video)
+VIDEO_EXTENSIONS: frozenset[str] = frozenset({
+    ".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"
+})
+
+# Audio file extensions (audio-only formats)
+AUDIO_EXTENSIONS: frozenset[str] = frozenset({
+    ".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"
+})
+
+# Subtitle file extensions
+SUBTITLE_EXTENSIONS: frozenset[str] = frozenset({
+    ".vtt", ".srt", ".ass", ".ssa"
+})
+
+# Combined video and audio extensions (for file search operations)
+MEDIA_EXTENSIONS: frozenset[str] = VIDEO_EXTENSIONS | AUDIO_EXTENSIONS
+
 if __name__ == "__main__":
     # If this file is run directly, print directory information; if imported, create the necessary directories for the application.
     # for debug, to check os specific variable which can be different based on os.

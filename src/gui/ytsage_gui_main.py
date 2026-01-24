@@ -47,7 +47,14 @@ from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__
 from src.gui.ytsage_gui_format_table import FormatTableMixin
 from src.gui.ytsage_gui_video_info import VideoInfoMixin
 from src.gui.ytsage_gui_analysis import AnalysisMixin
-from src.utils.ytsage_constants import ICON_PATH, SOUND_PATH, SUBPROCESS_CREATIONFLAGS
+from src.utils.ytsage_constants import (
+    ICON_PATH,
+    SOUND_PATH,
+    SUBPROCESS_CREATIONFLAGS,
+    VIDEO_EXTENSIONS,
+    AUDIO_EXTENSIONS,
+    SUBTITLE_EXTENSIONS,
+)
 from src.utils.ytsage_logger import logger
 from src.utils.ytsage_config_manager import ConfigManager
 from src.utils.ytsage_localization import LocalizationManager, _
@@ -704,13 +711,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             ext = filename.suffix.lower()
 
             # Video file extensions
-            if ext in [".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"]:
+            if ext in VIDEO_EXTENSIONS:
                 self.status_label.setText(_('download.video_completed'))
             # Audio file extensions
-            elif ext in [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"]:
+            elif ext in AUDIO_EXTENSIONS:
                 self.status_label.setText(_('download.audio_completed'))
             # Subtitle file extensions
-            elif ext in [".vtt", ".srt", ".ass", ".ssa"]:
+            elif ext in SUBTITLE_EXTENSIONS:
                 self.status_label.setText(_('download.subtitle_completed'))
             # Default case
             else:
@@ -1109,13 +1116,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         ext = Path(filename).suffix.lower()
 
         # Video file extensions
-        if ext in [".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"]:
+        if ext in VIDEO_EXTENSIONS:
             self.status_label.setText(_("status.video_file_exists"))
         # Audio file extensions
-        elif ext in [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"]:
+        elif ext in AUDIO_EXTENSIONS:
             self.status_label.setText(_("status.audio_file_exists"))
         # Subtitle file extensions
-        elif ext in [".vtt", ".srt", ".ass", ".ssa"]:
+        elif ext in SUBTITLE_EXTENSIONS:
             self.status_label.setText(_("status.subtitle_file_exists"))
         # Default case
         else:

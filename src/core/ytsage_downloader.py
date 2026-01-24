@@ -12,7 +12,13 @@ from typing import Optional, List, Set
 from PySide6.QtCore import QObject, QThread, Signal
 
 from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
+from src.utils.ytsage_constants import (
+    SUBPROCESS_CREATIONFLAGS,
+    VIDEO_EXTENSIONS,
+    AUDIO_EXTENSIONS,
+    SUBTITLE_EXTENSIONS,
+    MEDIA_EXTENSIONS,
+)
 from src.utils.ytsage_localization import LocalizationManager
 from src.utils.ytsage_logger import logger
 
@@ -444,10 +450,6 @@ class DownloadThread(QThread):
                 final_file_found = False
                 
                 try:
-                    # Define video/audio extensions
-                    video_audio_extensions = {'.mp4', '.webm', '.mkv', '.avi', '.mov', '.flv', 
-                                             '.m4a', '.mp3', '.opus', '.flac', '.aac', '.wav', '.ogg'}
-                    
                     # First, check if last_file_path exists and is valid
                     if self.last_file_path:
                         last_path = Path(self.last_file_path)
@@ -463,7 +465,7 @@ class DownloadThread(QThread):
                         potential_files = []
                         
                         # Search in download directory and subdirectories (for playlists)
-                        for ext in video_audio_extensions:
+                        for ext in MEDIA_EXTENSIONS:
                             potential_files.extend(self.path.glob(f'*{ext}'))
                             # Also check subdirectories (for playlist downloads)
                             potential_files.extend(self.path.glob(f'*/*{ext}'))
@@ -563,13 +565,13 @@ class DownloadThread(QThread):
                 if is_audio_download or "Downloading audio" in line:
                     self.status_signal.emit(_("download.downloading_audio"))
                 # Video file extensions with likely video content
-                elif ext in [".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"]:
+                elif ext in VIDEO_EXTENSIONS:
                     self.status_signal.emit(_("download.downloading_video"))
                 # Audio file extensions
-                elif ext in [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"]:
+                elif ext in AUDIO_EXTENSIONS:
                     self.status_signal.emit(_("download.downloading_audio"))
                 # Subtitle file extensions
-                elif ext in [".vtt", ".srt", ".ass", ".ssa"]:
+                elif ext in SUBTITLE_EXTENSIONS:
                     self.status_signal.emit(_("download.downloading_subtitle"))
                 # Default case
                 else:
@@ -704,11 +706,11 @@ class DownloadThread(QThread):
                 # Determine file type based on extension for existing file message
                 ext = Path(filename).suffix.lower()
 
-                if ext in [".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"]:
+                if ext in VIDEO_EXTENSIONS:
                     self.status_signal.emit(f"⚠️ Video file already exists")
-                elif ext in [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"]:
+                elif ext in AUDIO_EXTENSIONS:
                     self.status_signal.emit(f"⚠️ Audio file already exists")
-                elif ext in [".vtt", ".srt", ".ass", ".ssa"]:
+                elif ext in SUBTITLE_EXTENSIONS:
                     self.status_signal.emit(f"⚠️ Subtitle file already exists")
                 else:
                     self.status_signal.emit(f"⚠️ File already exists")
@@ -725,13 +727,13 @@ class DownloadThread(QThread):
                 ext = Path(self.current_filename).suffix.lower()
 
                 # Video file extensions
-                if ext in [".mp4", ".webm", ".mkv", ".avi", ".mov", ".flv"]:
+                if ext in VIDEO_EXTENSIONS:
                     self.status_signal.emit(_("download.video_completed"))
                 # Audio file extensions
-                elif ext in [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".opus", ".flac"]:
+                elif ext in AUDIO_EXTENSIONS:
                     self.status_signal.emit(_("download.audio_completed"))
                 # Subtitle file extensions
-                elif ext in [".vtt", ".srt", ".ass", ".ssa"]:
+                elif ext in SUBTITLE_EXTENSIONS:
                     self.status_signal.emit(_("download.subtitle_completed"))
                 # Default case
                 else:
