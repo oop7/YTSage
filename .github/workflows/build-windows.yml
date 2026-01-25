@@ -49,7 +49,7 @@ jobs:
         path: |
           venv
           ~\AppData\Local\pip\Cache
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
           ${{ runner.os }}-pip-
 
@@ -59,7 +59,7 @@ jobs:
         python -m venv venv
         .\venv\Scripts\Activate.ps1
         python -m pip install --upgrade pip
-        pip install --no-cache-dir -r requirements.txt
+        pip install --no-cache-dir .
         pip install --no-cache-dir cx_Freeze
 
     - name: Prepare build variables
@@ -72,6 +72,14 @@ jobs:
     - name: Create cx_Freeze setup script
       shell: powershell
       run: |
+        # Create entry point script
+        $entryContent = @'
+        from ytsage.main import main
+        if __name__ == "__main__":
+            main()
+        '@
+        Set-Content -Path "ytsage_entry.py" -Value $entryContent
+
         # Create setup script for cx_Freeze
         New-Item -Path "setup_cxfreeze.py" -ItemType File -Force
         Add-Content -Path "setup_cxfreeze.py" -Value "import os"
@@ -82,6 +90,7 @@ jobs:
         Add-Content -Path "setup_cxfreeze.py" -Value "build_exe_options = dict("
         Add-Content -Path "setup_cxfreeze.py" -Value "    optimize=2,"
         Add-Content -Path "setup_cxfreeze.py" -Value "    packages=["
+        Add-Content -Path "setup_cxfreeze.py" -Value '        "ytsage",'
         Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtCore",'
         Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtGui",'
         Add-Content -Path "setup_cxfreeze.py" -Value '        "PySide6.QtWidgets",'
@@ -119,20 +128,19 @@ jobs:
         Add-Content -Path "setup_cxfreeze.py" -Value '        "tests",'
         Add-Content -Path "setup_cxfreeze.py" -Value "    ],"
         Add-Content -Path "setup_cxfreeze.py" -Value "    include_files=["
-        Add-Content -Path "setup_cxfreeze.py" -Value '        ("src", "src"),'
-        Add-Content -Path "setup_cxfreeze.py" -Value '        ("assets/branding/icons", "lib/assets/branding/icons"),'
-        Add-Content -Path "setup_cxfreeze.py" -Value '        ("assets/Icon", "lib/assets/Icon"),'
-        Add-Content -Path "setup_cxfreeze.py" -Value '        ("assets/sound", "lib/assets/sound"),'
-        Add-Content -Path "setup_cxfreeze.py" -Value '        ("languages", "lib/languages"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("ytsage/assets/Icon", "lib/assets/Icon"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("ytsage/assets/sound", "lib/assets/sound"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("ytsage/languages", "lib/languages"),'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        ("branding/icons", "lib/assets/branding/icons"),'
         Add-Content -Path "setup_cxfreeze.py" -Value "    ],"
         Add-Content -Path "setup_cxfreeze.py" -Value ")"
         Add-Content -Path "setup_cxfreeze.py" -Value ""
         Add-Content -Path "setup_cxfreeze.py" -Value "executables = ["
         Add-Content -Path "setup_cxfreeze.py" -Value "    Executable("
-        Add-Content -Path "setup_cxfreeze.py" -Value '        script="main.py",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        script="ytsage_entry.py",'
         Add-Content -Path "setup_cxfreeze.py" -Value '        target_name=f"YTSage-v{version}.exe",'
         Add-Content -Path "setup_cxfreeze.py" -Value '        base="gui",'
-        Add-Content -Path "setup_cxfreeze.py" -Value '        icon="assets/branding/icons/YTSage.ico",'
+        Add-Content -Path "setup_cxfreeze.py" -Value '        icon="branding/icons/YTSage.ico",'
         Add-Content -Path "setup_cxfreeze.py" -Value "    )"
         Add-Content -Path "setup_cxfreeze.py" -Value "]"
         Add-Content -Path "setup_cxfreeze.py" -Value ""
