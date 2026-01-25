@@ -1,7 +1,7 @@
 <div align="center">
 
-<img src="assets\branding\svg\ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
-<img src="assets\branding\screenshots\main.png" width="800" alt="YTSage Interface"/>
+<img src="branding\svg\ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
+<img src="branding\screenshots\main.png" width="800" alt="YTSage Interface"/>
 
 [![PyPI version](https://img.shields.io/pypi/v/ytsage?color=dc2626&style=for-the-badge&logo=pypi&logoColor=white)](https://badge.fury.io/py/ytsage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-374151?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
@@ -114,19 +114,19 @@ cd YTSage
 #### ⚡ With uv
 
 ```bash
-uv pip install -r requirements.txt
+uv pip install .
 ```
 
 #### 📦 Or with standard pip
 
 ```bash
-pip install -r requirements.txt
+pip install .
 ```
 
 ### 3. Run the Application
 
 ```bash
-python main.py
+python -m ytsage.main
 ```
 
 </details>
@@ -137,16 +137,16 @@ python main.py
 <div align="center">
 <table>
   <tr>
-    <td><img src="assets\branding\screenshots\Download-Settings.png" alt="Download Settings" width="400"/></td>
-    <td><img src="assets\branding\screenshots\playlist.png" alt="Playlist Download" width="400"/></td>
+    <td><img src="branding\screenshots\Download-Settings.png" alt="Download Settings" width="400"/></td>
+    <td><img src="branding\screenshots\playlist.png" alt="Playlist Download" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Download Settings</em></td>
     <td align="center"><em>Playlist Download</em></td>
   </tr>
   <tr>
-    <td><img src="assets\branding\screenshots\audio_format.png" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="assets\branding\screenshots\Custom-Option.png" alt="Custom Options" width="400"/></td>
+    <td><img src="branding\screenshots\audio_format.png" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
+    <td><img src="branding\screenshots\Custom-Option.png" alt="Custom Options" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Audio Format</em></td>
@@ -344,47 +344,23 @@ YTSage/
 │   │   │── build-windows.yml      # Windows build workflow
 |   |   └── release-all.yml          # Master release workflow
 │   └── 📄 CI_CD_README.md        # CI/CD documentation
-├──  📁 assets/                    # Static assets and resources
-│   ├── 📁 branding/              # Branding assets
-│   │   ├── 📁 icons/             # Application icons
-│   │   │   ├── icon.icns         # macOS icon
-│   │   │   ├── icon.png          # PNG icon
-│   │   │   └── YTSage.ico        # Windows icon
-│   │   ├── 📁 screenshots/       # Screenshots for documentation
-│   │   │   ├── audio_format.png
-│   │   │   ├── Custom-Option.png
-│   │   │   ├── Download-Settings.png
-│   │   │   ├── playlist.png
-│   │   │   └── main.png
-│   │   └── 📁 svg/               # SVG assets
-│   │       └── ytsage-wordmark.svg
-│   │       └── ytsage-wordmark.svg
-│   ├── 📁 Icon/                  # Legacy icon directory
-│   │   └── icon.png
-│   └── 📁 sound/                 # Audio files
-│       └── notification.mp3
-├── 📁 languages/                 # Localization files
-│   ├── 📄 ar.json                # Arabic translation
-│   ├── 📄 de.json                # German translation
-│   ├── 📄 en.json                # English translation
-│   ├── 📄 es.json                # Spanish translation
-│   ├── 📄 fr.json                # French translation
-│   ├── 📄 hi.json                # Hindi translation
-│   ├── 📄 id.json                # Indonesian translation
-│   ├── 📄 it.json                # Italian translation
-│   ├── 📄 ja.json                # Japanese translation
-│   ├── 📄 pl.json                # Polish translation
-│   ├── 📄 pt.json                # Portuguese translation
-│   ├── 📄 ru.json                # Russian translation
-│   ├── 📄 tr.json                # Turkish translation
-│   └── 📄 zh.json                # Chinese translation
+├──  📁 branding/                 # Branding assets (Screenshots, SVGs)
+│   ├── 📁 icons/                 # Application icons
+│   ├── 📁 screenshots/           # Screenshots for documentation
+│   └── 📁 svg/                   # SVG assets
 ├── 📄 LICENSE                    # License file
-├── 📄 main.py                    # Application entry point
+├── 📄 pyproject.toml             # Project metadata and dependencies
 ├── 📄 README.md                  # Project documentation
-├── 📄 .gitignore                 # Git ignore rules
-├── 📄 requirements.txt           # Python dependencies
-└── 📁 src/                       # Source code
-    |
+├── 📄 requirements.txt           # Python dependencies (dev)
+└── 📁 ytsage/                    # Source package
+    ├── 📁 assets/                # Runtime assets
+    │   ├── 📁 Icon/              # Application icons
+    │   └── 📁 sound/             # Audio files
+    ├── 📁 languages/             # Localization files
+    │   ├── 📄 ar.json            # Arabic translation
+    │   ├── 📄 de.json            # German translation
+    │   ├── 📄 en.json            # English translation
+    │   └── ...                   # Other languages
     ├── 📁 core/                  # Core business logic
     │   ├── 📄 __init__.py        # Core package init
     │   ├── 📄 ytsage_deno.py     # Deno integration
@@ -394,27 +370,14 @@ YTSage/
     │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
     ├── 📁 gui/                   # User interface components
     │   ├── 📄 __init__.py        # GUI package init
-    │   ├── 📄 ytsage_gui_format_table.py # Format table functionality
     │   ├── 📄 ytsage_gui_main.py # Main application window
-    │   ├── 📄 ytsage_gui_video_info.py # Video information display
-    |   ├── 📄 ytsage_stylesheet.py # Stylesheet definitions
     │   └── 📁 ytsage_gui_dialogs/ # Dialog classes
-    │       ├── 📄 __init__.py    # Dialogs package init
-    │       ├── 📄 ytsage_dialogs_base.py     # Basic dialogs
-    │       ├── 📄 ytsage_dialogs_custom.py   # Custom functionality dialogs
-    │       ├── 📄 ytsage_dialogs_ffmpeg.py   # FFmpeg-related dialogs
-    │       ├── 📄 ytsage_dialogs_history.py  # History dialogs
-    │       ├── 📄 ytsage_dialogs_selection.py # Selection dialogs
-    │       ├── 📄 ytsage_dialogs_settings.py  # Settings dialogs
-    │       ├── 📄 ytsage_dialogs_update.py    # Update dialogs
-    │       └── 📄 ytsage_dialogs_updater.py    # Updater dialogs
-    └── 📁 utils/                 # Utility modules
-        ├── 📄 __init__.py        # Utils package init
-        ├── 📄 ytsage_config_manager.py # Configuration management
-        ├── 📄 ytsage_constants.py # Application constants
-        ├── 📄 ytsage_history_manager.py # History management
-        ├── 📄 ytsage_localization.py # Localization utilities
-        └── 📄 ytsage_logger.py   # Logging utilities
+    ├── 📁 utils/                 # Utility modules
+    │   ├── 📄 __init__.py        # Utils package init
+    │   ├── 📄 ytsage_config_manager.py # Configuration management
+    │   └── 📄 ytsage_logger.py   # Logging utilities
+    ├── 📄 __init__.py            # Package entry point
+    └── 📄 main.py                # Main execution script
 ```
 
 </details>
