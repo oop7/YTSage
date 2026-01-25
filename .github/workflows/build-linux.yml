@@ -49,7 +49,7 @@ jobs:
         path: |
           venv
           ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
           ${{ runner.os }}-pip-
 
@@ -67,7 +67,7 @@ jobs:
         python -m venv venv
         source venv/bin/activate
         python -m pip install --upgrade pip
-        pip install --no-cache-dir -r requirements.txt
+        pip install --no-cache-dir .
         pip install --no-cache-dir cx_Freeze
 
     - name: Prepare build variables
@@ -82,6 +82,13 @@ jobs:
     - name: Create cx_Freeze setup script (Linux)
       shell: bash
       run: |
+        # Create entry point script
+        cat > ytsage_entry.py <<'ENTRY'
+        from ytsage.main import main
+        if __name__ == "__main__":
+            main()
+        ENTRY
+
         cat > setup_cxfreeze.py <<'PY'
         import os
         import sys
@@ -92,18 +99,18 @@ jobs:
 
         # Prepare include_files list
         include_files_list = [
-            ("src", "src"),
-            ("assets/branding/icons", "lib/assets/branding/icons"),
-            ("assets/Icon", "lib/assets/Icon"),
-            ("assets/sound", "lib/assets/sound"),
-            ("languages", "lib/languages"),
+            ("ytsage/assets/Icon", "lib/assets/Icon"),
+            ("ytsage/assets/sound", "lib/assets/sound"),
+            ("ytsage/languages", "lib/languages"),
+            ("branding/icons", "lib/assets/branding/icons"),
             ("ytsage.desktop", "share/applications/ytsage.desktop"),
-            ("assets/branding/icons/icon.png", "share/pixmaps/ytsage.png"),
+            ("branding/icons/icon.png", "share/pixmaps/ytsage.png"),
         ]
 
         build_exe_options = dict(
             optimize=2,
             packages=[
+                "ytsage",
                 "PySide6.QtCore",
                 "PySide6.QtGui",
                 "PySide6.QtWidgets",
@@ -143,9 +150,9 @@ jobs:
             include_files=include_files_list,
             # Bundle all dependencies - avoid system library references
             bin_includes=[],
-            bin_excludes=[],
-            # Important: include system libs to avoid external dependencies
-            replace_paths=[("*", "")],
+            bin_excludesytsage_entry.py",
+                target_name="ytsage",
+                icon="*", "")],
         )
 
         executables = [
