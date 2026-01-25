@@ -51,8 +51,8 @@ The workflow creates the following files based on the platform:
 - `YTSage-v{version}-{arch}.flatpak` - Flatpak bundle
 
 #### macOS
-- `YTSage-v{version}-{arch}.app.zip` - Zipped application bundle arm64
-- `YTSage-v{version}-{arch}.dmg` - Disk image installer
+- `YTSage-v{version}-arm64.app.zip` - Zipped application bundle
+- `YTSage-v{version}-arm64.dmg` - Disk image installer
 
 ## Workflow Features
 
