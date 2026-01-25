@@ -20,7 +20,7 @@ Features
 
 Usage
 -----
-from src.utils.ytsage_config_manager import ConfigManager
+from .ytsage_config_manager import ConfigManager
 
 # Load settings (auto-loads if not already loaded)
 download_path = ConfigManager.get("download_path")
@@ -54,8 +54,8 @@ import threading
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from src.utils.ytsage_constants import APP_CONFIG_FILE, USER_HOME_DIR
-from src.utils.ytsage_logger import logger
+from .ytsage_constants import APP_CONFIG_FILE, USER_HOME_DIR
+from .ytsage_logger import logger
 
 
 class ConfigManager:

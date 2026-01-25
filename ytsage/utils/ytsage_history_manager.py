@@ -14,7 +14,7 @@ Features
 
 Usage
 -----
-from src.utils.ytsage_history_manager import HistoryManager
+from .ytsage_history_manager import HistoryManager
 
 # Add a download to history
 HistoryManager.add_entry(...)
@@ -38,8 +38,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from src.utils.ytsage_constants import APP_HISTORY_FILE, APP_DATA_DIR
-from src.utils.ytsage_logger import logger
+from .ytsage_constants import APP_HISTORY_FILE, APP_DATA_DIR
+from .ytsage_logger import logger
 
 
 class HistoryManager:

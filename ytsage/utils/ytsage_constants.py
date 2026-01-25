@@ -70,7 +70,7 @@ def get_asset_path(asset_relative_path: str) -> Path:
     
     # Fallback to relative path (for development environment)
     current_file = Path(__file__)
-    # Go up from src/utils to ytsage root, then to asset
+    # Go up from utils to ytsage root, then to asset
     ytsage_root = current_file.parent.parent.parent
     asset_path = ytsage_root / asset_relative_path
     

@@ -9,7 +9,7 @@ import sys
 
 from loguru import logger
 
-from src.utils.ytsage_constants import APP_LOG_DIR, IS_FROZEN
+from .ytsage_constants import APP_LOG_DIR, IS_FROZEN
 
 # Separate configs for each handler
 CONSOLE_CONFIG = {

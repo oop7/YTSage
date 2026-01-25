@@ -15,7 +15,7 @@ Features
 
 Usage
 -----
-from src.utils.ytsage_localization import LocalizationManager
+from .ytsage_localization import LocalizationManager
 
 # Get localized text
 text = LocalizationManager.get_text("download.ready")
@@ -33,7 +33,7 @@ import threading
 from pathlib import Path
 from typing import Any, Dict
 
-from src.utils.ytsage_logger import logger
+from .ytsage_logger import logger
 
 
 class LocalizationManager:
@@ -46,7 +46,7 @@ class LocalizationManager:
     _lock = threading.RLock()
     _current_language = "en"
     _languages: Dict[str, Dict[str, Any]] = {}
-    _languages_dir = Path(__file__).parent.parent.parent / "languages"
+    _languages_dir = Path(__file__).parent.parent / "languages"
     
     # Fallback English strings embedded in code
     _fallback_strings = {
