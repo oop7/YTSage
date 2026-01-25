@@ -48,9 +48,10 @@ The workflow creates the following files based on the platform:
 - `YTSage-v{version}-{arch}.AppImage` - AppImage portable (x86_64, aarch64)
 - `YTSage-v{version}-{arch}.rpm` - RPM package
 - `YTSage-v{version}-{arch}.deb` - Debian package
+- `YTSage-v{version}-{arch}.flatpak` - Flatpak bundle
 
 #### macOS
-- `YTSage-v{version}-{arch}.app.zip` - Zipped application bundle (x64, arm64)
+- `YTSage-v{version}-{arch}.app.zip` - Zipped application bundle arm64
 - `YTSage-v{version}-{arch}.dmg` - Disk image installer
 
 ## Workflow Features
@@ -63,7 +64,7 @@ The workflow creates the following files based on the platform:
 ### Manual Versioning
 - Version is strictly controlled by the input you provide at runtime.
 - No longer dependent on git tags, reducing accidental releases.
-
+ 
 ### Caching
 - Python dependencies and virtual environments are cached to speed up builds.
 
