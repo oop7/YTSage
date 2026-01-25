@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ytsage"
+version = "4.9.7"
+description = "Modern YouTube downloader with a clean PySide6 interface."
+authors = [
+    { name = "oop7", email = "oop7_support@proton.me" },
+]
+dependencies = [
+    "PySide6>=6.10.1",
+    "requests>=2.32.5",
+    "pillow>=12.0.0",
+    "packaging>=25.0",
+    "markdown>=3.10",
+    "loguru>=0.7.3",
+    "setuptools>=80.9.0",
+]
+requires-python = ">=3.10,<3.15"
+readme = "README.md"
+license = "MIT"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    'Programming Language :: Python :: 3.14',
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Desktop Environment",
+    "Environment :: X11 Applications :: Qt",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: MacOS X"
+]
+
+keywords = ["youtube", "downloader", "video", "audio", "PySide6", "yt-dlp", "GUI"]
+
+
+[project.scripts]
+ytsage = "ytsage.main:main"
+
+[project.urls]
+Homepage = "https://github.com/oop7/YTSage"
+Bug-Tracker = "https://github.com/oop7/YTSage/issues"
+Reddit = "https://www.reddit.com/r/NO-N_A_M_E/"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["ytsage*"]
+
+[tool.setuptools.package-data]
+ytsage = [
+    "assets/Icon/icon.png",
+    "assets/sound/notification.mp3",
+    "languages/*.json",
+]
