@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src.utils.ytsage_localization import _
+from ...utils.ytsage_localization import _
 
 
 class SubtitleSelectionDialog(QDialog):

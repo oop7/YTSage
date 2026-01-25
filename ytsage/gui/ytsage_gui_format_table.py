@@ -4,10 +4,10 @@ from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QColor, QFontMetrics
 from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QHeaderView, QSizePolicy, QTableWidget, QTableWidgetItem, QWidget
 
-from src.utils.ytsage_localization import _
+from ..utils.ytsage_localization import _
 
 if TYPE_CHECKING:
-    from src.gui.ytsage_gui_main import YTSageApp
+    from .ytsage_gui_main import YTSageApp
 
 
 class FormatSignals(QObject):

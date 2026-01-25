@@ -9,9 +9,9 @@ from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 
-from src.core.ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
-from src.utils.ytsage_constants import ICON_PATH
-from src.utils.ytsage_localization import _
+from ...core.ytsage_ffmpeg import auto_install_ffmpeg, check_ffmpeg_installed
+from ...utils.ytsage_constants import ICON_PATH
+from ...utils.ytsage_localization import _
 
 
 class FFmpegInstallThread(QThread):

@@ -5,14 +5,14 @@ import subprocess
 from PySide6.QtCore import QMetaObject, Qt, Q_ARG, QThread, Signal
 from PySide6.QtWidgets import QMessageBox
 
-from src.core.ytsage_utils import validate_video_url, parse_yt_dlp_error
-from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
-from src.utils.ytsage_localization import _
-from src.utils.ytsage_logger import logger
+from ..core.ytsage_utils import validate_video_url, parse_yt_dlp_error
+from ..core.ytsage_yt_dlp import get_yt_dlp_path
+from ..utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
+from ..utils.ytsage_localization import _
+from ..utils.ytsage_logger import logger
 
 if TYPE_CHECKING:
-    from src.gui.ytsage_gui_main import YTSageApp
+    from .ytsage_gui_main import YTSageApp
 
 
 class AnalysisThread(QThread):

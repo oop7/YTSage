@@ -29,16 +29,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.core.ytsage_utils import update_auto_update_settings
-from src.utils.ytsage_constants import YTDLP_DOCS_URL
-from src.utils.ytsage_config_manager import ConfigManager
-from src.utils.ytsage_localization import LocalizationManager, _
-from src.utils.ytsage_logger import logger
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_updater import UpdaterTabWidget
+from ...core.ytsage_yt_dlp import get_yt_dlp_path
+from ...core.ytsage_utils import update_auto_update_settings
+from ...utils.ytsage_constants import YTDLP_DOCS_URL
+from ...utils.ytsage_config_manager import ConfigManager
+from ...utils.ytsage_localization import LocalizationManager, _
+from ...utils.ytsage_logger import logger
+from .ytsage_dialogs_updater import UpdaterTabWidget
 
 if TYPE_CHECKING:
-    from src.gui.ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
+    from ..ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
 
 
 class CommandWorker(QObject):

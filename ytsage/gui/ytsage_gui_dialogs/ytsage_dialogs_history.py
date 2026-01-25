@@ -37,13 +37,13 @@ from PySide6.QtWidgets import (
     QApplication
 )
 
-from src.utils.ytsage_history_manager import HistoryManager
-from src.utils.ytsage_constants import APP_THUMBNAILS_DIR, SUBPROCESS_CREATIONFLAGS
-from src.utils.ytsage_localization import _
-from src.utils.ytsage_logger import logger
+from ...utils.ytsage_history_manager import HistoryManager
+from ...utils.ytsage_constants import APP_THUMBNAILS_DIR, SUBPROCESS_CREATIONFLAGS
+from ...utils.ytsage_localization import _
+from ...utils.ytsage_logger import logger
 
 if TYPE_CHECKING:
-    from src.gui.ytsage_gui_main import YTSageApp
+    from ..ytsage_gui_main import YTSageApp
 
 
 class HistoryLoaderThread(QThread):

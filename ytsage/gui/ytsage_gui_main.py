@@ -28,12 +28,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src import __version__ as APP_VERSION
-from src.core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
-from src.core.ytsage_utils import check_ffmpeg, load_saved_path, parse_yt_dlp_error, save_path, should_check_for_auto_update, validate_video_url
-from src.core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
-from src.core.ytsage_deno import get_deno_path, setup_deno  # Import the new Deno functions
-from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
+from .. import __version__ as APP_VERSION
+from ..core.ytsage_downloader import DownloadThread, SignalManager  # Import downloader related classes
+from ..core.ytsage_utils import check_ffmpeg, load_saved_path, parse_yt_dlp_error, save_path, should_check_for_auto_update, validate_video_url
+from ..core.ytsage_yt_dlp import get_yt_dlp_path, setup_ytdlp  # Import the new yt-dlp functions
+from ..core.ytsage_deno import get_deno_path, setup_deno  # Import the new Deno functions
+from .ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     AboutDialog,
     AutoUpdateThread,
     CustomOptionsDialog,
@@ -44,10 +44,10 @@ from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__
     TimeRangeDialog,
     YTDLPUpdateDialog,
 )
-from src.gui.ytsage_gui_format_table import FormatTableMixin
-from src.gui.ytsage_gui_video_info import VideoInfoMixin
-from src.gui.ytsage_gui_analysis import AnalysisMixin
-from src.utils.ytsage_constants import (
+from .ytsage_gui_format_table import FormatTableMixin
+from .ytsage_gui_video_info import VideoInfoMixin
+from .ytsage_gui_analysis import AnalysisMixin
+from ..utils.ytsage_constants import (
     ICON_PATH,
     SOUND_PATH,
     SUBPROCESS_CREATIONFLAGS,
@@ -55,11 +55,11 @@ from src.utils.ytsage_constants import (
     AUDIO_EXTENSIONS,
     SUBTITLE_EXTENSIONS,
 )
-from src.utils.ytsage_logger import logger
-from src.utils.ytsage_config_manager import ConfigManager
-from src.utils.ytsage_localization import LocalizationManager, _
-from src.utils.ytsage_history_manager import HistoryManager
-from src.gui.ytsage_stylesheet import StyleSheet
+from ..utils.ytsage_logger import logger
+from ..utils.ytsage_config_manager import ConfigManager
+from ..utils.ytsage_localization import LocalizationManager, _
+from ..utils.ytsage_history_manager import HistoryManager
+from .ytsage_stylesheet import StyleSheet
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 

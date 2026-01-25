@@ -12,18 +12,18 @@ This package contains all dialog classes organized by functionality:
 """
 
 # Re-export all dialog classes for backward compatibility
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_base import AboutDialog, LogWindow
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_custom import CustomOptionsDialog, TimeRangeDialog
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_ffmpeg import FFmpegCheckDialog, FFmpegInstallThread
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_history import HistoryDialog
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_selection import (
+from .ytsage_dialogs_base import AboutDialog, LogWindow
+from .ytsage_dialogs_custom import CustomOptionsDialog, TimeRangeDialog
+from .ytsage_dialogs_ffmpeg import FFmpegCheckDialog, FFmpegInstallThread
+from .ytsage_dialogs_history import HistoryDialog
+from .ytsage_dialogs_selection import (
     PlaylistSelectionDialog,
     SponsorBlockCategoryDialog,
     SubtitleSelectionDialog,
 )
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_settings import AutoUpdateSettingsDialog, DownloadSettingsDialog
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import AutoUpdateThread, UpdateThread, VersionCheckThread, YTDLPUpdateDialog
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_updater import UpdaterTabWidget
+from .ytsage_dialogs_settings import AutoUpdateSettingsDialog, DownloadSettingsDialog
+from .ytsage_dialogs_update import AutoUpdateThread, UpdateThread, VersionCheckThread, YTDLPUpdateDialog
+from .ytsage_dialogs_updater import UpdaterTabWidget
 
 __all__ = [
     # Base dialogs

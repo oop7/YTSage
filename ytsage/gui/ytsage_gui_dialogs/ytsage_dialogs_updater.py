@@ -23,25 +23,25 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src.core.ytsage_utils import (
+from ...core.ytsage_utils import (
     get_auto_update_settings,
     get_ffmpeg_version_direct,
     update_auto_update_settings,
 )
-from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.core.ytsage_deno import check_deno_update, upgrade_deno
-from src.gui.ytsage_gui_dialogs.ytsage_dialogs_update import YTDLPUpdateDialog
-from src.utils.ytsage_config_manager import ConfigManager
-from src.utils.ytsage_localization import _
-from src.utils.ytsage_logger import logger
-from src.utils.ytsage_constants import (
+from ...core.ytsage_yt_dlp import get_yt_dlp_path
+from ...core.ytsage_deno import check_deno_update, upgrade_deno
+from .ytsage_dialogs_update import YTDLPUpdateDialog
+from ...utils.ytsage_config_manager import ConfigManager
+from ...utils.ytsage_localization import _
+from ...utils.ytsage_logger import logger
+from ...utils.ytsage_constants import (
     FFMPEG_7Z_VERSION_URL,
     OS_NAME,
     SUBPROCESS_CREATIONFLAGS,
 )
 
 if TYPE_CHECKING:
-    from src.gui.ytsage_gui_dialogs.ytsage_dialogs_custom import CustomOptionsDialog
+    from .ytsage_dialogs_custom import CustomOptionsDialog
 
 
 # Helper functions for FFmpeg version checking (copied from removed ytsage_ffmpeg_updater.py)

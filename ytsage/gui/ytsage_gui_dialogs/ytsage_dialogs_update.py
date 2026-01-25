@@ -14,16 +14,16 @@ from packaging import version
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QProgressBar, QPushButton, QVBoxLayout
 
-from src.core.ytsage_utils import get_ytdlp_version
-from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH, YTDLP_DOWNLOAD_URL
-from src.utils.ytsage_config_manager import ConfigManager
-from src.utils.ytsage_localization import LocalizationManager
+from ...core.ytsage_utils import get_ytdlp_version
+from ...core.ytsage_yt_dlp import get_yt_dlp_path
+from ...utils.ytsage_constants import OS_NAME, SUBPROCESS_CREATIONFLAGS, YTDLP_APP_BIN_PATH, YTDLP_DOWNLOAD_URL
+from ...utils.ytsage_config_manager import ConfigManager
+from ...utils.ytsage_localization import LocalizationManager
 
 # Shorthand for localization
 _ = LocalizationManager.get_text
-from src.utils.ytsage_localization import _
-from src.utils.ytsage_logger import logger
+from ...utils.ytsage_localization import _
+from ...utils.ytsage_logger import logger
 
 
 class VersionCheckThread(QThread):

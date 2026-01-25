@@ -27,9 +27,9 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from src.utils.ytsage_logger import logger
-from src.utils.ytsage_localization import _
-from src.utils.ytsage_config_manager import ConfigManager
+from ...utils.ytsage_logger import logger
+from ...utils.ytsage_localization import _
+from ...utils.ytsage_config_manager import ConfigManager
 
 
 class DownloadSettingsDialog(QDialog):

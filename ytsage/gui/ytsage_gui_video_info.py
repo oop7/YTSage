@@ -10,15 +10,15 @@ from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
-from src.gui.ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
+from .ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.py
     SponsorBlockCategoryDialog,
     SubtitleSelectionDialog,
 )
-from src.utils.ytsage_localization import _
-from src.utils.ytsage_logger import logger
+from ..utils.ytsage_localization import _
+from ..utils.ytsage_logger import logger
 
 if TYPE_CHECKING:
-    from src.gui.ytsage_gui_main import YTSageApp
+    from .ytsage_gui_main import YTSageApp
 
 
 class ThumbnailDownloadThread(QThread):

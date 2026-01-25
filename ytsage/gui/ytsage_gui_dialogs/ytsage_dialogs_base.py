@@ -19,13 +19,13 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src import __version__ as APP_VERSION
-from src.utils.ytsage_localization import _
+from ... import __version__ as APP_VERSION
+from ...utils.ytsage_localization import _
 
-from src.core.ytsage_ffmpeg import get_ffmpeg_path
-from src.core.ytsage_utils import _version_cache, check_ffmpeg, get_ffmpeg_version, get_ytdlp_version, get_deno_version, refresh_version_cache
-from src.core.ytsage_yt_dlp import check_ytdlp_installed, get_yt_dlp_path
-from src.core.ytsage_deno import check_deno_installed, get_deno_path
+from ...core.ytsage_ffmpeg import get_ffmpeg_path
+from ...core.ytsage_utils import _version_cache, check_ffmpeg, get_ffmpeg_version, get_ytdlp_version, get_deno_version, refresh_version_cache
+from ...core.ytsage_yt_dlp import check_ytdlp_installed, get_yt_dlp_path
+from ...core.ytsage_deno import check_deno_installed, get_deno_path
 
 
 class LogWindow(QDialog):
@@ -459,7 +459,7 @@ class AboutDialog(QDialog):
             # Only show path if it's not the fallback "deno" and the file exists
             if deno_path and deno_path != "deno":
                 from pathlib import Path
-                from src.utils.ytsage_constants import DENO_APP_BIN_PATH
+                from ...utils.ytsage_constants import DENO_APP_BIN_PATH
                 # Check if the path is our managed binary
                 if Path(deno_path).resolve() == DENO_APP_BIN_PATH.resolve():
                     deno_path_text = deno_path
