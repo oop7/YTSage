@@ -2,8 +2,8 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QMessageBox
 
-from src.utils.ytsage_logger import logger
-from src.gui.ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
+from .utils.ytsage_logger import logger
+from .gui.ytsage_gui_main import YTSageApp  # Import the main application class from ytsage_gui_main
 
 
 def show_error_dialog(message):
