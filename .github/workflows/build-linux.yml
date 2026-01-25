@@ -263,7 +263,7 @@ jobs:
         
         # Install desktop file and icon
         install -m 0644 ${workspace_root}/ytsage.desktop %{buildroot}/usr/share/applications/ytsage.desktop
-        install -m 0644 ${workspace_root}/assets/branding/icons/icon.png %{buildroot}/usr/share/pixmaps/ytsage.png
+        install -m 0644 ${workspace_root}/branding/icons/icon.png %{buildroot}/usr/share/pixmaps/ytsage.png
         
         %files
         /opt/ytsage
@@ -343,7 +343,7 @@ jobs:
 
         # Desktop file and icon
         install -m 0644 ytsage.desktop "$pkgroot/usr/share/applications/ytsage.desktop"
-        install -m 0644 assets/branding/icons/icon.png "$pkgroot/usr/share/pixmaps/ytsage.png"
+        install -m 0644 branding/icons/icon.png "$pkgroot/usr/share/pixmaps/ytsage.png"
 
         # Control file
         cat > "$pkgroot/DEBIAN/control" <<CONTROL
@@ -441,7 +441,7 @@ jobs:
                 "cp -r dist/ytsage-v${version}-*/* /app/share/ytsage/",
                 "ln -s /app/share/ytsage/ytsage /app/bin/ytsage",
                 "install -D flatpak.desktop /app/share/applications/$APP_ID.desktop",
-                "install -D assets/branding/icons/icon.png /app/share/icons/hicolor/128x128/apps/$APP_ID.png"
+                "install -D branding/icons/icon.png /app/share/icons/hicolor/128x128/apps/$APP_ID.png"
               ],
               "sources": [
                 {
