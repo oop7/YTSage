@@ -115,6 +115,7 @@ jobs:
                 "PySide6.QtGui",
                 "PySide6.QtWidgets",
                 "PySide6.QtMultimedia",
+                "PySide6.QtNetwork",
                 "requests",
                 "PIL",
                 "packaging",
@@ -124,7 +125,6 @@ jobs:
             ],
             excludes=[
                 "PySide6.QtBluetooth",
-                "PySide6.QtNetwork",
                 "PySide6.QtOpenGL",
                 "PySide6.QtPrintSupport",
                 "PySide6.QtSvg",
