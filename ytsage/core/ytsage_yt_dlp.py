@@ -20,8 +20,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from src.utils.ytsage_logger import logger
-from src.utils.ytsage_constants import (
+from ..utils.ytsage_logger import logger
+from ..utils.ytsage_constants import (
     APP_BIN_DIR,
     ICON_PATH,
     OS_FULL_NAME,
@@ -31,8 +31,8 @@ from src.utils.ytsage_constants import (
     YTDLP_DOWNLOAD_URL,
     YTDLP_SHA256_URL,
 )
-from src.core.ytsage_ffmpeg import get_file_sha256
-from src.utils.ytsage_localization import _
+from .ytsage_ffmpeg import get_file_sha256
+from ..utils.ytsage_localization import _
 
 # YTDLP_URLS moved to src\utils\ytsage_constants.py
 # get_ytdlp_install_dir() moved to src\utils\ytsage_constants.py

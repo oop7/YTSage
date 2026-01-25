@@ -11,9 +11,9 @@ from typing import Any, Dict, Optional, Union
 import requests
 from packaging import version
 
-from src.core.ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
-from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.utils.ytsage_constants import (
+from .ytsage_ffmpeg import check_ffmpeg_installed, get_ffmpeg_install_path
+from .ytsage_yt_dlp import get_yt_dlp_path
+from ..utils.ytsage_constants import (
     APP_CONFIG_FILE,
     OS_NAME,
     SUBPROCESS_CREATIONFLAGS,
@@ -21,8 +21,8 @@ from src.utils.ytsage_constants import (
     YTDLP_APP_BIN_PATH,
     YTDLP_DOWNLOAD_URL,
 )
-from src.utils.ytsage_localization import _
-from src.utils.ytsage_logger import logger
+from ..utils.ytsage_localization import _
+from ..utils.ytsage_logger import logger
 
 try:
     from importlib.metadata import PackageNotFoundError as ImportlibPackageNotFoundError
@@ -107,7 +107,7 @@ def update_version_cache(tool_name: str, version_info: str, path: Optional[str],
 
 def load_version_cache_from_config() -> None:
     """Load cached version info from config file."""
-    from src.utils.ytsage_config_manager import ConfigManager
+    from ..utils.ytsage_config_manager import ConfigManager
     
     try:
         cached_versions = ConfigManager.get("cached_versions") or {}
@@ -121,7 +121,7 @@ def load_version_cache_from_config() -> None:
 
 def save_version_cache_to_config() -> None:
     """Save version cache to config file."""
-    from src.utils.ytsage_config_manager import ConfigManager
+    from ..utils.ytsage_config_manager import ConfigManager
     
     try:
         ConfigManager.set("cached_versions", _version_cache.copy())
@@ -179,7 +179,7 @@ def get_ffmpeg_version_cached() -> str:
 def get_deno_version_cached() -> str:
     """Get Deno version with caching support."""
     try:
-        from src.core.ytsage_deno import get_deno_path
+        from .ytsage_deno import get_deno_path
         
         current_path = get_deno_path()
 
@@ -190,7 +190,7 @@ def get_deno_version_cached() -> str:
                 return cached_version
 
         # Get fresh version info
-        from src.core.ytsage_deno import get_deno_version_direct
+        from .ytsage_deno import get_deno_version_direct
         version_info = get_deno_version_direct(current_path)
 
         # Update cache
@@ -215,7 +215,7 @@ def refresh_version_cache(force=False) -> bool:
         update_version_cache("ffmpeg", version_info, "ffmpeg", force_save=True)
 
         # Refresh Deno
-        from src.core.ytsage_deno import get_deno_path, get_deno_version_direct
+        from .ytsage_deno import get_deno_path, get_deno_version_direct
         deno_path = get_deno_path()
         version_info = get_deno_version_direct(deno_path)
         update_version_cache("deno", version_info, deno_path, force_save=True)
@@ -550,7 +550,7 @@ def update_yt_dlp() -> bool:
 
 def should_check_for_auto_update() -> bool:
     """Check if auto-update should be performed based on user settings."""
-    from src.utils.ytsage_config_manager import ConfigManager
+    from ..utils.ytsage_config_manager import ConfigManager
     
     try:
         # Check if auto-update is enabled
@@ -580,7 +580,7 @@ def should_check_for_auto_update() -> bool:
 
 def check_and_update_ytdlp_auto() -> bool:
     """Perform automatic yt-dlp update check and update if needed."""
-    from src.utils.ytsage_config_manager import ConfigManager
+    from ..utils.ytsage_config_manager import ConfigManager
     
     try:
         logger.info("Performing automatic yt-dlp update check...")
@@ -637,7 +637,7 @@ def check_and_update_ytdlp_auto() -> bool:
 
 def get_auto_update_settings() -> Dict[str, Any]:
     """Get current auto-update settings from config."""
-    from src.utils.ytsage_config_manager import ConfigManager
+    from ..utils.ytsage_config_manager import ConfigManager
     
     enabled: Optional[bool] = ConfigManager.get("auto_update_ytdlp")
     frequency: Optional[str] = ConfigManager.get("auto_update_frequency")
@@ -653,7 +653,7 @@ def get_auto_update_settings() -> Dict[str, Any]:
 def update_auto_update_settings(enabled: bool, frequency: str) -> bool:
     """Update auto-update settings in config."""
     try:
-        from src.utils.ytsage_config_manager import ConfigManager
+        from ..utils.ytsage_config_manager import ConfigManager
         
         ConfigManager.set("auto_update_ytdlp", enabled)
         ConfigManager.set("auto_update_frequency", frequency)

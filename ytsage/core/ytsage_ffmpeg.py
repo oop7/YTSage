@@ -7,8 +7,8 @@ from pathlib import Path
 
 import requests
 
-from src.utils.ytsage_logger import logger
-from src.utils.ytsage_constants import (
+from ..utils.ytsage_logger import logger
+from ..utils.ytsage_constants import (
     FFMPEG_7Z_DOWNLOAD_URL,
     FFMPEG_7Z_SHA256_URL,
     FFMPEG_ZIP_DOWNLOAD_URL,

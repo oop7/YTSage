@@ -11,16 +11,16 @@ from typing import Optional, List, Set
 
 from PySide6.QtCore import QObject, QThread, Signal
 
-from src.core.ytsage_yt_dlp import get_yt_dlp_path
-from src.utils.ytsage_constants import (
+from .ytsage_yt_dlp import get_yt_dlp_path
+from ..utils.ytsage_constants import (
     SUBPROCESS_CREATIONFLAGS,
     VIDEO_EXTENSIONS,
     AUDIO_EXTENSIONS,
     SUBTITLE_EXTENSIONS,
     MEDIA_EXTENSIONS,
 )
-from src.utils.ytsage_localization import LocalizationManager
-from src.utils.ytsage_logger import logger
+from ..utils.ytsage_localization import LocalizationManager
+from ..utils.ytsage_logger import logger
 
 # Shorthand for localization
 _ = LocalizationManager.get_text
