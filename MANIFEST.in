@@ -1,0 +1,5 @@
+include README.md
+include LICENSE
+include pyproject.toml
+recursive-include ytsage/assets *
+recursive-include ytsage/languages *
