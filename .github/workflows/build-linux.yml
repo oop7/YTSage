@@ -150,16 +150,16 @@ jobs:
             include_files=include_files_list,
             # Bundle all dependencies - avoid system library references
             bin_includes=[],
-            bin_excludesytsage_entry.py",
-                target_name="ytsage",
-                icon="*", "")],
+            bin_excludes=[],
+            # Important: include system libs to avoid external dependencies
+            replace_paths=[("*", "")],
         )
 
         executables = [
             Executable(
-                script="main.py",
+                script="ytsage_entry.py",
                 target_name="ytsage",
-                icon="assets/branding/icons/icon.png",
+                icon="branding/icons/icon.png",
             )
         ]
 
