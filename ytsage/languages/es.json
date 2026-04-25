@@ -327,7 +327,11 @@
     "tab_format": "Formato",
     "tab_file": "Archivo",
     "concurrent_fragments": "Concurrent Connections",
-    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1."
+    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
+    "defaults_settings": "Default Selection Settings",
+    "default_video_quality": "Default Video Resolution (Height):",
+    "default_subtitle_language": "Default Subtitle Language(s):",
+    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."
   },
   "main_ui": {
     "url_placeholder": "Ingresa URL de video o lista de YouTube",
@@ -452,7 +456,13 @@
     "unknown": "Lista de reproducción desconocida",
     "total_videos": "Total de Videos: {count}",
     "display_format": "Lista de reproducción: {title} | {count} videos",
-    "select_videos_title": "Seleccionar Videos de la Lista de Reproducción"
+    "select_videos_title": "Seleccionar Videos de la Lista de Reproducción",
+    "save_as": "Save Playlist As",
+    "save_success_title": "Success",
+    "saved_successfully": "Playlist saved successfully.",
+    "save_error_title": "Save Error",
+    "no_videos_to_save": "No playlist entries gathered!",
+    "save_error_msg": "Failed to save playlist."
   },
   "subtitle_selection": {
     "count_selected": "{count} seleccionados"

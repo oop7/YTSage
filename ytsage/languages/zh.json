@@ -332,7 +332,11 @@
     "tab_format": "格式",
     "tab_file": "文件",
     "concurrent_fragments": "Concurrent Connections",
-    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1."
+    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
+    "defaults_settings": "Default Selection Settings",
+    "default_video_quality": "Default Video Resolution (Height):",
+    "default_subtitle_language": "Default Subtitle Language(s):",
+    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."
   },
   "main_ui": {
     "url_placeholder": "输入 YouTube 视频或播放列表网址",
@@ -457,7 +461,13 @@
     "unknown": "未知播放列表",
     "total_videos": "总视频数：{count}",
     "display_format": "播放列表：{title} | {count}个视频",
-    "select_videos_title": "选择播放列表视频"
+    "select_videos_title": "选择播放列表视频",
+    "save_as": "Save Playlist As",
+    "save_success_title": "Success",
+    "saved_successfully": "Playlist saved successfully.",
+    "save_error_title": "Save Error",
+    "no_videos_to_save": "No playlist entries gathered!",
+    "save_error_msg": "Failed to save playlist."
   },
   "subtitle_selection": {
     "count_selected": "已选择{count}个"
