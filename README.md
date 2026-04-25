@@ -72,6 +72,7 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 | 📜 Download History              | 🔄 Release Channel Selection            | 🌐 Proxy Support                   |
 | 🎚️ Audio Format Conversion       | 🎬 Video Format Settings                | 🆙 Built-in Updater Tab            |
 | 🌍 Generic Mode                   | 🔊 Audio Normalization (EBU R128)       | 🌍 Localization in 14 Languages    |
+| 💾 Export Playlists               | ⚙️ Default Quality & Subtitles          |         |
 </div>
 
 <a id="installation"></a>
@@ -262,7 +263,7 @@ python -m ytsage.main
 4. **Choose desired format/quality**
 5. **Click "Download"**
 
-> 💡 The application automatically handles the download queue
+> 💡 The application automatically handles the download queue, and you can export the playlist entries to `.txt`, `.csv`, `.m3u`, or `.json` using the **Save Playlist As** button.
 
 </details>
 
@@ -305,7 +306,9 @@ Notes:
 
 - **Speed Limiter:** Limit the download speed, for example `500K` for 500 KB/s
 - **Save Download Path:** Save the default download path for future downloads. Available in **Download Settings → Download Path**.
-- **Output Filename Format:** Customize the output filename format using variables like `%(title)s`, `%(uploader)s`, and `%(resolution)s`. Available in **Download Settings → Filename Format**.
+- **Default Video Resolution:** Set your preferred default video resolution for automatic selection (e.g., 1080p, 720p). Available in **Download Settings → Default Video Resolution**.
+- **Default Subtitle Languages:** Set default subtitle languages to auto-select automatically (comma-separated, e.g., `en,es`). Available in **Download Settings → Default Subtitle Languages**.
+- **Output Filename Format:** Customize the output filename format using variables like `%(title)s`, `%(uploader)s`, `%(playlist_index)s`, and `%(resolution)s`. Available in **Download Settings → Filename Format**.
 - **Force Output Format:** Force video downloads into a specific container format such as `mp4`, `webm`, or `mkv`. Available in **Download Settings → Output Format Settings**.
 - **Audio Format Conversion:** Convert audio-only downloads to preferred formats such as `AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, or `Best`. Available in **Download Settings → Audio Format Settings**.
 - **Audio Normalization:** Standardize volume for audio-only downloads using EBU R128.
