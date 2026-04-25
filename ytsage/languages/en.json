@@ -82,8 +82,7 @@
     "select_defaults": "Select Defaults",
     "select_all": "Select All",
     "deselect_all": "Deselect All",
-    "open_folder": "Open folder location",
-    "reset": "Reset"
+    "open_folder": "Open folder location",    "save_playlist": "Save Playlist As",    "reset": "Reset"
   },
   "dialogs": {
     "custom_options": "Custom Options",
@@ -330,7 +329,11 @@
     "audio_normalization": "Audio Normalization (EBU R128)",
     "audio_normalization_help": "When enabled, audio tracks will be normalized. Note: This requires re-encoding, so a specific audio format (like MP3 or M4A) must be forced.",
     "filename_format": "Output Filename Format",
-    "filename_format_help": "Available variables: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s. Standard yt-dlp output template syntax is supported.",
+    "filename_format_help": "Available variables: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s, %(playlist_index)s. Standard yt-dlp output template syntax is supported.",
+    "defaults_settings": "Default Selection Settings",
+    "default_video_quality": "Default Video Resolution (Height):",
+    "default_subtitle_language": "Default Subtitle Language(s):",
+    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available.",
     "concurrent_fragments": "Concurrent Connections",
     "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
     "preferred_audio_format": "Preferred audio format:",
@@ -470,7 +473,13 @@
     "unknown": "Unknown Playlist",
     "total_videos": "Total Videos: {count}",
     "display_format": "Playlist: {title} | {count} videos",
-    "select_videos_title": "Select Playlist Videos"
+    "select_videos_title": "Select Playlist Videos",
+    "save_as": "Save Playlist As",
+    "save_success_title": "Success",
+    "saved_successfully": "Playlist saved successfully.",
+    "save_error_title": "Save Error",
+    "no_videos_to_save": "No playlist entries gathered!",
+    "save_error_msg": "Failed to save playlist."
   },
   "subtitle_selection": {
     "count_selected": "{count} selected"
