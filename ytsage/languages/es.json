@@ -18,8 +18,8 @@
     "italian": "Italiano",
     "arabic": "Árabe",
     "japanese": "Japonés",
-    "help_text": "Select your preferred language for the interface.",
-    "restart_notice": "Language change will take effect after restarting the application."
+    "help_text": "Seleccione su idioma preferido para la interfaz.",
+    "restart_notice": "El cambio de idioma tendrá efecto después de reiniciar la aplicación."
   },
   "app": {
     "title": "YTSage",
@@ -53,8 +53,8 @@
     "deselect_all": "Deseleccionar Todos",
     "open_folder": "Abrir ubicación de carpeta",
     "history": "Historial",
-    "save_playlist": "Save Playlist As",
-    "custom_command_help": "Help"
+    "save_playlist": "Guardar playlist como",
+    "custom_command_help": "Ayuda"
   },
   "dialogs": {
     "custom_options": "Opciones Personalizadas",
@@ -67,7 +67,7 @@
     "no_subtitles_available": "No hay subtítulos disponibles",
     "matching": "que coincidan con",
     "ytdlp_log_title": "Registro de yt-dlp",
-    "filter_playlist_placeholder": "Filter videos..."
+    "filter_playlist_placeholder": "Filtrar videos..."
   },
   "tabs": {
     "cookies": "Iniciar sesión con Cookies",
@@ -345,12 +345,12 @@
     "tab_general": "General",
     "tab_format": "Formato",
     "tab_file": "Archivo",
-    "concurrent_fragments": "Concurrent Connections",
-    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
-    "defaults_settings": "Default Selection Settings",
-    "default_video_quality": "Default Video Resolution (Height):",
-    "default_subtitle_language": "Default Subtitle Language(s):",
-    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."
+    "concurrent_fragments": "Conexiones simultáneas",
+    "concurrent_fragments_help": "Número de conexiones por descarga. Los valores más altos evitan la limitación, pero pueden causar bloqueos temporales si son demasiado altos. Predeterminado: 1.",
+    "defaults_settings": "Configuración de selección predeterminada",
+    "default_video_quality": "Resolución de video predeterminada (Altura):",
+    "default_subtitle_language": "Idioma(s) de subtítulos predeterminado(s):",
+    "defaults_help": "Establezca su altura de video y sus idiomas de subtítulos preferidos (separados por comas). Se seleccionarán automáticamente si están disponibles."
   },
   "main_ui": {
     "url_placeholder": "Ingresa URL de video o lista de YouTube",
@@ -476,12 +476,12 @@
     "total_videos": "Total de Videos: {count}",
     "display_format": "Lista de reproducción: {title} | {count} videos",
     "select_videos_title": "Seleccionar Videos de la Lista de Reproducción",
-    "save_as": "Save Playlist As",
-    "save_success_title": "Success",
-    "saved_successfully": "Playlist saved successfully.",
-    "save_error_title": "Save Error",
-    "no_videos_to_save": "No playlist entries gathered!",
-    "save_error_msg": "Failed to save playlist."
+    "save_as": "Guardar lista como",
+    "save_success_title": "Éxito",
+    "saved_successfully": "Lista de reproducción guardada con éxito.",
+    "save_error_title": "Error al guardar",
+    "no_videos_to_save": "¡No se han recopilado entradas de la lista!",
+    "save_error_msg": "Error al guardar la lista de reproducción."
   },
   "subtitle_selection": {
     "count_selected": "{count} seleccionados"
