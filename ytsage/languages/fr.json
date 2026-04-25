@@ -84,7 +84,7 @@
     "deselect_all": "Tout désélectionner",
     "open_folder": "Ouvrir l'emplacement du dossier",
     "history": "Historique",
-    "save_playlist": "Save Playlist As"
+    "save_playlist": "Enregistrer la playlist sous"
   },
   "dialogs": {
     "custom_options": "Options personnalisées",
@@ -97,7 +97,7 @@
     "no_subtitles_available": "Aucun sous-titre disponible",
     "matching": "correspondant",
     "ytdlp_log_title": "Journal yt-dlp",
-    "filter_playlist_placeholder": "Filter videos..."
+    "filter_playlist_placeholder": "Filtrer les vidéos..."
   },
   "tabs": {
     "cookies": "Se connecter avec des cookies",
@@ -345,12 +345,12 @@
     "tab_general": "Général",
     "tab_format": "Format",
     "tab_file": "Fichier",
-    "concurrent_fragments": "Concurrent Connections",
-    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
-    "defaults_settings": "Default Selection Settings",
-    "default_video_quality": "Default Video Resolution (Height):",
-    "default_subtitle_language": "Default Subtitle Language(s):",
-    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."
+    "concurrent_fragments": "Connexions simultanées",
+    "concurrent_fragments_help": "Nombre de connexions par téléchargement. Des valeurs plus élevées contournent le bridage mais peuvent causer des blocages temporaires si elles sont trop élevées. Par défaut : 1.",
+    "defaults_settings": "Paramètres de sélection par défaut",
+    "default_video_quality": "Résolution vidéo par défaut (Hauteur) :",
+    "default_subtitle_language": "Langue(s) des sous-titres par défaut :",
+    "defaults_help": "Définissez votre hauteur de vidéo et vos langues de sous-titres préférées (séparées par des virgules). Elles seront sélectionnées automatiquement si disponibles."
   },
   "main_ui": {
     "url_placeholder": "Entrer l'URL de la vidéo ou de la playlist YouTube",
