@@ -376,6 +376,39 @@ class DownloadSettingsDialog(QDialog):
 
         audio_format_group_box.setLayout(audio_format_layout)
         format_layout.addWidget(audio_format_group_box)
+
+        # --- Default Quality and Subtitles Section ---
+        defaults_group_box = QGroupBox(_("settings.defaults_settings", default="Default Selection Settings"))
+        defaults_layout = QVBoxLayout()
+        
+        # Default Video Quality
+        vid_qual_layout = QHBoxLayout()
+        vid_qual_label = QLabel(_("settings.default_video_quality", default="Default Video Resolution (Height):"))
+        vid_qual_label.setStyleSheet("color: #ffffff; margin-top: 5px;")
+        self.default_vid_qual_input = QLineEdit(str(ConfigManager.get("default_video_quality") or ""))
+        self.default_vid_qual_input.setPlaceholderText("e.g. 1080 or 720")
+        vid_qual_layout.addWidget(vid_qual_label)
+        vid_qual_layout.addWidget(self.default_vid_qual_input)
+        defaults_layout.addLayout(vid_qual_layout)
+
+        # Default Subtitles
+        sub_layout = QHBoxLayout()
+        sub_label = QLabel(_("settings.default_subtitle_language", default="Default Subtitle Language(s):"))
+        sub_label.setStyleSheet("color: #ffffff; margin-top: 5px;")
+        self.default_sub_input = QLineEdit(ConfigManager.get("default_subtitle_language") or "")
+        self.default_sub_input.setPlaceholderText("e.g. en, es")
+        sub_layout.addWidget(sub_label)
+        sub_layout.addWidget(self.default_sub_input)
+        defaults_layout.addLayout(sub_layout)
+
+        defaults_help = QLabel(_("settings.defaults_help", default="Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."))
+        defaults_help.setWordWrap(True)
+        defaults_help.setStyleSheet("color: #cccccc; margin: 5px; font-size: 11px;")
+        defaults_layout.addWidget(defaults_help)
+
+        defaults_group_box.setLayout(defaults_layout)
+        format_layout.addWidget(defaults_group_box)
+
         format_layout.addStretch()
 
         # === File Tab ===
@@ -579,6 +612,12 @@ class DownloadSettingsDialog(QDialog):
             ConfigManager.set("force_audio_format", force_audio_format)
             ConfigManager.set("preferred_audio_format", preferred_audio_format)
             ConfigManager.set("audio_normalization", audio_normalization)
+
+            # Save defaults
+            default_vid = self.default_vid_qual_input.text().strip()
+            ConfigManager.set("default_video_quality", default_vid if default_vid else None)
+            default_sub = self.default_sub_input.text().strip()
+            ConfigManager.set("default_subtitle_language", default_sub if default_sub else None)
 
             # Save filename format
             filename_format = self.get_filename_format()
