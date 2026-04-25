@@ -238,6 +238,30 @@ class FormatTableMixin:
         self._populate_format_table(all_filtered)
         self._table_built = True
 
+        from ..utils.ytsage_config_manager import ConfigManager
+        default_video_quality = ConfigManager.get("default_video_quality")
+        
+        # Auto-select the default or best format
+        if self.format_checkboxes:
+            found_default = False
+            if default_video_quality:
+                # Try to find a video format with the requested height (e.g. '1080')
+                target_height = str(default_video_quality)
+                # the formats are sorted by quality, so the first match is typically the best one for that height
+                for idx, (f, fmt_type) in enumerate(all_filtered):
+                    if fmt_type == "video":
+                        res = str(f.get("resolution", ""))
+                        if res.endswith(f"x{target_height}") or target_height in res:
+                            self.format_checkboxes[idx].setChecked(True)
+                            self.handle_checkbox_click(self.format_checkboxes[idx])
+                            found_default = True
+                            break
+                        
+            if not found_default:
+                # Fallback to the first available format (which is the best quality since it's sorted)
+                self.format_checkboxes[0].setChecked(True)
+                self.handle_checkbox_click(self.format_checkboxes[0])
+
         # Apply initial visibility based on current button states
         self.filter_formats()
         
