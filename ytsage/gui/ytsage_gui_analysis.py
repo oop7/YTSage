@@ -393,6 +393,29 @@ class AnalysisMixin:
         self.available_automatic_subtitles = result_data["available_automatic_subtitles"]
         self.selected_playlist_items = None
         self.selected_subtitles = []
+        
+        from ..utils.ytsage_config_manager import ConfigManager
+        default_sub = ConfigManager.get("default_subtitle_language")
+        if default_sub:
+            if isinstance(default_sub, str):
+                default_sub_list = [s.strip() for s in default_sub.split(",")]
+            else:
+                default_sub_list = []
+            
+            for lang in default_sub_list:
+                if lang in self.available_subtitles:
+                    self.selected_subtitles.append(f"{lang} - Manual")
+                elif lang in self.available_automatic_subtitles:
+                    self.selected_subtitles.append(f"{lang} - Auto-generated")
+            
+            count = len(self.selected_subtitles)
+            try:
+                self.signals.selected_subs_label_text.emit(_("subtitle_selection.count_selected", count=count))
+                self.subtitle_select_btn.setProperty("subtitlesSelected", count > 0)
+                self.subtitle_select_btn.style().unpolish(self.subtitle_select_btn)
+                self.subtitle_select_btn.style().polish(self.subtitle_select_btn)
+            except Exception:
+                pass
 
         # Update UI components (safe - we're in main thread)
         self.update_video_info(self.video_info)
