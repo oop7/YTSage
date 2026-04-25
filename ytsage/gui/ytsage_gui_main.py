@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QButtonGroup,
     QCheckBox,
     QDialog,
+    QFileDialog,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -397,12 +398,24 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.playlist_info_label = self.setup_playlist_info_section()
         layout.addWidget(self.playlist_info_label)
 
+        # Playlist buttons layout
+        playlist_btns_layout = QHBoxLayout()
+
         # Add playlist selection BUTTON (initially hidden) - REPLACED QLineEdit
         self.playlist_select_btn = QPushButton(_("buttons.select_videos"))
         self.playlist_select_btn.clicked.connect(self.open_playlist_selection_dialog)
         self.playlist_select_btn.setVisible(False)
         self.playlist_select_btn.setStyleSheet(StyleSheet.PLAYLIST_BUTTON)
-        layout.addWidget(self.playlist_select_btn)
+        playlist_btns_layout.addWidget(self.playlist_select_btn)
+
+        # Save playlist as button
+        self.save_playlist_btn = QPushButton(_("buttons.save_playlist", default="Save Playlist As"))
+        self.save_playlist_btn.clicked.connect(self.save_playlist_to_file)
+        self.save_playlist_btn.setVisible(False)
+        self.save_playlist_btn.setStyleSheet(StyleSheet.PLAYLIST_BUTTON)
+        playlist_btns_layout.addWidget(self.save_playlist_btn)
+
+        layout.addLayout(playlist_btns_layout)
         # --- End Playlist Info Section ---
 
         # Format controls section with minimal spacing
@@ -568,6 +581,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.signals.playlist_info_label_text.connect(self.playlist_info_label.setText)
         self.signals.selected_subs_label_text.connect(self.selected_subs_label.setText)
         self.signals.playlist_select_btn_visible.connect(lambda v: self.set_widget_visible_animated(self.playlist_select_btn, v))
+        self.signals.playlist_select_btn_visible.connect(lambda v: self.set_widget_visible_animated(self.save_playlist_btn, v))
         self.signals.playlist_select_btn_text.connect(self.playlist_select_btn.setText)
 
         # Disable analysis-dependent controls until video is analyzed
@@ -1320,6 +1334,48 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 )
                 button_text = f"Select Videos... ({display_text})"
             self.playlist_select_btn.setText(button_text)  # Direct call is fine here
+
+    def save_playlist_to_file(self) -> None:
+        """Save current playlist URLs/info to a file."""
+        if not getattr(self, "playlist_entries", None):
+            QMessageBox.warning(self, _("playlist.save_error_title", default="Save Error"), _("playlist.no_videos_to_save", default="No playlist entries gathered!"))
+            return
+            
+        default_dir = str(Path(self.last_path) / "playlist.txt")
+        file_path, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            _("playlist.save_as", default="Save Playlist As"),
+            default_dir,
+            "Text files (*.txt);;M3U playlists (*.m3u);;CSV files (*.csv);;JSON files (*.json)"
+        )
+        
+        if not file_path:
+            return
+            
+        try:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                if "Text files" in selected_filter:
+                    for entry in self.playlist_entries:
+                        f.write(f"{entry.get('url', '')}\n")
+                elif "M3U" in selected_filter:
+                    f.write("#EXTM3U\n")
+                    for entry in self.playlist_entries:
+                        duration = int(entry.get('duration', 0)) if entry.get('duration') else 0
+                        title = entry.get('title', 'Unknown Title')
+                        f.write(f"#EXTINF:{duration},{title}\n{entry.get('url', '')}\n")
+                elif "CSV" in selected_filter:
+                    import csv
+                    writer = csv.writer(f, lineterminator='\n')
+                    writer.writerow(['Title', 'URL', 'Duration', 'Uploader'])
+                    for entry in self.playlist_entries:
+                        writer.writerow([entry.get('title', ''), entry.get('url', ''), entry.get('duration', ''), entry.get('uploader', '')])
+                elif "JSON" in selected_filter:
+                    import json
+                    json.dump(self.playlist_entries, f, indent=4, ensure_ascii=False)
+            QMessageBox.information(self, _("playlist.save_success_title", default="Success"), _("playlist.saved_successfully", default="Playlist saved successfully."))
+        except Exception as e:
+            logger.exception(f"Error saving playlist: {e}")
+            QMessageBox.critical(self, _("playlist.save_error_title", default="Error"), _("playlist.save_error_msg", default="Failed to save playlist."))
 
     # --- New Slot for Updating Playlist Button Text ---
     # moved to SignalManager as Signal and added to init_ui() method.
