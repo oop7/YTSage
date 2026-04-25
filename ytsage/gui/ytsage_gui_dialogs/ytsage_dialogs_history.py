@@ -279,7 +279,7 @@ class HistoryDelegate(QStyledItemDelegate):
         painter.drawText(badge_rect, Qt.AlignmentFlag.AlignCenter, badge_text)
         
         # File Size
-        file_size = entry.get("file_size", 0)
+        file_size = entry.get("file_size") or 0
         if file_size > 0:
             size_str = self.format_file_size(file_size)
             painter.setPen(QColor("#aaaaaa"))
