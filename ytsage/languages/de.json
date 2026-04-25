@@ -84,7 +84,7 @@
     "deselect_all": "Alle abwählen",
     "open_folder": "Ordnerspeicherort öffnen",
     "history": "Verlauf",
-    "save_playlist": "Save Playlist As"
+    "save_playlist": "Playlist speichern unter"
   },
   "dialogs": {
     "custom_options": "Benutzerdefinierte Optionen",
@@ -97,7 +97,7 @@
     "no_subtitles_available": "Keine Untertitel verfügbar",
     "matching": "passend",
     "ytdlp_log_title": "yt-dlp-Protokoll",
-    "filter_playlist_placeholder": "Filter videos..."
+    "filter_playlist_placeholder": "Videos filtern..."
   },
   "tabs": {
     "cookies": "Mit Cookies anmelden",
@@ -345,12 +345,12 @@
     "tab_general": "Allgemein",
     "tab_format": "Format",
     "tab_file": "Datei",
-    "concurrent_fragments": "Concurrent Connections",
-    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
-    "defaults_settings": "Default Selection Settings",
-    "default_video_quality": "Default Video Resolution (Height):",
-    "default_subtitle_language": "Default Subtitle Language(s):",
-    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."
+    "concurrent_fragments": "Gleichzeitige Verbindungen",
+    "concurrent_fragments_help": "Anzahl der Verbindungen pro Download. Höhere Werte umgehen die Drosselung, können aber bei zu hohen Werten zu temporären Sperren führen. Standard: 1.",
+    "defaults_settings": "Standard-Auswahleinstellungen",
+    "default_video_quality": "Standard-Videoauflösung (Höhe):",
+    "default_subtitle_language": "Standard-Untertitelsprache(n):",
+    "defaults_help": "Geben Sie Ihre bevorzugte Videohöhe und Untertitelsprachen ein (kommagetrennt). Sie werden automatisch ausgewählt, falls verfügbar."
   },
   "main_ui": {
     "url_placeholder": "YouTube-Video- oder Playlist-URL eingeben",

@@ -84,7 +84,7 @@
     "deselect_all": "सभी को अचयनित करें",
     "open_folder": "फ़ोल्डर स्थान खोलें",
     "history": "इतिहास",
-    "save_playlist": "Save Playlist As"
+    "save_playlist": "प्लेलिस्ट को इस रूप में सहेजें"
   },
   "dialogs": {
     "custom_options": "कस्टम विकल्प",
@@ -92,12 +92,12 @@
     "select_folder": "डाउनलोड फ़ोल्डर चुनें",
     "sponsorblock_categories": "SponsorBlock श्रेणियां",
     "sponsorblock_description": "डाउनलोड के दौरान अपने आप हटाए जाने वाले वीडियो सेगमेंट के प्रकार चुनें।\nSponsorBlock इन सेगमेंट की पहचान के लिए समुदाय द्वारा प्रस्तुत डेटा का उपयोग करता है।",
-    "select_subtitles": "उपशीर्षक चुनें",
+    "select_subtitles": "उपशीर्षک चुनें",
     "filter_languages_placeholder": "भाषाएं फ़िल्टर करें (जैसे: hi, en)...",
     "no_subtitles_available": "कोई उपशीर्षक उपलब्ध नहीं",
     "matching": "मेल खाता",
     "ytdlp_log_title": "yt-dlp लॉग",
-    "filter_playlist_placeholder": "Filter videos..."
+    "filter_playlist_placeholder": "वीडियो फ़िल्टर करें..."
   },
   "tabs": {
     "cookies": "कुकीज़ के साथ लॉगिन",
@@ -476,12 +476,12 @@
     "total_videos": "कुल वीडियो: {count}",
     "display_format": "प्लेलिस्ट: {title} | {count} वीडियो",
     "select_videos_title": "प्लेलिस्ट वीडियो चुनें",
-    "save_as": "Save Playlist As",
-    "save_success_title": "Success",
-    "saved_successfully": "Playlist saved successfully.",
-    "save_error_title": "Save Error",
-    "no_videos_to_save": "No playlist entries gathered!",
-    "save_error_msg": "Failed to save playlist."
+    "save_as": "प्लेलिस्ट को इस रूप में सहेजें",
+    "save_success_title": "सफलता",
+    "saved_successfully": "प्लेलिस्ट सफलतापूर्वक सहेजी गई।",
+    "save_error_title": "सहेजने में त्रुटि",
+    "no_videos_to_save": "कोई प्लेलिस्ट प्रविष्टियां एकत्र नहीं की गईं!",
+    "save_error_msg": "प्लेलिस्ट सहेजने में विफल।"
   },
   "subtitle_selection": {
     "count_selected": "{count} चुना गया"
