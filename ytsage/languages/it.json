@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "Filtra lingue (es: it, en)...",
     "no_subtitles_available": "Nessun sottotitolo disponibile",
     "matching": "corrispondenti",
-    "ytdlp_log_title": "Registro yt-dlp"
+    "ytdlp_log_title": "Registro yt-dlp",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Accedi con i cookie",

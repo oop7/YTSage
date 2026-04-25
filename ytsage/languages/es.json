@@ -17,7 +17,9 @@
     "polish": "Polaco",
     "italian": "Italiano",
     "arabic": "Árabe",
-    "japanese": "Japonés"
+    "japanese": "Japonés",
+    "help_text": "Select your preferred language for the interface.",
+    "restart_notice": "Language change will take effect after restarting the application."
   },
   "app": {
     "title": "YTSage",
@@ -51,7 +53,8 @@
     "deselect_all": "Deseleccionar Todos",
     "open_folder": "Abrir ubicación de carpeta",
     "history": "Historial",
-    "save_playlist": "Save Playlist As"
+    "save_playlist": "Save Playlist As",
+    "custom_command_help": "Help"
   },
   "dialogs": {
     "custom_options": "Opciones Personalizadas",
@@ -63,7 +66,8 @@
     "filter_languages_placeholder": "Filtrar idiomas (ej., en, es)...",
     "no_subtitles_available": "No hay subtítulos disponibles",
     "matching": "que coincidan con",
-    "ytdlp_log_title": "Registro de yt-dlp"
+    "ytdlp_log_title": "Registro de yt-dlp",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Iniciar sesión con Cookies",
@@ -115,7 +119,9 @@
     "url_label": "📍 URL: {url}",
     "args_label": "⚙️  Argumentos: {command}",
     "download_path_label": "📁 Ruta de descarga: {path}",
-    "separator": "=================================================="
+    "separator": "==================================================",
+    "command_placeholder": "Enter custom yt-dlp command...",
+    "command_help": "Available placeholders:\n{url} - Video URL\n{output} - Output directory\n\nExample: --write-info-json --write-thumbnail"
   },
   "proxy": {
     "help_text": "Configurar ajustes de proxy para conexiones de red y geo-verificación.\nEl proxy puede ayudar a evitar restricciones regionales y mejorar el rendimiento de descarga.",
@@ -141,7 +147,11 @@
     "cleared_title": "Configuración de proxy borrada",
     "cleared_message": "Se borró y guardó toda la configuración de proxy.",
     "saved_main": "Proxy principal guardado: {proxy}",
-    "saved_geo": "Proxy geo guardado: {proxy}"
+    "saved_geo": "Proxy geo guardado: {proxy}",
+    "proxy_url": "Proxy URL",
+    "proxy_placeholder": "http://proxy:port or socks5://proxy:port",
+    "geo_bypass": "Geo-bypass proxy (for geographic restrictions)",
+    "geo_bypass_placeholder": "http://proxy:port for bypassing geo-blocks"
   },
   "download": {
     "preparing": "Preparando descarga...",
@@ -195,7 +205,11 @@
     "high_audio": "Audio Alto",
     "medium_audio": "Audio Medio",
     "low_audio": "Audio Bajo",
-    "audio_only_resolution": "Solo audio"
+    "audio_only_resolution": "Solo audio",
+    "video_format": "Video Format:",
+    "audio_format": "Audio Format:",
+    "no_formats": "No formats available",
+    "loading": "Loading formats..."
   },
   "about": {
     "title": "Acerca de YTSage",
@@ -223,7 +237,11 @@
     "end_time": "Tiempo de Fin:",
     "start_time_placeholder": "00:00:00 (o dejar vacío para inicio)",
     "end_time_placeholder": "00:10:00 (o dejar vacío para fin)",
-    "force_keyframes": "Forzar fotogramas clave en cortes (mejor precisión, más lento)"
+    "force_keyframes": "Forzar fotogramas clave en cortes (mejor precisión, más lento)",
+    "start_placeholder": "00:00:00",
+    "end_placeholder": "00:00:00",
+    "invalid_format": "Invalid time format. Use HH:MM:SS format.",
+    "start_after_end": "Start time cannot be after end time."
   },
   "update": {
     "title": "Actualizar yt-dlp",

@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "言語でフィルタ (例: ja, en)...",
     "no_subtitles_available": "利用可能な字幕がありません",
     "matching": "一致",
-    "ytdlp_log_title": "yt-dlpログ"
+    "ytdlp_log_title": "yt-dlpログ",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Cookieでログイン",

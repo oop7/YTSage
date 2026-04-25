@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "Filtrer les langues (ex: en, fr)...",
     "no_subtitles_available": "Aucun sous-titre disponible",
     "matching": "correspondant",
-    "ytdlp_log_title": "Journal yt-dlp"
+    "ytdlp_log_title": "Journal yt-dlp",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Se connecter avec des cookies",

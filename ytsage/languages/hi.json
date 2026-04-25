@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "भाषाएं फ़िल्टर करें (जैसे: hi, en)...",
     "no_subtitles_available": "कोई उपशीर्षक उपलब्ध नहीं",
     "matching": "मेल खाता",
-    "ytdlp_log_title": "yt-dlp लॉग"
+    "ytdlp_log_title": "yt-dlp लॉग",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "कुकीज़ के साथ लॉगिन",

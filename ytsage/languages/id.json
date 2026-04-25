@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "Filter bahasa (misalnya: id, en)...",
     "no_subtitles_available": "Tidak ada subtitle yang tersedia",
     "matching": "yang cocok",
-    "ytdlp_log_title": "Log yt-dlp"
+    "ytdlp_log_title": "Log yt-dlp",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Masuk dengan cookies",

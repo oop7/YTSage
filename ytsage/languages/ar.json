@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "تصفية اللغات (مثال: ar، en)...",
     "no_subtitles_available": "لا توجد ترجمات متاحة",
     "matching": "مطابقة",
-    "ytdlp_log_title": "سجل yt-dlp"
+    "ytdlp_log_title": "سجل yt-dlp",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "تسجيل الدخول بالكوكيز",

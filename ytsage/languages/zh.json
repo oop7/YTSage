@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "过滤语言（例如：en, zh）...",
     "no_subtitles_available": "无可用字幕",
     "matching": "匹配",
-    "ytdlp_log_title": "yt-dlp 日志"
+    "ytdlp_log_title": "yt-dlp 日志",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "使用 Cookie 登录",
@@ -127,7 +128,10 @@
     "browser_selected_title": "已应用浏览器 Cookie",
     "browser_applied_message": "将从以下位置提取浏览器 cookie：{browser}",
     "cleared_title": "已清除 Cookie",
-    "cleared_message": "Cookie 设置已被清除"
+    "cleared_message": "Cookie 设置已被清除",
+    "active_browser": "✓ Active: Browser cookies ({browser})",
+    "active_file": "✓ Active: Cookie file ({file})",
+    "none_active": "○ No cookies active"
   },
   "custom_command": {
     "help_text": "在下面输入您的自定义 yt-dlp 命令。当前网址将自动附加。<br><br>有关选项和使用示例的完整列表，<a href=\"{docs_url}\">点击此处查看官方 yt-dlp 文档</a>。<br><br>注意：下载路径和文件名模板将自动处理。",
@@ -140,7 +144,14 @@
     "full_command": "🔧 完整命令：{command}",
     "command_success": "✅ 自定义命令执行成功！",
     "command_failed": "❌ 命令失败，退出代码 {code}",
-    "command_error": "❌ 执行自定义命令时出错：{error}"
+    "command_error": "❌ 执行自定义命令时出错：{error}",
+    "error_no_url": "❌ Error: No URL provided. Please enter a URL in the main window.",
+    "error_no_command": "❌ Error: No command provided. Please enter yt-dlp arguments.",
+    "executing": "🚀 Executing custom yt-dlp command",
+    "url_label": "📍 URL: {url}",
+    "args_label": "⚙️  Arguments: {command}",
+    "download_path_label": "📁 Download path: {path}",
+    "separator": "=================================================="
   },
   "proxy": {
     "help_text": "配置下载的代理设置。留空使用直接连接。",
@@ -168,7 +179,9 @@
     "geo_set_title": "已设置地理代理",
     "geo_set_message": "地理验证代理已设置并保存: {proxy}",
     "cleared_title": "代理设置已清除",
-    "cleared_message": "所有代理设置已清除并保存。"
+    "cleared_message": "所有代理设置已清除并保存。",
+    "saved_main": "Saved main proxy: {proxy}",
+    "saved_geo": "Saved geo proxy: {proxy}"
   },
   "download": {
     "preparing": "正在准备下载...",
@@ -539,14 +552,21 @@
     "redownload_confirm_message": "重新下载？\n\n{title}",
     "redownload_started": "已开始下载",
     "no_url_error": "历史记录中未找到 URL",
-    "redownload_failed": "无法开始重新下载: {error}"
+    "redownload_failed": "无法开始重新下载: {error}",
+    "loading": "Loading history..."
   },
   "ffmpeg": {
     "installation_title": "FFmpeg 安装",
     "installation_message": "YTSage 需要 FFmpeg 来处理视频。\n\n请选择下面的安装选项：",
     "install_button": "安装 FFmpeg",
     "manual_guide": "手动指南",
-    "installation_failed": "FFmpeg 安装遇到问题。"
+    "installation_failed": "FFmpeg 安装遇到问题。",
+    "already_installed": "FFmpeg is already installed!",
+    "installation_complete": "Installation complete. You can close this dialog and continue using YTSage.",
+    "installing": "Installing FFmpeg... Please wait",
+    "install_success": "FFmpeg has been installed successfully!",
+    "installation_complete_close": "Installation complete. You can now close this dialog and continue using YTSage.",
+    "try_manual": "Please try using the manual installation guide instead."
   },
   "ytdlp_setup": {
     "required_title": "需要设置 yt-dlp",

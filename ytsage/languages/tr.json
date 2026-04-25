@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "Dilleri filtrele (örn: tr, en)...",
     "no_subtitles_available": "Altyazı mevcut değil",
     "matching": "eşleşen",
-    "ytdlp_log_title": "yt-dlp Günlüğü"
+    "ytdlp_log_title": "yt-dlp Günlüğü",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Çerezlerle giriş yap",
@@ -178,7 +179,9 @@
     "geo_set_title": "Coğrafi proxy ayarlandı",
     "geo_set_message": "Coğrafi doğrulama proxy'si ayarlandı ve kaydedildi: {proxy}",
     "cleared_title": "Proxy ayarları temizlendi",
-    "cleared_message": "Tüm proxy ayarları temizlendi ve kaydedildi."
+    "cleared_message": "Tüm proxy ayarları temizlendi ve kaydedildi.",
+    "saved_main": "Saved main proxy: {proxy}",
+    "saved_geo": "Saved geo proxy: {proxy}"
   },
   "download": {
     "preparing": "İndirme hazırlanıyor...",
@@ -549,14 +552,21 @@
     "redownload_confirm_message": "Tekrar indir?\n\n{title}",
     "redownload_started": "İndirme başladı",
     "no_url_error": "Geçmiş kaydında URL bulunamadı",
-    "redownload_failed": "Yeniden indirme başlatılamadı: {error}"
+    "redownload_failed": "Yeniden indirme başlatılamadı: {error}",
+    "loading": "Loading history..."
   },
   "ffmpeg": {
     "installation_title": "FFmpeg Kurulumu",
     "installation_message": "YTSage, videoları işlemek için FFmpeg'e ihtiyaç duyar.\n\nAşağıdan bir kurulum seçeneği seçin:",
     "install_button": "FFmpeg Kur",
     "manual_guide": "Manuel Kılavuz",
-    "installation_failed": "FFmpeg kurulumu bir sorunla karşılaştı."
+    "installation_failed": "FFmpeg kurulumu bir sorunla karşılaştı.",
+    "already_installed": "FFmpeg is already installed!",
+    "installation_complete": "Installation complete. You can close this dialog and continue using YTSage.",
+    "installing": "Installing FFmpeg... Please wait",
+    "install_success": "FFmpeg has been installed successfully!",
+    "installation_complete_close": "Installation complete. You can now close this dialog and continue using YTSage.",
+    "try_manual": "Please try using the manual installation guide instead."
   },
   "ytdlp_setup": {
     "required_title": "yt-dlp Kurulumu Gerekli",

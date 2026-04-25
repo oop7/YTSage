@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "Sprachen filtern (z.B. en, de)...",
     "no_subtitles_available": "Keine Untertitel verfügbar",
     "matching": "passend",
-    "ytdlp_log_title": "yt-dlp-Protokoll"
+    "ytdlp_log_title": "yt-dlp-Protokoll",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Mit Cookies anmelden",

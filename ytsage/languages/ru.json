@@ -96,7 +96,8 @@
     "filter_languages_placeholder": "Фильтр языков (например, en, ru)...",
     "no_subtitles_available": "Субтитры недоступны",
     "matching": "соответствующие",
-    "ytdlp_log_title": "Журнал yt-dlp"
+    "ytdlp_log_title": "Журнал yt-dlp",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Войти через Cookie",
