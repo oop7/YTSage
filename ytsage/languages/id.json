@@ -83,7 +83,8 @@
     "select_all": "Pilih semua",
     "deselect_all": "Batalkan pilihan semua",
     "open_folder": "Buka lokasi folder",
-    "history": "Riwayat"
+    "history": "Riwayat",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "Opsi khusus",

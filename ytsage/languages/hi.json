@@ -83,7 +83,8 @@
     "select_all": "सभी चुनें",
     "deselect_all": "सभी को अचयनित करें",
     "open_folder": "फ़ोल्डर स्थान खोलें",
-    "history": "इतिहास"
+    "history": "इतिहास",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "कस्टम विकल्प",

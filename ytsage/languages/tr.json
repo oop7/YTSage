@@ -83,7 +83,8 @@
     "select_all": "Tümünü seç",
     "deselect_all": "Tüm seçimi kaldır",
     "open_folder": "Klasör konumunu aç",
-    "history": "Geçmiş"
+    "history": "Geçmiş",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "Özel seçenekler",

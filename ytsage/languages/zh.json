@@ -83,7 +83,8 @@
     "select_all": "全选",
     "deselect_all": "取消全选",
     "open_folder": "打开文件夹位置",
-    "history": "历史"
+    "history": "历史",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "自定义选项",

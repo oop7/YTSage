@@ -83,7 +83,8 @@
     "select_all": "تحديد الكل",
     "deselect_all": "إلغاء تحديد الكل",
     "open_folder": "فتح موقع المجلد",
-    "history": "السجل"
+    "history": "السجل",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "خيارات مخصصة",

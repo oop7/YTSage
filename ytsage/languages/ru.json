@@ -83,7 +83,8 @@
     "select_all": "Выбрать всё",
     "deselect_all": "Снять выделение",
     "open_folder": "Открыть расположение папки",
-    "history": "История"
+    "history": "История",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "Пользовательские опции",

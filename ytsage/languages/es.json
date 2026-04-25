@@ -50,7 +50,8 @@
     "select_all": "Seleccionar Todos",
     "deselect_all": "Deseleccionar Todos",
     "open_folder": "Abrir ubicación de carpeta",
-    "history": "Historial"
+    "history": "Historial",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "Opciones Personalizadas",

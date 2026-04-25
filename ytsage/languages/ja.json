@@ -83,7 +83,8 @@
     "select_all": "すべて選択",
     "deselect_all": "すべて解除",
     "open_folder": "フォルダの場所を開く",
-    "history": "履歴"
+    "history": "履歴",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "カスタムオプション",

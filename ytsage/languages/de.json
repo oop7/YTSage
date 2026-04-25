@@ -83,7 +83,8 @@
     "select_all": "Alle auswählen",
     "deselect_all": "Alle abwählen",
     "open_folder": "Ordnerspeicherort öffnen",
-    "history": "Verlauf"
+    "history": "Verlauf",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "Benutzerdefinierte Optionen",

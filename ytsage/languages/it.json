@@ -83,7 +83,8 @@
     "select_all": "Seleziona tutto",
     "deselect_all": "Deseleziona tutto",
     "open_folder": "Apri posizione cartella",
-    "history": "Cronologia"
+    "history": "Cronologia",
+    "save_playlist": "Save Playlist As"
   },
   "dialogs": {
     "custom_options": "Opzioni personalizzate",
