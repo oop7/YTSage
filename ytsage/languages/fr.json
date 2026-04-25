@@ -346,11 +346,11 @@
     "tab_format": "Format",
     "tab_file": "Fichier",
     "concurrent_fragments": "Connexions simultanées",
-    "concurrent_fragments_help": "Nombre de connexions par téléchargement. Des valeurs plus élevées contournent le bridage mais peuvent causer des blocages temporaires si elles sont trop élevées. Par défaut : 1.",
+    "concurrent_fragments_help": "Nombre de connexions par téléchargement. Des valeurs plus élevées contournent le bridage mais peuvent entraîner des blocages temporaires si elles sont trop élevées. Par défaut : 1.",
     "defaults_settings": "Paramètres de sélection par défaut",
-    "default_video_quality": "Résolution vidéo par défaut (Hauteur) :",
+    "default_video_quality": "Résolution vidéo par défaut (hauteur) :",
     "default_subtitle_language": "Langue(s) des sous-titres par défaut :",
-    "defaults_help": "Définissez votre hauteur de vidéo et vos langues de sous-titres préférées (séparées par des virgules). Elles seront sélectionnées automatiquement si disponibles."
+    "defaults_help": "Définissez votre hauteur de vidéo préférée et les langues des sous-titres (séparées par des virgules). Elles seront sélectionnées automatiquement si elles sont disponibles."
   },
   "main_ui": {
     "url_placeholder": "Entrer l'URL de la vidéo ou de la playlist YouTube",
@@ -476,12 +476,12 @@
     "total_videos": "Total des vidéos : {count}",
     "display_format": "Playlist : {title} | {count} vidéos",
     "select_videos_title": "Sélectionner les Vidéos de la Playlist",
-    "save_as": "Save Playlist As",
-    "save_success_title": "Success",
-    "saved_successfully": "Playlist saved successfully.",
-    "save_error_title": "Save Error",
-    "no_videos_to_save": "No playlist entries gathered!",
-    "save_error_msg": "Failed to save playlist."
+    "save_as": "Enregistrer la playlist sous",
+    "save_success_title": "Succès",
+    "saved_successfully": "Playlist enregistrée avec succès.",
+    "save_error_title": "Erreur d'enregistrement",
+    "no_videos_to_save": "Aucune vidéo de la playlist n'a été récupérée !",
+    "save_error_msg": "Échec de l'enregistrement de la playlist."
   },
   "subtitle_selection": {
     "count_selected": "{count} sélectionné(s)"

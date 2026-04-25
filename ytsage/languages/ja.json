@@ -84,7 +84,7 @@
     "deselect_all": "すべて解除",
     "open_folder": "フォルダの場所を開く",
     "history": "履歴",
-    "save_playlist": "Save Playlist As"
+    "save_playlist": "プレイリストを別名で保存"
   },
   "dialogs": {
     "custom_options": "カスタムオプション",
@@ -345,12 +345,12 @@
     "tab_general": "一般",
     "tab_format": "フォーマット",
     "tab_file": "ファイル",
-    "concurrent_fragments": "Concurrent Connections",
-    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
-    "defaults_settings": "Default Selection Settings",
-    "default_video_quality": "Default Video Resolution (Height):",
-    "default_subtitle_language": "Default Subtitle Language(s):",
-    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."
+    "concurrent_fragments": "同時接続数",
+    "concurrent_fragments_help": "ダウンロードごとの接続数。値を大きくするとスロットリングを回避できますが、高すぎると一時的なブロックが発生する可能性があります。デフォルト: 1。",
+    "defaults_settings": "デフォルト選択設定",
+    "default_video_quality": "デフォルトのビデオ解像度 (高さ):",
+    "default_subtitle_language": "デフォルトの字幕言語:",
+    "defaults_help": "優先するビデオの高さと字幕言語（カンマ区切り）を設定します。利用可能な場合は自動的に選択されます。"
   },
   "main_ui": {
     "url_placeholder": "YouTubeの動画URLまたはプレイリストURLを入力",
@@ -476,12 +476,12 @@
     "total_videos": "総動画数: {count}",
     "display_format": "再生リスト: {title} | {count}個の動画",
     "select_videos_title": "プレイリスト動画を選択",
-    "save_as": "Save Playlist As",
-    "save_success_title": "Success",
-    "saved_successfully": "Playlist saved successfully.",
-    "save_error_title": "Save Error",
-    "no_videos_to_save": "No playlist entries gathered!",
-    "save_error_msg": "Failed to save playlist."
+    "save_as": "プレイリストを別名で保存",
+    "save_success_title": "成功",
+    "saved_successfully": "プレイリストを正常に保存しました。",
+    "save_error_title": "保存エラー",
+    "no_videos_to_save": "プレイリストのエントリが見つかりません！",
+    "save_error_msg": "プレイリストの保存に失敗しました。"
   },
   "subtitle_selection": {
     "count_selected": "{count}個選択"

@@ -346,11 +346,11 @@
     "tab_format": "Format",
     "tab_file": "Datei",
     "concurrent_fragments": "Gleichzeitige Verbindungen",
-    "concurrent_fragments_help": "Anzahl der Verbindungen pro Download. Höhere Werte umgehen die Drosselung, können aber bei zu hohen Werten zu temporären Sperren führen. Standard: 1.",
+    "concurrent_fragments_help": "Anzahl der Verbindungen pro Download. Höhere Werte umgehen Drosselungen, können aber bei zu hohen Werten zu temporären Sperren führen. Standard: 1.",
     "defaults_settings": "Standard-Auswahleinstellungen",
     "default_video_quality": "Standard-Videoauflösung (Höhe):",
-    "default_subtitle_language": "Standard-Untertitelsprache(n):",
-    "defaults_help": "Geben Sie Ihre bevorzugte Videohöhe und Untertitelsprachen ein (kommagetrennt). Sie werden automatisch ausgewählt, falls verfügbar."
+    "default_subtitle_language": "Standard- Untertitelsprache(n):",
+    "defaults_help": "Legen Sie Ihre bevorzugte Videohöhe und Untertitelsprachen fest (kommagetrennt). Diese werden automatisch ausgewählt, falls verfügbar."
   },
   "main_ui": {
     "url_placeholder": "YouTube-Video- oder Playlist-URL eingeben",
@@ -476,12 +476,12 @@
     "total_videos": "Gesamtanzahl Videos: {count}",
     "display_format": "Playlist: {title} | {count} Videos",
     "select_videos_title": "Playlist-Videos auswählen",
-    "save_as": "Save Playlist As",
-    "save_success_title": "Success",
-    "saved_successfully": "Playlist saved successfully.",
-    "save_error_title": "Save Error",
-    "no_videos_to_save": "No playlist entries gathered!",
-    "save_error_msg": "Failed to save playlist."
+    "save_as": "Playlist speichern unter",
+    "save_success_title": "Erfolg",
+    "saved_successfully": "Playlist erfolgreich gespeichert.",
+    "save_error_title": "Fehler beim Speichern",
+    "no_videos_to_save": "Keine Playlist-Einträge gesammelt!",
+    "save_error_msg": "Fehler beim Speichern der Playlist."
   },
   "subtitle_selection": {
     "count_selected": "{count} ausgewählt"

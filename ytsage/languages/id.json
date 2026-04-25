@@ -84,7 +84,7 @@
     "deselect_all": "Batalkan pilihan semua",
     "open_folder": "Buka lokasi folder",
     "history": "Riwayat",
-    "save_playlist": "Save Playlist As"
+    "save_playlist": "Simpan Playlist Sebagai"
   },
   "dialogs": {
     "custom_options": "Opsi khusus",
@@ -345,12 +345,12 @@
     "tab_general": "Umum",
     "tab_format": "Format",
     "tab_file": "Berkas",
-    "concurrent_fragments": "Concurrent Connections",
-    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
-    "defaults_settings": "Default Selection Settings",
-    "default_video_quality": "Default Video Resolution (Height):",
-    "default_subtitle_language": "Default Subtitle Language(s):",
-    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."
+    "concurrent_fragments": "Koneksi Simultan",
+    "concurrent_fragments_help": "Jumlah koneksi per unduhan. Nilai yang lebih tinggi melewati pembatasan tetapi dapat menyebabkan pemblokiran sementara jika diatur terlalu tinggi. Default: 1.",
+    "defaults_settings": "Pengaturan Pilihan Default",
+    "default_video_quality": "Resolusi Video Default (Tinggi):",
+    "default_subtitle_language": "Bahasa Subtitel Default:",
+    "defaults_help": "Atur tinggi video dan bahasa subtitel pilihan Anda (pisahkan dengan koma). Mereka akan dipilih otomatis jika tersedia."
   },
   "main_ui": {
     "url_placeholder": "Masukkan URL video atau playlist YouTube",
@@ -476,12 +476,12 @@
     "total_videos": "Total Video: {count}",
     "display_format": "Playlist: {title} | {count} video",
     "select_videos_title": "Pilih Video Playlist",
-    "save_as": "Save Playlist As",
-    "save_success_title": "Success",
-    "saved_successfully": "Playlist saved successfully.",
-    "save_error_title": "Save Error",
-    "no_videos_to_save": "No playlist entries gathered!",
-    "save_error_msg": "Failed to save playlist."
+    "save_as": "Simpan Playlist Sebagai",
+    "save_success_title": "Berhasil",
+    "saved_successfully": "Playlist berhasil disimpan.",
+    "save_error_title": "Gagal Menyimpan",
+    "no_videos_to_save": "Tidak ada entri playlist yang dikumpulkan!",
+    "save_error_msg": "Gagal menyimpan playlist."
   },
   "subtitle_selection": {
     "count_selected": "{count} dipilih"
