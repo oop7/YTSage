@@ -330,13 +330,31 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             logger.exception(f"Error playing notification sound: {e}")
 
     def _initialize_cookie_settings_from_config(self) -> None:
-        """Initialize cookie settings - cookies are NOT auto-activated on startup.
-        User must explicitly click Apply in the dialog each session."""
-        # Cookies always start inactive on app launch
-        # User must click Apply in Custom Options dialog to activate them
+        """Initialize cookie settings and restore from last session if active."""
         self.cookie_file_path = None
         self.browser_cookies_option = None
-        logger.debug("Cookie settings initialized - no cookies active (user must apply manually)")
+
+        # Check if the user wants to remember cookies across sessions
+        remember_val = ConfigManager.get("cookie_remember")
+        should_remember = True if remember_val is None else remember_val
+        
+        if ConfigManager.get("cookie_active") and should_remember:
+            source = ConfigManager.get("cookie_source")
+            if source == "file":
+                saved_path = ConfigManager.get("cookie_file_path")
+                if saved_path and Path(saved_path).exists():
+                    self.cookie_file_path = Path(saved_path)
+                    logger.info(f"Restored cookie file from previous session: {self.cookie_file_path}")
+            elif source == "browser":
+                browser = ConfigManager.get("cookie_browser")
+                profile = ConfigManager.get("cookie_browser_profile")
+                if browser:
+                    self.browser_cookies_option = f"{browser}:{profile}" if profile else browser
+                    logger.info(f"Restored browser cookies from previous session: {self.browser_cookies_option}")
+        else:
+            # Revert activation back if the user opted NOT to remember them
+            ConfigManager.set("cookie_active", False)
+            logger.debug("Cookie settings initialized - no cookies active")
 
     def init_ui(self) -> None:
         self.setWindowTitle(f"{_('app.title')}  {_('app.version', version=self.version)}")
