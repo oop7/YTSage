@@ -242,7 +242,29 @@ class DownloadThread(QThread):
             logger.debug(f"Using {self.concurrent_fragments} concurrent connections")
 
         # Format selection strategy - use format ID if provided or fallback to resolution
-        if self.format_id:
+        if self.is_playlist:
+            # For playlists, specific format_id from the first video often fails for subsequent videos.
+            # Instead, we rely on dynamic fallback/resolution limits.
+            if self.is_audio_only:
+                # For audio-only playlist, let yt-dlp pick best audio.
+                cmd.extend(["-f", "bestaudio/best"])
+                logger.debug(f"Playlist mode: using dynamic best audio fallback instead of format_id")
+            else:
+                # If a specific resolution is given, limit to it. Otherwise, select the overall best.
+                # The resolution might be e.g. "1920x1080" or "1080". We want the height.
+                try:
+                    if self.resolution and self.resolution != "default":
+                        res_str = str(self.resolution)
+                        h = min(map(int, res_str.split('x'))) if 'x' in res_str else int(res_str)
+                        cmd.extend(["-S", f"res:{h}"])
+                        logger.debug(f"Playlist mode: using resolution limiter -S res:{h}")
+                    else:
+                        cmd.extend(["-f", "bestvideo+bestaudio/best"])
+                        logger.debug("Playlist mode: using dynamic best quality overall")
+                except ValueError:
+                    cmd.extend(["-f", "bestvideo+bestaudio/best"])
+                    logger.debug("Playlist mode: invalid resolution string, using dynamic best quality overall")
+        elif self.format_id:
             clean_format_id: str = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
 
             # If the selected format is audio-only, pass it directly.
