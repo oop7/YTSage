@@ -131,7 +131,8 @@
     "cleared_message": "Cookie設定がクリアされました",
     "active_browser": "✓ 有効: ブラウザーのCookie ({browser})",
     "active_file": "✓ 有効: Cookieファイル ({file})",
-    "none_active": "○ 有効なCookieはありません"
+    "none_active": "○ 有効なCookieはありません",
+    "remember_settings": "次回の起動時にCookie設定を記憶する"
   },
   "custom_command": {
     "help_text": "以下にカスタムyt-dlpコマンドを入力してください。現在のURLは自動的に追加されます。<br><br>オプションの完全なリストと使用例については、<a href=\"{docs_url}\">こちらをクリックしてyt-dlp公式ドキュメントを参照してください</a>。<br><br>注: ダウンロードパスとファイル名テンプレートは自動的に処理されます。",
@@ -460,7 +461,8 @@
     "generic_error": "エラー: {error}",
     "download_failed_return_code_conflict": "ダウンロードは戻りコード {return_code} で失敗しました。複数の yt-dlp インストールの競合が原因の可能性があります。システムにインストールされた yt-dlp（例: snap や apt）をアンインストールしてアプリを再起動してください。",
     "download_failed_return_code": "ダウンロードは戻りコード {return_code} で失敗しました",
-    "direct_command_error": "直接コマンドのエラー: {error}"
+    "direct_command_error": "直接コマンドのエラー: {error}",
+    "private_video": "この動画は非公開かもしれません。カスタムオプションからCookieを使用してください。"
   },
   "update_dialog": {
     "title": "アップデートが利用可能です",

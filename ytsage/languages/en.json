@@ -82,7 +82,9 @@
     "select_defaults": "Select Defaults",
     "select_all": "Select All",
     "deselect_all": "Deselect All",
-    "open_folder": "Open folder location",    "save_playlist": "Save Playlist As",    "reset": "Reset"
+    "open_folder": "Open folder location",
+    "save_playlist": "Save Playlist As",
+    "reset": "Reset"
   },
   "dialogs": {
     "custom_options": "Custom Options",
@@ -129,7 +131,8 @@
     "cleared_message": "Cookie settings have been cleared",
     "active_browser": "✓ Active: Browser cookies ({browser})",
     "active_file": "✓ Active: Cookie file ({file})",
-    "none_active": "○ No cookies active"
+    "none_active": "○ No cookies active",
+    "remember_settings": "Remember cookie settings on next startup"
   },
   "custom_command": {
     "help_text": "Enter your custom yt-dlp command below. The current URL will be appended automatically.<br><br>For the full list of options and usage examples, <a href=\"{docs_url}\">click here to view the official yt-dlp documentation</a>.<br><br>Note: Download path and filename template will be handled automatically.",
@@ -453,6 +456,7 @@
     "analysis_timeout": "Error: Analysis timed out. Please try again.",
     "invalid_speed_limit": "❌ Error: Invalid speed limit value set in settings.",
     "ytdlp_failed": "Error: yt-dlp failed: {error}",
+    "private_video": "This video might be private. Please use cookies from the custom options.",
     "parse_failed": "Error: Failed to parse yt-dlp output: {error}",
     "analysis_failed": "Error: Analysis failed: {error}",
     "generic_error": "Error: {error}",

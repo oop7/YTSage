@@ -131,7 +131,8 @@
     "cleared_message": "Les paramètres des cookies ont été effacés",
     "active_browser": "✓ Actifs : cookies du navigateur ({browser})",
     "active_file": "✓ Actif : fichier cookies ({file})",
-    "none_active": "○ Aucun cookie actif"
+    "none_active": "○ Aucun cookie actif",
+    "remember_settings": "Mémoriser les paramètres des cookies au prochain démarrage"
   },
   "custom_command": {
     "help_text": "Entrez votre commande yt-dlp personnalisée ci-dessous. L'URL actuelle sera automatiquement ajoutée.<br><br>Pour la liste complète des options et exemples d'utilisation <a href=\"{docs_url}\">cliquez ici pour voir la documentation officielle yt-dlp</a>.<br><br>Note : Le chemin de téléchargement et le modèle de nom de fichier sont gérés automatiquement.",
@@ -460,7 +461,8 @@
     "generic_error": "Erreur : {error}",
     "download_failed_return_code_conflict": "Téléchargement échoué avec le code de retour {return_code}. Cela peut être dû à un conflit entre plusieurs installations de yt-dlp. Essayez de désinstaller toute version installée au niveau du système (par ex. via snap ou apt) puis redémarrez l’application.",
     "download_failed_return_code": "Téléchargement échoué avec le code de retour {return_code}",
-    "direct_command_error": "Erreur dans la commande directe : {error}"
+    "direct_command_error": "Erreur dans la commande directe : {error}",
+    "private_video": "Cette vidéo pourrait être privée. Veuillez utiliser des cookies depuis les options personnalisées."
   },
   "update_dialog": {
     "title": "Mise à jour disponible",

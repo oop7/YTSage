@@ -131,7 +131,8 @@
     "cleared_message": "Cookie 设置已被清除",
     "active_browser": "✓ Active: Browser cookies ({browser})",
     "active_file": "✓ Active: Cookie file ({file})",
-    "none_active": "○ No cookies active"
+    "none_active": "○ No cookies active",
+    "remember_settings": "在下次启动时记住 cookie 设置"
   },
   "custom_command": {
     "help_text": "在下面输入您的自定义 yt-dlp 命令。当前网址将自动附加。<br><br>有关选项和使用示例的完整列表，<a href=\"{docs_url}\">点击此处查看官方 yt-dlp 文档</a>。<br><br>注意：下载路径和文件名模板将自动处理。",
@@ -460,7 +461,8 @@
     "generic_error": "错误：{error}",
     "download_failed_return_code_conflict": "下载失败，返回码 {return_code}。这可能是由于存在多个 yt-dlp 安装导致冲突。请卸载系统中安装的 yt-dlp（例如通过 snap 或 apt），然后重启应用。",
     "download_failed_return_code": "下载失败，返回码 {return_code}",
-    "direct_command_error": "直接命令出错：{error}"
+    "direct_command_error": "直接命令出错：{error}",
+    "private_video": "此视频可能是私享视频。请使用自定义选项中的 cookie。"
   },
   "update_dialog": {
     "title": "有可用更新",

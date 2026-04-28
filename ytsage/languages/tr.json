@@ -131,7 +131,8 @@
     "cleared_message": "Çerez ayarları temizlendi",
     "active_browser": "✓ Etkin: Tarayıcı çerezleri ({browser})",
     "active_file": "✓ Etkin: Çerez dosyası ({file})",
-    "none_active": "○ Etkin çerez yok"
+    "none_active": "○ Etkin çerez yok",
+    "remember_settings": "Sonraki başlangıçta çerez ayarlarını hatırla"
   },
   "custom_command": {
     "help_text": "Özel yt-dlp komutunuzu aşağıya girin. Mevcut URL otomatik olarak eklenecektir.<br><br>Seçeneklerin tam listesi ve kullanım örnekleri için <a href=\"{docs_url}\">resmi yt-dlp belgelerini görmek için buraya tıklayın</a>.<br><br>Not: İndirme yolu ve dosya adı şablonu otomatik olarak işlenir.",
@@ -460,7 +461,8 @@
     "generic_error": "Hata: {error}",
     "download_failed_return_code_conflict": "İndirme {return_code} dönüş koduyla başarısız oldu. Bunun nedeni birden fazla yt-dlp kurulumunun çakışması olabilir. Sistem kurulumlu yt-dlp'yi (örn. snap veya apt) kaldırıp uygulamayı yeniden başlatmayı deneyin.",
     "download_failed_return_code": "İndirme {return_code} dönüş koduyla başarısız oldu",
-    "direct_command_error": "Doğrudan komutta hata: {error}"
+    "direct_command_error": "Doğrudan komutta hata: {error}",
+    "private_video": "Bu video gizli olabilir. Lütfen özel seçeneklerden çerezleri kullanın."
   },
   "update_dialog": {
     "title": "Güncelleme Mevcut",

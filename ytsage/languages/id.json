@@ -131,7 +131,8 @@
     "cleared_message": "Pengaturan cookie telah dihapus",
     "active_browser": "✓ Aktif: cookie browser ({browser})",
     "active_file": "✓ Aktif: file cookie ({file})",
-    "none_active": "○ Tidak ada cookie aktif"
+    "none_active": "○ Tidak ada cookie aktif",
+    "remember_settings": "Ingat pengaturan cookie pada startup berikutnya"
   },
   "custom_command": {
     "help_text": "Masukkan perintah yt-dlp khusus Anda di bawah. URL saat ini akan ditambahkan secara otomatis.<br><br>Untuk daftar lengkap opsi dan contoh penggunaan <a href=\"{docs_url}\">klik di sini untuk melihat dokumentasi resmi yt-dlp</a>.<br><br>Catatan: Jalur unduhan dan template nama file ditangani secara otomatis.",
@@ -460,7 +461,8 @@
     "generic_error": "Kesalahan: {error}",
     "download_failed_return_code_conflict": "Unduhan gagal dengan kode pengembalian {return_code}. Ini mungkin karena konflik dengan beberapa instalasi yt-dlp. Coba uninstall yt-dlp yang terpasang di sistem (mis. melalui snap atau apt) lalu mulai ulang aplikasi.",
     "download_failed_return_code": "Unduhan gagal dengan kode pengembalian {return_code}",
-    "direct_command_error": "Error pada perintah langsung: {error}"
+    "direct_command_error": "Error pada perintah langsung: {error}",
+    "private_video": "Video ini mungkin bersifat pribadi. Silakan gunakan cookie dari opsi kustom."
   },
   "update_dialog": {
     "title": "Pembaruan Tersedia",

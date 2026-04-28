@@ -131,7 +131,8 @@
     "cleared_message": "Ustawienia ciasteczek zostały wyczyszczone",
     "active_browser": "✓ Aktywne: ciasteczka przeglądarki ({browser})",
     "active_file": "✓ Aktywny: plik ciasteczek ({file})",
-    "none_active": "○ Brak aktywnych ciasteczek"
+    "none_active": "○ Brak aktywnych ciasteczek",
+    "remember_settings": "Zapamiętaj ustawienia plików cookie przy następnym uruchomieniu"
   },
   "custom_command": {
     "help_text": "Wprowadź niestandardowe polecenie yt-dlp poniżej. Aktualny URL zostanie automatycznie dodany.<br><br>Aby uzyskać pełną listę opcji i przykładów użycia <a href=\"{docs_url}\">kliknij tutaj, aby zobaczyć oficjalną dokumentację yt-dlp</a>.<br><br>Uwaga: Ścieżka pobierania i szablon nazwy pliku są obsługiwane automatycznie.",
@@ -460,7 +461,8 @@
     "generic_error": "Błąd: {error}",
     "download_failed_return_code_conflict": "Pobieranie nie powiodło się z kodem {return_code}. Może to wynikać z konfliktu wielu instalacji yt-dlp. Spróbuj odinstalować systemowo zainstalowane yt-dlp (np. przez snap lub apt) i uruchom aplikację ponownie.",
     "download_failed_return_code": "Pobieranie nie powiodło się z kodem {return_code}",
-    "direct_command_error": "Błąd w bezpośrednim poleceniu: {error}"
+    "direct_command_error": "Błąd w bezpośrednim poleceniu: {error}",
+    "private_video": "Ten film może być prywatny. Proszę użyć plików cookie z opcji niestandardowych."
   },
   "update_dialog": {
     "title": "Dostępna aktualizacja",
