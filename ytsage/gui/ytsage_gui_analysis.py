@@ -131,8 +131,13 @@ class AnalysisThread(QThread):
             return
 
         if result.returncode != 0:
-            logger.error(f"yt-dlp failed: {result.stderr}")
-            self.analysis_error.emit(_("errors.ytdlp_failed", error=result.stderr))
+            if "Private video" in result.stderr or "Sign in" in result.stderr:
+                logger.error(f"yt-dlp failed (private video): {result.stderr}")
+                self.analysis_error.emit(_("errors.private_video"))
+            else:
+                logger.error(f"yt-dlp failed: {result.stderr}")
+                self.analysis_error.emit(_("errors.ytdlp_failed", error=result.stderr))
+            
             self.playlist_info_visible.emit(False)
             self.playlist_select_btn_visible.emit(False)
             return
