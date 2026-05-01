@@ -352,17 +352,21 @@ class DownloadThread(QThread):
 
             # Get language codes from subtitle selections
             lang_codes: List[str] = []
+            has_auto_generated = False
             for sub_selection in self.subtitle_langs:
                 try:
                     # Extract just the language code (e.g., 'en' from 'en - Manual')
                     lang_code = sub_selection.split(" - ")[0]
                     lang_codes.append(lang_code)
+                    if "Auto-generated" in sub_selection:
+                        has_auto_generated = True
                 except Exception as e:
                     logger.exception(f"Could not parse subtitle selection '{sub_selection}': {e}")
 
             if lang_codes:
                 cmd.extend(["--sub-langs", ",".join(lang_codes)])
-                cmd.append("--write-auto-subs")  # Include auto-generated subtitles
+                if has_auto_generated:
+                    cmd.append("--write-auto-subs")  # Include auto-generated subtitles
 
                 # Only embed subtitles if merge is enabled
                 if self.merge_subs:

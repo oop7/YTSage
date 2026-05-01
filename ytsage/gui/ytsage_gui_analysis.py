@@ -435,7 +435,11 @@ class AnalysisMixin:
             self.download_thumbnail_file(self.video_url, self.last_path)
 
         # Update subtitle UI
-        self.signals.selected_subs_label_text.emit(_("main_ui.zero_selected"))
+        count = len(self.selected_subtitles)
+        if count > 0:
+            self.signals.selected_subs_label_text.emit(_("subtitle_selection.count_selected", count=count))
+        else:
+            self.signals.selected_subs_label_text.emit(_("main_ui.zero_selected"))
 
         # Update format table
         self.video_button.setChecked(True)
