@@ -1373,8 +1373,23 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         try:
             with open(file_path, 'w', encoding='utf-8') as f:
                 if "Text files" in selected_filter:
-                    for entry in self.playlist_entries:
-                        f.write(f"{entry.get('url', '')}\n")
+                    for index, entry in enumerate(self.playlist_entries):
+                        duration = entry.get("duration")
+                        duration_str = ""
+                        if duration:
+                            try:
+                                m, s = divmod(int(duration), 60)
+                                h, m = divmod(m, 60)
+                                if h > 0:
+                                    duration_str = f" [{h}:{m:02d}:{s:02d}]"
+                                else:
+                                    duration_str = f" [{m:02d}:{s:02d}]"
+                            except (ValueError, TypeError):
+                                pass
+                        
+                        title = entry.get('title', f'Video {index + 1}')
+                        # Formatting output to include index and duration
+                        f.write(f"{index + 1}. {title}{duration_str} - {entry.get('url', '')}\n")
                 elif "M3U" in selected_filter:
                     f.write("#EXTM3U\n")
                     for entry in self.playlist_entries:
@@ -1384,9 +1399,25 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 elif "CSV" in selected_filter:
                     import csv
                     writer = csv.writer(f, lineterminator='\n')
-                    writer.writerow(['Title', 'URL', 'Duration', 'Uploader'])
-                    for entry in self.playlist_entries:
-                        writer.writerow([entry.get('title', ''), entry.get('url', ''), entry.get('duration', ''), entry.get('uploader', '')])
+                    # Adding Playlist Index to CSV and formatting Title with index and duration
+                    writer.writerow(['Playlist Index', 'Title', 'URL', 'Duration', 'Uploader'])
+                    for index, entry in enumerate(self.playlist_entries):
+                        duration = entry.get("duration")
+                        duration_str = ""
+                        if duration:
+                            try:
+                                m, s = divmod(int(duration), 60)
+                                h, m = divmod(m, 60)
+                                if h > 0:
+                                    duration_str = f" [{h}:{m:02d}:{s:02d}]"
+                                else:
+                                    duration_str = f" [{m:02d}:{s:02d}]"
+                            except (ValueError, TypeError):
+                                pass
+                        
+                        title = entry.get('title', f'Video {index + 1}')
+                        formatted_title = f"{index + 1}. {title}{duration_str}"
+                        writer.writerow([index + 1, formatted_title, entry.get('url', ''), entry.get('duration', ''), entry.get('uploader', '')])
                 elif "JSON" in selected_filter:
                     import json
                     json.dump(self.playlist_entries, f, indent=4, ensure_ascii=False)
