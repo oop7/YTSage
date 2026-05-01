@@ -330,6 +330,9 @@ class DownloadThread(QThread):
             # Create output template with playlist subfolder
             output_template: str = f"{base_path}/%(playlist_title)s/{filename_part}"
         else:
+            # For single files, automatically ignore/remove playlist-specific preamble (like "%(playlist_index)s - ")
+            import re
+            filename_part = re.sub(r'%\(playlist_index[^)]*\)[a-zA-Z0-9]*\s*(?:[-_]\s*)?', '', filename_part)
             output_template: str = f"{base_path}/{filename_part}"
 
         cmd.extend(["-o", str(output_template)])
