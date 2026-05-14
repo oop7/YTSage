@@ -12,33 +12,33 @@
 [![PyPI version](https://img.shields.io/pypi/v/ytsage?color=c90000&style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/ytsage/)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/oop7?color=c90000&style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/oop7)
 
-**Ein moderner YouTube-Downloader mit einer sauberen PySide6-Oberfläche.**  
-Laden Sie Videos in beliebiger Qualität herunter, extrahieren Sie Audio, rufen Sie Untertitel ab und mehr.
+**Ein moderner YouTube-Downloader mit einer eleganten PySide6-Benutzeroberfläche.**  
+Downloaden Sie Videos in jeder Qualität, extrahieren Sie Audio, rufen Sie Untertitel ab und vieles mehr.
 
 ### 🌍 README-Sprachen
 
 Englisch: [EN](../README.md)
-| Quelle: [AR](README.ar.md)
+| Arabisch: [AR](README.ar.md)
 | Deutsch: [DE](README.de.md)
 | Spanisch: [ES](README.es.md)
 | Französisch: [FR](README.fr.md)
-| Quelle: [HI](README.hi.md)
-| Bahasa Indonesien: [ID](README.id.md)
+| Hindi: [HI](README.hi.md)
+| Indonesisch: [ID](README.id.md)
 | Italienisch: [IT](README.it.md)
-| 日本語: [JA](README.ja.md)
+| Japanisch: [JA](README.ja.md)
 | Polnisch: [PL](README.pl.md)
 | Portugiesisch: [PT](README.pt.md)
 | Russisch: [RU](README.ru.md)
-| Türkei: [TR](README.tr.md)
-| Quelle: [ZH](README.zh.md)
+| Türkisch: [TR](README.tr.md)
+| Chinesisch: [ZH](README.zh.md)
 
 <p align="center">
   <a href="#installation">Installation</a> •
   <a href="#features">Funktionen</a> •
-  <a href="#usage">Verwendung</a> •
+  <a href="#usage">Bedienung</a> •
   <a href="#screenshots">Screenshots</a> •
   <a href="#troubleshooting">Fehlerbehebung</a> •
-  <a href="#sponsor">Sponsor</a> •
+  <a href="#sponsor">Sponsoren</a> •
   <a href="#contributing">Mitwirken</a>
 </p>
 
@@ -51,10 +51,10 @@ Englisch: [EN](../README.md)
 
 YTSage wurde für Benutzer entwickelt, die einen **einfachen, aber leistungsstarken YouTube-Downloader** suchen. Im Gegensatz zu anderen Tools bietet es:
 
-- Eine saubere, moderne PySide6-Schnittstelle
+- Eine moderne und übersichtliche PySide6-Oberfläche
 - Ein-Klick-Downloads für Video, Audio und Untertitel
-- Erweiterte Funktionen wie SponsorBlock, Zusammenführen von Untertiteln und Auswahl von Wiedergabelisten
-- Optionaler generischer Modus für von YT-DLP unterstützte Websites außerhalb von YouTube
+- Erweiterte Funktionen wie SponsorBlock, Zusammenführen von Untertiteln und Playlist-Auswahl
+- Optionaler generischer Modus (Generic Mode) für von yt-dlp unterstützte Seiten außerhalb von YouTube
 - Plattformübergreifende Unterstützung und einfache Installation
 
 <a id="features"></a>
@@ -62,31 +62,32 @@ YTSage wurde für Benutzer entwickelt, die einen **einfachen, aber leistungsstar
 
 <div align="center">
 
-| Kernfunktionen | Erweiterte Funktionen | Zusätzliche Funktionen |
-|----------------------------------|--------------------------|------------------------------------|
-| 🎥 Tabelle formatieren | 🚫 SponsorBlock-Integration | 🎞️ FPS/HDR-Anzeige |
-| 🎵 Audioextraktion | 📝 Mehrere Untertitel auswählen und zusammenführen | 🔄 yt-dlp automatisch aktualisieren |
-| ✨ Einfache Benutzeroberfläche |  💾 Beschreibung und Miniaturansicht speichern | 🛠️ FFmpeg/yt-dlp/Deno-Erkennung |
-| 📋 Playlist-Unterstützung und -Auswahl | 🚀 Geschwindigkeitsbegrenzer | ⚙️ Benutzerdefinierte Befehle |
-| 📑 Kapitel einbetten | ✂️ Videoabschnitte zuschneiden | 🍪 Mit Cookies anmelden |
-| 📜 Download-Verlauf | 🔄 Kanalauswahl freigeben | 🌐 Proxy-Unterstützung |
-| 🎚️ Audioformatkonvertierung | 🎬 Videoformateinstellungen | 🆙 Integrierte Updater-Registerkarte |
-| 🌍 Allgemeiner Modus | 🔊 Audio-Normalisierung (EBU R128) | 🌍 Lokalisierung in 14 Sprachen |
+| Basisfunktionen | Erweiterte Funktionen | Zusätzliche Funktionen |
+|-----------------------------------|-----------------------------------------|------------------------------------|
+| 🎥 Formattabelle | 🚫 SponsorBlock-Integration | 🎞️ FPS/HDR-Anzeige |
+| 🎵 Audio-Extraktion | 📝 Untertitel-Auswahl & Merging | 🔄 Automatisches yt-dlp Update |
+| ✨ Einfache Benutzeroberfläche | 💾 Beschreibung & Thumbnail speichern | 🛠️ FFmpeg/yt-dlp/Deno Erkennung |
+| 📋 Playlist-Support & Selector | 🚀 Geschwindigkeitsbegrenzer | ⚙️ Benutzerdefinierte Befehle |
+| 📑 Kapitel-Integration | ✂️ Videoabschnitte zuschneiden | 🍪 Cookie-Login |
+| 📜 Download-Historie | 🔄 Release-Kanal Auswahl | 🌐 Proxy-Support |
+| 🎚️ Audioformat-Konvertierung | 🎬 Videoformat-Einstellungen | 🆙 Integrierter Update-Tab |
+| 🌍 Generischer Modus | 🔊 Audio-Normalisierung (EBU R128) | 🌍 In 14 Sprachen lokalisiert |
+| 💾 Playlist-Export | ⚙️ Standardqualität & Untertitel | |
 </div>
 
 <a id="installation"></a>
 ## 🚀 Installation
 
-### ⚡ Schnellinstallation (empfohlen)
+### ⚡ Schnelle Installation (Empfohlen)
 
-Installieren Sie YTSage von PyPI:
+Installieren Sie YTSage über PyPI:
 
 ```bash
 pip install ytsage
 ```
 
 <details>
-<summary>🔄Aktualisieren Sie eine vorhandene Installation</summary>
+<summary>🔄 Bestehende Installation aktualisieren</summary>
 
 ```bash
 pip install --upgrade ytsage
@@ -94,7 +95,7 @@ pip install --upgrade ytsage
 
 </details>
 
-Starten Sie dann die App:
+Starten Sie dann die Anwendung:
 
 ```bash
 ytsage
@@ -102,33 +103,33 @@ ytsage
 
 ### 📦 Vorgefertigte ausführbare Dateien
 
-> [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
+> [👉 Neuestes Release herunterladen](https://github.com/oop7/YTSage/releases/latest)
 
 #### 🪟 Windows
 
-| Formatieren | Beschreibung |
+| Format | Beschreibung |
 |--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Standardinstallationsprogramm |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Mit FFmpeg gebündelt |
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Standard-Installer |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Mit integriertem FFmpeg |
 | ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portable Version, keine Installation erforderlich |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Tragbar mit FFmpeg, gezippt |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portable Version mit FFmpeg, gepackt |
 
 <details>
 <summary>🛠️ Installationsschritte</summary>
 
-1. **EXE-Installationsprogramm (`.exe`)**: Doppelklicken Sie auf die Datei und folgen Sie dem Setup-Assistenten.
-2. **Portable Version (`.zip`)**: Extrahieren Sie das Archiv an den gewünschten Speicherort und führen Sie `ytsage.exe` aus.
-3. **FFmpeg gebündelt**: Wählen Sie die gebündelten FFmpeg-Versionen, wenn Sie FFmpeg nicht auf Ihrem System installiert haben.
+1. **EXE-Installer (`.exe`)**: Doppelklicken Sie auf die Datei und folgen Sie dem Installationsassistenten.
+2. **Portable Version (`.zip`)**: Entpacken Sie das Archiv an den gewünschten Ort und starten Sie `ytsage.exe`.
+3. **Integriertes FFmpeg**: Wählen Sie die Versionen mit integriertem FFmpeg, falls FFmpeg nicht bereits auf Ihrem System installiert ist.
 </details>
 
 #### 🐧 Linux
 
-| Formatieren | Beschreibung |
+| Format | Beschreibung |
 |--------|-------------|
 | ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian-Paket |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, tragbar |
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, portabel |
 | ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM-Paket |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak-Bundle |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak Bundle |
 
 <details>
 <summary>🛠️ Installationsschritte</summary>
@@ -136,7 +137,7 @@ ytsage
 - **DEB (`.deb`)**:
   ```bash
   sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Fix missing dependencies if any
+  sudo apt-get install -f # Repariert fehlende Abhängigkeiten, falls nötig
   ```
 - **RPM (`.rpm`)**:
   ```bash
@@ -147,7 +148,7 @@ ytsage
   chmod +x YTSage-*.AppImage
   ./YTSage-*.AppImage
   ```
-- **Flatpak**: Folgen Sie den Anweisungen auf Flathub oder führen Sie Folgendes aus:
+- **Flatpak**: Folgen Sie den Anweisungen auf Flathub oder führen Sie aus:
   ```bash
   flatpak install flathub io.github.oop7.ytsage
   ```
@@ -155,26 +156,26 @@ ytsage
 
 #### 🍎 macOS
 
-| Formatieren | Beschreibung |
+| Format | Beschreibung |
 |--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Gezippte Anwendung für Apple Silicon |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Disk-Image-Installationsprogramm für Apple Silicon |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Gepackte App für Apple Silicon |
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Disk Image Installer für Apple Silicon |
 
 <details>
 <summary>🛠️ Installationsschritte</summary>
 
-- **DMG-Installationsprogramm (`.dmg`)**: Doppelklicken Sie zum Mounten und ziehen Sie dann `YTSage.app` in Ihren Anwendungsordner.
-- **App-Archiv (`.zip`)**: Extrahieren Sie die ZIP-Datei und verschieben Sie `YTSage.app` in Ihren Anwendungsordner.
+- **DMG-Installer (`.dmg`)**: Doppelklick zum Mounten, dann `YTSage.app` in den Programme-Ordner ziehen.
+- **App-Archiv (`.zip`)**: Zip entpacken und `YTSage.app` in den Programme-Ordner verschieben.
 
-*Hinweis: Wenn Sie auf den Fehler „App ist beschädigt“ stoßen, sehen Sie sich das [macOS troubleshooting section](#troubleshooting) unten an.*
+*Hinweis: Wenn Sie die Fehlermeldung "App ist beschädigt" erhalten, lesen Sie bitte den Abschnitt zur Fehlerbehebung für macOS weiter unten.*
 </details>
 
 ---
 
 <details>
-<summary>💻 Manuelle Installation von der Quelle</summary>
+<summary>💻 Manuelle Installation aus dem Quellcode</summary>
 
-### 1. Klonen Sie das Repository
+### 1. Repository klonen
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
@@ -183,19 +184,19 @@ cd YTSage
 
 ### 2. Abhängigkeiten installieren
 
-#### ⚡ Mit UV
+#### ⚡ Mit uv
 
 ```bash
 uv pip install .
 ```
 
-#### 📦 Oder mit Standard-Pip
+#### 📦 Oder mit Standard-pip
 
 ```bash
 pip install .
 ```
 
-### 3. Führen Sie die Anwendung aus
+### 3. Anwendung starten
 
 ```bash
 python -m ytsage.main
@@ -209,46 +210,47 @@ python -m ytsage.main
 <div align="center">
 <table>
   <tr>
-    <td><img src="../branding/screenshots/Download-Settings.png" alt="Download Settings" width="400"/></td>
-    <td><img src="../branding/screenshots/playlist.png" alt="Playlist Download" width="400"/></td>
+    <td><img src="../branding/screenshots/Download-Settings.png" alt="Download-Einstellungen" width="400"/></td>
+    <td><img src="../branding/screenshots/playlist.png" alt="Playlist-Download" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Download-Einstellungen</em></td>
     <td align="center"><em>Playlist-Download</em></td>
   </tr>
   <tr>
-    <td><img src="../branding/screenshots/audio_format.png" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="../branding/screenshots/Custom-Option.png" alt="Custom Options" width="400"/></td>
+    <td><img src="../branding/screenshots/audio_format.png" alt="Audioformat-Auswahl" width="400"/></td>
+    <td><img src="../branding/screenshots/Custom-Option.png" alt="Benutzerdefinierte Optionen" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Audioformat</em></td>
     <td align="center"><em>Benutzerdefinierte Optionen</em></td>
   </tr>
 </table>
-</div><a id="usage"></a>
+</div>
 
-## 📖 Verwendung
+<a id="usage"></a>
+## 📖 Bedienung
 
 <details>
-<summary>🎯 Grundlegende Verwendung</summary>
+<summary>🎯 Grundlegende Bedienung</summary>
 
 1. **YTSage starten**
-2. **YouTube-URL einfügen** (oder verwenden Sie die Schaltfläche „URL einfügen“)
-3. **Klicken Sie auf „Analysieren“**
+2. **YouTube-URL einfügen** (oder die Schaltfläche "Paste URL" verwenden)
+3. **Auf "Analyze" klicken**
 4. **Format auswählen:**
    - `Video` für Video-Downloads
-   - `Audio Only` zur Audioextraktion
+   - `Audio Only` für Audio-Extraktion
 5. **Optionen wählen:**
-   - Untertitel aktivieren und Sprache auswählen
-   - Untertitelzusammenführung aktivieren
-   - Miniaturansicht speichern
-   - Entfernen Sie Sponsorsegmente
+   - Untertitel aktivieren & Sprache auswählen
+   - Untertitel-Merging aktivieren
+   - Thumbnail speichern
+   - Sponsoren-Segmente entfernen
    - Beschreibung speichern
-   - Kapitel einbetten
-6. **Ausgabeverzeichnis auswählen**
-7. **Klicken Sie auf „Herunterladen“**
+   - Kapitel integrieren
+6. **Ausgabeverzeichnis wählen**
+7. **Auf "Download" klicken**
 
-> 💡 Das Standard-Download-Verzeichnis ist der Ordner „Downloads“ des Benutzers.
+> 💡 Das Standard-Download-Verzeichnis ist der "Downloads"-Ordner des Benutzers.
 
 </details>
 
@@ -256,94 +258,97 @@ python -m ytsage.main
 <summary>📋 Playlist-Download</summary>
 
 1. **Playlist-URL einfügen**
-2. **Klicken Sie auf „Analysieren“**
-3. **Wählen Sie Videos aus der Playlist-Auswahl aus (optional, standardmäßig alle)**
-4. **Wählen Sie das gewünschte Format/die gewünschte Qualität**
-5. **Klicken Sie auf „Herunterladen“**
+2. **Auf "Analyze" klicken**
+3. **Videos aus dem Playlist-Selector auswählen (optional, standardmäßig alle)**
+4. **Gewünschtes Format/Qualität wählen**
+5. **Auf "Download" klicken**
 
-> 💡 Die Anwendung verwaltet die Download-Warteschlange automatisch
+> 💡 Die Anwendung verwaltet die Download-Warteschlange automatisch, und Sie können Playlist-Einträge als `.txt`, `.csv`, `.m3u` oder `.json` exportieren.
 
 </details>
 
 <details>
-<summary>🌍 Allgemeiner Modus für Nicht-YouTube-Websites</summary>
+<summary>🌍 Generischer Modus für Nicht-YouTube-Seiten</summary>
 
-Verwenden Sie den generischen Modus, wenn Sie möchten, dass YTSage URLs von Websites akzeptiert, die von yt-dlp unterstützt werden, wie z. B. Dailymotion, CBC Gem, TikTok und andere.
+Verwenden Sie den generischen Modus (Generic Mode), wenn YTSage URLs von anderen von yt-dlp unterstützten Seiten wie Dailymotion, CBC Gem, TikTok und anderen akzeptieren soll.
 
-So verwenden Sie es:
+So verwenden Sie ihn:
 
 1. Öffnen Sie `Download Settings`.
 2. Aktivieren Sie `Generic Mode`.
-3. Fügen Sie eine unterstützte Nicht-YouTube-Video- oder Playlist-URL ein.
+3. Fügen Sie eine unterstützte Video- oder Playlist-URL ein, die nicht von YouTube stammt.
 4. Klicken Sie auf `Analyze`.
 5. Wählen Sie ein Format und laden Sie es wie gewohnt herunter.
 
 Hinweise:
 
-- Der generische Modus ändert nur die URL-Validierung innerhalb von YTSage. Die Zielsite muss weiterhin von Ihrer installierten yt-dlp-Version unterstützt werden.
-- Einige Websites erfordern je nach Extraktor Cookies, eine Anmeldesitzung, einen Proxy oder zusätzliche YT-DLP-Argumente.
-- Wenn eine Site ausfällt, aktualisieren Sie yt-dlp zunächst über die Registerkarte des integrierten Updaters, bevor Sie das Problem melden.
+- Der generische Modus ändert nur die URL-Validierung innerhalb von YTSage. Die Zielseite muss weiterhin von Ihrer installierten yt-dlp-Version unterstützt werden.
+- Einige Seiten erfordern Cookies, Login, Proxy oder zusätzliche yt-dlp-Argumente je nach Extractor.
+- Wenn eine Seite fehlschlägt, aktualisieren Sie zuerst yt-dlp über den integrierten Update-Tab, bevor Sie das Problem melden.
 
 </details>
 
 <details>
-<summary>🧰 Medien- und Download-Optionen</summary>
+<summary>🧰 Medien- & Download-Optionen</summary>
 
-- **Untertiteloptionen:** Sprachen filtern und Untertitel in die Videodatei einbetten
-- **Untertitel zusammenführen:** Untertitel für fest codierte Untertitel in die Videodatei einbinden
-- **Beschreibung speichern:** Speichern Sie die Videobeschreibung als Textdatei
-- **Miniaturansicht speichern:** Speichern Sie die Miniaturansicht des Videos als Bilddatei
-- **Kapitel einbetten:** Betten Sie Kapitelmarkierungen als Metadaten für kompatible Videoplayer ein
-- **Sponsorensegmente entfernen:** Entfernen Sie Sponsorsegmente aus dem Video mit SponsorBlock
-- **Video zuschneiden:** Laden Sie nur bestimmte Teile eines Videos herunter, indem Sie Zeitbereiche im Format `HH:MM:SS` angeben
+- **Untertitel-Optionen:** Sprachen filtern und Untertitel in die Videodatei einbetten.
+- **Untertitel-Merging:** Mergt Untertitel in die Videodatei für fest eingebrannte (hardcoded) Untertitel.
+- **Beschreibung speichern:** Speichert die Videobeschreibung als Textdatei.
+- **Thumbnail speichern:** Speichert das Video-Thumbnail als Bilddatei.
+- **Kapitel integrieren:** Bettet Kapitelmarken als Metadaten für kompatible Videoplayer ein.
+- **Sponsoren-Segmente entfernen:** Entfernt gesponserte Abschnitte aus dem Video mithilfe von SponsorBlock.
+- **Video zuschneiden:** Laden Sie nur bestimmte Teile eines Videos herunter, indem Sie Zeitbereiche im Format `HH:MM:SS` angeben.
 
 </details>
 
 <details>
-<summary>⚙️ Ausgabe- und Dateieinstellungen</summary>
+<summary>⚙️ Ausgabe- & Dateieinstellungen</summary>
 
-- **Geschwindigkeitsbegrenzer:** Begrenzen Sie die Download-Geschwindigkeit, zum Beispiel `500K` auf 500 KB/s
-- **Download-Pfad speichern:** Speichern Sie den Standard-Download-Pfad für zukünftige Downloads. Verfügbar unter **Download-Einstellungen → Download-Pfad**.
-- **Format des Ausgabedateinamens:** Passen Sie das Format des Ausgabedateinamens mithilfe von Variablen wie `%(title)s`, `%(uploader)s` und `%(resolution)s` an. Verfügbar unter **Download-Einstellungen → Dateinamenformat**.
-- **Ausgabeformat erzwingen:** Video-Downloads in ein bestimmtes Containerformat wie `mp4`, `webm` oder `mkv` erzwingen. Verfügbar unter **Download-Einstellungen → Ausgabeformat-Einstellungen**.
-- **Audioformatkonvertierung:** Konvertieren Sie reine Audio-Downloads in bevorzugte Formate wie `AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis` oder `Best`. Verfügbar unter **Download-Einstellungen → Audioformat-Einstellungen**.
-- **Audio-Normalisierung:** Standardisieren Sie die Lautstärke für reine Audio-Downloads mit EBU R128.
-- **Gleichzeitige Verbindungen:** Erhöhen Sie die Download-Geschwindigkeit drastisch, indem Sie Dateien gleichzeitig in mehreren Fragmenten herunterladen. Verfügbar in **Download-Einstellungen → Allgemein → Gleichzeitige Verbindungen** (Standard ist 1, empfohlenes Maximum ist 8-10, um IP-Einschränkungen zu vermeiden).\n
+- **Geschwindigkeitsbegrenzer:** Begrenzt die Download-Geschwindigkeit, z. B. `500K` für 500 KB/s.
+- **Download-Pfad speichern:** Speichert den Standard-Download-Pfad für zukünftige Downloads. Verfügbar unter **Download Settings → Download Path**.
+- **Standard-Videoauflösung:** Legen Sie Ihre bevorzugte Videoauflösung für die automatische Auswahl fest (z. B. 1080p, 720p). Verfügbar unter **Download Settings → Default Video Resolution**.
+- **Standard-Untertitelsprachen:** Legen Sie Standard-Untertitelsprachen für die automatische Auswahl fest (kommagetrennt, z. B. `de,en`). Verfügbar unter **Download Settings → Default Subtitle Languages**.
+- **Dateinamen-Format:** Passen Sie das Format des Ausgabedateinamen mit Variablen wie `%(title)s`, `%(uploader)s`, `%(playlist_index)s` und `%(resolution)s` an. Verfügbar unter **Download Settings → Filename Format**.
+- **Ausgabeformat erzwingen:** Erzwingt Video-Downloads in ein bestimmtes Containerformat wie `mp4`, `webm` oder `mkv`. Verfügbar unter **Download Settings → Output Format Settings**.
+- **Audioformat-Konvertierung:** Konvertiert reine Audio-Downloads in bevorzugte Formate wie `AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis` oder `Best`. Verfügbar unter **Download Settings → Audio Format Settings**.
+- **Audio-Normalisierung:** Standardisiert die Lautstärke für reine Audio-Downloads unter Verwendung von EBU R128.
+- **Gleichzeitige Verbindungen:** Erhöhen Sie die Download-Geschwindigkeit erheblich, indem Sie Dateien in mehreren Fragmenten gleichzeitig herunterladen. Verfügbar unter **Download Settings → General → Concurrent Connections** (Standardmäßig 1, maximal 8-10 empfohlen, um IP-Sperren zu vermeiden).
+
 </details>
 
 <details>
-<summary>🌐 Zugang und Netzwerk</summary>
+<summary>🌐 Zugriff & Netzwerk</summary>
 
-- **Mit Cookies anmelden:** Melden Sie sich mit Cookies bei YouTube an, um auf private Inhalte zuzugreifen.
-  So verwenden Sie es:
-  1. **Empfohlen:** Verwenden Sie die integrierte Option „Extract cookies from browser“ in der App und wählen Sie dann Ihren Browser und optional ein Profil aus.
-  2. Alternativ können Sie Cookies auch manuell extrahieren:
+- **Cookie-Login:** Loggen Sie sich mit Cookies bei YouTube ein, um auf private Inhalte zuzugreifen.
+  Verwendung:
+  1. **Empfohlen:** Verwenden Sie die integrierte Option `Extract cookies from browser` in der App, wählen Sie dann Ihren Browser und optional ein Profil.
+  2. Alternativ können Sie Cookies manuell extrahieren:
      a. Exportieren Sie Cookies aus Ihrem Browser mit einer Erweiterung wie [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file)
      b. Kopieren Sie die Cookies im Netscape-Format
-     c. Erstellen Sie eine Datei mit dem Namen `cookies.txt` und fügen Sie die Cookies darin ein
-     d. Wählen Sie in der App die Datei „cookies.txt“ aus
-- **Proxy-Unterstützung:** Verwenden Sie einen Proxy-Server für Downloads, zum Beispiel `http://<proxy-server>:<port>`
-- **Generischer Modus:** Ermöglicht YTSage die Analyse und den Download von Nicht-YouTube-Websites, die von yt-dlp unterstützt werden. Aktivieren Sie es über **Download-Einstellungen → Allgemeiner Modus**.
+     c. Erstellen Sie eine Datei namens `cookies.txt` und fügen Sie die Cookies ein
+     d. Wählen Sie die Datei `cookies.txt` in der App aus
+- **Proxy-Support:** Verwenden Sie einen Proxy-Server für Downloads, z. B. `http://<proxy-server>:<port>`
+- **Generischer Modus:** Ermöglicht YTSage das Analysieren und Herunterladen von anderen von yt-dlp unterstützten Seiten. Aktivieren Sie dies unter **Download Settings → Generic Mode**.
 
 </details>
 
 <details>
-<summary>🛠️ Werkzeuge und Wartung</summary>
+<summary>🛠️ Tools & Wartung</summary>
 
-- **Benutzerdefinierte Befehle:** Greifen Sie über Befehlszeilenargumente auf erweiterte yt-dlp-Funktionen zu
-- **Registerkarte „Updater“:** Integrierte Update-Tools von einem Ort aus in den benutzerdefinierten Optionen verwalten:
-  - **yt-dlp-Updates:** Suchen Sie nach Updates und wechseln Sie zwischen den Veröffentlichungskanälen Stable und Nightly
-  - **FFmpeg-Versionsprüfer:** Überprüfen Sie Ihre FFmpeg-Version und öffnen Sie die Installationsanleitungen
-  - **Deno-Updates:** Überprüfen und aktualisieren Sie die Deno-Laufzeitumgebung
-- **FFmpeg/yt-dlp/Deno-Erkennung:** Erkennt automatisch FFmpeg-, yt-dlp- und Deno-Pfade und -Versionen im Info-Dialog.
-- **Download-Verlauf:** Zeigen Sie frühere Downloads mit Miniaturansichten und Status über die Schaltfläche **Verlauf** an.
+- **Benutzerdefinierte Befehle:** Greifen Sie auf erweiterte yt-dlp-Funktionen über Befehlszeilenargumente zu.
+- **Update-Tab:** Verwalten Sie integrierte Update-Tools an einem Ort in den benutzerdefinierten Optionen:
+  - **yt-dlp Updates:** Suchen Sie nach Updates und wechseln Sie zwischen Stable- und Nightly-Release-Kanälen.
+  - **FFmpeg-Versionsprüfung:** Überprüfen Sie Ihre FFmpeg-Version und öffnen Sie Installationsanleitungen.
+  - **Deno-Updates:** Überprüfen und aktualisieren Sie die Deno-Laufzeitumgebung.
+- **FFmpeg/yt-dlp/Deno Erkennung:** Erkennt Pfade und Versionen von FFmpeg, yt-dlp und Deno automatisch aus dem About-Dialog.
+- **Download-Historie:** Zeigt vergangene Downloads mit Thumbnails und Status über die Schaltfläche **History** an.
 
 </details>
 
 <details>
 <summary>🌍 Lokalisierung</summary>
 
-YTSage unterstützt **14 Sprachen** für weltweite Zugänglichkeit. Wählen Sie Ihre bevorzugte Sprache unter **Benutzerdefinierte Optionen → Sprache** aus.
+YTSage unterstützt **14 Sprachen** für globale Barrierefreiheit. Wählen Sie Ihre bevorzugte Sprache unter **Custom Options → Language**.
 
 ### Unterstützte Sprachen
 
@@ -361,7 +366,7 @@ YTSage unterstützt **14 Sprachen** für weltweite Zugänglichkeit. Wählen Sie 
 
 | Sprache | Datei | Sprache | Datei |
 |----------|------|----------|------|
-| 🇺🇸 Englisch | [README.md](../README.md) | 🇪🇸 Spanisch | [README.es.md](README.es.md)
+| 🇺🇸 Englisch | [README.md](README.md) | 🇪🇸 Spanisch | [README.es.md](README.es.md) |
 | 🇸🇦 Arabisch | [README.ar.md](README.ar.md) | 🇫🇷 Französisch | [README.fr.md](README.fr.md) |
 | 🇩🇪 Deutsch | [README.de.md](README.de.md) | 🇮🇳 Hindi | [README.hi.md](README.hi.md) |
 | 🇮🇩 Indonesisch | [README.id.md](README.id.md) | 🇮🇹 Italienisch | [README.it.md](README.it.md) |
@@ -369,7 +374,7 @@ YTSage unterstützt **14 Sprachen** für weltweite Zugänglichkeit. Wählen Sie 
 | 🇧🇷 Portugiesisch | [README.pt.md](README.pt.md) | 🇷🇺 Russisch | [README.ru.md](README.ru.md) |
 | 🇹🇷 Türkisch | [README.tr.md](README.tr.md) | 🇨🇳 Chinesisch | [README.zh.md](README.zh.md) |
 
-> 💡 **Möchten Sie eine Übersetzung beisteuern?** Schauen Sie sich den Abschnitt [Contributing](#contributing) an, um uns beim Hinzufügen weiterer Sprachen zu helfen!
+> 💡 **Möchten Sie bei einer Übersetzung helfen?** Schauen Sie in den Abschnitt [Mitwirken](#contributing), um uns zu helfen, weitere Sprachen hinzuzufügen!
 
 </details>
 
@@ -379,50 +384,50 @@ YTSage unterstützt **14 Sprachen** für weltweite Zugänglichkeit. Wählen Sie 
 <details>
 <summary>Klicken Sie hier, um häufige Probleme und Lösungen anzuzeigen</summary>
 
-- **Formattabelle wird nicht angezeigt:** Aktualisieren Sie yt-dlp auf die neueste Version und wechseln Sie jede Nacht zu yt-dlp.
+- **Formattabelle wird nicht angezeigt:** Aktualisieren Sie yt-dlp auf die neueste Version und wechseln Sie zu yt-dlp nightly.
 - **Download schlägt fehl:** Überprüfen Sie Ihre Internetverbindung und stellen Sie sicher, dass das Video verfügbar ist.
-- **Spezifische Downloadfehler:**
-  - **Private Videos:** Verwenden Sie die Cookie-Authentifizierung, um auf private Inhalte zuzugreifen.
-  - **Inhalte mit Altersbeschränkung:** Melden Sie sich bei Ihrem YouTube-Konto an, um Videos mit Altersbeschränkung anzusehen.
-  - **Geoblockierte Videos:** Erwägen Sie die Verwendung eines VPN, um regionale Beschränkungen zu umgehen.
-  - **Entfernte/gelöschte Videos:** Das Video ist nicht mehr auf YouTube verfügbar.
-  - **Live-Streams:** Live-Streams können nicht heruntergeladen werden; Warten Sie, bis der Stream beendet ist.
+- **Spezifische Download-Fehler:**
+  - **Private Videos:** Verwenden Sie Cookie-Authentifizierung, um auf private Inhalte zuzugreifen.
+  - **Videos mit Altersbeschränkung:** Loggen Sie sich in Ihr YouTube-Konto ein, um altersbeschränkte Videos anzusehen.
+  - **Geoblockierte Videos:** Erwägen Sie die Verwendung eines VPN, um regionale Einschränkungen zu umgehen.
+  - **Gelöschte Videos:** Das Video ist auf YouTube nicht mehr verfügbar.
+  - **Livestreams:** Livestreams können während der Übertragung nicht heruntergeladen werden; warten Sie, bis der Stream beendet ist.
   - **Netzwerkfehler:** Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.
   - **Ungültige URLs:** Stellen Sie sicher, dass die URL korrekt ist und von einer unterstützten Plattform stammt.
-  - **Premium-Inhalte:** Erfordert eine YouTube Premium-Mitgliedschaft.
-  - **Urheberrechtliche Sperren:** Der Inhalt ist aufgrund von Urheberrechtsbeschränkungen gesperrt.
-- **Video- und Audiodateien nach dem Download trennen:** Dies passiert, wenn FFmpeg fehlt oder nicht erkannt wird. YTSage benötigt FFmpeg, um hochwertige Video- und Audiostreams zusammenzuführen.
-  - **Lösung:** Stellen Sie sicher, dass FFmpeg im PATH Ihres Systems installiert und zugänglich ist. Für Windows-Benutzer ist es am einfachsten, die Datei „YTSage-v<version>-ffmpeg.exe“ herunterzuladen, die im Lieferumfang von FFmpeg enthalten ist.
+  - **Premium-Inhalte:** Erfordert ein YouTube-Premium-Abonnement.
+  - **Urheberrechtssperren:** Der Inhalt ist aufgrund von Urheberrechtsbeschränkungen gesperrt.
+- **Video- und Audiodateien sind nach dem Download getrennt:** Dies passiert, wenn FFmpeg fehlt oder nicht erkannt wird. YTSage benötigt FFmpeg, um hochwertige Video- und Audiostreams zusammenzuführen.
+  - **Lösung:** Stellen Sie sicher, dass FFmpeg installiert und im PATH Ihres Systems zugänglich ist. Für Windows-Benutzer ist die einfachste Option, die Datei `YTSage-v<version>-ffmpeg.exe` herunterzuladen, die FFmpeg integriert hat.
 
 ---
 
-#### 🛡️ Windows Defender/Antivirus-Warnung
+#### 🛡️ Windows Defender / Antivirus Warnung
 
-Einige Antivirenprogramme kennzeichnen die „.exe“-Dateien möglicherweise als falsch positive Ergebnisse. Dies ist eine **bekannte Einschränkung** von Paketanwendungen.
+Einige Antivirenprogramme können `.exe`-Dateien als Fehlalarm (False Positive) markieren. Dies ist eine **bekannte Einschränkung** von gepackten Anwendungen.
 
 **Warum das passiert:**
-– Antivirus-Heuristiken können gepackte ausführbare Dateien fälschlicherweise als verdächtig identifizieren
+- Antiviren-Heuristiken können gepackte ausführbare Dateien fälschlicherweise als verdächtig identifizieren.
 
 **Sichere Alternativen:**
-- ✅ **Pip-Installation verwenden:** `pip install ytsage` (empfohlen)
-- ✅ **Aus dem Quellcode erstellen**: Folgen Sie diesem [guide](../.github/CI_CD_README.md)
-- ✅ **Setzen Sie die Anwendung in Ihre Antivirensoftware auf die Whitelist
+- ✅ **Verwenden Sie die pip-Installation:** `pip install ytsage` (Empfohlen)
+- ✅ **Aus dem Quellcode bauen**: Folgen Sie diesem [Leitfaden](.github/CI_CD_README.md)
+- ✅ **App auf die Whitelist setzen** in Ihrer Antiviren-Software.
 
-#### 🍎 macOS: „App ist beschädigt und kann nicht geöffnet werden“
-Wenn dieser Fehler unter macOS Sonoma oder neuer auftritt, müssen Sie das Quarantäneattribut entfernen.
+#### 🍎 macOS: "Die App ist beschädigt und kann nicht geöffnet werden"
+Wenn dieser Fehler unter macOS Sonoma oder neuer auftritt, müssen Sie das Quarantäne-Attribut entfernen.
 
-1. **Öffnen Sie das Terminal** (Sie können es mit Spotlight finden).
-2. **Geben Sie den folgenden Befehl ein**, drücken Sie aber noch nicht die Eingabetaste. Achten Sie darauf, das Leerzeichen am Ende einzufügen:
+1.  **Öffnen Sie das Terminal** (Sie finden es über Spotlight).
+2.  **Geben Sie den folgenden Befehl ein**, aber drücken Sie noch **nicht** Enter. Stellen Sie sicher, dass am Ende ein Leerzeichen steht:
     ```bash
     xattr -d com.apple.quarantine 
     ```
-3. **Ziehen Sie die Datei „YTSage.app“ aus Ihrem Finder-Fenster und legen Sie sie direkt im Terminalfenster ab. Dadurch wird automatisch der richtige Dateipfad eingefügt.
-4. **Drücken Sie die Eingabetaste**, um den Befehl auszuführen.
-5. **Versuchen Sie erneut, YTSage.app zu öffnen.** Es sollte jetzt korrekt starten.
+3.  **Ziehen Sie die Datei `YTSage.app`** aus Ihrem Finder-Fenster direkt in das Terminal-Fenster. Dadurch wird der korrekte Dateipfad automatisch eingefügt.
+4.  **Drücken Sie Enter**, um den Befehl auszuführen.
+5.  **Versuchen Sie erneut, YTSage.app zu öffnen.** Sie sollte nun korrekt starten.
 
 ---
 
-#### **Konfigurationsorte (Erweitert)**
+#### **Speicherorte der Konfiguration (Erweitert)**
 - **Windows:** `%LOCALAPPDATA%\YTSage`
 - **macOS:** `~/Library/Application Support/YTSage`
 - **Linux:** `~/.local/share/YTSage`
@@ -430,45 +435,45 @@ Wenn dieser Fehler unter macOS Sonoma oder neuer auftritt, müssen Sie das Quara
 </details>
 
 <a id="sponsor"></a>
-## 💖 Sponsor
+## 💖 Sponsoren
 
-Wenn Sie mit YTSage Zeit sparen, sollten Sie das Projekt sponsern. Durch Sponsoring können Entwicklungszeit, plattformübergreifende Tests und zukünftige Verbesserungen abgedeckt werden.
+Wenn YTSage Ihnen Zeit spart, ziehen Sie bitte in Erwägung, das Projekt zu sponsern. Sponsoring hilft, die Entwicklungszeit, Tests auf allen Plattformen und zukünftige Verbesserungen zu finanzieren.
 
-- GitHub-Sponsoren: https://github.com/sponsors/oop7
-- Der Sponsor-Link ist auch direkt in der App im Info-Dialog verfügbar.
+- GitHub Sponsors: https://github.com/sponsors/oop7
+- Der Sponsoring-Link ist auch direkt in der App über den About-Dialog verfügbar.
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
 <a id="contributing"></a>
 ## 👥 Mitwirken
 
-Wir freuen uns über Beiträge! So können Sie helfen:
+Beiträge sind herzlich willkommen! So können Sie helfen:
 
 1. 🍴 Forken Sie das Repository
-2. 🌿 Erstellen Sie Ihren Feature-Branch:
+2. 🌿 Erstellen Sie einen Feature-Branch:
   ```bash
   git checkout -b feature/AmazingFeature
   ```
-3. 💾 Übernehmen Sie Ihre Änderungen:
+3. 💾 Committen Sie Ihre Änderungen:
   ```bash
   git commit -m 'Add some AmazingFeature'
   ```
-4. 📤 Zur Filiale schieben:
+4. 📤 Pushen Sie in den Branch:
   ```bash
   git push origin feature/AmazingFeature
   ```
-5. 🔄 Öffnen Sie eine Pull-Anfrage
+5. 🔄 Öffnen Sie einen Pull Request
 
-### 🌍 Mitwirkende Übersetzungen
+### 🌍 Zu Übersetzungen beitragen
 
-- Aktualisieren Sie die passende lokalisierte README-Datei (zum Beispiel `README.es.md`)
-- Halten Sie App-Strings synchron, indem Sie `ytsage/languages/<code>.json` bearbeiten
-- Wenn Ihre Sprache fehlt, beginnen Sie mit `README.md` und erstellen Sie `README.<code>.md`
+- Aktualisieren Sie die entsprechende lokalisierte README-Datei (z. B. `readme-translations/README.de.md`)
+- Halten Sie die App-Strings synchron, indem Sie `ytsage/languages/<code>.json` bearbeiten
+- Wenn Ihre Sprache fehlt, beginnen Sie mit der `README.md` und erstellen Sie `README.<code>.md`
 
 <details>
 <summary>📂 Projektstruktur</summary>
 
-## YTSage – Projektstruktur
+## YTSage - Projektstruktur
 
 Dieses Dokument beschreibt die organisierte Ordnerstruktur von YTSage.
 
@@ -476,58 +481,58 @@ Dieses Dokument beschreibt die organisierte Ordnerstruktur von YTSage.
 
 ```
 YTSage/
-├── 📁 .github/                   # GitHub configuration
-│   ├── 📁 ISSUE_TEMPLATE/         # Issue templates
-│   │   └── 🐛-bug-report.md       # Bug report template
-│   ├─── 📁 workflows/              # GitHub Actions workflows
-│   │   ├── build-linux.yml        # Linux build workflow
-│   │   ├── build-macos.yml        # macOS build workflow
-│   │   │── build-windows.yml      # Windows build workflow
-|   |   └── release-all.yml          # Master release workflow
-│   └── 📄 CI_CD_README.md        # CI/CD documentation
-├──  📁 branding/                 # Branding assets (Screenshots, SVGs)
-│   ├── 📁 icons/                 # Application icons
-│   ├── 📁 screenshots/           # Screenshots for documentation
-│   └── 📁 svg/                   # SVG assets
-├── 📄 LICENSE                    # License file
-├── 📄 pyproject.toml             # Project metadata and dependencies
-├── 📄 README.md                  # Project documentation
-├── 📄 requirements.txt           # Python dependencies (dev)
-└── 📁 ytsage/                    # Source package
-    ├── 📁 assets/                # Runtime assets
-    │   ├── 📁 Icon/              # Application icons
-    │   └── 📁 sound/             # Audio files
-    ├── 📁 languages/             # Localization files
-    │   ├── 📄 ar.json            # Arabic translation
-    │   ├── 📄 de.json            # German translation
-    │   ├── 📄 en.json            # English translation
-    │   └── ...                   # Other languages
-    ├── 📁 core/                  # Core business logic
-    │   ├── 📄 __init__.py        # Core package init
-    │   ├── 📄 ytsage_deno.py     # Deno integration
-    │   ├── 📄 ytsage_downloader.py # Download functionality
-    │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
-    │   ├── 📄 ytsage_utils.py    # Utility functions
-    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
-    ├── 📁 gui/                   # User interface components
-    │   ├── 📄 __init__.py        # GUI package init
-    │   ├── 📄 ytsage_gui_main.py # Main application window
-    │   └── 📁 ytsage_gui_dialogs/ # Dialog classes
-    ├── 📁 utils/                 # Utility modules
-    │   ├── 📄 __init__.py        # Utils package init
-    │   ├── 📄 ytsage_config_manager.py # Configuration management
-    │   └── 📄 ytsage_logger.py   # Logging utilities
-    ├── 📄 __init__.py            # Package entry point
-    └── 📄 main.py                # Main execution script
+├── 📁 .github/                   # GitHub-Konfiguration
+│   ├── 📁 ISSUE_TEMPLATE/         # Ticket-Vorlagen
+│   │   └── 🐛-bug-report.md       # Bug-Report-Vorlage
+│   ├─── 📁 workflows/              # GitHub Actions Workflows
+│   │   ├── build-linux.yml        # Linux Build Workflow
+│   │   ├── build-macos.yml        # macOS Build Workflow
+│   │   │── build-windows.yml      # Windows Build Workflow
+|   |   └── release-all.yml          # Master Release Workflow
+│   └── 📄 CI_CD_README.md        # CI/CD-Dokumentation
+├──  📁 branding/                 # Branding-Assets (Screenshots, SVGs)
+│   ├── 📁 icons/                 # App-Icons
+│   ├── 📁 screenshots/           # Screenshots für die Dokumentation
+│   └── 📁 svg/                   # SVG-Assets
+├── 📄 LICENSE                    # Lizenzdatei
+├── 📄 pyproject.toml             # Projekt-Metadaten und Abhängigkeiten
+├── 📄 README.md                  # Projekt-Dokumentation
+├── 📄 requirements.txt           # Python-Abhängigkeiten (dev)
+└── 📁 ytsage/                    # Quellcode-Paket
+    ├── 📁 assets/                # Laufzeit-Assets
+    │   ├── 📁 Icon/              # App-Icons
+    │   └── 📁 sound/             # Audiodateien
+    ├── 📁 languages/             # Lokalisierungsdateien
+    │   ├── 📄 ar.json            # Arabische Übersetzung
+    │   ├── 📄 de.json            # Deutsche Übersetzung
+    │   ├── 📄 en.json            # Englische Übersetzung
+    │   └── ...                   # Weitere Sprachen
+    ├── 📁 core/                  # Hauptgeschäftslogik
+    │   ├── 📄 __init__.py        # Core-Paket-Initialisierung
+    │   ├── 📄 ytsage_deno.py     # Deno-Integration
+    │   ├── 📄 ytsage_downloader.py # Download-Funktionalität
+    │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg-Integration
+    │   ├── 📄 ytsage_utils.py    # Hilfsfunktionen
+    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp-Integration
+    ├── 📁 gui/                   # Benutzeroberflächen-Komponenten
+    │   ├── 📄 __init__.py        # GUI-Paket-Initialisierung
+    │   ├── 📄 ytsage_gui_main.py # Hauptfenster der App
+    │   └── 📁 ytsage_gui_dialogs/ # Dialog-Klassen
+    ├── 📁 utils/                 # Hilfsmodule
+    │   ├── 📄 __init__.py        # Utils-Paket-Initialisierung
+    │   ├── 📄 ytsage_config_manager.py # Konfigurationsverwaltung
+    │   └── 📄 ytsage_logger.py   # Logging-Tool
+    ├── 📄 __init__.py            # Paket-Einstiegspunkt
+    └── 📄 main.py                # Hauptskript zur Ausführung
 ```
 
 </details>
 
-## ⭐️ Sterngeschichte
+## ⭐️ Star History
 
 <div align="center">
 
-## Sterngeschichte
+## Star History
 
 <a href="https://www.star-history.com/#oop7/YTSage&Date">
  <picture>
@@ -541,7 +546,7 @@ YTSage/
 
 ## 📜 Lizenz
 
-Dieses Projekt ist unter der MIT-Lizenz lizenziert – Einzelheiten finden Sie in der Datei „LICENSE“.
+Dieses Projekt steht unter der MIT-Lizenz – weitere Details finden Sie in der Datei [LICENSE](LICENSE).
 
 ## 🙏 Danksagungen
 
@@ -550,13 +555,13 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert – Einzelheiten finden Sie i
 
 <div align="center">
 
-<p>Ein herzliches Dankeschön an alle, die zu diesem Projekt beigetragen haben, indem sie ein Problem geöffnet haben, um eine Verbesserung vorzuschlagen oder einen Fehler zu melden.</p>
+<p>Ein großes Dankeschön an alle, die zu diesem Projekt beigetragen haben, indem sie Tickets für Verbesserungsvorschläge oder Bug-Reports geöffnet haben.</p>
 
 <table>
     <tr class="section"><th colspan="2">Kernkomponenten</th></tr>
     <tr>
         <td width="35%"><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></td>
-        <td>Download Engine</td>
+        <td>Download-Engine</td>
     </tr>
     <tr>
         <td><a href="https://ffmpeg.org/">FFmpeg</a></td>
@@ -564,40 +569,41 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert – Einzelheiten finden Sie i
     </tr>
     <tr>
         <td><a href="https://deno.com/">Deno</a></td>
-        <td>Laufzeit für die Integration mit yt-dlp</td>
+        <td>Runtime für yt-dlp Integration</td>
     </tr>
-    <tr class="section"><th colspan="2">Bibliotheken und Frameworks</th></tr>
+    <tr class="section"><th colspan="2">Bibliotheken & Frameworks</th></tr>
     <tr>
         <td><a href="https://wiki.qt.io/Qt_for_Python">PySide6</a></td>
         <td>GUI-Framework</td>
     </tr>
     <tr>
-        <td><a href="https://python-pillow.org/">Kissen</a></td>
+        <td><a href="https://python-pillow.org/">Pillow</a></td>
         <td>Bildverarbeitung</td>
     </tr>
-    <tr><td><a href="https://requests.readthedocs.io/">Anfragen</a></td>
+    <tr>
+        <td><a href="https://requests.readthedocs.io/">requests</a></td>
         <td>HTTP-Anfragen</td>
     </tr>
     <tr>
-        <td><a href="https://packaging.python.org/">Verpackung</a></td>
-        <td>Versions- und Pakethandhabung</td>
+        <td><a href="https://packaging.python.org/">packaging</a></td>
+        <td>Versionsverwaltung & Packaging</td>
     </tr>
     <tr>
-        <td><a href="https://python-markdown.github.io/">Abschlag</a></td>
+        <td><a href="https://python-markdown.github.io/">markdown</a></td>
         <td>Markdown-Rendering</td>
     </tr>
     <tr>
         <td><a href="https://github.com/Delgan/loguru">loguru</a></td>
-        <td>Protokollierung</td>
+        <td>Logging</td>
     </tr>
-    <tr class="section"><th colspan="2">Vermögenswerte und Mitwirkende</th></tr>
+    <tr class="section"><th colspan="2">Assets & Mitwirkende</th></tr>
     <tr>
-        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">Neue Benachrichtigung 09 von Universfield</a></td>
+        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">New Notification 09 by Universfield</a></td>
         <td>Benachrichtigungston</td>
     </tr>
     <tr>
         <td><a href="https://github.com/viru185">viru185</a></td>
-        <td>Code-Mitwirkender</td>
+        <td>Code-Contributor</td>
     </tr>
 </table>
 
@@ -607,12 +613,12 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert – Einzelheiten finden Sie i
 
 ## ⚠️ Haftungsausschluss
 
-Dieses Tool ist nur für den persönlichen Gebrauch bestimmt. Bitte respektieren Sie die Nutzungsbedingungen und die Rechte der Inhaltsersteller von YouTube.
+Dieses Tool ist nur für den persönlichen Gebrauch bestimmt. Bitte respektieren Sie die Nutzungsbedingungen von YouTube und die Rechte der Content-Ersteller.
 
 ---
 
 <div align="center">
 
-Hergestellt mit ❤️ von [oop7](https://github.com/oop7)
+Erstellt mit ❤️ von [oop7](https://github.com/oop7)
 
 </div>
