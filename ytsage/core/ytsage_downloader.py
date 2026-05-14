@@ -413,6 +413,9 @@ class DownloadThread(QThread):
             logger.debug(f"Added download section: {self.download_section}, Force keyframes: {self.force_keyframes}")
 
         # Add the URL as the final argument
+        if self.is_playlist:
+            cmd.append("--ignore-errors")
+            cmd.append("--no-abort-on-error")
         cmd.append(self.url)
 
         return cmd
