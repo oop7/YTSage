@@ -198,6 +198,37 @@ class CustomOptionsDialog(QDialog):
 
         # Initially show browser group (recommended default) and hide file group
         self.cookie_file_group.setVisible(False)
+
+        # Remember Cookie Settings Checkbox
+        self.remember_cb = QCheckBox(_("cookies.remember_settings"))
+        remember_val = ConfigManager.get("cookie_remember")
+        self.remember_cb.setChecked(True if remember_val is None else remember_val)  # Default to True
+        self.remember_cb.setStyleSheet(
+            """
+            QCheckBox {
+                color: #ffffff;
+                padding: 10px 5px;
+            }
+            QCheckBox::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #1d1e22;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+                border-radius: 9px;
+            }
+            """
+        )
+        # Connect state change directly to config save to make it work immediately without Apply button dependency if needed
+        self.remember_cb.toggled.connect(lambda checked: ConfigManager.set("cookie_remember", checked))
+        cookies_layout.addWidget(self.remember_cb)
         self.cookie_browser_group.setVisible(True)
 
         # Apply button and status indicator
@@ -725,6 +756,7 @@ class CustomOptionsDialog(QDialog):
         self._parent.browser_cookies_option = None
 
         # Save settings to ConfigManager for persistence
+        ConfigManager.set("cookie_remember", self.remember_cb.isChecked())
         if self.cookie_file_radio.isChecked():
             ConfigManager.set("cookie_source", "file")
             ConfigManager.set("cookie_file_path", str(cookie_path) if cookie_path else None)

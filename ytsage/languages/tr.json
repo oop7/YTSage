@@ -83,7 +83,8 @@
     "select_all": "Tümünü seç",
     "deselect_all": "Tüm seçimi kaldır",
     "open_folder": "Klasör konumunu aç",
-    "history": "Geçmiş"
+    "history": "Geçmiş",
+    "save_playlist": "Oynatma Listesini Farklı Kaydet"
   },
   "dialogs": {
     "custom_options": "Özel seçenekler",
@@ -95,7 +96,8 @@
     "filter_languages_placeholder": "Dilleri filtrele (örn: tr, en)...",
     "no_subtitles_available": "Altyazı mevcut değil",
     "matching": "eşleşen",
-    "ytdlp_log_title": "yt-dlp Günlüğü"
+    "ytdlp_log_title": "yt-dlp Günlüğü",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Çerezlerle giriş yap",
@@ -129,7 +131,8 @@
     "cleared_message": "Çerez ayarları temizlendi",
     "active_browser": "✓ Etkin: Tarayıcı çerezleri ({browser})",
     "active_file": "✓ Etkin: Çerez dosyası ({file})",
-    "none_active": "○ Etkin çerez yok"
+    "none_active": "○ Etkin çerez yok",
+    "remember_settings": "Sonraki başlangıçta çerez ayarlarını hatırla"
   },
   "custom_command": {
     "help_text": "Özel yt-dlp komutunuzu aşağıya girin. Mevcut URL otomatik olarak eklenecektir.<br><br>Seçeneklerin tam listesi ve kullanım örnekleri için <a href=\"{docs_url}\">resmi yt-dlp belgelerini görmek için buraya tıklayın</a>.<br><br>Not: İndirme yolu ve dosya adı şablonu otomatik olarak işlenir.",
@@ -177,7 +180,9 @@
     "geo_set_title": "Coğrafi proxy ayarlandı",
     "geo_set_message": "Coğrafi doğrulama proxy'si ayarlandı ve kaydedildi: {proxy}",
     "cleared_title": "Proxy ayarları temizlendi",
-    "cleared_message": "Tüm proxy ayarları temizlendi ve kaydedildi."
+    "cleared_message": "Tüm proxy ayarları temizlendi ve kaydedildi.",
+    "saved_main": "Saved main proxy: {proxy}",
+    "saved_geo": "Saved geo proxy: {proxy}"
   },
   "download": {
     "preparing": "İndirme hazırlanıyor...",
@@ -340,7 +345,13 @@
     "filename_format_help": "Kullanılabilir değişkenler: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s. Standart yt-dlp çıktı şablonu sözdizimi desteklenir.",
     "tab_general": "Genel",
     "tab_format": "Biçim",
-    "tab_file": "Dosya"
+    "tab_file": "Dosya",
+    "concurrent_fragments": "Eşzamanlı Bağlantılar",
+    "concurrent_fragments_help": "İndirme başına bağlantı sayısı. Daha yüksek değerler sınırlamayı atlar ancak çok yüksek ayarlanırsa geçici engellemelere neden olabilir. Varsayılan: 1.",
+    "defaults_settings": "Varsayılan Seçim Ayarları",
+    "default_video_quality": "Varsayılan Video Çözünürlüğü (Yükseklik):",
+    "default_subtitle_language": "Varsayılan Altyazı Dili/Dilleri:",
+    "defaults_help": "Tercih ettiğiniz video yüksekliğini ve altyazı dillerini (virgülle ayırarak) ayarlayın. Varsa otomatik olarak seçileceklerdir."
   },
   "main_ui": {
     "url_placeholder": "YouTube video veya oynatma listesi URL'sini girin",
@@ -450,7 +461,8 @@
     "generic_error": "Hata: {error}",
     "download_failed_return_code_conflict": "İndirme {return_code} dönüş koduyla başarısız oldu. Bunun nedeni birden fazla yt-dlp kurulumunun çakışması olabilir. Sistem kurulumlu yt-dlp'yi (örn. snap veya apt) kaldırıp uygulamayı yeniden başlatmayı deneyin.",
     "download_failed_return_code": "İndirme {return_code} dönüş koduyla başarısız oldu",
-    "direct_command_error": "Doğrudan komutta hata: {error}"
+    "direct_command_error": "Doğrudan komutta hata: {error}",
+    "private_video": "Bu video gizli olabilir. Lütfen özel seçeneklerden çerezleri kullanın."
   },
   "update_dialog": {
     "title": "Güncelleme Mevcut",
@@ -465,7 +477,13 @@
     "unknown": "Bilinmeyen Oynatma Listesi",
     "total_videos": "Toplam Video: {count}",
     "display_format": "Oynatma Listesi: {title} | {count} video",
-    "select_videos_title": "Oynatma Listesi Videolarını Seç"
+    "select_videos_title": "Oynatma Listesi Videolarını Seç",
+    "save_as": "Oynatma Listesini Farklı Kaydet",
+    "save_success_title": "Başarılı",
+    "saved_successfully": "Oynatma listesi başarıyla kaydedildi.",
+    "save_error_title": "Kaydetme Hatası",
+    "no_videos_to_save": "Hiçbir oynatma listesi girdisi toplanmadı!",
+    "save_error_msg": "Oynatma listesi kaydedilemedi."
   },
   "subtitle_selection": {
     "count_selected": "{count} seçildi"
@@ -536,14 +554,21 @@
     "redownload_confirm_message": "Tekrar indir?\n\n{title}",
     "redownload_started": "İndirme başladı",
     "no_url_error": "Geçmiş kaydında URL bulunamadı",
-    "redownload_failed": "Yeniden indirme başlatılamadı: {error}"
+    "redownload_failed": "Yeniden indirme başlatılamadı: {error}",
+    "loading": "Loading history..."
   },
   "ffmpeg": {
     "installation_title": "FFmpeg Kurulumu",
     "installation_message": "YTSage, videoları işlemek için FFmpeg'e ihtiyaç duyar.\n\nAşağıdan bir kurulum seçeneği seçin:",
     "install_button": "FFmpeg Kur",
     "manual_guide": "Manuel Kılavuz",
-    "installation_failed": "FFmpeg kurulumu bir sorunla karşılaştı."
+    "installation_failed": "FFmpeg kurulumu bir sorunla karşılaştı.",
+    "already_installed": "FFmpeg zaten yüklü!",
+    "installation_complete": "Kurulum tamamlandı. Bu iletişim kutusunu kapatabilir ve YTSage'i kullanmaya devam edebilirsiniz.",
+    "installing": "FFmpeg kuruluyor... Lütfen bekleyin",
+    "install_success": "FFmpeg başarıyla kuruldu!",
+    "installation_complete_close": "Kurulum tamamlandı. Artık bu iletişim kutusunu kapatabilir ve YTSage'i kullanmaya devam edebilirsiniz.",
+    "try_manual": "Lütfen bunun yerine manuel kurulum kılavuzunu kullanmayı deneyin."
   },
   "ytdlp_setup": {
     "required_title": "yt-dlp Kurulumu Gerekli",

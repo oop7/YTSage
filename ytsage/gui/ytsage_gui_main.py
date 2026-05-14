@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QButtonGroup,
     QCheckBox,
     QDialog,
+    QFileDialog,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -329,13 +330,31 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             logger.exception(f"Error playing notification sound: {e}")
 
     def _initialize_cookie_settings_from_config(self) -> None:
-        """Initialize cookie settings - cookies are NOT auto-activated on startup.
-        User must explicitly click Apply in the dialog each session."""
-        # Cookies always start inactive on app launch
-        # User must click Apply in Custom Options dialog to activate them
+        """Initialize cookie settings and restore from last session if active."""
         self.cookie_file_path = None
         self.browser_cookies_option = None
-        logger.debug("Cookie settings initialized - no cookies active (user must apply manually)")
+
+        # Check if the user wants to remember cookies across sessions
+        remember_val = ConfigManager.get("cookie_remember")
+        should_remember = True if remember_val is None else remember_val
+        
+        if ConfigManager.get("cookie_active") and should_remember:
+            source = ConfigManager.get("cookie_source")
+            if source == "file":
+                saved_path = ConfigManager.get("cookie_file_path")
+                if saved_path and Path(saved_path).exists():
+                    self.cookie_file_path = Path(saved_path)
+                    logger.info(f"Restored cookie file from previous session: {self.cookie_file_path}")
+            elif source == "browser":
+                browser = ConfigManager.get("cookie_browser")
+                profile = ConfigManager.get("cookie_browser_profile")
+                if browser:
+                    self.browser_cookies_option = f"{browser}:{profile}" if profile else browser
+                    logger.info(f"Restored browser cookies from previous session: {self.browser_cookies_option}")
+        else:
+            # Revert activation back if the user opted NOT to remember them
+            ConfigManager.set("cookie_active", False)
+            logger.debug("Cookie settings initialized - no cookies active")
 
     def init_ui(self) -> None:
         self.setWindowTitle(f"{_('app.title')}  {_('app.version', version=self.version)}")
@@ -397,12 +416,24 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.playlist_info_label = self.setup_playlist_info_section()
         layout.addWidget(self.playlist_info_label)
 
+        # Playlist buttons layout
+        playlist_btns_layout = QHBoxLayout()
+
         # Add playlist selection BUTTON (initially hidden) - REPLACED QLineEdit
         self.playlist_select_btn = QPushButton(_("buttons.select_videos"))
         self.playlist_select_btn.clicked.connect(self.open_playlist_selection_dialog)
         self.playlist_select_btn.setVisible(False)
         self.playlist_select_btn.setStyleSheet(StyleSheet.PLAYLIST_BUTTON)
-        layout.addWidget(self.playlist_select_btn)
+        playlist_btns_layout.addWidget(self.playlist_select_btn)
+
+        # Save playlist as button
+        self.save_playlist_btn = QPushButton(_("buttons.save_playlist", default="Save Playlist As"))
+        self.save_playlist_btn.clicked.connect(self.save_playlist_to_file)
+        self.save_playlist_btn.setVisible(False)
+        self.save_playlist_btn.setStyleSheet(StyleSheet.PLAYLIST_BUTTON)
+        playlist_btns_layout.addWidget(self.save_playlist_btn)
+
+        layout.addLayout(playlist_btns_layout)
         # --- End Playlist Info Section ---
 
         # Format controls section with minimal spacing
@@ -568,6 +599,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.signals.playlist_info_label_text.connect(self.playlist_info_label.setText)
         self.signals.selected_subs_label_text.connect(self.selected_subs_label.setText)
         self.signals.playlist_select_btn_visible.connect(lambda v: self.set_widget_visible_animated(self.playlist_select_btn, v))
+        self.signals.playlist_select_btn_visible.connect(lambda v: self.set_widget_visible_animated(self.save_playlist_btn, v))
         self.signals.playlist_select_btn_text.connect(self.playlist_select_btn.setText)
 
         # Disable analysis-dependent controls until video is analyzed
@@ -713,12 +745,19 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         # Get resolution for filename
         resolution = "default"
-        for checkbox in self.format_checkboxes:
-            if checkbox.isChecked():
-                parts = checkbox.text().split("•")
-                if len(parts) >= 1:
-                    resolution = parts[0].strip().lower()
-                break
+        for row in range(self.format_table.rowCount()):
+            cell_widget = self.format_table.cellWidget(row, 0)
+            if cell_widget:
+                cb = cell_widget.layout().itemAt(0).widget()
+                if isinstance(cb, QCheckBox) and cb.isChecked():
+                    if self.is_playlist:
+                        res_item = self.format_table.item(row, 2)
+                    else:
+                        res_item = self.format_table.item(row, 3)
+                    
+                    if res_item and res_item.text() != "N/A":
+                        resolution = res_item.text().replace("≤ ", "").strip()
+                    break
 
         # Get subtitle selection if available - Now get the list
         selected_subs = self.selected_subtitles if hasattr(self, "selected_subtitles") else []
@@ -755,6 +794,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         # Get filename format from config
         filename_format = ConfigManager.get("filename_format")
+        concurrent_fragments = ConfigManager.get("concurrent_fragments") or 1
 
         # Create download thread with resolution in output template
         self.download_thread = DownloadThread(
@@ -785,6 +825,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             preferred_audio_format=self.preferred_audio_format,  # Pass preferred audio format
             audio_normalization=self.audio_normalization,  # Pass audio normalization setting
             filename_format=filename_format,  # Pass the filename format
+            concurrent_fragments=concurrent_fragments, # Pass the concurrent fragments
         )
 
         # Connect signals
@@ -1311,6 +1352,79 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 )
                 button_text = f"Select Videos... ({display_text})"
             self.playlist_select_btn.setText(button_text)  # Direct call is fine here
+
+    def save_playlist_to_file(self) -> None:
+        """Save current playlist URLs/info to a file."""
+        if not getattr(self, "playlist_entries", None):
+            QMessageBox.warning(self, _("playlist.save_error_title", default="Save Error"), _("playlist.no_videos_to_save", default="No playlist entries gathered!"))
+            return
+            
+        default_dir = str(Path(self.last_path) / "playlist.txt")
+        file_path, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            _("playlist.save_as", default="Save Playlist As"),
+            default_dir,
+            "Text files (*.txt);;M3U playlists (*.m3u);;CSV files (*.csv);;JSON files (*.json)"
+        )
+        
+        if not file_path:
+            return
+            
+        try:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                if "Text files" in selected_filter:
+                    for index, entry in enumerate(self.playlist_entries):
+                        duration = entry.get("duration")
+                        duration_str = ""
+                        if duration:
+                            try:
+                                m, s = divmod(int(duration), 60)
+                                h, m = divmod(m, 60)
+                                if h > 0:
+                                    duration_str = f" [{h}:{m:02d}:{s:02d}]"
+                                else:
+                                    duration_str = f" [{m:02d}:{s:02d}]"
+                            except (ValueError, TypeError):
+                                pass
+                        
+                        title = entry.get('title', f'Video {index + 1}')
+                        # Formatting output to include index and duration
+                        f.write(f"{index + 1}. {title}{duration_str} - {entry.get('url', '')}\n")
+                elif "M3U" in selected_filter:
+                    f.write("#EXTM3U\n")
+                    for entry in self.playlist_entries:
+                        duration = int(entry.get('duration', 0)) if entry.get('duration') else 0
+                        title = entry.get('title', 'Unknown Title')
+                        f.write(f"#EXTINF:{duration},{title}\n{entry.get('url', '')}\n")
+                elif "CSV" in selected_filter:
+                    import csv
+                    writer = csv.writer(f, lineterminator='\n')
+                    # Adding Playlist Index to CSV and formatting Title with index and duration
+                    writer.writerow(['Playlist Index', 'Title', 'URL', 'Duration', 'Uploader'])
+                    for index, entry in enumerate(self.playlist_entries):
+                        duration = entry.get("duration")
+                        duration_str = ""
+                        if duration:
+                            try:
+                                m, s = divmod(int(duration), 60)
+                                h, m = divmod(m, 60)
+                                if h > 0:
+                                    duration_str = f" [{h}:{m:02d}:{s:02d}]"
+                                else:
+                                    duration_str = f" [{m:02d}:{s:02d}]"
+                            except (ValueError, TypeError):
+                                pass
+                        
+                        title = entry.get('title', f'Video {index + 1}')
+                        formatted_title = f"{index + 1}. {title}{duration_str}"
+                        writer.writerow([index + 1, formatted_title, entry.get('url', ''), entry.get('duration', ''), entry.get('uploader', '')])
+                elif "JSON" in selected_filter:
+                    import json
+                    json.dump(self.playlist_entries, f, indent=4, ensure_ascii=False)
+            QMessageBox.information(self, _("playlist.save_success_title", default="Success"), _("playlist.saved_successfully", default="Playlist saved successfully."))
+        except Exception as e:
+            logger.exception(f"Error saving playlist: {e}")
+            QMessageBox.critical(self, _("playlist.save_error_title", default="Error"), _("playlist.save_error_msg", default="Failed to save playlist."))
 
     # --- New Slot for Updating Playlist Button Text ---
     # moved to SignalManager as Signal and added to init_ui() method.

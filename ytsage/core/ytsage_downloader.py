@@ -74,6 +74,7 @@ class DownloadThread(QThread):
         preferred_audio_format="best",
         audio_normalization=False,
         filename_format=None,
+        concurrent_fragments=1,
     ) -> None:
         super().__init__()
         self.url = url
@@ -103,6 +104,7 @@ class DownloadThread(QThread):
         self.preferred_audio_format = preferred_audio_format
         self.audio_normalization = audio_normalization
         self.filename_format = filename_format
+        self.concurrent_fragments = concurrent_fragments
         self.paused: bool = False
         self.cancelled: bool = False
         self.process: Optional[subprocess.Popen] = None
@@ -229,13 +231,40 @@ class DownloadThread(QThread):
 
     def _build_yt_dlp_command(self) -> List[str]:
         """Build the yt-dlp command line with all options for direct execution."""
-        # Use the new yt-dlp path function from ytsage_yt_dlp module
         yt_dlp_path: str = get_yt_dlp_path()
+        # Build the command line array
         cmd: List[str] = [yt_dlp_path]
         logger.debug(f"Using yt-dlp from: {yt_dlp_path}")
 
+        # Add concurrent fragments setting
+        if self.concurrent_fragments:
+            cmd.extend(["-N", str(self.concurrent_fragments)])
+            logger.debug(f"Using {self.concurrent_fragments} concurrent connections")
+
         # Format selection strategy - use format ID if provided or fallback to resolution
-        if self.format_id:
+        if self.is_playlist:
+            # For playlists, specific format_id from the first video often fails for subsequent videos.
+            # Instead, we rely on dynamic fallback/resolution limits.
+            if self.is_audio_only:
+                # For audio-only playlist, let yt-dlp pick best audio.
+                cmd.extend(["-f", "bestaudio/best"])
+                logger.debug(f"Playlist mode: using dynamic best audio fallback instead of format_id")
+            else:
+                # If a specific resolution is given, limit to it. Otherwise, select the overall best.
+                # The resolution might be e.g. "1920x1080" or "1080". We want the height.
+                try:
+                    if self.resolution and self.resolution != "default":
+                        res_str = str(self.resolution)
+                        h = min(map(int, res_str.split('x'))) if 'x' in res_str else int(res_str)
+                        cmd.extend(["-S", f"res:{h}"])
+                        logger.debug(f"Playlist mode: using resolution limiter -S res:{h}")
+                    else:
+                        cmd.extend(["-f", "bestvideo+bestaudio/best"])
+                        logger.debug("Playlist mode: using dynamic best quality overall")
+                except ValueError:
+                    cmd.extend(["-f", "bestvideo+bestaudio/best"])
+                    logger.debug("Playlist mode: invalid resolution string, using dynamic best quality overall")
+        elif self.format_id:
             clean_format_id: str = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
 
             # If the selected format is audio-only, pass it directly.
@@ -295,12 +324,15 @@ class DownloadThread(QThread):
         base_path: str = self.path.as_posix()
         
         # Determine the filename part of the template
-        filename_part = self.filename_format if self.filename_format else "%(title)s_%(resolution)s.%(ext)s"
+        filename_part = self.filename_format if self.filename_format else "%(title)s_%(resolution)s_[%(id)s].%(ext)s"
 
         if self.is_playlist:
             # Create output template with playlist subfolder
             output_template: str = f"{base_path}/%(playlist_title)s/{filename_part}"
         else:
+            # For single files, automatically ignore/remove playlist-specific preamble (like "%(playlist_index)s - ")
+            import re
+            filename_part = re.sub(r'%\(playlist_index[^)]*\)[a-zA-Z0-9]*\s*(?:[-_]\s*)?', '', filename_part)
             output_template: str = f"{base_path}/{filename_part}"
 
         cmd.extend(["-o", str(output_template)])
@@ -320,17 +352,21 @@ class DownloadThread(QThread):
 
             # Get language codes from subtitle selections
             lang_codes: List[str] = []
+            has_auto_generated = False
             for sub_selection in self.subtitle_langs:
                 try:
                     # Extract just the language code (e.g., 'en' from 'en - Manual')
                     lang_code = sub_selection.split(" - ")[0]
                     lang_codes.append(lang_code)
+                    if "Auto-generated" in sub_selection:
+                        has_auto_generated = True
                 except Exception as e:
                     logger.exception(f"Could not parse subtitle selection '{sub_selection}': {e}")
 
             if lang_codes:
                 cmd.extend(["--sub-langs", ",".join(lang_codes)])
-                cmd.append("--write-auto-subs")  # Include auto-generated subtitles
+                if has_auto_generated:
+                    cmd.append("--write-auto-subs")  # Include auto-generated subtitles
 
                 # Only embed subtitles if merge is enabled
                 if self.merge_subs:
@@ -377,6 +413,9 @@ class DownloadThread(QThread):
             logger.debug(f"Added download section: {self.download_section}, Force keyframes: {self.force_keyframes}")
 
         # Add the URL as the final argument
+        if self.is_playlist:
+            cmd.append("--ignore-errors")
+            cmd.append("--no-abort-on-error")
         cmd.append(self.url)
 
         return cmd
@@ -447,6 +486,7 @@ class DownloadThread(QThread):
                     time.sleep(2)
                     self.cleanup_partial_files()
                     self.status_signal.emit(_("download.cancelled"))
+                    self.finished_signal.emit()
                     return
 
                 # Wait if paused
@@ -467,7 +507,7 @@ class DownloadThread(QThread):
                 )
                 return
 
-            if return_code == 0:
+            if return_code == 0 or (self.is_playlist and return_code != 0 and self.current_filename is not None):
                 self.progress_signal.emit(100)
                 
                 # Robust file finding: Always search for the most recent file
@@ -516,7 +556,10 @@ class DownloadThread(QThread):
                     logger.error(f"Error finding final file: {e}", exc_info=True)
                 
                 # Set completion status
-                self.status_signal.emit(_("download.completed"))
+                if return_code != 0:
+                    self.status_signal.emit(_("download.completed") + " (with some errors)")
+                else:
+                    self.status_signal.emit(_("download.completed"))
                 
                 # Clean up subtitle files if they were merged, with a small delay
                 # to ensure the embedding process has completed
@@ -532,6 +575,7 @@ class DownloadThread(QThread):
                 # Check if it was cancelled
                 if self.cancelled:
                     self.status_signal.emit(_("download.cancelled"))
+                    self.finished_signal.emit()
                 else:
                     # Provide informative error message based on captured output
                     if self.error_lines:

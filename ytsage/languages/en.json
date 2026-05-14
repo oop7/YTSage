@@ -83,6 +83,7 @@
     "select_all": "Select All",
     "deselect_all": "Deselect All",
     "open_folder": "Open folder location",
+    "save_playlist": "Save Playlist As",
     "reset": "Reset"
   },
   "dialogs": {
@@ -130,7 +131,8 @@
     "cleared_message": "Cookie settings have been cleared",
     "active_browser": "✓ Active: Browser cookies ({browser})",
     "active_file": "✓ Active: Cookie file ({file})",
-    "none_active": "○ No cookies active"
+    "none_active": "○ No cookies active",
+    "remember_settings": "Remember cookie settings on next startup"
   },
   "custom_command": {
     "help_text": "Enter your custom yt-dlp command below. The current URL will be appended automatically.<br><br>For the full list of options and usage examples, <a href=\"{docs_url}\">click here to view the official yt-dlp documentation</a>.<br><br>Note: Download path and filename template will be handled automatically.",
@@ -330,7 +332,13 @@
     "audio_normalization": "Audio Normalization (EBU R128)",
     "audio_normalization_help": "When enabled, audio tracks will be normalized. Note: This requires re-encoding, so a specific audio format (like MP3 or M4A) must be forced.",
     "filename_format": "Output Filename Format",
-    "filename_format_help": "Available variables: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s. Standard yt-dlp output template syntax is supported.",
+    "filename_format_help": "Available variables: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s, %(playlist_index)s. Standard yt-dlp output template syntax is supported.",
+    "defaults_settings": "Default Selection Settings",
+    "default_video_quality": "Default Video Resolution (Height):",
+    "default_subtitle_language": "Default Subtitle Language(s):",
+    "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available.",
+    "concurrent_fragments": "Concurrent Connections",
+    "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
     "preferred_audio_format": "Preferred audio format:",
     "force_audio_format_help": "When enabled, audio-only downloads will be converted to your preferred format. This only applies when downloading audio formats.",
     "audio_format_best": "Best (No conversion)",
@@ -448,6 +456,7 @@
     "analysis_timeout": "Error: Analysis timed out. Please try again.",
     "invalid_speed_limit": "❌ Error: Invalid speed limit value set in settings.",
     "ytdlp_failed": "Error: yt-dlp failed: {error}",
+    "private_video": "This video might be private. Please use cookies from the custom options.",
     "parse_failed": "Error: Failed to parse yt-dlp output: {error}",
     "analysis_failed": "Error: Analysis failed: {error}",
     "generic_error": "Error: {error}",
@@ -468,7 +477,13 @@
     "unknown": "Unknown Playlist",
     "total_videos": "Total Videos: {count}",
     "display_format": "Playlist: {title} | {count} videos",
-    "select_videos_title": "Select Playlist Videos"
+    "select_videos_title": "Select Playlist Videos",
+    "save_as": "Save Playlist As",
+    "save_success_title": "Success",
+    "saved_successfully": "Playlist saved successfully.",
+    "save_error_title": "Save Error",
+    "no_videos_to_save": "No playlist entries gathered!",
+    "save_error_msg": "Failed to save playlist."
   },
   "subtitle_selection": {
     "count_selected": "{count} selected"

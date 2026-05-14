@@ -1,85 +1,86 @@
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
-<img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
+<img src="../branding/screenshots/main.png" width="800" alt="YTSage 界面"/>
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
-[![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
-[![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
-[![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![PyPI 下载量](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
+[![GitHub 下载量](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![许可证: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
+[![支持平台](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
-[![PyPI version](https://img.shields.io/pypi/v/ytsage?color=c90000&style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/ytsage/)
-[![GitHub Sponsors](https://img.shields.io/github/sponsors/oop7?color=c90000&style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/oop7)
+[![PyPI 版本](https://img.shields.io/pypi/v/ytsage?color=c90000&style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/ytsage/)
+[![GitHub 赞助](https://img.shields.io/github/sponsors/oop7?color=c90000&style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/oop7)
 
-**具有干净 PySide6 界面的现代 YouTube 下载器。**  
-下载任何质量的视频、提取音频、获取字幕等等。
+**一款现代、整洁、基于 PySide6 的 YouTube 下载器。**  
+支持下载任意质量的视频、提取音频、获取字幕等更多功能。
 
-### 🌍 自述文件语言
+### 🌍 README 语言
 
-英文：[EN](../README.md)
-|巴黎: [AR](README.ar.md)
-|德语：[DE](README.de.md)
-|西班牙语：[ES](README.es.md)
-|法语：[FR](README.fr.md)
-|编号：[HI](README.hi.md)
-|印度尼西亚语：[ID](README.id.md)
-|意大利语：[IT](README.it.md)
-| 日本语：[JA](README.ja.md)
-|波兰斯基：[PL](README.pl.md)
-|葡萄牙语：[PT](README.pt.md)
-| Русский: [RU](README.ru.md)
-|土耳其：[TR](README.tr.md)
+英语: [EN](../README.md)
+| 阿拉伯语: [AR](README.ar.md)
+| 德语: [DE](README.de.md)
+| 西班牙语: [ES](README.es.md)
+| 法语: [FR](README.fr.md)
+| 印地语: [HI](README.hi.md)
+| 印尼语: [ID](README.id.md)
+| 意大利语: [IT](README.it.md)
+| 日语: [JA](README.ja.md)
+| 波兰语: [PL](README.pl.md)
+| 葡萄牙语: [PT](README.pt.md)
+| 俄语: [RU](README.ru.md)
+| 土耳其语: [TR](README.tr.md)
 | 中文: [ZH](README.zh.md)
 
 <p align="center">
-  <a href="#installation">安装</a> •
-  <a href="#features">特点</a> •
-  <a href="#usage">使用</a> •
-  <a href="#screenshots">屏幕截图</a> •
-  <a href="#troubleshooting">故障排除</a> •
-  <a href="#sponsor">赞助商</a> •
-  <a href="#contributing">贡献</a>
+  <a href="#安装">安装</a> •
+  <a href="#功能">功能</a> •
+  <a href="#使用说明">使用说明</a> •
+  <a href="#屏幕截图">屏幕截图</a> •
+  <a href="#故障排除">故障排除</a> •
+  <a href="#赞助支持">赞助支持</a> •
+  <a href="#贡献">贡献</a>
 </p>
 
 </div>
 
 ---
 
-<a id="why-ytsage"></a>
-## ❓ 为什么选择 YTSage？
+<a id="为什么选择-ytsage"></a>
+## ❓ 为什么选择 YTSage?
 
-YTSage 专为想要**简单但功能强大的 YouTube 下载器**的用户而设计。与其他工具不同，它提供：
+YTSage 专为寻找 **简单但强大** 的 YouTube 下载器的用户而设计。与其他工具不同，它提供：
 
-- 干净、现代的 PySide6 界面
-- 视频、音频和字幕一键下载
-- SponsorBlock、字幕合并和播放列表选择等高级功能
-- 适用于 YouTube 以外支持 yt-dlp 的网站的可选通用模式
-- 跨平台支持且易于安装
+- 现代、整洁的 PySide6 用户界面
+- 一键下载视频、音频和字幕
+- 支持 SponsorBlock、字幕合并和播放列表选择等高级功能
+- 可选的“通用模式”，支持 yt-dlp 兼容的其他非 YouTube 网站
+- 跨平台支持，安装简单
 
-<a id="features"></a>
-## ✨ 特点
+<a id="功能"></a>
+## ✨ 功能
 
 <div align="center">
 
-|核心特点|高级功能 |额外功能 |
-|------------------------------------------------|--------------------------------------------------------|------------------------------------|
-| 🎥 格式化表格 | 🚫 SponsorBlock 集成 | 🎞️ FPS/HDR 显示 |
-| 🎵 音频提取 | 📝 多字幕选择和合并 | 🔄 自动更新 yt-dlp |
-| ✨ 简单的用户界面 |  💾 保存描述和缩略图 | 🛠️ FFmpeg/yt-dlp/Deno 检测 |
-| 📋 播放列表支持和选择器 | 🚀 限速器 | ⚙️ 自定义命令 |
-| 📑 嵌入章节 | ✂️ 修剪视频部分 | 🍪 使用 Cookie 登录 |
-| 📜 下载历史记录 | 🔄 发布渠道选择 | 🌐 代理支持 |
-| 🎚️ 音频格式转换 | 🎬 视频格式设置 | 🆙 内置更新程序选项卡 |
-| 🌍 通用模式 | 🔊 音频标准化 (EBU R128) | 🌍 14 种语言本地化 |
+| 核心功能 | 高级功能 | 更多功能 |
+|-----------------------------------|-----------------------------------------|------------------------------------|
+| 🎥 格式选择列表 | 🚫 集成 SponsorBlock | 🎞️ FPS / HDR 显示 |
+| 🎵 音频提取 | 📝 字幕选择与合并 | 🔄 yt-dlp 自动更新 |
+| ✨ 现代 UI 体验 | 💾 保存描述与缩略图 | 🛠️ FFmpeg/yt-dlp/Deno 检测 |
+| 📋 播放列表支持与选择 | 🚀 下载限速 | ⚙️ 自定义参数支持 |
+| 📑 视频列表集成 | ✂️ 视频剪辑 | 🍪 Cookie 登录集成 |
+| 📜 下载历史记录 | 🔄 更新版本分支选择 | 🌐 代理支持 |
+| 🎚️ 音频格式转换 | 🎬 视频格式设置 | 🆙 内置更新页签 |
+| 🌍 通用模式 | 🔊 音频归一化 (EBU R128) | 🌍 支持 14 种语言 |
+| 💾 播放列表导出 | ⚙️ 默认质量与字幕设置 | |
 </div>
 
-<a id="installation"></a>
+<a id="安装"></a>
 ## 🚀 安装
 
-### ⚡ 快速安装（推荐）
+### ⚡ 快速安装 (推荐)
 
-从 PyPI 安装 YTSage：
+通过 PyPI 安装 YTSage：
 
 ```bash
 pip install ytsage
@@ -94,60 +95,60 @@ pip install --upgrade ytsage
 
 </details>
 
-然后启动应用程序：
+然后通过以下命令运行：
 
 ```bash
 ytsage
 ```
 
-### 📦 预构建的可执行文件
+### 📦 独立可执行文件
 
-> [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
+> [👉 下载最新版本](https://github.com/oop7/YTSage/releases/latest)
 
 #### 🪟 Windows
 
-|格式|描述 |
+| 格式 | 说明 |
 |--------|-------------|
-| ！[Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) |标准安装程序 |
-| ！[Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) |与 FFmpeg 捆绑 |
-| ！[Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) |便携版，无需安装|
-| ！[Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) |带有 FFmpeg 的便携式，压缩 |
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 标准安装程序 |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 包含 FFmpeg 的安装程序 |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 便携版 (无需安装) |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 包含 FFmpeg 的便携版 (ZIP) |
 
 <details>
-<summary>🛠️安装步骤</summary>
+<summary>🛠️ 安装步骤</summary>
 
-1. **EXE 安装程序 (`.exe`)**：双击该文件并按照安装向导进行操作。
-2. **便携式版本（`.zip`）**：将存档解压到您所需的位置并运行`ytsage.exe`。
-3. **FFmpeg Bundled**：如果您的系统上没有安装 FFmpeg，请选择 FFmpeg 捆绑版本。
+1. **EXE 安装程序 (`.exe`)**: 双击并按照安装向导进行操作。
+2. **便携版 (`.zip`)**: 解压到所需位置并运行 `ytsage.exe`。
+3. **内置 FFmpeg**: 如果系统没有安装 FFmpeg，请选择带 `-ffmpeg` 的版本。
 </details>
 
 #### 🐧 Linux
 
-|格式|描述 |
+| 格式 | 说明 |
 |--------|-------------|
-| ！[Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian 软件包 |
-| ！[Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage，便携式|
-| ！[Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) |转包 |
-| ！[Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak 捆绑包 |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian 软件包 |
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | 便携 AppImage |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM 软件包 |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak 软件包 |
 
 <details>
-<summary>🛠️安装步骤</summary>
+<summary>🛠️ 安装步骤</summary>
 
-- **DEB (`.deb`)**：
+- **DEB (`.deb`)**:
   ```bash
   sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Fix missing dependencies if any
+  sudo apt-get install -f # 如有依赖问题请运行
   ```
-- **转速（`.rpm`）**：
+- **RPM (`.rpm`)**:
   ```bash
   sudo rpm -i ytsage-*.rpm
   ```
-- **应用程序图像（`.AppImage`）**：
+- **AppImage (`.AppImage`)**:
   ```bash
   chmod +x YTSage-*.AppImage
   ./YTSage-*.AppImage
   ```
-- **Flatpak**：按照 Flathub 上的说明进行操作或运行：
+- **Flatpak**: 按照 Flathub 的说明或运行：
   ```bash
   flatpak install flathub io.github.oop7.ytsage
   ```
@@ -155,47 +156,47 @@ ytsage
 
 #### 🍎 macOS
 
-|格式|描述 |
+| 格式 | 说明 |
 |--------|-------------|
-| ！[macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 的压缩应用程序 |
-| ！[macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 的磁盘映像安装程序 |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 专用 ZIP 压缩包 |
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 专用 DMG 安装程序 |
 
 <details>
-<summary>🛠️安装步骤</summary>
+<summary>🛠️ 安装步骤</summary>
 
-- **DMG 安装程序 (`.dmg`)**：双击安装，然后将 `YTSage.app` 拖到您的应用程序文件夹中。
-- **应用程序存档 (`.zip`)**：解压 zip 并将 `YTSage.app` 移动到您的应用程序文件夹。
+- **DMG 安装程序 (`.dmg`)**: 双击挂载，然后将 `YTSage.app` 拖入 Applications 文件夹。
+- **ZIP 应用包 (`.zip`)**: 解压并移动 `YTSage.app` 到 Applications 文件夹。
 
-*注意：如果您遇到“应用程序已损坏”错误，请参阅下面的[macOS troubleshooting section](#troubleshooting)。*
+*注意：如果遇到“应用已损坏”的提示，请参阅下方的 macOS 解决办法。*
 </details>
 
 ---
 
 <details>
-<summary>💻从源手动安装</summary>
+<summary>💻 从源码手动安装</summary>
 
-### 1.克隆存储库
+### 1. 克隆仓库
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2.安装依赖项
+### 2. 安装依赖
 
-#### ⚡ 有紫外线
+#### ⚡ 使用 uv
 
 ```bash
 uv pip install .
 ```
 
-#### 📦 或使用标准点
+#### 📦 或使用标准 pip
 
 ```bash
 pip install .
 ```
 
-### 3. 运行应用程序
+### 3. 运行程序
 
 ```bash
 python -m ytsage.main
@@ -203,330 +204,289 @@ python -m ytsage.main
 
 </details>
 
-<a id="screenshots"></a>
-## 📸 截图
+<a id="屏幕截图"></a>
+## 📸 屏幕截图
 
 <div align="center">
 <table>
   <tr>
-    <td><img src="../branding/screenshots/Download-Settings.png" alt="Download Settings" width="400"/></td>
-    <td><img src="../branding/screenshots/playlist.png" alt="Playlist Download" width="400"/></td>
+    <td><img src="../branding/screenshots/Download-Settings.png" alt="下载设置" width="400"/></td>
+    <td><img src="../branding/screenshots/playlist.png" alt="播放列表下载" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>下载设置</em></td>
-    <td align="center"><em>播放列表下载</em></td>
+    <td align="center"><em>播放列表列表</em></td>
   </tr>
   <tr>
-    <td><img src="../branding/screenshots/audio_format.png" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="../branding/screenshots/Custom-Option.png" alt="Custom Options" width="400"/></td>
+    <td><img src="../branding/screenshots/audio_format.png" alt="音频格式选择" width="400"/></td>
+    <td><img src="../branding/screenshots/Custom-Option.png" alt="自定义选项" width="400"/></td>
   </tr>
   <tr>
-    <td align="center"><em>音频格式</em></td>
+    <td align="center"><em>音频格式设置</em></td>
     <td align="center"><em>自定义选项</em></td>
   </tr>
 </table>
-</div><a id="usage"></a>
+</div>
 
-## 📖 用法
+<a id="使用说明"></a>
+## 📖 使用说明
 
 <details>
-<summary>🎯基本用法</summary>
+<summary>🎯 基本使用方法</summary>
 
-1. **启动 YTSage**
-2. **粘贴 YouTube URL**（或使用“粘贴 URL”按钮）
-3. **点击“分析”**
-4. **选择格式：**
-   - `Video` 用于视频下载
-   - `Audio Only` 用于音频提取
-5. **选择选项：**
+1. **运行 YTSage**
+2. **粘贴 YouTube 地址** (或点击 "Paste URL")
+3. **点击 "Analyze" (分析)**
+4. **选择下载模式:**
+   - `Video` 下载视频
+   - `Audio Only` 仅提取音频
+5. **配置下载项:**
    - 启用字幕并选择语言
-   - 启用字幕合并
-   - 保存缩略图
-   - 删除赞助商部分
-   - 保存描述
-   - 嵌入章节
-6. **选择输出目录**
-7. **点击“下载”**
+   - 启用字幕合并 (Merge)
+   - 保存缩略图 (Save Thumbnail)
+   - 启用赞助内容跳过 (SponsorBlock)
+   - 下载描述文本 (Save Description)
+   - 嵌入视频章节 (Embed Chapters)
+6. **选择路径**
+7. **点击 "Download" (下载)**
 
-> 💡 默认下载目录是用户的“Downloads”文件夹。
-
-</details>
-
-<details>
-<summary>📋播放列表下载</summary>
-
-1. **粘贴播放列表 URL**
-2. **点击“分析”**
-3. **从播放列表选择器中选择视频（可选，默认为全部）**
-4. **选择所需的格式/质量**
-5. **点击“下载”**
-
-> 💡 应用程序自动处理下载队列
+> 💡 默认下载到系统的“下载”文件夹。
 
 </details>
 
 <details>
-<summary>🌍非 YouTube 网站的通用模式</summary>
+<summary>📋 下载播放列表</summary>
 
-当您希望 YTSage 接受来自 yt-dlp 支持的网站（例如 Dailymotion、CBC Gem、TikTok 等）的 URL 时，请使用通用模式。
+1. **粘贴播放列表地址**
+2. **添加并分析**
+3. **在弹出窗口中选择视频 (默认全选)**
+4. **设置质量方案**
+5. **开始下载**
 
-使用方法：
-
-1. 打开`Download Settings`。
-2. 启用`Generic Mode`。
-3. 粘贴受支持的非 YouTube 视频或播放列表 URL。
-4. 单击`Analyze`。
-5. 选择格式并照常下载。
-
-注意事项：
-
-- 通用模式仅更改 YTSage 内的 URL 验证。您安装的 yt-dlp 版本仍必须支持目标站点。
-- 某些站点需要 cookie、登录会话、代理或额外的 yt-dlp 参数，具体取决于提取器。
-- 如果站点出现故障，请先从内置更新程序选项卡更新 yt-dlp，然后再报告问题。
+> 💡 程序会自动管理下载队列。您可以将列表导出为 `.txt`, `.csv`, `.m3u` 或 `.json` 格式。
 
 </details>
 
 <details>
-<summary>🧰媒体和下载选项</summary>
+<summary>🌍 非 YouTube 网站 (通用模式)</summary>
 
-- **字幕选项：** 过滤语言并将字幕嵌入到视频文件中
-- **字幕合并：** 将字幕合并到视频文件中以获取硬编码字幕
-- **保存描述：** 将视频描述保存为文本文件
-- **保存缩略图：** 将视频缩略图保存为图像文件
-- **嵌入章节：** 将章节标记嵌入为兼容视频播放器的元数据
-- **删除赞助商片段：** 使用 SponsorBlock 从视频中删除赞助商片段
-- **修剪视频：** 通过以 `HH:MM:SS` 格式指定时间范围，仅下载视频的特定部分
+当您想从被 yt-dlp 支持的其他网站（如 TikTok、Dailymotion 等）下载时，请开启通用模式。
 
-</details>
+如何使用：
 
-<details>
-<summary>⚙️输出和文件设置</summary>
+1. 打开 `Download Settings` (下载设置)。
+2. 启用 `Generic Mode` (通用模式)。
+3. 输入非 YouTube 的支持网站链接。
+4. 点击 `Analyze` (分析)。
+5. 正常下载。
 
-- **限速器：**限制下载速度，例如`500K`为500 KB/s
-- **保存下载路径：** 保存默认下载路径以供将来下载。在**下载设置→下载路径**中可用。
-- **输出文件名格式：** 使用`%(title)s`、`%(uploader)s`和`%(resolution)s`等变量自定义输出文件名格式。在**下载设置 → 文件名格式**中可用。- **强制输出格式：** 强制视频下载为特定容器格式，例如`mp4`、`webm`或`mkv`。在**下载设置 → 输出格式设置**中可用。
-- **音频格式转换：** 将纯音频下载转换为首选格式，例如 `AAC`、`MP3`、`FLAC`、`WAV`、`Opus`、`M4A`、 `Vorbis`，或`Best`。在**下载设置 → 音频格式设置**中可用。
-- **音频归一化:** 使用 EBU R128 标准化纯音频下载的音量。
+说明：
+
+- 通用模式仅关闭了 YTSage 内部的 URL 类型检查。网站支持程度仍取决于您安装的 yt-dlp。
+- 有些站点可能需要特定的 Cookie 或代理配置。
+- 如果某个网站无法分析，请先在内置更新程序中更新 yt-dlp。
 
 </details>
 
 <details>
-<summary>🌐接入和网络</summary>
+<summary>🧰 媒体与下载选项</summary>
 
-- **使用 Cookie 登录：** 使用 Cookie 登录 YouTube 以访问私人内容。
-  使用方法：
-  1. **推荐：** 使用应用程序中的内置`Extract cookies from browser`选项，然后选择您的浏览器和可选的配置文件。
-  2. 或者，手动提取 cookie：
-     a.使用类似 [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file) 的扩展程序从浏览器导出 cookie
-     b.以 Netscape 格式复制 cookie
-     c.创建一个名为 `cookies.txt` 的文件并将 cookie 粘贴到其中
-     d.在应用程序中选择`cookies.txt`文件
-- **代理支持：** 使用代理服务器进行下载，例如`http://<proxy-server>:<port>`
-- **通用模式：** 允许 YTSage 从 yt-dlp 支持的非 YouTube 网站分析和下载。从**下载设置 → 通用模式**启用它。
+- **字幕选项:** 过滤特定语言并支持嵌入到视频中。
+- **字幕合并:** 将字幕“烧录”到视频中（硬字幕）。
+- **保存描述:** 将视频描述保存为独立的文本文档。
+- **保存缩略图:** 下载视频的高清封面。
+- **嵌入章节:** 允许将视频章节标记写入媒体元数据。
+- **赞助商跳过:** 配合 SponsorBlock 自动跳过或剪辑掉广告段落。
+- **视频剪裁:** 输入 `HH:MM:SS` 时间点来实现部分下载。
 
 </details>
 
 <details>
-<summary>🛠️工具与维护</summary>
+<summary>⚙️ 文件与输出设置</summary>
 
-- **自定义命令：** 通过命令行参数访问高级 yt-dlp 功能
-- **更新程序选项卡：** 从自定义选项中的一处管理内置更新工具：
-  - **yt-dlp 更新：** 检查更新并在稳定版和夜间发布频道之间切换
-  - **FFmpeg 版本检查器：** 检查您的 FFmpeg 版本并打开安装指南
-  - **Deno 更新：** 检查并更新 Deno 运行时
-- **FFmpeg/yt-dlp/Deno 检测：** 从“关于”对话框中自动检测 FFmpeg、yt-dlp 和 Deno 路径和版本。
-- **下载历史记录：** 通过“**历史记录**”按钮查看过去的下载，其中包含缩略图和状态。
+- **下载限速:** 输入如 `500K` 表示限制为 500 KB/s。
+- **保存路径:** 在 **Download Settings → Download Path** 中保存您的默认位置。
+- **默认分辨率:** 设置您首选的清晰度（如 1080p, 720p）。
+- **默认字幕语言:** 输入语言代码（如 `zh,en`）来自动选择默认字幕。
+- **文件命名模板:** 通过 `%(title)s` 等变量自定义文件名格式。
+- **强制输出格式:** 强制转换输出容器，如 `mp4`, `webm` 或 `mkv`。
+- **音频转换:** 将音频转换为 `AAC`, `MP3`, `FLAC` 等格式。
+- **音量归一化:** 使用 EBU R128 标准使下载的音量均衡。
+- **多线程连接:** 设置 **Concurrent Connections** 为 8-10 以最大化下载速度。
 
 </details>
 
 <details>
-<summary>🌍本地化</summary>
+<summary>🌐 进阶访问与网络</summary>
 
-YTSage 支持**14 种语言**，可在全球范围内访问。从**自定义选项 → 语言**中选择您的首选语言。
+- **Cookie 登录:** 允许通过 Cookie 下载私人内容或绕过限制。
+  推荐方法：
+  1. 在设置中点击 `Extract cookies from browser`，选择您的浏览器。
+  2. 或：导出 Netscape 格式的 `cookies.txt` 文件并手动载入。
+- **代理支持:** 支持设置 HTTP 代理，例如 `http://127.0.0.1:8080`。
 
-### 支持的语言
+</details>
 
-|语言 |代码|语言 |代码|
+<details>
+<summary>🛠️ 系统工具与维护</summary>
+
+- **自定义参数:** 为 yt-dlp 传递特定的命令行参数。
+- **内置更新器:** (在 Custom Options 中)
+  - **yt-dlp 更新:** 在稳定版和测试版之间切换。
+  - **FFmpeg 检测:** 验证安装路劲。
+  - **Deno 更新:** 维护相关的集成环境。
+- **下载历史:** 管理您的所有下载历史记录，包含缩略图和状态。
+
+</details>
+
+<details>
+<summary>🌍 语言支持</summary>
+
+YTSage 支持 **14 种语言**。您可以在 **Custom Options → Language** 中更改。
+
+### 支持的界面语言
+
+| 语言 | 代码 | 语言 | 代码 |
 |----------|------|----------|------|
 | 🇺🇸 英语 | `en` | 🇪🇸 西班牙语 | `es` |
 | 🇸🇦 阿拉伯语 | `ar` | 🇫🇷 法语 | `fr` |
 | 🇩🇪 德语 | `de` | 🇮🇳 印地语 | `hi` |
-| 🇮🇩 印度尼西亚语 | `id` | 🇮🇹 意大利语 | `it` |
+| 🇮🇩 印尼语 | `id` | 🇮🇹 意大利语 | `it` |
 | 🇯🇵 日语 | `ja` | 🇵🇱 波兰语 | `pl` |
 | 🇧🇷 葡萄牙语 | `pt` | 🇷🇺 俄语 | `ru` |
 | 🇹🇷 土耳其语 | `tr` | 🇨🇳 中文 | `zh` |
 
-### 自述文件翻译
+### README 翻译版
 
-|语言 |文件 |语言 |文件 |
+| 语言 | 文件 | 语言 | 文件 |
 |----------|------|----------|------|
-| 🇺🇸 英语 | [README.md](../README.md) | 🇪🇸 西班牙语 | [README.es.md](README.es.md)
+| 🇺🇸 英语 | [README.md](README.md) | 🇪🇸 西班牙语 | [README.es.md](README.es.md) |
 | 🇸🇦 阿拉伯语 | [README.ar.md](README.ar.md) | 🇫🇷 法语 | [README.fr.md](README.fr.md) |
 | 🇩🇪 德语 | [README.de.md](README.de.md) | 🇮🇳 印地语 | [README.hi.md](README.hi.md) |
-| 🇮🇩 印度尼西亚语 | [README.id.md](README.id.md) | 🇮🇹 意大利语 | [README.it.md](README.it.md) |
+| 🇮🇩 印尼语 | [README.id.md](README.id.md) | 🇮🇹 意大利语 | [README.it.md](README.it.md) |
 | 🇯🇵 日语 | [README.ja.md](README.ja.md) | 🇵🇱 波兰语 | [README.pl.md](README.pl.md) |
 | 🇧🇷 葡萄牙语 | [README.pt.md](README.pt.md) | 🇷🇺 俄语 | [README.ru.md](README.ru.md) |
 | 🇹🇷 土耳其语 | [README.tr.md](README.tr.md) | 🇨🇳 中文 | [README.zh.md](README.zh.md) |
 
-> 💡 **想要贡献翻译吗？** 查看 [Contributing](#contributing) 部分以帮助我们添加更多语言！
+> 💡 **想要贡献翻译?** 欢迎查看 [贡献指南](#贡献) 部分！
 
 </details>
 
-<a id="troubleshooting"></a>
+<a id="故障排除"></a>
 ## 🛠️ 故障排除
 
 <details>
-<summary>点击查看常见问题及解决方案</summary>
+<summary>常见问题解答</summary>
 
-- **格式表不显示：** 将 yt-dlp 更新到最新版本，并切换到 yt-dlp nightly。
-- **下载失败：** 检查您的互联网连接并确保视频可用。
-- **具体下载错误：**
-  - **私人视频：** 使用cookie身份验证访问私人内容。
-  - **有年龄限制的内容：** 登录 YouTube 帐户即可观看有年龄限制的视频。
-  - **地理封锁的视频：** 考虑使用 VPN 来绕过区域限制。
-  - **删除/删除的视频：** YouTube 上不再提供视频。
-  - **直播：** 直播无法下载；等待流结束。
-  - **网络错误：** 检查您的互联网连接并重试。
-  - **无效 URL：** 确保 URL 正确且来自受支持的平台。
-  - **高级内容：** 需要 YouTube Premium 会员资格。
-  - **版权封锁：** 由于版权限制，内容被封锁。
-- **下载后分离视频和音频文件：** 当 FFmpeg 丢失或未检测到时会发生这种情况。 YTSage 需要 FFmpeg 来合并高质量的视频和音频流。
-  - **解决方案：** 确保 FFmpeg 已安装并可在系统路径中访问。对于 Windows 用户，最简单的选择是下载与 FFmpeg 捆绑在一起的 `YTSage-v<version>-ffmpeg.exe` 文件。
+- **没有显示格式表格:** 请更新 yt-dlp。如果仍无效，请尝试切换到测试版 (Nightly) 分支。
+- **下载失败:** 请检查网络连接或该地区视频是否可用。
+- **常见特定的错误提示:**
+  - **私有视频:** 需提供 Cookie 登录。
+  - **内容受限:** 部分视频需登录账号。
+  - **地理锁定:** 需使用代理或 VPN。
+  - **视频已删除:** 视频已不存在。
+  - **直播内容:** YTSage 目前不支持实时直播下载，请等直播结束后再试。
+- **下载后画面和声音分离:** 意味着系统中未安装或未检测到 FFmpeg。
+  - **解决方法:** 确保 FFmpeg 已安装并加入 PATH，或下载带 `-ffmpeg` 版本的 Windows 程序。
 
 ---
 
-#### 🛡️ Windows Defender / 防病毒警告
+#### 🛡️ Windows Defender / 杀毒软件警告
 
-某些防病毒软件可能会将“.exe”文件标记为误报。这是打包应用程序的**已知限制**。
+某些杀毒软件可能会误报。这是打包程序的常见现象。
 
-**为什么会发生这种情况：**
-- 防病毒启发式可能会将打包的可执行文件误认为可疑
+**原因:**
+- 启发式查杀可能会误认为打包的可执行文件是恶意软件。
 
-**安全替代品：**
-- ✅ **使用pip安装：** `pip install ytsage`（推荐）
-- ✅ **从源代码构建**：按照此[guide](../.github/CI_CD_README.md)
-- ✅ **在防病毒软件中将应用程序列入白名单**
+**安全建议:**
+- ✅ **通过 pip 安装:** `pip install ytsage`（推荐）
+- ✅ **自行构建**: 参照 [CI_CD 指南](.github/CI_CD_README.md)
+- ✅ **添加排除项**。
 
-#### 🍎 macOS：“应用程序已损坏且无法打开”
-如果您在 macOS Sonoma 或更高版本上看到此错误，则需要删除隔离属性。
+#### 🍎 macOS: "应用已损坏，无法打开"
+在 macOS Sonoma 及以后版本：
 
-1. **打开终端**（您可以使用 Spotlight 找到它）。
-2. **键入以下命令**，但**不要**按 Enter 键。确保末尾包含空格：
-    ```bash
-    xattr -d com.apple.quarantine 
-    ```
-3. **将 `YTSage.app` 文件**从 Finder 窗口拖放到终端窗口中。这将自动粘贴正确的文件路径。
-4. **按 Enter** 运行命令。
-5. **再次尝试打开 YTSage.app。** 现在它应该可以正确启动。
+1. 打开 **终端 (Terminal)**。
+2. 输入命令 (结尾有一个空格):
+   ```bash
+   xattr -d com.apple.quarantine 
+   ```
+3. 从 Finder 中将 **YTSage.app** 拖入终端窗口。
+4. 按回车。
+5. 再次打开应用。
 
 ---
 
-#### **配置位置（高级）**
-- **Windows：** `%LOCALAPPDATA%\YTSage`
-- **macOS：** `~/Library/Application Support/YTSage`
-- **Linux：** `~/.local/share/YTSage`
+#### **配置存放路径**
+- **Windows:** `%LOCALAPPDATA%\YTSage`
+- **macOS:** `~/Library/Application Support/YTSage`
+- **Linux:** `~/.local/share/YTSage`
 
 </details>
 
-<a id="sponsor"></a>
-## 💖 赞助商
+<a id="赞助支持"></a>
+## 💖 赞助支持
 
-如果 YTSage 可以节省您的时间，请考虑赞助该项目。赞助有助于涵盖开发时间、跨平台测试以及未来的改进。
+如果 YTSage 节省了您的时间，请考虑资助本项目。赞助收入将用于多平台测试环境的维护和新功能开发。
 
-- GitHub 赞助商：https://github.com/sponsors/oop7
-- 赞助商链接也可以直接在应用程序内的“关于”对话框中找到。
+- GitHub Sponsors: https://github.com/sponsors/oop7
+- 您也可以通过应用内的“About (关于)”窗口找到捐赠链接。
 
-[![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
+[![赞助 YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
-<a id="contributing"></a>
+<a id="贡献"></a>
 ## 👥 贡献
 
-我们欢迎贡献！以下是您可以提供帮助的方法：
+感谢所有帮助！
 
-1. 🍴 分叉存储库
-2. 🌿 创建您的功能分支：
-  ```bash
-  git checkout -b feature/AmazingFeature
-  ```
-3. 💾 提交您的更改：
-  ```bash
-  git commit -m 'Add some AmazingFeature'
-  ```
-4. 📤推送到分支：
-  ```bash
-  git push origin feature/AmazingFeature
-  ```
-5. 🔄 打开拉取请求
+1. 🍴 Fork 仓库
+2. 🌿 创建特性分支: `git checkout -b feature/NewFeature`
+3. 💾 提交更改: `git commit -m 'Add NewFeature'`
+4. 📤 推送分支: `git push origin feature/NewFeature`
+5. 🔄 开启 Pull Request
 
-### 🌍 贡献翻译
+### 🌍 翻译贡献
 
-- 更新匹配的本地化自述文件（例如`README.es.md`）
-- 通过编辑`ytsage/languages/<code>.json`保持应用程序字符串同步
-- 如果您的语言缺失，请从`README.md`开始并创建`README.<code>.md`
+- 您可以更新各语种 README (例如 `readme-translations/README.zh.md`)。
+- 也可以翻译界面词条：`ytsage/languages/<语言代码>.json`。
 
 <details>
-<summary>📂项目结构</summary>
+<summary>📂 项目结构</summary>
 
 ## YTSage - 项目结构
 
-本文档描述了 YTSage 的组织文件夹结构。
-
-### 📁 项目结构
+### 📁 目录概览
 
 ```
 YTSage/
-├── 📁 .github/                   # GitHub configuration
-│   ├── 📁 ISSUE_TEMPLATE/         # Issue templates
-│   │   └── 🐛-bug-report.md       # Bug report template
-│   ├─── 📁 workflows/              # GitHub Actions workflows
-│   │   ├── build-linux.yml        # Linux build workflow
-│   │   ├── build-macos.yml        # macOS build workflow
-│   │   │── build-windows.yml      # Windows build workflow
-|   |   └── release-all.yml          # Master release workflow
-│   └── 📄 CI_CD_README.md        # CI/CD documentation
-├──  📁 branding/                 # Branding assets (Screenshots, SVGs)
-│   ├── 📁 icons/                 # Application icons
-│   ├── 📁 screenshots/           # Screenshots for documentation
-│   └── 📁 svg/                   # SVG assets
-├── 📄 LICENSE                    # License file
-├── 📄 pyproject.toml             # Project metadata and dependencies
-├── 📄 README.md                  # Project documentation
-├── 📄 requirements.txt           # Python dependencies (dev)
-└── 📁 ytsage/                    # Source package
-    ├── 📁 assets/                # Runtime assets
-    │   ├── 📁 Icon/              # Application icons
-    │   └── 📁 sound/             # Audio files
-    ├── 📁 languages/             # Localization files
-    │   ├── 📄 ar.json            # Arabic translation
-    │   ├── 📄 de.json            # German translation
-    │   ├── 📄 en.json            # English translation
-    │   └── ...                   # Other languages
-    ├── 📁 core/                  # Core business logic
-    │   ├── 📄 __init__.py        # Core package init
-    │   ├── 📄 ytsage_deno.py     # Deno integration
-    │   ├── 📄 ytsage_downloader.py # Download functionality
-    │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
-    │   ├── 📄 ytsage_utils.py    # Utility functions
-    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
-    ├── 📁 gui/                   # User interface components
-    │   ├── 📄 __init__.py        # GUI package init
-    │   ├── 📄 ytsage_gui_main.py # Main application window
-    │   └── 📁 ytsage_gui_dialogs/ # Dialog classes
-    ├── 📁 utils/                 # Utility modules
-    │   ├── 📄 __init__.py        # Utils package init
-    │   ├── 📄 ytsage_config_manager.py # Configuration management
-    │   └── 📄 ytsage_logger.py   # Logging utilities
-    ├── 📄 __init__.py            # Package entry point
-    └── 📄 main.py                # Main execution script
+├── 📁 .github/                   # GitHub 设置
+│   ├── 📁 ISSUE_TEMPLATE/         # 问题模板
+│   ├─── 📁 workflows/              # GitHub Actions 流程
+├──  📁 branding/                 # 品牌资源 (截图, SVG)
+│   ├── 📁 icons/                 # 图标
+│   ├── 📁 screenshots/           # 截图说明
+│   └── 📁 svg/                   # SVG 素材
+├── 📄 LICENSE                    # 许可证
+├── 📄 pyproject.toml             # 项目元数据与依赖
+├── 📄 README.md                  # 英语 README
+├── 📄 requirements.txt           # 开发依赖
+└── 📁 ytsage/                    # 源代码
+    ├── 📁 assets/                # 运行时资源 (音频, 图标)
+    ├── 📁 languages/             # 多语言 JSON 文件
+    ├── 📁 core/                  # 下载与集成核心逻辑
+    ├── 📁 gui/                   # UI 组件
+    ├── 📁 utils/                 # 工具类
+    ├── 📄 __init__.py            
+    └── 📄 main.py                # 程序入口
 ```
 
 </details>
 
-## ⭐️ 明星历史
+## ⭐️ 关注趋势
 
 <div align="center">
 
-## 明星历史
+## Star History
 
 <a href="https://www.star-history.com/#oop7/YTSage&Date">
  <picture>
@@ -540,63 +500,64 @@ YTSage/
 
 ## 📜 许可证
 
-该项目已获得 MIT 许可证 - 有关详细信息，请参阅[LICENSE](../LICENSE) 文件。
+本项目基于 MIT 许可证分发 - 详情请参阅 [LICENSE](LICENSE) 文件。
 
-## 🙏致谢
+## 🙏 鸣谢
 
 <details>
-<summary>显示致谢</summary>
+<summary>查看致谢名单</summary>
 
 <div align="center">
 
-<p>衷心感谢所有通过提出改进建议或报告错误为该项目做出贡献的人。</p>
+<p>特别鸣谢所有通过反馈、建议或代码合并来完善此工具的贡献者。</p>
 
 <table>
     <tr class="section"><th colspan="2">核心组件</th></tr>
     <tr>
         <td width="35%"><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></td>
-        <td>下载引擎</td>
+        <td>核心下载引擎</td>
     </tr>
     <tr>
         <td><a href="https://ffmpeg.org/">FFmpeg</a></td>
-        <td>媒体处理</td>
+        <td>媒体流处理</td>
     </tr>
     <tr>
-        <td><a href="https://deno.com/">德诺</a></td>
-        <td>与 yt-dlp 集成的运行时</td>
+        <td><a href="https://deno.com/">Deno</a></td>
+        <td>集成运行环境</td>
     </tr>
-    <tr class="section"><th colspan="2">库和框架</th></tr>
+    <tr class="section"><th colspan="2">库与框架</th></tr>
     <tr>
         <td><a href="https://wiki.qt.io/Qt_for_Python">PySide6</a></td>
-        <td>GUI框架</td>
+        <td>GUI 框架</td>
     </tr>
     <tr>
-        <td><a href="https://python-pillow.org/">枕头</a></td>
-        <td>图像处理</td>
-    </tr>
-    <tr><td><a href="https://requests.readthedocs.io/">请求</a></td>
-        <td>HTTP 请求</td>
+        <td><a href="https://python-pillow.org/">Pillow</a></td>
+        <td>图片处理</td>
     </tr>
     <tr>
-        <td><a href="https://packaging.python.org/">包装</a></td>
-        <td>版本和包处理</td>
+        <td><a href="https://requests.readthedocs.io/">requests</a></td>
+        <td>网络请求</td>
     </tr>
     <tr>
-        <td><a href="https://python-markdown.github.io/">降价</a></td>
+        <td><a href="https://packaging.python.org/">packaging</a></td>
+        <td>版本管理</td>
+    </tr>
+    <tr>
+        <td><a href="https://python-markdown.github.io/">markdown</a></td>
         <td>Markdown 渲染</td>
     </tr>
     <tr>
         <td><a href="https://github.com/Delgan/loguru">loguru</a></td>
-        <td>记录</td>
+        <td>日志记录</td>
     </tr>
-    <tr class="section"><th colspan="2">资产和贡献者</th></tr>
+    <tr class="section"><th colspan="2">内容与贡献</th></tr>
     <tr>
-        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">Universfield 的新通知 09</a></td>
+        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">Universfield 的通知音效</a></td>
         <td>通知声音</td>
     </tr>
     <tr>
         <td><a href="https://github.com/viru185">viru185</a></td>
-        <td>代码贡献者</td>
+        <td>代码贡献</td>
     </tr>
 </table>
 
@@ -606,12 +567,10 @@ YTSage/
 
 ## ⚠️ 免责声明
 
-该工具仅供个人使用。请尊重 YouTube 的服务条款和内容创作者的权利。
+本工具仅供个人学习与研究使用。请尊重 YouTube 服务条款及创作者版权。
 
 ---
 
 <div align="center">
-
-由[oop7](https://github.com/oop7)用❤️制作
-
+由 [oop7](https://github.com/oop7) 倾力协作 ❤️
 </div>

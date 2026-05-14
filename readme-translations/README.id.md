@@ -13,80 +13,81 @@
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/oop7?color=c90000&style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/oop7)
 
 **Pengunduh YouTube modern dengan antarmuka PySide6 yang bersih.**  
-Unduh video dalam kualitas apa pun, ekstrak audio, ambil subtitle, dan banyak lagi.
+Unduh video dalam kualitas apa pun, ekstrak audio, dapatkan subtitle, dan banyak lagi.
 
-### 🌍 README Bahasa
+### 🌍 Bahasa README
 
-Bahasa Inggris: [EN](../README.md)
-| Nilai: [AR](README.ar.md)
+Inggris: [EN](../README.md)
+| Arab: [AR](README.ar.md)
 | Jerman: [DE](README.de.md)
 | Spanyol: [ES](README.es.md)
-| Perancis: [FR](README.fr.md)
-| nilai: [HI](README.hi.md)
-| Bahasa Indonesia: [ID](README.id.md)
+| Prancis: [FR](README.fr.md)
+| Hindi: [HI](README.hi.md)
+| Indonesia: [ID](README.id.md)
 | Italia: [IT](README.it.md)
-| Nilai: [JA](README.ja.md)
-| Polski: [PL](README.pl.md)
+| Jepang: [JA](README.ja.md)
+| Polandia: [PL](README.pl.md)
 | Portugis: [PT](README.pt.md)
-| Jawaban: [RU](README.ru.md)
+| Rusia: [RU](README.ru.md)
 | Turki: [TR](README.tr.md)
-| nama: [ZH](README.zh.md)
+| Mandarin: [ZH](README.zh.md)
 
 <p align="center">
-  <a href="#installation">Instalasi</a> •
-  <a href="#features">Fitur</a> •
-  <a href="#usage">Penggunaan</a> •
-  <a href="#screenshots">Tangkapan Layar</a> •
-  <a href="#troubleshooting">Pemecahan Masalah</a> •
+  <a href="#instalasi">Instalasi</a> •
+  <a href="#fitur">Fitur</a> •
+  <a href="#penggunaan">Penggunaan</a> •
+  <a href="#screenshot">Screenshot</a> •
+  <a href="#troubleshooting">Troubleshooting</a> •
   <a href="#sponsor">Sponsor</a> •
-  <a href="#contributing">Berkontribusi</a>
+  <a href="#kontribusi">Kontribusi</a>
 </p>
 
 </div>
 
 ---
 
-<a id="why-ytsage"></a>
+<a id="mengapa-ytsage"></a>
 ## ❓ Mengapa YTSage?
 
-YTSage dirancang untuk pengguna yang menginginkan **pengunduh YouTube yang sederhana namun kuat**. Tidak seperti alat lainnya, alat ini menawarkan:
+YTSage dirancang untuk pengguna yang menginginkan **pengunduh YouTube yang sederhana namun kuat**. Tidak seperti alat lainnya, ia menawarkan:
 
-- Antarmuka PySide6 yang bersih dan modern
-- Unduhan sekali klik untuk video, audio, dan subtitle
-- Fitur lanjutan seperti SponsorBlock, penggabungan subtitle, dan pemilihan playlist
-- Mode Generik Opsional untuk situs yang didukung yt-dlp di luar YouTube
+- Antarmuka PySide6 yang modern dan bersih
+- Unduh video, audio, dan subtitle sekali klik
+- Fitur canggih seperti SponsorBlock, penggabungan subtitle, dan pemilihan playlist
+- Mode Generik Opsional untuk situs di luar YouTube yang didukung oleh yt-dlp
 - Dukungan lintas platform dan instalasi mudah
 
-<a id="features"></a>
+<a id="fitur"></a>
 ## ✨ Fitur
 
 <div align="center">
 
-| Fitur Inti | Fitur Lanjutan | Fitur Ekstra |
-|----------------------------------||-----------------------------------------|------------------------------------|
-| 🎥 Format Tabel | 🚫 Integrasi Blok Sponsor | 🎞️ Tampilan FPS/HDR |
-| 🎵 Ekstraksi Audio | 📝 Pilih & Gabungkan Multi-Subjudul | 🔄 Perbarui Otomatis yt-dlp |
-| ✨ UI Sederhana |  💾 Simpan Deskripsi & Gambar Kecil | 🛠️ Deteksi FFmpeg/yt-dlp/Deno |
-| 📋 Dukungan & Pemilih Daftar Putar | 🚀 Pembatas Kecepatan | ⚙️ Perintah Khusus |
-| 📑 Sematkan Bab | ✂️ Pangkas Bagian Video | 🍪 Masuk dengan Cookie |
-| 📜 Unduh Riwayat | 🔄 Rilis Pilihan Saluran | 🌐 Dukungan Proksi |
-| 🎚️ Konversi Format Audio | 🎬 Pengaturan Format Video | 🆙 Tab Pembaruan Bawaan |
+| Fitur Dasar | Fitur Lanjutan | Fitur Tambahan |
+|-----------------------------------|-----------------------------------------|------------------------------------|
+| 🎥 Tabel Format | 🚫 Integrasi SponsorBlock | 🎞️ Tampilan FPS/HDR |
+| 🎵 Ekstraksi Audio | 📝 Pemilihan & Penggabungan Subtitle | 🔄 Pembaruan yt-dlp Otomatis |
+| ✨ Antarmuka Pengguna Sederhana | 💾 Simpan Deskripsi & Thumbnail | 🛠️ Deteksi FFmpeg/yt-dlp/Deno |
+| 📋 Dukungan & Pemilih Playlist | 🚀 Pembatas Kecepatan | ⚙️ Perintah Kustom |
+| 📑 Integrasi Bab (Chapters) | ✂️ Potong Bagian Video | 🍪 Login Cookie |
+| 📜 Riwayat Unduhan | 🔄 Pilihan Saluran Rilis | 🌐 Dukungan Proxy |
+| 🎚️ Konversi Format Audio | 🎬 Pengaturan Format Video | 🆙 Tab Pembaruan Terintegrasi |
 | 🌍 Mode Generik | 🔊 Normalisasi Audio (EBU R128) | 🌍 Lokalisasi dalam 14 Bahasa |
+| 💾 Ekspor Playlist | ⚙️ Kualitas & Subtitle Default | |
 </div>
 
-<a id="installation"></a>
+<a id="instalasi"></a>
 ## 🚀 Instalasi
 
-### ⚡ Instal Cepat (Disarankan)
+### ⚡ Instalasi Cepat (Direkomendasikan)
 
-Instal YTSage dari PyPI:
+Instal YTSage melalui PyPI:
 
 ```bash
 pip install ytsage
 ```
 
 <details>
-<summary>🔄 Perbarui instalasi yang ada</summary>
+<summary>🔄 Perbarui Instalasi yang Ada</summary>
 
 ```bash
 pip install --upgrade ytsage
@@ -94,31 +95,31 @@ pip install --upgrade ytsage
 
 </details>
 
-Kemudian luncurkan aplikasi:
+Kemudian jalankan aplikasi:
 
 ```bash
 ytsage
 ```
 
-### 📦 Executable yang sudah dibuat sebelumnya
+### 📦 Executable Siap Pakai (Executable)
 
-> [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
+> [👉 Unduh Rilis Terbaru](https://github.com/oop7/YTSage/releases/latest)
 
-#### 🪟 Jendela
+#### 🪟 Windows
 
 | Format | Deskripsi |
 |--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Pemasang standar |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Dengan FFmpeg dibundel |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Versi portabel, tidak perlu instalasi |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portabel dengan FFmpeg, zip |
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Installer Standar |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Dilengkapi dengan FFmpeg |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Versi Portabel, tidak perlu instalasi |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portabel dengan FFmpeg, dikompresi (ZIP) |
 
 <details>
 <summary>🛠️ Langkah Instalasi</summary>
 
-1. **EXE Installer (`.exe`)**: Klik dua kali file tersebut dan ikuti panduan pengaturan.
-2. **Versi Portabel (`.zip`)**: Ekstrak arsip ke lokasi yang Anda inginkan dan jalankan `ytsage.exe`.
-3. **FFmpeg Bundled**: Pilih versi paket FFmpeg jika Anda belum menginstal FFmpeg di sistem Anda.
+1. **Installer EXE (`.exe`)**: Klik dua kali pada file dan ikuti wizard pengaturan.
+2. **Versi Portabel (`.zip`)**: Ekstrak arsip ke lokasi yang diinginkan dan jalankan `ytsage.exe`.
+3. **FFmpeg Bawaan**: Jika Anda tidak memiliki FFmpeg di sistem Anda, pilih versi dengan FFmpeg bawaan.
 </details>
 
 #### 🐧 Linux
@@ -126,9 +127,9 @@ ytsage
 | Format | Deskripsi |
 |--------|-------------|
 | ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paket Debian |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, portabel |
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, Portabel |
 | ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paket RPM |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Paket Flatpak |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Bundel Flatpak |
 
 <details>
 <summary>🛠️ Langkah Instalasi</summary>
@@ -136,13 +137,13 @@ ytsage
 - **DEB (`.deb`)**:
   ```bash
   sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Fix missing dependencies if any
+  sudo apt-get install -f # Jika perlu perbaiki dependensi yang kurang
   ```
 - **RPM (`.rpm`)**:
   ```bash
   sudo rpm -i ytsage-*.rpm
   ```
-- **Gambar Aplikasi (`.AppImage`)**:
+- **AppImage (`.AppImage`)**:
   ```bash
   chmod +x YTSage-*.AppImage
   ./YTSage-*.AppImage
@@ -157,22 +158,22 @@ ytsage
 
 | Format | Deskripsi |
 |--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Aplikasi zip untuk Apple Silicon |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Penginstal gambar disk untuk Apple Silicon |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Aplikasi ZIP untuk Apple Silicon |
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Installer Disk Image untuk Apple Silicon |
 
 <details>
 <summary>🛠️ Langkah Instalasi</summary>
 
-- **Pemasang DMG (`.dmg`)**: Klik dua kali untuk memasang, lalu seret `YTSage.app` ke dalam folder Aplikasi Anda.
-- **Arsip Aplikasi (`.zip`)**: Ekstrak zip dan pindahkan `YTSage.app` ke folder Aplikasi Anda.
+- **Installer DMG (`.dmg`)**: Klik dua kali untuk memasang, lalu tarik `YTSage.app` ke folder Applications Anda.
+- **Arsip Aplikasi (`.zip`)**: Ekstrak ZIP dan pindahkan `YTSage.app` ke folder Applications Anda.
 
-*Catatan: Jika Anda mengalami kesalahan "Aplikasi rusak", lihat [macOS troubleshooting section](#troubleshooting) di bawah.*
+*Catatan: Jika Anda mendapatkan kesalahan "App is damaged", lihat bagian Troubleshooting macOS di bawah ini.*
 </details>
 
 ---
 
 <details>
-<summary>💻 Instalasi Manual dari Sumber</summary>
+<summary>💻 Instalasi Manual dari Sumber (Source)</summary>
 
 ### 1. Kloning Repositori
 
@@ -183,7 +184,7 @@ cd YTSage
 
 ### 2. Instal Dependensi
 
-#### ⚡ Dengan UV
+#### ⚡ Dengan uv
 
 ```bash
 uv pip install .
@@ -203,227 +204,231 @@ python -m ytsage.main
 
 </details>
 
-<a id="screenshots"></a>
-## 📸 Tangkapan layar
+<a id="screenshot"></a>
+## 📸 Screenshot
 
 <div align="center">
 <table>
   <tr>
-    <td><img src="../branding/screenshots/Download-Settings.png" alt="Download Settings" width="400"/></td>
-    <td><img src="../branding/screenshots/playlist.png" alt="Playlist Download" width="400"/></td>
+    <td><img src="../branding/screenshots/Download-Settings.png" alt="Pengaturan Unduhan" width="400"/></td>
+    <td><img src="../branding/screenshots/playlist.png" alt="Unduhan Playlist" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Pengaturan Unduhan</em></td>
-    <td align="center"><em>Unduh Daftar Putar</em></td>
+    <td align="center"><em>Unduhan Playlist</em></td>
   </tr>
   <tr>
-    <td><img src="../branding/screenshots/audio_format.png" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="../branding/screenshots/Custom-Option.png" alt="Custom Options" width="400"/></td>
+    <td><img src="../branding/screenshots/audio_format.png" alt="Pemilihan Format Audio" width="400"/></td>
+    <td><img src="../branding/screenshots/Custom-Option.png" alt="Opsi Kustom" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Format Audio</em></td>
-    <td align="center"><em>Opsi Khusus</em></td>
+    <td align="center"><em>Opsi Kustom</em></td>
   </tr>
 </table>
-</div><a id="usage"></a>
+</div>
 
+<a id="penggunaan"></a>
 ## 📖 Penggunaan
 
 <details>
 <summary>🎯 Penggunaan Dasar</summary>
 
 1. **Luncurkan YTSage**
-2. **Tempel URL YouTube** (atau gunakan tombol "Tempel URL")
-3. **Klik "Analisis"**
+2. **Tempel URL YouTube** (atau gunakan tombol "Paste URL")
+3. **Klik "Analyze"**
 4. **Pilih Format:**
-   - `Video` untuk mengunduh video
+   - `Video` untuk unduhan video
    - `Audio Only` untuk ekstraksi audio
 5. **Pilih Opsi:**
-   - Aktifkan subtitle & pilih bahasa
+   - Aktifkan subtitle dan pilih bahasa
    - Aktifkan penggabungan subtitle
-   - Simpan gambar kecil
-   - Hapus segmen sponsor
+   - Simpan thumbnail
+   - Hapus bagian sponsor
    - Simpan deskripsi
-   - Sematkan bab
-6. **Pilih Direktori Keluaran**
-7. **Klik "Unduh"**
+   - Masukkan bab (chapters)
+6. **Pilih Direktori Output**
+7. **Klik "Download"**
 
-> 💡 Direktori unduhan default adalah folder "Unduhan" milik pengguna.
+> 💡 Direktori unduhan bawaan adalah folder "Downloads" pengguna.
 
 </details>
 
 <details>
-<summary>📋 Unduh Daftar Putar</summary>
+<summary>📋 Unduhan Playlist</summary>
 
-1. **Tempel URL Daftar Putar**
-2. **Klik "Analisis"**
-3. **Pilih video dari pemilih daftar putar (opsional, default untuk semua)**
+1. **Tempel URL Playlist**
+2. **Klik "Analyze"**
+3. **Pilih video dari pemilih playlist (opsional, default semua)**
 4. **Pilih format/kualitas yang diinginkan**
-5. **Klik "Unduh"**
+5. **Klik "Download"**
 
-> 💡 Aplikasi secara otomatis menangani antrian unduhan
+> 💡 Aplikasi secara otomatis mengelola antrean unduhan, dan Anda dapat mengekspor entri playlist sebagai file `.txt`, `.csv`, `.m3u`, atau `.json`.
 
 </details>
 
 <details>
-<summary>🌍 Mode Generik untuk situs non-YouTube</summary>
+<summary>🌍 Mode Generik untuk Situs Selain YouTube</summary>
 
-Gunakan Mode Generik bila Anda ingin YTSage menerima URL dari situs yang didukung oleh yt-dlp, seperti Dailymotion, CBC Gem, TikTok, dan lainnya.
+Gunakan Mode Generik saat Anda ingin YTSage menerima URL dari situs yang didukung oleh yt-dlp seperti Dailymotion, CBC Gem, TikTok, dan lainnya.
 
 Cara menggunakannya:
 
 1. Buka `Download Settings`.
 2. Aktifkan `Generic Mode`.
-3. Tempelkan URL video atau playlist non-YouTube yang didukung.
+3. Tempel URL video atau playlist yang didukung selain YouTube.
 4. Klik `Analyze`.
 5. Pilih format dan unduh seperti biasa.
 
 Catatan:
 
 - Mode Generik hanya mengubah validasi URL di dalam YTSage. Situs target harus tetap didukung oleh versi yt-dlp yang Anda instal.
-- Beberapa situs memerlukan cookie, sesi login, proxy, atau argumen yt-dlp tambahan tergantung pada ekstraktornya.
-- Jika situs gagal, perbarui yt-dlp terlebih dahulu dari tab pembaru bawaan sebelum melaporkan masalah tersebut.
+- Beberapa situs memerlukan cookie, login, proxy, atau argumen yt-dlp tambahan tergantung pada ekstraktornya.
+- Jika suatu situs gagal, perbarui yt-dlp dari tab pembaruan terintegrasi sebelum melaporkan masalah.
 
 </details>
 
 <details>
-<summary>🧰 Opsi Media dan Unduhan</summary>
+<summary>🧰 Opsi Media & Unduhan</summary>
 
-- **Opsi Subtitle:** Filter bahasa dan sematkan subtitle ke dalam file video
-- **Penggabungan Subtitle:** Menggabungkan subtitle ke dalam file video untuk subtitle hardcode
-- **Simpan Deskripsi:** Simpan deskripsi video sebagai file teks
-- **Simpan Gambar Kecil:** Menyimpan gambar kecil video sebagai file gambar
-- **Sematkan Bab:** Sematkan penanda bab sebagai metadata untuk pemutar video yang kompatibel
-- **Hapus Segmen Sponsor:** Hapus segmen sponsor dari video menggunakan SponsorBlock
-- **Pangkas Video:** Unduh hanya bagian tertentu dari video dengan menentukan rentang waktu dalam format `HH:MM:SS`
-
-</details>
-
-<details>
-<summary>⚙️ Pengaturan Output dan File</summary>
-
-- **Pembatas Kecepatan:** Batasi kecepatan unduh, misalnya `500K` sebesar 500 KB/dtk
-- **Simpan Jalur Unduhan:** Simpan jalur unduhan default untuk unduhan berikutnya. Tersedia di **Pengaturan Unduhan → Jalur Unduhan**.
-- **Format Nama File Keluaran:** Sesuaikan format nama file keluaran menggunakan variabel seperti `%(title)s`, `%(uploader)s`, dan `%(resolution)s`. Tersedia di **Pengaturan Unduhan → Format Nama File**.
-- **Format Output Paksa:** Paksa pengunduhan video ke dalam format wadah tertentu seperti `mp4`, `webm`, atau `mkv`. Tersedia di **Pengaturan Unduhan → Pengaturan Format Output**.
-- **Konversi Format Audio:** Konversi unduhan audio saja ke format pilihan seperti `AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, atau `Best`. Tersedia di **Pengaturan Unduhan → Pengaturan Format Audio**.
-- **Normalisasi Audio:** Standarkan volume untuk unduhan audio saja menggunakan EBU R128.
+- **Opsi Subtitle:** Filter bahasa dan masukkan subtitle ke dalam file video.
+- **Penggabungan Subtitle:** Menggabungkan subtitle ke dalam file video untuk subtitle permanen (hardcoded).
+- **Simpan Deskripsi:** Simpan deskripsi video sebagai file teks.
+- **Simpan Thumbnail:** Simpan thumbnail video sebagai file gambar.
+- **Masukkan Bab (Chapters):** Sertakan penanda bab sebagai metadata untuk pemutar video yang kompatibel.
+- **Hapus Bagian Sponsor:** Gunakan SponsorBlock untuk menghapus segmen sponsor dari video.
+- **Potong Video:** Unduh hanya bagian tertentu dari video dengan menentukan rentang waktu dalam format `JJ:MM:DD`.
 
 </details>
 
 <details>
-<summary>🌐 Akses dan Jaringan</summary>
+<summary>⚙️ Pengaturan Output & File</summary>
 
-- **Masuk dengan Cookie:** Masuk ke YouTube menggunakan cookie untuk mengakses konten pribadi.
-  Cara menggunakannya:
-  1. **Disarankan:** Gunakan opsi `Extract cookies from browser` bawaan di aplikasi, lalu pilih browser Anda dan opsional profil.
-  2. Alternatifnya, ekstrak cookie secara manual:
-     sebuah. Ekspor cookie dari browser Anda menggunakan ekstensi seperti [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file)
+- **Pembatas Kecepatan:** Batasi kecepatan unduhan, misalnya `500K` untuk 500 KB/s.
+- **Simpan Jalur Unduhan:** Menyimpan jalur unduhan default untuk unduhan di masa mendatang. Tersedia di **Download Settings → Download Path**.
+- **Resolusi Video Default:** Atur resolusi video pilihan Anda untuk pemilihan otomatis (misalnya 1080p, 720p). Tersedia di **Download Settings → Default Video Resolution**.
+- **Bahasa Subtitle Default:** Atur bahasa subtitle default untuk pemilihan otomatis (dipisahkan koma, misalnya `id,en`). Tersedia di **Download Settings → Default Subtitle Languages**.
+- **Format Nama File:** Sesuaikan format nama file output menggunakan variabel seperti `%(title)s`, `%(uploader)s`, `%(playlist_index)s`, dan `%(resolution)s`. Tersedia di **Download Settings → Filename Format**.
+- **Paksa Format Output:** Paksa unduhan video ke format kontainer tertentu seperti `mp4`, `webm`, atau `mkv`. Tersedia di **Download Settings → Output Format Settings**.
+- **Konversi Format Audio:** Konversi unduhan audio saja ke format pilihan seperti `AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, atau `Best`. Tersedia di **Download Settings → Audio Format Settings**.
+- **Normalisasi Audio:** Standarisasi volume untuk unduhan audio saja menggunakan EBU R128.
+- **Koneksi Serentak:** Tingkatkan kecepatan unduhan secara signifikan dengan mengunduh file dalam beberapa bagian secara bersamaan. Tersedia di **Download Settings → General → Concurrent Connections** (default 1, maksimal 8-10 direkomendasikan untuk menghindari blokir IP).
+
+</details>
+
+<details>
+<summary>🌐 Akses & Jaringan</summary>
+
+- **Login Cookie:** Masuk ke YouTube menggunakan cookie untuk mengakses konten pribadi.
+  Penggunaan:
+  1. **Direkomendasikan:** Gunakan opsi bawaan `Extract cookies from browser` di aplikasi, lalu pilih browser dan opsional profil Anda.
+  2. Secara opsional, ekstrak cookie secara manual:
+     a. Ekspor cookie dari browser Anda menggunakan ekstensi seperti [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file)
      b. Salin cookie dalam format Netscape
-     c. Buat file bernama `cookies.txt` dan tempel cookie ke dalamnya
+     c. Buat file bernama `cookies.txt` dan tempel cookie
      d. Pilih file `cookies.txt` di aplikasi
-- **Dukungan Proxy:** Gunakan server proxy untuk mendownload, misalnya `http://<proxy-server>:<port>`
-- **Mode Generik:** Izinkan YTSage menganalisis dan mengunduh dari situs non-YouTube yang didukung oleh yt-dlp. Aktifkan dari **Pengaturan Unduhan → Mode Generik**.
+- **Dukungan Proxy:** Gunakan server proxy untuk unduhan, misalnya `http://<server-proxy>:<port>`
+- **Mode Generik:** Izinkan YTSage untuk menganalisis dan mengunduh dari situs selain YouTube yang didukung oleh yt-dlp. Aktifkan dari **Download Settings → Generic Mode**.
 
 </details>
 
 <details>
-<summary>🛠️ Alat dan Perawatan</summary>
+<summary>🛠️ Alat & Pemeliharaan</summary>
 
-- **Perintah Khusus:** Akses fitur yt-dlp tingkat lanjut melalui argumen baris perintah
+- **Perintah Kustom:** Akses fitur yt-dlp tingkat lanjut melalui argumen baris perintah.
 - **Tab Pembaruan:** Kelola alat pembaruan bawaan dari satu tempat di Opsi Kustom:
-  - **Pembaruan yt-dlp:** Periksa pembaruan dan beralih antara saluran rilis Stabil dan Malam
-  - **Pemeriksa Versi FFmpeg:** Periksa versi FFmpeg Anda dan buka panduan instalasi
-  - **Pembaruan Deno:** Periksa dan perbarui runtime Deno
-- **Deteksi FFmpeg/yt-dlp/Deno:** Secara otomatis mendeteksi jalur dan versi FFmpeg, yt-dlp, dan Deno dari dialog Tentang.
-- **Riwayat Unduhan:** Lihat unduhan sebelumnya dengan thumbnail dan status dari tombol **Riwayat**.
+  - **Pembaruan yt-dlp:** Periksa pembaruan dan beralih antara saluran rilis Stable dan Nightly.
+  - **Pemeriksa Versi FFmpeg:** Verifikasi versi FFmpeg Anda dan buka panduan instalasi.
+  - **Pembaruan Deno:** Periksa dan perbarui runtime Deno.
+- **Deteksi FFmpeg/yt-dlp/Deno:** Secara otomatis mendeteksi jalur dan versi FFmpeg, yt-dlp, dan Deno dari dialog About.
+- **Riwayat Unduhan:** Lihat unduhan sebelumnya dengan thumbnail dan status dari tombol **History**.
 
 </details>
 
 <details>
 <summary>🌍 Lokalisasi</summary>
 
-YTSage mendukung **14 bahasa** untuk aksesibilitas di seluruh dunia. Pilih bahasa pilihan Anda dari **Opsi Kustom → Bahasa**.
+YTSage mendukung **14 bahasa** untuk jangkauan global. Pilih bahasa pilihan Anda di **Custom Options → Language**.
 
 ### Bahasa yang Didukung
 
 | Bahasa | Kode | Bahasa | Kode |
 |----------|------|----------|------|
-| 🇮🇩 Bahasa Inggris | `en` | 🇪🇪 Spanyol | `es` |
-| Arab Saudi | `ar` | 🇫🇷 Perancis | `fr` |
-| 🇩🇪 Jerman | `de` | 🇮🇩 Hindi | `hi` |
-| 🇮🇩 Bahasa Indonesia | `id` | 🇮🇹 Italia | `it` |
-| 🇯ppa Jepang | `ja` | 🇱 Polandia | `pl` |
-| 🇧🇷 Portugis | `pt` | 🇷л Rusia | `ru` |
-| 🇹🇷 Turki | `tr` | CNY Cina | `zh` |
+| 🇺🇸 Inggris | `en` | 🇪🇸 Spanyol | `es` |
+| 🇸🇦 Arab | `ar` | 🇫🇷 Prancis | `fr` |
+| 🇩🇪 Jerman | `de` | 🇮🇳 Hindi | `hi` |
+| 🇮🇩 Indonesia | `id` | 🇮🇹 Italia | `it` |
+| 🇯🇵 Jepang | `ja` | 🇵🇱 Polandia | `pl` |
+| 🇧🇷 Portugis | `pt` | 🇷🇺 Rusia | `ru` |
+| 🇹🇷 Turki | `tr` | 🇨🇳 Mandarin | `zh` |
 
-### README Terjemahan
+### Terjemahan README
 
-| Bahasa | Berkas | Bahasa | Berkas |
+| Bahasa | File | Bahasa | File |
 |----------|------|----------|------|
-| 🇮🇩 Bahasa Inggris | [README.md](../README.md) | 🇪🇪 Spanyol | [README.es.md](README.es.md)
-| Arab Saudi | [README.ar.md](README.ar.md) | 🇫🇷 Perancis | [README.fr.md](README.fr.md) |
-| 🇩🇪 Jerman | [README.de.md](README.de.md) | 🇮🇩 Hindi | [README.hi.md](README.hi.md) |
-| 🇮🇩 Bahasa Indonesia | [README.id.md](README.id.md) | 🇮🇹 Italia | [README.it.md](README.it.md) |
-| 🇯ppa Jepang | [README.ja.md](README.ja.md) | 🇱 Polandia | [README.pl.md](README.pl.md) |
-| 🇧🇷 Portugis | [README.pt.md](README.pt.md) | 🇷л Rusia | [README.ru.md](README.ru.md) |
-| 🇹🇷 Turki | [README.tr.md](README.tr.md) | CNY Cina | [README.zh.md](README.zh.md) |
+| 🇺🇸 Inggris | [README.md](README.md) | 🇪🇸 Spanyol | [README.es.md](README.es.md) |
+| 🇸🇦 Arab | [README.ar.md](README.ar.md) | 🇫🇷 Prancis | [README.fr.md](README.fr.md) |
+| 🇩🇪 Jerman | [README.de.md](README.de.md) | 🇮🇳 Hindi | [README.hi.md](README.hi.md) |
+| 🇮🇩 Indonesia | [README.id.md](README.id.md) | 🇮🇹 Italia | [README.it.md](README.it.md) |
+| 🇯🇵 Jepang | [README.ja.md](README.ja.md) | 🇵🇱 Polandia | [README.pl.md](README.pl.md) |
+| 🇧🇷 Portugis | [README.pt.md](README.pt.md) | 🇷🇺 Rusia | [README.ru.md](README.ru.md) |
+| 🇹🇷 Turki | [README.tr.md](README.tr.md) | 🇨🇳 Mandarin | [README.zh.md](README.zh.md) |
 
-> 💡 **Ingin berkontribusi terjemahan?** Lihat bagian [Contributing](#contributing) untuk membantu kami menambahkan lebih banyak bahasa!
+> 💡 **Ingin membantu menerjemahkan?** Lihat bagian [Kontribusi](#kontribusi) untuk membantu kami menambahkan lebih banyak bahasa!
 
 </details>
 
 <a id="troubleshooting"></a>
-## 🛠️ Pemecahan masalah
+## 🛠️ Troubleshooting
 
 <details>
 <summary>Klik untuk melihat masalah umum dan solusinya</summary>
 
-- **Format tabel tidak ditampilkan:** Perbarui yt-dlp ke versi terbaru, dan beralih ke yt-dlp setiap malam.
-- **Pengunduhan gagal:** Periksa koneksi internet Anda dan pastikan video tersedia.
-- **Kesalahan pengunduhan tertentu:**
-  - **Video pribadi:** Gunakan autentikasi cookie untuk mengakses konten pribadi.
-  - **Konten dengan batasan usia:** Masuk ke akun YouTube untuk melihat video dengan batasan usia.
-  - **Video yang diblokir secara geografis:** Pertimbangkan untuk menggunakan VPN untuk melewati batasan regional.
-  - **Video yang dihapus/dihapus:** Video tidak lagi tersedia di YouTube.
-  - **Streaming langsung:** Streaming langsung tidak dapat diunduh; tunggu hingga streaming berakhir.
-  - **Kesalahan jaringan:** Periksa koneksi internet Anda dan coba lagi.
-  - **URL tidak valid:** Pastikan URL benar dan berasal dari platform yang didukung.
-  - **Konten premium:** Memerlukan keanggotaan YouTube Premium.
-  - **Pemblokiran hak cipta:** Konten diblokir karena pembatasan hak cipta.
-- **Pisahkan file video dan audio setelah diunduh:** Ini terjadi jika FFmpeg hilang atau tidak terdeteksi. YTSage memerlukan FFmpeg untuk menggabungkan aliran video dan audio berkualitas tinggi.
-  - **Solusi:** Pastikan FFmpeg diinstal dan dapat diakses di PATH sistem Anda. Untuk pengguna Windows, opsi termudah adalah mengunduh file `YTSage-v<version>-ffmpeg.exe`, yang disertakan dengan FFmpeg.
+- **Tabel format tidak muncul:** Perbarui yt-dlp ke versi terbaru dan coba beralih ke yt-dlp Nightly.
+- **Unduhan gagal:** Periksa koneksi internet Anda dan pastikan video tersedia.
+- **Kesalahan Unduhan Spesifik:**
+  - **Video Pribadi:** Gunakan autentikasi cookie untuk mengakses konten pribadi.
+  - **Konten Dibatasi Usia:** Masuk ke akun YouTube Anda untuk melihat video yang dibatasi usia.
+  - **Video yang Diblokir Geo:** Pertimbangkan menggunakan VPN untuk melewati batasan regional.
+  - **Video Dihapus:** Video tidak lagi tersedia di YouTube.
+  - **Live Stream:** Streaming langsung tidak dapat diunduh saat sedang disiarkan; tunggu hingga streaming selesai.
+  - **Kesalahan Jaringan:** Periksa koneksi internet Anda dan coba lagi.
+  - **URL Tidak Valid:** Pastikan URL benar dan berasal dari platform yang didukung.
+  - **Konten Premium:** Memerlukan langganan YouTube Premium.
+  - **Blokir Hak Cipta:** Konten diblokir karena pembatasan hak cipta.
+- **File video dan audio terpisah setelah diunduh:** Ini terjadi ketika FFmpeg hilang atau tidak terdeteksi. YTSage memerlukan FFmpeg untuk menggabungkan aliran video dan audio berkualitas tinggi.
+  - **Solusi:** Pastikan FFmpeg terinstal dan dapat diakses di PATH sistem Anda. Untuk pengguna Windows, opsi termudah adalah mengunduh file `YTSage-v<version>-ffmpeg.exe`, yang dilengkapi dengan FFmpeg.
 
 ---
 
 #### 🛡️ Peringatan Windows Defender / Antivirus
 
-Beberapa perangkat lunak antivirus mungkin menandai file `.exe` sebagai positif palsu. Ini adalah **batasan umum** pada aplikasi paket.
+Beberapa perangkat lunak antivirus mungkin menandai file `.exe` sebagai positif palsu (false positive). Ini adalah **batasan umum** dari aplikasi yang dipaketkan.
 
 **Mengapa ini terjadi:**
-- Heuristik antivirus dapat salah mengidentifikasi executable yang dikemas sebagai sesuatu yang mencurigakan
+- Heuristik antivirus mungkin salah mengidentifikasi executable yang dipaketkan sebagai mencurigakan.
 
-**Alternatif yang aman:**
-- ✅ **Gunakan instalasi pip:** `pip install ytsage` (disarankan)
-- ✅ **Bangun dari sumber**: dengan mengikuti [guide](../.github/CI_CD_README.md) ini
-- ✅ **Masukkan aplikasi ke daftar putih** di perangkat lunak antivirus Anda
+**Opsi Aman:**
+- ✅ **Gunakan instalasi pip:** `pip install ytsage` (direkomendasikan)
+- ✅ **Build dari sumber**: Mengikuti [panduan](.github/CI_CD_README.md) ini
+- ✅ **Whitelist aplikasi** di perangkat lunak antivirus Anda.
 
-#### 🍎 macOS: "Aplikasi rusak dan tidak dapat dibuka"
-Jika Anda melihat kesalahan ini di macOS Sonoma atau lebih baru, Anda harus menghapus atribut karantina.
+#### 🍎 macOS: "App is damaged and can’t be opened"
+Jika Anda melihat kesalahan ini di macOS Sonoma atau yang lebih baru, Anda perlu menghapus atribut karantina.
 
-1. **Buka Terminal** (Anda dapat menemukannya menggunakan Spotlight).
-2. **Ketik perintah berikut** tetapi **jangan** tekan Enter dulu. Pastikan untuk menyertakan spasi di akhir:
+1.  **Buka Terminal** (Anda dapat menemukannya menggunakan Spotlight).
+2.  **Ketik perintah berikut** tetapi **JANGAN** tekan Enter dulu. Pastikan untuk menyertakan spasi di akhir:
     ```bash
     xattr -d com.apple.quarantine 
     ```
-3. **Seret file `YTSage.app`** dari jendela Finder Anda dan letakkan langsung ke jendela Terminal. Ini secara otomatis akan menempelkan jalur file yang benar.
-4. **Tekan Enter** untuk menjalankan perintah.
-5. **Coba buka YTSage.app lagi.** Sekarang seharusnya sudah diluncurkan dengan benar.
+3.  **Tarik file `YTSage.app` dari jendela Finder Anda** dan lepaskan langsung ke jendela Terminal. Ini akan secara otomatis menempelkan jalur file yang benar.
+4.  **Tekan Enter** untuk menjalankan perintah.
+5.  **Coba buka kembali YTSage.app.** Sekarang seharusnya dapat diluncurkan dengan benar.
 
 ---
 
 #### **Lokasi Konfigurasi (Lanjutan)**
-- **Jendela:** `%LOCALAPPDATA%\YTSage`
+- **Windows:** `%LOCALAPPDATA%\YTSage`
 - **macOS:** `~/Library/Application Support/YTSage`
 - **Linux:** `~/.local/share/YTSage`
 
@@ -432,102 +437,102 @@ Jika Anda melihat kesalahan ini di macOS Sonoma atau lebih baru, Anda harus meng
 <a id="sponsor"></a>
 ## 💖 Sponsor
 
-Jika YTSage menghemat waktu Anda, pertimbangkan untuk mensponsori proyek tersebut. Sponsor membantu menutupi waktu pengembangan, pengujian lintas platform, dan peningkatan di masa depan.
+Jika YTSage menghemat waktu Anda, pertimbangkan untuk mensponsori proyek ini. Sponsor membantu mencakup waktu pengembangan, pengujian di semua platform, dan peningkatan di masa mendatang.
 
-- Sponsor GitHub: https://github.com/sponsors/oop7
-- Tautan sponsor juga tersedia langsung di dalam aplikasi dari dialog Tentang.
+- GitHub Sponsors: https://github.com/sponsors/oop7
+- Tautan sponsor tersedia langsung melalui dialog About di dalam aplikasi.
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
-<a id="contributing"></a>
-## 👥 Berkontribusi
+<a id="kontribusi"></a>
+## 👥 Kontribusi
 
-Kami menyambut kontribusi! Inilah cara Anda dapat membantu:
+Kami menerima kontribusi! Berikut cara Anda dapat membantu:
 
-1. 🍴 Cabangkan repositori
+1. 🍴 Fork repositori
 2. 🌿 Buat cabang fitur Anda:
   ```bash
-  git checkout -b feature/AmazingFeature
+  git checkout -b feature/FiturLuarBiasa
   ```
 3. 💾 Komit perubahan Anda:
   ```bash
-  git commit -m 'Add some AmazingFeature'
+  git commit -m 'Tambah FiturLuarBiasa'
   ```
-4. 📤 Dorong ke cabang:
+4. 📤 Push ke cabang:
   ```bash
-  git push origin feature/AmazingFeature
+  git push origin feature/FiturLuarBiasa
   ```
-5. 🔄 Buka Permintaan Tarik
+5. 🔄 Buka Pull Request
 
 ### 🌍 Berkontribusi pada Terjemahan
 
-- Perbarui file README lokal yang cocok (misalnya `README.es.md`)
+- Perbarui file README lokal yang relevan (misalnya `readme-translations/README.id.md`)
 - Jaga agar string aplikasi tetap sinkron dengan mengedit `ytsage/languages/<code>.json`
-- Jika bahasa Anda hilang, mulai dari `README.md` dan buat `README.<code>.md`
+- Jika bahasa Anda belum ada, mulailah dari `README.md` dan buat `README.<code>.md`
 
 <details>
 <summary>📂 Struktur Proyek</summary>
 
 ## YTSage - Struktur Proyek
 
-Dokumen ini menjelaskan struktur folder YTSage yang terorganisir.
+Dokumen ini menjelaskan struktur folder yang terorganisir dari YTSage.
 
 ### 📁 Struktur Proyek
 
 ```
 YTSage/
-├── 📁 .github/                   # GitHub configuration
-│   ├── 📁 ISSUE_TEMPLATE/         # Issue templates
-│   │   └── 🐛-bug-report.md       # Bug report template
-│   ├─── 📁 workflows/              # GitHub Actions workflows
-│   │   ├── build-linux.yml        # Linux build workflow
-│   │   ├── build-macos.yml        # macOS build workflow
-│   │   │── build-windows.yml      # Windows build workflow
-|   |   └── release-all.yml          # Master release workflow
-│   └── 📄 CI_CD_README.md        # CI/CD documentation
-├──  📁 branding/                 # Branding assets (Screenshots, SVGs)
-│   ├── 📁 icons/                 # Application icons
-│   ├── 📁 screenshots/           # Screenshots for documentation
-│   └── 📁 svg/                   # SVG assets
-├── 📄 LICENSE                    # License file
-├── 📄 pyproject.toml             # Project metadata and dependencies
-├── 📄 README.md                  # Project documentation
-├── 📄 requirements.txt           # Python dependencies (dev)
-└── 📁 ytsage/                    # Source package
-    ├── 📁 assets/                # Runtime assets
-    │   ├── 📁 Icon/              # Application icons
-    │   └── 📁 sound/             # Audio files
-    ├── 📁 languages/             # Localization files
-    │   ├── 📄 ar.json            # Arabic translation
-    │   ├── 📄 de.json            # German translation
-    │   ├── 📄 en.json            # English translation
-    │   └── ...                   # Other languages
-    ├── 📁 core/                  # Core business logic
-    │   ├── 📄 __init__.py        # Core package init
-    │   ├── 📄 ytsage_deno.py     # Deno integration
-    │   ├── 📄 ytsage_downloader.py # Download functionality
-    │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
-    │   ├── 📄 ytsage_utils.py    # Utility functions
-    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
-    ├── 📁 gui/                   # User interface components
-    │   ├── 📄 __init__.py        # GUI package init
-    │   ├── 📄 ytsage_gui_main.py # Main application window
-    │   └── 📁 ytsage_gui_dialogs/ # Dialog classes
-    ├── 📁 utils/                 # Utility modules
-    │   ├── 📄 __init__.py        # Utils package init
-    │   ├── 📄 ytsage_config_manager.py # Configuration management
-    │   └── 📄 ytsage_logger.py   # Logging utilities
-    ├── 📄 __init__.py            # Package entry point
-    └── 📄 main.py                # Main execution script
+├── 📁 .github/                   # Konfigurasi GitHub
+│   ├── 📁 ISSUE_TEMPLATE/         # Templat Issue
+│   │   └── 🐛-bug-report.md       # Templat laporan bug
+│   ├─── 📁 workflows/              # Alur kerja GitHub Actions
+│   │   ├── build-linux.yml        # Alur kerja build Linux
+│   │   ├── build-macos.yml        # Alur kerja build macOS
+│   │   │── build-windows.yml      # Alur kerja build Windows
+|   |   └── release-all.yml          # Alur kerja rilis master
+│   └── 📄 CI_CD_README.md        # Dokumentasi CI/CD
+├──  📁 branding/                 # Aset branding (screenshot, SVG)
+│   ├── 📁 icons/                 # Ikon aplikasi
+│   ├── 📁 screenshots/           # Screenshot untuk dokumentasi
+│   └── 📁 svg/                   # Aset SVG
+├── 📄 LICENSE                    # File lisensi
+├── 📄 pyproject.toml             # Metadata proyek dan dependensi
+├── 📄 README.md                  # Dokumentasi proyek
+├── 📄 requirements.txt           # Dependensi Python (dev)
+└── 📁 ytsage/                    # Paket kode sumber
+    ├── 📁 assets/                # Aset runtime
+    │   ├── 📁 Icon/              # Ikon aplikasi
+    │   └── 📁 sound/             # File audio
+    ├── 📁 languages/             # File lokalisasi
+    │   ├── 📄 ar.json            # Terjemahan Arab
+    │   ├── 📄 de.json            # Terjemahan Jerman
+    │   ├── 📄 en.json            # Terjemahan Inggris
+    │   └── ...                   # Bahasa lainnya
+    ├── 📁 core/                  # Logika bisnis inti
+    │   ├── 📄 __init__.py        
+    │   ├── 📄 ytsage_deno.py     # Integrasi Deno
+    │   ├── 📄 ytsage_downloader.py # Fungsionalitas pengunduhan
+    │   ├── 📄 ytsage_ffmpeg.py   # Integrasi FFmpeg
+    │   ├── 📄 ytsage_utils.py    # Fungsi utilitas
+    │   └── 📄 ytsage_yt_dlp.py   # Integrasi yt-dlp
+    ├── 📁 gui/                   # Komponen antarmuka pengguna
+    │   ├── 📄 __init__.py        
+    │   ├── 📄 ytsage_gui_main.py # Jendela utama aplikasi
+    │   └── 📁 ytsage_gui_dialogs/ # Kelas dialog
+    ├── 📁 utils/                 # Modul utilitas
+    │   ├── 📄 __init__.py        
+    │   ├── 📄 ytsage_config_manager.py # Manajemen konfigurasi
+    │   └── 📄 ytsage_logger.py   # Alat logging
+    ├── 📄 __init__.py            # Titik masuk paket
+    └── 📄 main.py                # Skrip eksekusi utama
 ```
 
 </details>
 
-## ⭐️ Sejarah Bintang
+## ⭐️ Riwayat Bintang
 
 <div align="center">
 
-## Sejarah Bintang
+## Star History
 
 <a href="https://www.star-history.com/#oop7/YTSage&Date">
  <picture>
@@ -541,22 +546,22 @@ YTSage/
 
 ## 📜 Lisensi
 
-Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) untuk detailnya.
+Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](LICENSE) untuk detailnya.
 
-## 🙏 Ucapan Terima Kasih
+## 🙏 Terima Kasih
 
 <details>
-<summary>Tampilkan Ucapan Terima Kasih</summary>
+<summary>Tampilkan Terima Kasih</summary>
 
 <div align="center">
 
-<p>Terima kasih yang sebesar-besarnya kepada semua orang yang telah berkontribusi pada proyek ini dengan membuka terbitan untuk menyarankan perbaikan atau melaporkan bug.</p>
+<p>Terima kasih banyak kepada semua orang yang telah berkontribusi pada proyek ini dengan membuka masalah untuk menyarankan perbaikan atau melaporkan bug.</p>
 
 <table>
-    <tr class="section"><th colspan="2">Komponen Inti</th></tr>
+    <tr class="section"><th colspan="2">Komponen Utama</th></tr>
     <tr>
         <td width="35%"><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></td>
-        <td>Mesin Unduh</td>
+        <td>Mesin Pengunduhan</td>
     </tr>
     <tr>
         <td><a href="https://ffmpeg.org/">FFmpeg</a></td>
@@ -564,39 +569,40 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) 
     </tr>
     <tr>
         <td><a href="https://deno.com/">Deno</a></td>
-        <td>Waktu proses untuk integrasi dengan yt-dlp</td>
+        <td>Runtime untuk integrasi yt-dlp</td>
     </tr>
-    <tr class="section"><th colspan="2">Perpustakaan & Kerangka Kerja</th></tr>
+    <tr class="section"><th colspan="2">Pustaka & Framework</th></tr>
     <tr>
         <td><a href="https://wiki.qt.io/Qt_for_Python">PySide6</a></td>
-        <td>Kerangka GUI</td>
+        <td>Framework GUI</td>
     </tr>
     <tr>
-        <td><a href="https://python-pillow.org/">Bantal</a></td>
+        <td><a href="https://python-pillow.org/">Pillow</a></td>
         <td>Pemrosesan Gambar</td>
     </tr>
-    <tr><td><a href="https://requests.readthedocs.io/">permintaan</a></td>
+    <tr>
+        <td><a href="https://requests.readthedocs.io/">requests</a></td>
         <td>Permintaan HTTP</td>
     </tr>
     <tr>
-        <td><a href="https://packaging.python.org/">kemasan</a></td>
-        <td>Penanganan Versi & Paket</td>
+        <td><a href="https://packaging.python.org/">packaging</a></td>
+        <td>Manajemen Versi & Pemaketan</td>
     </tr>
     <tr>
-        <td><a href="https://python-markdown.github.io/">penurunan harga</a></td>
-        <td>Render Penurunan Harga</td>
+        <td><a href="https://python-markdown.github.io/">markdown</a></td>
+        <td>Rendering Markdown</td>
     </tr>
     <tr>
-        <td><a href="https://github.com/Delgan/loguru">logguru</a></td>
-        <td>Pencatatan</td>
+        <td><a href="https://github.com/Delgan/loguru">loguru</a></td>
+        <td>Logging</td>
     </tr>
     <tr class="section"><th colspan="2">Aset & Kontributor</th></tr>
     <tr>
-        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">Pemberitahuan Baru 09 oleh Universfield</a></td>
+        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">New Notification 09 oleh Universfield</a></td>
         <td>Suara Notifikasi</td>
     </tr>
     <tr>
-        <td><a href="https://github.com/viru185">virus185</a></td>
+        <td><a href="https://github.com/viru185">viru185</a></td>
         <td>Kontributor Kode</td>
     </tr>
 </table>
@@ -607,7 +613,7 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) 
 
 ## ⚠️ Penafian
 
-Alat ini hanya untuk penggunaan pribadi. Harap hormati persyaratan layanan YouTube dan hak pembuat konten.
+Alat ini hanya untuk penggunaan pribadi. Harap hormati Ketentuan Layanan YouTube dan hak-hak produser konten.
 
 ---
 

@@ -87,6 +87,7 @@ class ConfigManager:
         "check_app_updates": True,
         "check_beta_updates": False,
         "last_update_check": 0,
+        "concurrent_fragments": 1,
         "language": "en",
         "ytdlp_channel": "stable",
         "force_output_format": False,
@@ -94,7 +95,7 @@ class ConfigManager:
         "force_audio_format": False,
         "preferred_audio_format": "best",
         "audio_normalization": False,
-        "filename_format": "%(title)s_%(resolution)s.%(ext)s",
+        "filename_format": "%(title)s_%(resolution)s_[%(id)s].%(ext)s",
         "cached_versions": {
             "ytdlp": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},
             "ffmpeg": {"version": None, "path": None, "last_check": 0, "path_mtime": 0},

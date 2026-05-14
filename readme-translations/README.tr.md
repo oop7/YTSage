@@ -1,7 +1,7 @@
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
-<img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
+<img src="../branding/screenshots/main.png" width="800" alt="YTSage Arayüzü"/>
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
@@ -13,80 +13,81 @@
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/oop7?color=c90000&style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/oop7)
 
 **Temiz bir PySide6 arayüzüne sahip modern bir YouTube indiricisi.**  
-Videoları istediğiniz kalitede indirin, ses çıkarın, altyazıları getirin ve daha fazlasını yapın.
+Videoları herhangi bir kalitede indirin, sesleri çıkarın, altyazıları alın ve daha fazlasını yapın.
 
-### 🌍 BENİOKU Diller
+### 🌍 README Dilleri
 
 İngilizce: [EN](../README.md)
-| Cevap: [AR](README.ar.md)
+| Arapça: [AR](README.ar.md)
 | Almanca: [DE](README.de.md)
 | İspanyolca: [ES](README.es.md)
 | Fransızca: [FR](README.fr.md)
-| Adres: [HI](README.hi.md)
-| Bahasa Endonezya: [ID](README.id.md)
+| Hintçe: [HI](README.hi.md)
+| Endonezce: [ID](README.id.md)
 | İtalyanca: [IT](README.it.md)
-| Şarkı sözü: [JA](README.ja.md)
-| Polski: [PL](README.pl.md)
+| Japonca: [JA](README.ja.md)
+| Lehçe: [PL](README.pl.md)
 | Portekizce: [PT](README.pt.md)
 | Rusça: [RU](README.ru.md)
 | Türkçe: [TR](README.tr.md)
-| Adres: [ZH](README.zh.md)
+| Çince: [ZH](README.zh.md)
 
 <p align="center">
-  <a href="#installation">Kurulum</a> •
-  <a href="#features">Özellikler</a> •
-  <a href="#usage">Kullanım</a> •
-  <a href="#screenshots">Ekran görüntüleri</a> •
-  <a href="#troubleshooting">Sorun giderme</a> •
-  <a href="#sponsor">Sponsor</a> •
-  <a href="#contributing">Katkıda Bulunuyorum</a>
+  <a href="#kurulum">Kurulum</a> •
+  <a href="#özellikler">Özellikler</a> •
+  <a href="#kullanım">Kullanım</a> •
+  <a href="#ekran-görüntüleri">Ekran Görüntüleri</a> •
+  <a href="#sorun-giderme">Sorun Giderme</a> •
+  <a href="#sponsor-olun">Sponsor Olun</a> •
+  <a href="#katkıda-bulunma">Katkıda Bulunma</a>
 </p>
 
 </div>
 
 ---
 
-<a id="why-ytsage"></a>
+<a id="neden-ytsage"></a>
 ## ❓ Neden YTSage?
 
 YTSage, **basit ama güçlü bir YouTube indiricisi** isteyen kullanıcılar için tasarlanmıştır. Diğer araçların aksine şunları sunar:
 
-- Temiz, modern bir PySide6 arayüzü
-- Video, ses ve altyazılar için tek tıklamayla indirmeler
+- Modern ve temiz bir PySide6 arayüzü
+- Tek tıkla video, ses ve altyazı indirme
 - SponsorBlock, altyazı birleştirme ve oynatma listesi seçimi gibi gelişmiş özellikler
-- YouTube'un ötesinde yt-dlp destekli siteler için İsteğe Bağlı Genel Mod
-- Platformlar arası destek ve kolay kurulum
+- yt-dlp tarafından desteklenen YouTube dışındaki siteler için isteğe bağlı "Genel Mod"
+- Çoklu platform desteği ve kolay kurulum
 
-<a id="features"></a>
+<a id="özellikler"></a>
 ## ✨ Özellikler
 
 <div align="center">
 
 | Temel Özellikler | Gelişmiş Özellikler | Ekstra Özellikler |
-|-------------------------------------|--------------------------------------------------|
-| 🎥 Format Tablosu | 🚫 SponsorBlock Entegrasyonu | 🎞️ FPS/HDR Ekran |
-| 🎵 Ses Çıkarma | 📝 Çoklu Altyazı Seç ve Birleştir | 🔄 yt-dlp'yi Otomatik Güncelle |
-| ✨ Basit kullanıcı arayüzü |  💾 Açıklamayı ve Küçük Resmi Kaydet | 🛠️ FFmpeg/yt-dlp/Deno Algılama |
-| 📋 Çalma Listesi Desteği ve Seçici | 🚀 Hız Sınırlayıcı | ⚙️ Özel Komutlar |
-| 📑 Bölümleri Yerleştir | ✂️ Video Bölümlerini Kırp | 🍪 Çerezlerle Giriş Yapın |
-| 📜 Geçmişi İndir | 🔄 Kanal Seçimini Serbest Bırak | 🌐 Proxy Desteği |
-| 🎚️ Ses Formatı Dönüştürme | 🎬 Video Formatı Ayarları | 🆙 Yerleşik Güncelleyici Sekmesi |
+|-----------------------------------|-----------------------------------------|------------------------------------|
+| 🎥 Format Tablosu | 🚫 SponsorBlock Entegrasyonu | 🎞️ FPS/HDR Gösterimi |
+| 🎵 Ses Çıkarma | 📝 Altyazı Seçimi ve Birleştirme | 🔄 Otomatik yt-dlp Güncellemesi |
+| ✨ Basit Kullanıcı Arayüzü | 💾 Açıklama ve Küçük Resim Kaydetme | 🛠️ FFmpeg/yt-dlp/Deno Algılama |
+| 📋 Oynatma Listesi Desteği | 🚀 Hız Sınırlayıcı | ⚙️ Özel Komutlar |
+| 📑 Bölüm Entegrasyonu | ✂️ Video Kırpma | 🍪 Çerez ile Giriş |
+| 📜 İndirme Geçmişi | 🔄 Yayın Kanalı Seçimi | 🌐 Proxy Desteği |
+| 🎚️ Ses Formatı Dönüştürme | 🎬 Video Format Ayarları | 🆙 Entegre Güncelleme Sekmesi |
 | 🌍 Genel Mod | 🔊 Ses Normalizasyonu (EBU R128) | 🌍 14 Dilde Yerelleştirme |
+| 💾 Oynatma Listesi Dışa Aktarma | ⚙️ Varsayılan Kalite ve Altyazı | |
 </div>
 
-<a id="installation"></a>
+<a id="kurulum"></a>
 ## 🚀 Kurulum
 
-### ⚡ Hızlı Kurulum (Önerilir)
+### ⚡ Hızlı Kurulum (Önerilen)
 
-YTSage'i PyPI'den yükleyin:
+YTSage'i PyPI üzerinden yükleyin:
 
 ```bash
 pip install ytsage
 ```
 
 <details>
-<summary>🔄 Mevcut bir kurulumu güncelleyin</summary>
+<summary>🔄 Mevcut Kurulumu Güncelle</summary>
 
 ```bash
 pip install --upgrade ytsage
@@ -94,41 +95,41 @@ pip install --upgrade ytsage
 
 </details>
 
-Ardından uygulamayı başlatın:
+Ardından uygulamayı çalıştırın:
 
 ```bash
 ytsage
 ```
 
-### 📦 Önceden Oluşturulmuş Yürütülebilir Dosyalar
+### 📦 Hazır Çalıştırılabilir Dosyalar (Executable)
 
-> [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
+> [👉 En Son Sürümü İndir](https://github.com/oop7/YTSage/releases/latest)
 
 #### 🪟 Windows
 
-| Biçim | Açıklama |
-|----------|----------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Standart yükleyici |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg paketiyle birlikte |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Taşınabilir versiyon, kurulum gerektirmez |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg ile taşınabilir, sıkıştırılmış |
+| Format | Açıklama |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Standart Kurulum Dosyası |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg Dahil |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Taşınabilir Sürüm, kuruluma gerek yok |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg Dahil Taşınabilir, sıkıştırılmış (ZIP) |
 
 <details>
 <summary>🛠️ Kurulum Adımları</summary>
 
-1. **EXE Yükleyici (`.exe`)**: Dosyaya çift tıklayın ve kurulum sihirbazını izleyin.
-2. **Taşınabilir Sürüm (`.zip`)**: Arşivi istediğiniz konuma çıkarın ve `ytsage.exe`'i çalıştırın.
-3. **FFmpeg Paketli**: Sisteminizde FFmpeg yüklü değilse FFmpeg paketli versiyonlarını seçin.
+1. **EXE Yükleyici (`.exe`)**: Dosyaya çift tıklayın ve kurulum sihirbazını takip edin.
+2. **Taşınabilir Sürüm (`.zip`)**: Dosyayı istediğiniz yere çıkarın ve `ytsage.exe` dosyasını çalıştırın.
+3. **Dahili FFmpeg**: Sisteminizde FFmpeg kurulu değilse, FFmpeg dahil olan sürümleri seçin.
 </details>
 
 #### 🐧 Linux
 
-| Biçim | Açıklama |
-|----------|----------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian paketi |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, taşınabilir |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM paketi |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Düz Paket Paketi |
+| Format | Açıklama |
+|--------|-------------|
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian Paketi |
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, Taşınabilir |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM Paketi |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak Paketi |
 
 <details>
 <summary>🛠️ Kurulum Adımları</summary>
@@ -136,7 +137,7 @@ ytsage
 - **DEB (`.deb`)**:
   ```bash
   sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Fix missing dependencies if any
+  sudo apt-get install -f # Gerekirse eksik bağımlılıkları gidermek için
   ```
 - **RPM (`.rpm`)**:
   ```bash
@@ -147,32 +148,32 @@ ytsage
   chmod +x YTSage-*.AppImage
   ./YTSage-*.AppImage
   ```
-- **Flatpak**: Flathub'daki talimatları izleyin veya şunu çalıştırın:
+- **Flatpak**: Flathub üzerindeki talimatları izleyin veya şunu çalıştırın:
   ```bash
   flatpak install flathub io.github.oop7.ytsage
   ```
 </details>
 
-#### 🍎macOS
+#### 🍎 macOS
 
-| Biçim | Açıklama |
-|----------|----------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon için sıkıştırılmış uygulama |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon için disk görüntüsü yükleyici |
+| Format | Açıklama |
+|--------|-------------|
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon için ZIP Uygulaması |
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon için Disk Image Kurulum Dosyası |
 
 <details>
 <summary>🛠️ Kurulum Adımları</summary>
 
-- **DMG Installer (`.dmg`)**: Bağlamak için çift tıklayın, ardından `YTSage.app`'i Uygulamalar klasörünüze sürükleyin.
-- **Uygulama Arşivi (`.zip`)**: Zip dosyasını çıkartın ve `YTSage.app`'i Uygulamalar klasörünüze taşıyın.
+- **DMG Yükleyici (`.dmg`)**: Bağlamak için çift tıklayın ve `YTSage.app` dosyasını Uygulamalar klasörünüze sürükleyin.
+- **Uygulama Arşivi (`.zip`)**: ZIP dosyasını çıkarın ve `YTSage.app` dosyasını Uygulamalar klasörünüze taşıyın.
 
-*Not: "Uygulama hasar gördü" hatasıyla karşılaşırsanız aşağıdaki [macOS troubleshooting section](#troubleshooting)'e bakın.*
+*Not: "Uygulama hasarlı" hatası alırsanız, aşağıdaki macOS Sorun Giderme bölümüne bakın.*
 </details>
 
 ---
 
 <details>
-<summary>💻 Kaynaktan Manuel Kurulum</summary>
+<summary>💻 Kaynak Kodundan Manuel Kurulum</summary>
 
 ### 1. Depoyu Klonlayın
 
@@ -181,9 +182,9 @@ git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. Bağımlılıkları Kurun
+### 2. Bağımlılıkları Yükleyin
 
-#### ⚡UV ile
+#### ⚡ uv ile
 
 ```bash
 uv pip install .
@@ -195,7 +196,7 @@ uv pip install .
 pip install .
 ```
 
-### 3. Uygulamayı çalıştırın
+### 3. Uygulamayı Çalıştırın
 
 ```bash
 python -m ytsage.main
@@ -203,146 +204,151 @@ python -m ytsage.main
 
 </details>
 
-<a id="screenshots"></a>
-## 📸 Ekran görüntüleri
+<a id="ekran-görüntüleri"></a>
+## 📸 Ekran Görüntüleri
 
 <div align="center">
 <table>
   <tr>
-    <td><img src="../branding/screenshots/Download-Settings.png" alt="Download Settings" width="400"/></td>
-    <td><img src="../branding/screenshots/playlist.png" alt="Playlist Download" width="400"/></td>
+    <td><img src="../branding/screenshots/Download-Settings.png" alt="İndirme Ayarları" width="400"/></td>
+    <td><img src="../branding/screenshots/playlist.png" alt="Oynatma Listesi İndirme" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>İndirme Ayarları</em></td>
-    <td align="center"><em>Çalma Listesi İndir</em></td>
+    <td align="center"><em>Oynatma Listesi İndirme</em></td>
   </tr>
   <tr>
-    <td><img src="../branding/screenshots/audio_format.png" alt="Audio Format Selection with Save Thumbnail" width="400"/></td>
-    <td><img src="../branding/screenshots/Custom-Option.png" alt="Custom Options" width="400"/></td>
+    <td><img src="../branding/screenshots/audio_format.png" alt="Ses Formatı Seçimi" width="400"/></td>
+    <td><img src="../branding/screenshots/Custom-Option.png" alt="Özel Seçenekler" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Ses Formatı</em></td>
     <td align="center"><em>Özel Seçenekler</em></td>
   </tr>
 </table>
-</div><a id="usage"></a>
+</div>
 
+<a id="kullanım"></a>
 ## 📖 Kullanım
 
 <details>
 <summary>🎯 Temel Kullanım</summary>
 
 1. **YTSage'i başlatın**
-2. **YouTube URL'sini yapıştırın** (veya "URL'yi yapıştır" düğmesini kullanın)
-3. **"Analiz Et"i tıklayın**
-4. **Biçim Seçin:**
-   - `Video` video indirmeleri için
-   - `Audio Only` ses çıkarma için
-5. **Seçenekleri seçin:**
+2. **Bir YouTube URL'si yapıştırın** (veya "Paste URL" düğmesini kullanın)
+3. **"Analyze" düğmesine tıklayın**
+4. **Formatı Seçin:**
+   - Video indirmek için `Video`
+   - Sadece ses çıkarmak için `Audio Only`
+5. **Seçenekleri Belirleyin:**
    - Altyazıları etkinleştirin ve dili seçin
-   - Altyazı birleştirmeyi etkinleştir
-   - Küçük resmi kaydet
-   - Sponsor segmentlerini kaldırın
-   - Açıklamayı kaydet
-   - Bölümleri yerleştir
-6. **Çıktı Dizinini Seçin**
-7. **"İndir"e tıklayın**
+   - Altyazı birleştirmeyi (Merge subs) etkinleştirin
+   - Küçük resmi kaydet (Save thumbnail)
+   - Sponsor bölümlerini kaldır (SponsorBlock)
+   - Açıklamayı kaydet (Save description)
+   - Bölümleri göm (Embed chapters)
+6. **Çıkış Dizinini Seçin**
+7. **"Download" düğmesine tıklayın**
 
-> 💡 Varsayılan indirme dizini kullanıcının "İndirilenler" klasörüdür.
+> 💡 Varsayılan indirme dizini kullanıcının "İndirmeler" klasörüdür.
 
 </details>
 
 <details>
-<summary>📋 Çalma Listesi İndir</summary>
+<summary>📋 Oynatma Listesi İndirme</summary>
 
 1. **Oynatma Listesi URL'sini yapıştırın**
-2. **"Analiz Et"i tıklayın**
-3. **Oynatma seçiciden videoları seçin (isteğe bağlı, varsayılan olarak tümü)**
+2. **"Analyze" düğmesine tıklayın**
+3. **Seçiciden videoları seçin (varsayılan olarak tümü seçilidir)**
 4. **İstediğiniz formatı/kaliteyi seçin**
-5. **"İndir"e tıklayın**
+5. **"Download" düğmesine tıklayın**
 
-> 💡 Uygulama indirme sırasını otomatik olarak yönetir
+> 💡 Uygulama indirme kuyruğunu otomatik olarak yönetir ve oynatma listesi girişlerini `.txt`, `.csv`, `.m3u` veya `.json` dosyaları olarak dışa aktarabilirsiniz.
 
 </details>
 
 <details>
-<summary>🌍 YouTube dışı siteler için Genel Mod</summary>
+<summary>🌍 YouTube Dışındaki Siteler İçin Genel Mod</summary>
 
-YTSage'in Dailymotion, CBC Gem, TikTok ve diğerleri gibi yt-dlp tarafından desteklenen sitelerdeki URL'leri kabul etmesini istiyorsanız Genel Modu kullanın.
+YTSage'in Dailymotion, TikTok ve diğerleri gibi yt-dlp tarafından desteklenen sitelerden gelen URL'leri kabul etmesini istediğinizde Genel Modu kullanın.
 
 Nasıl kullanılır:
 
-1. `Download Settings`'i açın.
-2. `Generic Mode`'ı etkinleştirin.
-3. Desteklenen YouTube dışı bir video veya oynatma listesi URL'sini yapıştırın.
-4. `Analyze`'a tıklayın.
-5. Bir format seçin ve her zamanki gibi indirin.
+1. `Download Settings` bölümünü açın.
+2. `Generic Mode` seçeneğini etkinleştirin.
+3. YouTube dışındaki desteklenen bir video veya oynatma listesi URL'sini yapıştırın.
+4. `Analyze` düğmesine tıklayın.
+5. Bir format seçin ve normal şekilde indirin.
 
 Notlar:
 
-- Genel Mod yalnızca YTSage içindeki URL doğrulamasını değiştirir. Hedef sitenin yüklü yt-dlp sürümünüz tarafından hala desteklenmesi gerekiyor.
-- Bazı siteler, çıkarıcıya bağlı olarak çerezlere, oturum açma oturumuna, proxy'ye veya ekstra yt-dlp argümanlarına ihtiyaç duyar.
-- Bir site başarısız olursa, sorunu bildirmeden önce yerleşik güncelleyici sekmesinden yt-dlp'yi güncelleyin.
+- Genel Mod sadece YTSage içindeki URL doğrulamasını değiştirir. Hedef site hala yüklü yt-dlp sürümünüz tarafından desteklenmelidir.
+- Bazı siteler, çıkarıcıya bağlı olarak çerezler, giriş, proxy veya ek yt-dlp argümanları gerektirebilir.
+- Bir site hata verirse, sorun bildirmeden önce entegre güncelleme sekmesinden yt-dlp'yi güncelleyin.
 
 </details>
 
 <details>
 <summary>🧰 Medya ve İndirme Seçenekleri</summary>
 
-- **Altyazı Seçenekleri:** Dilleri filtreleyin ve altyazıları video dosyasına ekleyin
-- **Altyazı Birleştirme:** Sabit kodlanmış altyazılar için altyazıları video dosyasıyla birleştirin
-- **Açıklamayı Kaydet:** Video açıklamasını bir metin dosyası olarak kaydedin
-- **Küçük Resmi Kaydet:** Video küçük resmini bir resim dosyası olarak kaydedin
-- **Bölümleri Göm:** Uyumlu video oynatıcılar için bölüm işaretlerini meta veri olarak gömün
-- **Sponsor Segmentlerini Kaldır:** SponsorBlock'u kullanarak sponsor segmentlerini videodan kaldırın
-- **Videoyu Kırp:** `HH:MM:SS` biçiminde zaman aralıklarını belirterek videonun yalnızca belirli bölümlerini indirin
+- **Altyazı Seçenekleri:** Dilleri filtreleyin ve altyazıları video dosyasına gömün.
+- **Altyazı Birleştirme:** Altyazıları video dosyasına kalıcı olarak (hardcode) birleştirir.
+- **Açıklamayı Kaydet:** Video açıklamasını bir metin dosyası olarak kaydeder.
+- **Küçük Resmi Kaydet:** Video küçük resmini bir resim dosyası olarak kaydeder.
+- **Bölümleri Göm:** Uyumlu video oynatıcılar için meta veri olarak bölüm işaretlerini ekler.
+- **Sponsor Bölümlerini Kaldır:** Videodaki sponsorlu bölümleri kaldırmak için SponsorBlock kullanır.
+- **Videoyu Kırp:** Zaman aralığını `SA:DA:SA` formatında belirterek videonun sadece belirli bölümlerini indirin.
 
 </details>
 
 <details>
-<summary>⚙️ Çıktı ve Dosya Ayarları</summary>
+<summary>⚙️ Çıkış ve Dosya Ayarları</summary>
 
-- **Hız Sınırlayıcı:** İndirme hızını sınırlayın, örneğin 500 KB/s için `500K`
-- **İndirme Yolunu Kaydet:** Gelecekteki indirmeler için varsayılan indirme yolunu kaydedin. **İndirme Ayarları → İndirme Yolu**'nda mevcuttur.
-- **Çıktı Dosya Adı Formatı:** `%(title)s`, `%(uploader)s` ve `%(resolution)s` gibi değişkenleri kullanarak çıktı dosya adı formatını özelleştirin. **İndirme Ayarları → Dosya Adı Formatı**'nda mevcuttur.- **Çıktı Formatını Zorla:** Video indirme işlemlerini `mp4`, `webm` veya `mkv` gibi belirli bir kapsayıcı formatına zorlayın. **İndirme Ayarları → Çıktı Formatı Ayarları** bölümünde mevcuttur.
-- **Ses Formatı Dönüştürme:** Yalnızca ses indirmelerini `AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A` gibi tercih edilen formatlara dönüştürün `Vorbis` veya `Best`. **İndirme Ayarları → Ses Formatı Ayarları**'nda mevcuttur.
-- **Ses Normalizasyonu:** EBU R128 kullanarak yalnızca ses indirmeleri için ses düzeyini standartlaştırın.
+- **Hız Sınırlayıcı:** İndirme hızını sınırlandırın, örneğin 500 KB/s için `500K`.
+- **İndirme Yolunu Kaydet:** Gelecekteki indirmeler için varsayılan indirme yolunu kaydeder. **Download Settings → Download Path** bölümünde mevcuttur.
+- **Varsayılan Video Çözünürlüğü:** Otomatik seçim için tercih ettiğiniz video çözünürlüğünü ayarlayın (örn: 1080p, 720p). **Download Settings → Default Video Resolution** bölümünde mevcuttur.
+- **Varsayılan Altyazı Dilleri:** Otomatik seçim için varsayılan altyazı dillerini ayarlayın (virgülle ayrılmış, örn: `tr,en`). **Download Settings → Default Subtitle Languages** bölümünde mevcuttur.
+- **Dosya Adı Formatı:** Çıkış dosyası adı formatını `%(title)s`, `%(uploader)s` gibi değişkenler kullanarak özelleştirin. **Download Settings → Filename Format** bölümünde mevcuttur.
+- **Çıkış Formatını Zorla:** Videoyu `mp4`, `webm` veya `mkv` gibi belirli bir konteyner formatında indirmeye zorlar. **Download Settings → Output Format Settings** bölümünde mevcuttur.
+- **Ses Formatı Dönüştürme:** Sadece ses indirmelerini `AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis` veya `Best` gibi tercih edilen formatlara dönüştürün. **Download Settings → Audio Format Settings** bölümünde mevcuttur.
+- **Ses Normalizasyonu:** EBU R128 kullanarak sadece ses indirmeleri için ses seviyesini standartlaştırır.
+- **Eşzamanlı Bağlantılar:** Dosyaları aynı anda birden fazla parça halinde indirerek indirme hızını önemli ölçüde artırın. **Download Settings → General → Concurrent Connections** bölümünde mevcuttur (Varsayılan 1, IP engellemelerini önlemek için maksimum 8-10 önerilir).
 
 </details>
 
 <details>
 <summary>🌐 Erişim ve Ağ</summary>
 
-- **Çerezler ile Giriş Yapın:** Özel içeriğe erişmek için çerezleri kullanarak YouTube'a giriş yapın.
-  Nasıl kullanılır:
-  1. **Önerilen:** Uygulamadaki yerleşik `Extract cookies from browser` seçeneğini kullanın, ardından tarayıcınızı ve isteğe bağlı olarak bir profili seçin.
-  2. Alternatif olarak çerezleri manuel olarak çıkarın:
-     a. [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file) gibi bir uzantı kullanarak çerezleri tarayıcınızdan dışa aktarın
-     b. Çerezleri Netscape formatında kopyalayın
-     c. `cookies.txt` adında bir dosya oluşturun ve çerezleri bu dosyaya yapıştırın
-     D. Uygulamada `cookies.txt` dosyasını seçin
-- **Proxy Desteği:** İndirmeler için bir proxy sunucusu kullanın, örneğin `http://<proxy-server>:<port>`
-- **Genel Mod:** YTSage'in, yt-dlp tarafından desteklenen YouTube dışı sitelerden analiz yapmasına ve indirme yapmasına izin verin. **İndirme Ayarları → Genel Mod**'dan etkinleştirin.
+- **Çerez ile Giriş:** Özel içeriğe erişmek için çerezleri kullanarak YouTube'da oturum açın.
+  Kullanım:
+  1. **Önerilen:** Uygulamadaki entegre `Extract cookies from browser` seçeneğini kullanın, tarayıcıyı ve isteğe bağlı olarak profili seçin.
+  2. İsteğe bağlı olarak çerezleri manuel olarak çıkarın:
+     a. [cookie-editor](https://github.com/moustachauve/cookie-editor) gibi bir uzantı kullanarak tarayıcınızdan çerezleri dışa aktarın.
+     b. Çerezleri Netscape formatında kopyalayın.
+     c. `cookies.txt` adlı bir dosya oluşturun ve çerezleri yapıştırın.
+     d. Uygulamada `cookies.txt` dosyasını seçin.
+- **Proxy Desteği:** İndirmeler için bir proxy sunucusu kullanın, örn: `http://<proxy-server>:<port>`
+- **Genel Mod:** YTSage'in yt-dlp tarafından desteklenen YouTube dışındaki siteleri analiz etmesine ve indirmesine olanak tanır. **Download Settings → Generic Mode** bölümünden etkinleştirin.
 
 </details>
 
 <details>
 <summary>🛠️ Araçlar ve Bakım</summary>
 
-- **Özel Komutlar:** Komut satırı bağımsız değişkenleri aracılığıyla gelişmiş yt-dlp özelliklerine erişin
-- **Güncelleyici Sekmesi:** Özel Seçenekler'de yerleşik güncelleme araçlarını tek yerden yönetin:
-  - **yt-dlp Güncellemeleri:** Güncellemeleri kontrol edin ve Mevcut ve Gecelik sürüm kanalları arasında geçiş yapın
-  - **FFmpeg Sürüm Denetleyicisi:** FFmpeg sürümünüzü kontrol edin ve kurulum kılavuzlarını açın
-  - **Deno Güncellemeleri:** Deno çalışma zamanını kontrol edin ve güncelleyin
-- **FFmpeg/yt-dlp/Deno Algılama:** Hakkında iletişim kutusundan FFmpeg, yt-dlp ve Deno yollarını ve sürümlerini otomatik olarak algılar.
-- **İndirme Geçmişi:** **Geçmiş** düğmesinden geçmiş indirmeleri küçük resimler ve durumlarla birlikte görüntüleyin.
+- **Özel Komutlar:** Komut satırı argümanları aracılığıyla gelişmiş yt-dlp özelliklerine erişin.
+- **Güncelleme Sekmesi:** Entegre güncelleme araçlarını Özel Seçenekler altındaki tek bir yerden yönetin:
+  - **yt-dlp Güncelleme:** Güncellemeleri kontrol edin ve Stable ile Nightly yayın kanalları arasında geçiş yapın.
+  - **FFmpeg Sürüm Kontrolü:** FFmpeg sürümünüzü kontrol edin ve kurulum kılavuzlarını açın.
+  - **Deno Güncelleme:** Deno çalışma zamanını kontrol edin ve güncelleyin.
+- **FFmpeg/yt-dlp/Deno Algılama:** Hakkında diyaloğunda FFmpeg, yt-dlp ve Deno yollarını ve sürümlerini otomatik olarak algılar.
+- **İndirme Geçmişi:** **History** düğmesi aracılığıyla küçük resimler ve durumlarla birlikte geçmiş indirmeleri görün.
 
 </details>
 
 <details>
 <summary>🌍 Yerelleştirme</summary>
 
-YTSage, dünya çapında erişilebilirlik için **14 dili** destekler. **Özel Seçenekler → Dil**'den tercih ettiğiniz dili seçin.
+YTSage, küresel erişim için **14 dili** destekler. Tercih ettiğiniz dili **Custom Options → Language** bölümünden seçin.
 
 ### Desteklenen Diller
 
@@ -360,7 +366,7 @@ YTSage, dünya çapında erişilebilirlik için **14 dili** destekler. **Özel S
 
 | Dil | Dosya | Dil | Dosya |
 |----------|------|----------|------|
-| 🇺🇸 İngilizce | [README.md](../README.md) | 🇪🇸 İspanyolca | [README.es.md](README.es.md)
+| 🇺🇸 İngilizce | [README.md](README.md) | 🇪🇸 İspanyolca | [README.es.md](README.es.md) |
 | 🇸🇦 Arapça | [README.ar.md](README.ar.md) | 🇫🇷 Fransızca | [README.fr.md](README.fr.md) |
 | 🇩🇪 Almanca | [README.de.md](README.de.md) | 🇮🇳 Hintçe | [README.hi.md](README.hi.md) |
 | 🇮🇩 Endonezce | [README.id.md](README.id.md) | 🇮🇹 İtalyanca | [README.it.md](README.it.md) |
@@ -368,165 +374,165 @@ YTSage, dünya çapında erişilebilirlik için **14 dili** destekler. **Özel S
 | 🇧🇷 Portekizce | [README.pt.md](README.pt.md) | 🇷🇺 Rusça | [README.ru.md](README.ru.md) |
 | 🇹🇷 Türkçe | [README.tr.md](README.tr.md) | 🇨🇳 Çince | [README.zh.md](README.zh.md) |
 
-> 💡 **Çeviriye katkıda bulunmak mı istiyorsunuz?** Daha fazla dil eklememize yardımcı olmak için [Contributing](#contributing) bölümüne göz atın!
+> 💡 **Çeviriye yardımcı olmak ister misiniz?** Daha fazla dil eklememize yardımcı olmak için [Katkıda Bulunma](#katkıda-bulunma) bölümüne bakın!
 
 </details>
 
-<a id="troubleshooting"></a>
-## 🛠️ Sorun giderme
+<a id="sorun-giderme"></a>
+## 🛠️ Sorun Giderme
 
 <details>
-<summary>Genel sorunları ve çözümleri görüntülemek için tıklayın</summary>
+<summary>Yaygın sorunlar ve çözümler için tıklayın</summary>
 
-- **Biçim tablosu görüntülenmiyor:** yt-dlp'yi en son sürüme güncelleyin ve her gece yt-dlp'ye geçin.
-- **İndirme başarısız oluyor:** İnternet bağlantınızı kontrol edin ve videonun mevcut olduğundan emin olun.
-- **Belirli indirme hataları:**
-  - **Özel videolar:** Özel içeriğe erişmek için çerez kimlik doğrulamasını kullanın.
-  - **Yaş kısıtlamalı içerik:** Yaş kısıtlamalı videoları görüntülemek için YouTube hesabına giriş yapın.
-  - **Coğrafi olarak engellenen videolar:** Bölgesel kısıtlamaları aşmak için bir VPN kullanmayı düşünün.
-  - **Kaldırılan/silinen videolar:** Video artık YouTube'da mevcut değil.
-  - **Canlı yayınlar:** Canlı yayınlar indirilemez; akışın bitmesini bekleyin.
-  - **Ağ hataları:** İnternet bağlantınızı kontrol edip tekrar deneyin.
-  - **Geçersiz URL'ler:** URL'nin doğru olduğundan ve desteklenen bir platforma ait olduğundan emin olun.
-  - **Premium içerik:** YouTube Premium üyeliği gerektirir.
-  - **Telif hakkı engellemeleri:** İçerik, telif hakkı kısıtlamaları nedeniyle engellenmiştir.
-- **İndirmeden sonra video ve ses dosyalarını ayırın:** Bu, FFmpeg eksik olduğunda veya algılanmadığında meydana gelir. YTSage, yüksek kaliteli video ve ses akışlarını birleştirmek için FFmpeg'e ihtiyaç duyar.
-  - **Çözüm:** FFmpeg'in sisteminizin PATH'inde kurulu ve erişilebilir olduğundan emin olun. Windows kullanıcıları için en kolay seçenek, FFmpeg ile birlikte gelen `YTSage-v<version>-ffmpeg.exe` dosyasını indirmektir.
+- **Format tablosu görünmüyor:** yt-dlp'yi en son sürüme güncelleyin ve yt-dlp Nightly kanalına geçmeyi deneyin.
+- **İndirme başarısız oldu:** İnternet bağlantınızı kontrol edin ve videonun erişilebilir olduğundan emin olun.
+- **Belirli İndirme Hataları:**
+  - **Özel Videolar:** Özel içeriğe erişmek için çerez kimlik doğrulamasını kullanın.
+  - **Yaş Sınırlı İçerik:** Yaş sınırlı videoları görüntülemek için YouTube hesabınızda oturum açın.
+  - **Coğrafi Engelli Videolar:** Bölgesel kısıtlamaları aşmak için bir VPN kullanmayı düşünün.
+  - **Video Kaldırıldı:** Video artık YouTube'da mevcut değildir.
+  - **Canlı Yayınlar:** Canlı yayınlar yayınlanırken indirilemez; yayın bitene kadar bekleyin.
+  - **Ağ Hataları:** İnternet bağlantınızı kontrol edin ve tekrar deneyin.
+  - **Geçersiz URL:** URL'nin doğru olduğundan ve desteklenen bir platforma ait olduğundan emin olun.
+  - **Premium İçerik:** YouTube Premium aboneliği gerektirir.
+  - **Telif Hakkı Engeli:** İçerik telif hakkı kısıtlamaları nedeniyle engellenmiştir.
+- **İndirme sonrası video ve ses dosyaları ayrı:** Bu durum FFmpeg eksik olduğunda veya algılanmadığında olur. YTSage, yüksek kaliteli video ve ses akışlarını birleştirmek için FFmpeg gerektirir.
+  - **Çözüm:** FFmpeg'in kurulu olduğundan ve sistem PATH'inizde erişilebilir olduğundan emin olun. Windows kullanıcıları için en kolay seçenek, FFmpeg ile birlikte gelen `YTSage-v<sürüm>-ffmpeg.exe` dosyasını indirmektir.
 
 ---
 
 #### 🛡️ Windows Defender / Antivirüs Uyarısı
 
-Bazı antivirüs yazılımları `.exe` dosyalarını yanlış pozitif olarak işaretleyebilir. Bu, paket uygulamaların **bilinen bir sınırlamasıdır**.
+Bazı antivirüs yazılımları `.exe` dosyalarını yanlış pozitif olarak işaretleyebilir. Bu, paketlenmiş uygulamaların **bilinen bir sınırlamasıdır**.
 
-**Bu neden oluyor:**
-- Antivirüs buluşsal yöntemleri, paketlenmiş yürütülebilir dosyaları şüpheli olarak yanlış tanımlayabilir
+**Neden olur:**
+- Antivirüs sezgiselleri paketlenmiş yürütülebilir dosyaları hatalı bir şekilde şüpheli olarak tanımlayabilir.
 
-**Güvenli alternatifler:**
-- ✅ **Pip kurulumunu kullanın:** `pip install ytsage` (önerilir)
-- ✅ **Kaynaktan oluşturun**: bunu takip ederek [guide](../.github/CI_CD_README.md)
-- ✅ **Uygulamayı antivirüs yazılımınızda beyaz listeye alın**
+**Güvenli Seçenekler:**
+- ✅ **pip kurulumunu kullanın:** `pip install ytsage` (önerilir)
+- ✅ **Kaynaktan derleyin**: Bu [kılavuzu](.github/CI_CD_README.md) takip ederek
+- ✅ **Uygulamayı antivirüs yazılımınızın beyaz listesine ekleyin**.
 
 #### 🍎 macOS: "Uygulama hasarlı ve açılamıyor"
-Bu hatayı macOS Sonoma veya daha yeni bir sürümde görüyorsanız karantina özelliğini kaldırmanız gerekir.
+macOS Sonoma veya daha yeni sürümlerde bu hatayı görüyorsanız, karantina özniteliğini kaldırmanız gerekir.
 
-1. **Terminal'i açın** (Spotlight'ı kullanarak bulabilirsiniz).
-2. **Aşağıdaki komutu yazın** ancak **henüz Enter'a basmayın**. Sondaki boşluğu eklediğinizden emin olun:
+1.  **Terminal'i açın** (Spotlight kullanarak bulabilirsiniz).
+2.  **Aşağıdaki komutu yazın**, ancak henüz Enter tuşuna **BASMAYIN**. Sonundaki boşluğu eklediğinizden emin olun:
     ```bash
     xattr -d com.apple.quarantine 
     ```
-3. **`YTSage.app` dosyasını Finder pencerenizden sürükleyip doğrudan Terminal penceresine bırakın. Bu, doğru dosya yolunu otomatik olarak yapıştıracaktır.
-4. **Komutu çalıştırmak için **Enter** tuşuna basın.
-5. **YTSage.app'i tekrar açmayı deneyin.** Artık doğru şekilde başlatılması gerekir.
+3.  **`YTSage.app` dosyasını Finder penceresinden sürükleyin** ve doğrudan Terminal penceresine bırakın. Bu, doğru dosya yolunu otomatik olarak yapıştıracaktır.
+4.  Komutu çalıştırmak için **Enter tuşuna basın**.
+5.  **YTSage.app'i tekrar açmayı deneyin.** Artık düzgün bir şekilde çalışmalıdır.
 
 ---
 
-#### **Yapılandırma Konumları (Gelişmiş)**
+#### **Yapılandırma Konumu (Gelişmiş)**
 - **Windows:** `%LOCALAPPDATA%\YTSage`
 - **macOS:** `~/Library/Application Support/YTSage`
 - **Linux:** `~/.local/share/YTSage`
 
 </details>
 
-<a id="sponsor"></a>
-## 💖 Sponsor
+<a id="sponsor-olun"></a>
+## 💖 Sponsor Olun
 
-YTSage size zaman kazandırıyorsa projeye sponsor olmayı düşünün. Sponsorluk, geliştirme süresinin, platformlar arası testlerin ve gelecekteki iyileştirmelerin karşılanmasına yardımcı olur.
+YTSage size zaman kazandırıyorsa, projeye sponsor olmayı düşünün. Sponsorluklar geliştirme süresini, tüm platformlarda test yapmayı ve gelecekteki iyileştirmeleri karşılamaya yardımcı olur.
 
-- GitHub Sponsorları: https://github.com/sponsors/oop7
-- Sponsor bağlantısına doğrudan uygulamanın içindeki Hakkında iletişim kutusundan da ulaşılabilir.
+- GitHub Sponsors: https://github.com/sponsors/oop7
+- Sponsorluk bağlantısı uygulamadaki Hakkında diyaloğu üzerinden doğrudan mevcuttur.
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
-<a id="contributing"></a>
-## 👥 Katkıda Bulunmak
+<a id="katkıda-bulunma"></a>
+## 👥 Katkıda Bulunma
 
-Katkılarınızı bekliyoruz! İşte nasıl yardımcı olabileceğiniz:
+Katkılarınız bekliyoruz! İşte nasıl yardımcı olabileceğiniz:
 
-1. 🍴 Depoyu çatallayın
+1. 🍴 Depoyu Fork'layın
 2. 🌿 Özellik dalınızı oluşturun:
   ```bash
   git checkout -b feature/AmazingFeature
   ```
-3. 💾 Değişikliklerinizi gerçekleştirin:
+3. 💾 Değişikliklerinizi commit'leyin:
   ```bash
-  git commit -m 'Add some AmazingFeature'
+  git commit -m ' AmazingFeature Ekle'
   ```
-4. 📤 Şubeye itin:
+4. 📤 Dalı push'layın:
   ```bash
   git push origin feature/AmazingFeature
   ```
-5. 🔄 Bir Çekme İsteği Açın
+5. 🔄 Bir Pull Request açın
 
-### 🌍 Çevirilere Katkıda Bulunmak
+### 🌍 Çevirilerle Katkıda Bulunun
 
-- Eşleşen yerelleştirilmiş README dosyasını güncelleyin (örneğin `README.es.md`)
-- `ytsage/languages/<code>.json` düzenleyerek uygulama dizelerini senkronize tutun
-- Diliniz eksikse `README.md`'den başlayın ve `README.<code>.md`'i oluşturun
+- İlgili yerelleştirilmiş README dosyasını güncelleyin (örn: `readme-translations/README.tr.md`)
+- Uygulama dizelerini `ytsage/languages/<code>.json` dosyasını düzenleyerek senkronize tutun
+- Diliniz eksikse, `README.md` dosyasından başlayın ve `README.<code>.md` dosyasını oluşturun
 
 <details>
 <summary>📂 Proje Yapısı</summary>
 
 ## YTSage - Proje Yapısı
 
-Bu belge YTSage'in organize klasör yapısını açıklamaktadır.
+Bu belge YTSage'in düzenli klasör yapısını detaylandırır.
 
-### 📁 Proje Yapısı
+### 📁 Proje Düzeni
 
 ```
 YTSage/
-├── 📁 .github/                   # GitHub configuration
-│   ├── 📁 ISSUE_TEMPLATE/         # Issue templates
-│   │   └── 🐛-bug-report.md       # Bug report template
-│   ├─── 📁 workflows/              # GitHub Actions workflows
-│   │   ├── build-linux.yml        # Linux build workflow
-│   │   ├── build-macos.yml        # macOS build workflow
-│   │   │── build-windows.yml      # Windows build workflow
-|   |   └── release-all.yml          # Master release workflow
-│   └── 📄 CI_CD_README.md        # CI/CD documentation
-├──  📁 branding/                 # Branding assets (Screenshots, SVGs)
-│   ├── 📁 icons/                 # Application icons
-│   ├── 📁 screenshots/           # Screenshots for documentation
-│   └── 📁 svg/                   # SVG assets
-├── 📄 LICENSE                    # License file
-├── 📄 pyproject.toml             # Project metadata and dependencies
-├── 📄 README.md                  # Project documentation
-├── 📄 requirements.txt           # Python dependencies (dev)
-└── 📁 ytsage/                    # Source package
-    ├── 📁 assets/                # Runtime assets
-    │   ├── 📁 Icon/              # Application icons
-    │   └── 📁 sound/             # Audio files
-    ├── 📁 languages/             # Localization files
-    │   ├── 📄 ar.json            # Arabic translation
-    │   ├── 📄 de.json            # German translation
-    │   ├── 📄 en.json            # English translation
-    │   └── ...                   # Other languages
-    ├── 📁 core/                  # Core business logic
-    │   ├── 📄 __init__.py        # Core package init
-    │   ├── 📄 ytsage_deno.py     # Deno integration
-    │   ├── 📄 ytsage_downloader.py # Download functionality
-    │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg integration
-    │   ├── 📄 ytsage_utils.py    # Utility functions
-    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp integration
-    ├── 📁 gui/                   # User interface components
-    │   ├── 📄 __init__.py        # GUI package init
-    │   ├── 📄 ytsage_gui_main.py # Main application window
-    │   └── 📁 ytsage_gui_dialogs/ # Dialog classes
-    ├── 📁 utils/                 # Utility modules
-    │   ├── 📄 __init__.py        # Utils package init
-    │   ├── 📄 ytsage_config_manager.py # Configuration management
-    │   └── 📄 ytsage_logger.py   # Logging utilities
-    ├── 📄 __init__.py            # Package entry point
-    └── 📄 main.py                # Main execution script
+├── 📁 .github/                   # GitHub konfigürasyonları
+│   ├── 📁 ISSUE_TEMPLATE/         # Sorun şablonları
+│   │   └── 🐛-bug-report.md       # Hata raporu şablonu
+│   ├─── 📁 workflows/              # GitHub Actions iş akışları
+│   │   ├── build-linux.yml        # Linux derleme akışı
+│   │   ├── build-macos.yml        # macOS derleme akışı
+│   │   │── build-windows.yml      # Windows derleme akışı
+|   |   └── release-all.yml          # Ana yayın akışı
+│   └── 📄 CI_CD_README.md        # CI/CD dökümantasyonu
+├──  📁 branding/                 # Marka varlıkları (ekran görüntüleri, SVG'ler)
+│   ├── 📁 icons/                 # Uygulama ikonları
+│   ├── 📁 screenshots/           # Dökümantasyon için ekran görüntüleri
+│   └── 📁 svg/                   # SVG varlıkları
+├── 📄 LICENSE                    # Lisans dosyası
+├── 📄 pyproject.toml             # Proje metadatası ve bağımlılıklar
+├── 📄 README.md                  # Proje dökümantasyonu
+├── 📄 requirements.txt           # Python bağımlılıkları (dev)
+└── 📁 ytsage/                    # Kaynak kod paketi
+    ├── 📁 assets/                # Çalışma zamanı varlıkları
+    │   ├── 📁 Icon/              # Uygulama ikonları
+    │   └── 📁 sound/             # Ses dosyaları
+    ├── 📁 languages/             # Yerelleştirme dosyaları
+    │   ├── 📄 ar.json            # Arapça çeviri
+    │   ├── 📄 de.json            # Almanca çeviri
+    │   ├── 📄 en.json            # İngilizce çeviri
+    │   └── ...                   # Diğer diller
+    ├── 📁 core/                  # Temel iş mantığı
+    │   ├── 📄 __init__.py        
+    │   ├── 📄 ytsage_deno.py     # Deno entegrasyonu
+    │   ├── 📄 ytsage_downloader.py # İndirme işlevselliği
+    │   ├── 📄 ytsage_ffmpeg.py   # FFmpeg entegrasyonu
+    │   ├── 📄 ytsage_utils.py    # Yardımcı fonksiyonlar
+    │   └── 📄 ytsage_yt_dlp.py   # yt-dlp entegrasyonu
+    ├── 📁 gui/                   # Kullanıcı arayüzü bileşenleri
+    │   ├── 📄 __init__.py        
+    │   ├── 📄 ytsage_gui_main.py # Ana uygulama penceresi
+    │   └── 📁 ytsage_gui_dialogs/ # Diyalog sınıfları
+    ├── 📁 utils/                 # Yardımcı modüller
+    │   ├── 📄 __init__.py        
+    │   ├── 📄 ytsage_config_manager.py # Yapılandırma yönetimi
+    │   └── 📄 ytsage_logger.py   # Günlük tutma araçları
+    ├── 📄 __init__.py            # Paket giriş noktası
+    └── 📄 main.py                # Ana yürütme scripti
 ```
 
 </details>
 
-## ⭐️ Yıldız Tarihi
+## ⭐️ Yıldız Geçmişi
 
 <div align="center">
 
-## Yıldız Geçmişi
+## Star History
 
 <a href="https://www.star-history.com/#oop7/YTSage&Date">
  <picture>
@@ -540,7 +546,7 @@ YTSage/
 
 ## 📜 Lisans
 
-Bu proje MIT Lisansı kapsamında lisanslıdır; ayrıntılar için [LICENSE](../LICENSE) dosyasına bakın.
+Bu proje MIT Lisansı altında lisanslanmıştır - detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
 ## 🙏 Teşekkürler
 
@@ -549,7 +555,7 @@ Bu proje MIT Lisansı kapsamında lisanslıdır; ayrıntılar için [LICENSE](..
 
 <div align="center">
 
-<p>Bir iyileştirme önermek veya hata bildirmek için konu açarak bu projeye katkıda bulunan herkese yürekten teşekkür ederiz.</p>
+<p>İyileştirmeler önermek veya hataları bildirmek için sorunlar açarak bu projeye katkıda bulunan herkese çok teşekkürler.</p>
 
 <table>
     <tr class="section"><th colspan="2">Temel Bileşenler</th></tr>
@@ -563,40 +569,41 @@ Bu proje MIT Lisansı kapsamında lisanslıdır; ayrıntılar için [LICENSE](..
     </tr>
     <tr>
         <td><a href="https://deno.com/">Deno</a></td>
-        <td>Yt-dlp</td> ile entegrasyon için çalışma zamanı
+        <td>yt-dlp entegrasyonu için runtime</td>
     </tr>
-    <tr class="section"><th colspan="2">Kütüphaneler ve Çerçeveler</th></tr>
+    <tr class="section"><th colspan="2">Kütüphaneler ve Frameworkler</th></tr>
     <tr>
         <td><a href="https://wiki.qt.io/Qt_for_Python">PySide6</a></td>
-        <td>GUI Çerçevesi</td>
+        <td>GUI Framework</td>
     </tr>
     <tr>
-        <td><a href="https://python-pillow.org/">Yastık</a></td>
-        <td>Görüntü İşleme</td>
+        <td><a href="https://python-pillow.org/">Pillow</a></td>
+        <td>Resim İşleme</td>
     </tr>
-    <tr><td><a href="https://requests.readthedocs.io/">istekler</a></td>
+    <tr>
+        <td><a href="https://requests.readthedocs.io/">requests</a></td>
         <td>HTTP İstekleri</td>
     </tr>
     <tr>
-        <td><a href="https://packaging.python.org/">paketleme</a></td>
-        <td>Versiyon ve Paket İşleme</td>
+        <td><a href="https://packaging.python.org/">packaging</a></td>
+        <td>Sürüm ve Paket Yönetimi</td>
     </tr>
     <tr>
         <td><a href="https://python-markdown.github.io/">markdown</a></td>
-        <td>Markdown Oluşturma</td>
+        <td>Markdown İşleme</td>
     </tr>
     <tr>
         <td><a href="https://github.com/Delgan/loguru">loguru</a></td>
-        <td>Günlüğe kaydetme</td>
+        <td>Günlük Kaydı</td>
     </tr>
     <tr class="section"><th colspan="2">Varlıklar ve Katkıda Bulunanlar</th></tr>
     <tr>
-        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">Universfield'dan Yeni Bildirim 09</a></td>
+        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">Universfield'dan New Notification 09</a></td>
         <td>Bildirim Sesi</td>
     </tr>
     <tr>
         <td><a href="https://github.com/viru185">viru185</a></td>
-        <td>Kod Katılımcısı</td>
+        <td>Kod Katkıda Bulunan</td>
     </tr>
 </table>
 
@@ -604,14 +611,14 @@ Bu proje MIT Lisansı kapsamında lisanslıdır; ayrıntılar için [LICENSE](..
 
 </details>
 
-## ⚠️ Yasal Uyarı
+## ⚠️ Feragatname
 
-Bu araç yalnızca kişisel kullanım içindir. Lütfen YouTube'un hizmet şartlarına ve içerik oluşturucuların haklarına saygı gösterin.
+Bu araç sadece kişisel kullanım içindir. Lütfen YouTube'un Hizmet Şartlarına ve içerik oluşturucuların haklarına saygı gösterin.
 
 ---
 
 <div align="center">
 
-[oop7](https://github.com/oop7) tarafından ❤️ ile yapılmıştır
+[oop7](https://github.com/oop7) tarafından ❤️ ile yapıldı
 
 </div>

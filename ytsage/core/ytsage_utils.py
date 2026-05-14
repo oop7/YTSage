@@ -94,8 +94,8 @@ def update_version_cache(tool_name: str, version_info: str, path: Optional[str],
     current_mtime: float = get_file_mtime(path)
 
     _version_cache[tool_name] = {
-        "version": version_info,
-        "path": path,
+        "version": str(version_info) if version_info else "",
+        "path": str(path) if path else None,
         "last_check": current_time,
         "path_mtime": current_mtime,
     }

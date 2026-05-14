@@ -83,7 +83,8 @@
     "select_all": "सभी चुनें",
     "deselect_all": "सभी को अचयनित करें",
     "open_folder": "फ़ोल्डर स्थान खोलें",
-    "history": "इतिहास"
+    "history": "इतिहास",
+    "save_playlist": "प्लेलिस्ट को इस रूप में सहेजें"
   },
   "dialogs": {
     "custom_options": "कस्टम विकल्प",
@@ -91,11 +92,12 @@
     "select_folder": "डाउनलोड फ़ोल्डर चुनें",
     "sponsorblock_categories": "SponsorBlock श्रेणियां",
     "sponsorblock_description": "डाउनलोड के दौरान अपने आप हटाए जाने वाले वीडियो सेगमेंट के प्रकार चुनें।\nSponsorBlock इन सेगमेंट की पहचान के लिए समुदाय द्वारा प्रस्तुत डेटा का उपयोग करता है।",
-    "select_subtitles": "उपशीर्षक चुनें",
+    "select_subtitles": "उपशीर्षک चुनें",
     "filter_languages_placeholder": "भाषाएं फ़िल्टर करें (जैसे: hi, en)...",
     "no_subtitles_available": "कोई उपशीर्षक उपलब्ध नहीं",
     "matching": "मेल खाता",
-    "ytdlp_log_title": "yt-dlp लॉग"
+    "ytdlp_log_title": "yt-dlp लॉग",
+    "filter_playlist_placeholder": "वीडियो फ़िल्टर करें..."
   },
   "tabs": {
     "cookies": "कुकीज़ के साथ लॉगिन",
@@ -129,7 +131,8 @@
     "cleared_message": "कुकी सेटिंग्स साफ़ कर दी गई हैं",
     "active_browser": "✓ सक्रिय: ब्राउज़र कुकीज़ ({browser})",
     "active_file": "✓ सक्रिय: कुकी फ़ाइल ({file})",
-    "none_active": "○ कोई कुकी सक्रिय नहीं"
+    "none_active": "○ कोई कुकी सक्रिय नहीं",
+    "remember_settings": "अगले स्टार्टअप पर कुकी सेटिंग्स याद रखें"
   },
   "custom_command": {
     "help_text": "नीचे अपना कस्टम yt-dlp कमांड दर्ज करें। वर्तमान URL स्वचालित रूप से जोड़ा जाएगा।<br><br>विकल्पों की पूरी सूची और उपयोग के उदाहरणों के लिए <a href=\"{docs_url}\">आधिकारिक yt-dlp दस्तावेज़ देखने के लिए यहाँ क्लिक करें</a>।<br><br>नोट: डाउनलोड पथ और फ़ाइलनाम टेम्प्लेट स्वचालित रूप से संभाले जाते हैं।",
@@ -342,7 +345,13 @@
     "filename_format_help": "उपलब्ध चर: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s. मानक yt-dlp आउटपुट टेम्प्लेट सिंटैक्स समर्थित है.",
     "tab_general": "सामान्य",
     "tab_format": "प्रारूप",
-    "tab_file": "फ़ाइल"
+    "tab_file": "फ़ाइल",
+    "concurrent_fragments": "एक साथ कनेक्शन",
+    "concurrent_fragments_help": "प्रति डाउनलोड कनेक्शन की संख्या। उच्च मान थ्रॉटलिंग को बायपास करते हैं लेकिन बहुत अधिक सेट होने पर अस्थायी ब्लॉक का कारण बन सकते हैं। डिफ़ॉल्ट: 1.",
+    "defaults_settings": "डिफ़ॉल्ट चयन सेटिंग्स",
+    "default_video_quality": "डिफ़ॉल्ट वीडियो रिज़ॉल्यूशन (ऊंचाई):",
+    "default_subtitle_language": "डिफ़ॉल्ट उपशीर्षक भाषा(ए):",
+    "defaults_help": "अपनी पसंदीदा वीडियो ऊंचाई और उपशीर्षक भाषाएं (कॉमा से अलग) सेट करें। उपलब्ध होने पर वे स्वतः चयनित हो जाएंगी।"
   },
   "main_ui": {
     "url_placeholder": "YouTube वीडियो या प्लेलिस्ट URL दर्ज करें",
@@ -452,7 +461,8 @@
     "generic_error": "त्रुटि: {error}",
     "download_failed_return_code_conflict": "डाउनलोड {return_code} रिटर्न कोड के साथ विफल हुआ। यह कई yt-dlp इंस्टॉलेशन के टकराव के कारण हो सकता है। किसी भी सिस्टम-इंस्टॉल्ड yt-dlp (जैसे snap या apt) को हटाकर ऐप को रीस्टार्ट करें।",
     "download_failed_return_code": "डाउनलोड {return_code} रिटर्न कोड के साथ विफल हुआ",
-    "direct_command_error": "सीधे कमांड में त्रुटि: {error}"
+    "direct_command_error": "सीधे कमांड में त्रुटि: {error}",
+    "private_video": "यह वीडियो निजी हो सकता है। कृपया कस्टम विकल्पों से कुकीज़ का उपयोग करें।"
   },
   "update_dialog": {
     "title": "अपडेट उपलब्ध",
@@ -467,7 +477,13 @@
     "unknown": "अज्ञात प्लेलिस्ट",
     "total_videos": "कुल वीडियो: {count}",
     "display_format": "प्लेलिस्ट: {title} | {count} वीडियो",
-    "select_videos_title": "प्लेलिस्ट वीडियो चुनें"
+    "select_videos_title": "प्लेलिस्ट वीडियो चुनें",
+    "save_as": "प्लेलिस्ट को इस रूप में सहेजें",
+    "save_success_title": "सफलता",
+    "saved_successfully": "प्लेलिस्ट सफलतापूर्वक सहेजी गई।",
+    "save_error_title": "सहेजने में त्रुटि",
+    "no_videos_to_save": "कोई प्लेलिस्ट प्रविष्टियाँ एकत्रित नहीं हुई!",
+    "save_error_msg": "प्लेलिस्ट सहेजने में विफल।"
   },
   "subtitle_selection": {
     "count_selected": "{count} चुना गया"

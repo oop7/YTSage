@@ -83,7 +83,8 @@
     "select_all": "Tout sélectionner",
     "deselect_all": "Tout désélectionner",
     "open_folder": "Ouvrir l'emplacement du dossier",
-    "history": "Historique"
+    "history": "Historique",
+    "save_playlist": "Enregistrer la playlist sous"
   },
   "dialogs": {
     "custom_options": "Options personnalisées",
@@ -95,7 +96,8 @@
     "filter_languages_placeholder": "Filtrer les langues (ex: en, fr)...",
     "no_subtitles_available": "Aucun sous-titre disponible",
     "matching": "correspondant",
-    "ytdlp_log_title": "Journal yt-dlp"
+    "ytdlp_log_title": "Journal yt-dlp",
+    "filter_playlist_placeholder": "Filtrer les vidéos..."
   },
   "tabs": {
     "cookies": "Se connecter avec des cookies",
@@ -129,7 +131,8 @@
     "cleared_message": "Les paramètres des cookies ont été effacés",
     "active_browser": "✓ Actifs : cookies du navigateur ({browser})",
     "active_file": "✓ Actif : fichier cookies ({file})",
-    "none_active": "○ Aucun cookie actif"
+    "none_active": "○ Aucun cookie actif",
+    "remember_settings": "Mémoriser les paramètres des cookies au prochain démarrage"
   },
   "custom_command": {
     "help_text": "Entrez votre commande yt-dlp personnalisée ci-dessous. L'URL actuelle sera automatiquement ajoutée.<br><br>Pour la liste complète des options et exemples d'utilisation <a href=\"{docs_url}\">cliquez ici pour voir la documentation officielle yt-dlp</a>.<br><br>Note : Le chemin de téléchargement et le modèle de nom de fichier sont gérés automatiquement.",
@@ -342,7 +345,13 @@
     "filename_format_help": "Variables disponibles : %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s. La syntaxe standard des modèles de sortie yt-dlp est prise en charge.",
     "tab_general": "Général",
     "tab_format": "Format",
-    "tab_file": "Fichier"
+    "tab_file": "Fichier",
+    "concurrent_fragments": "Connexions simultanées",
+    "concurrent_fragments_help": "Nombre de connexions par téléchargement. Des valeurs plus élevées contournent le bridage mais peuvent entraîner des blocages temporaires si elles sont trop élevées. Par défaut : 1.",
+    "defaults_settings": "Paramètres de sélection par défaut",
+    "default_video_quality": "Résolution vidéo par défaut (hauteur) :",
+    "default_subtitle_language": "Langue(s) des sous-titres par défaut :",
+    "defaults_help": "Définissez votre hauteur de vidéo préférée et les langues des sous-titres (séparées par des virgules). Elles seront sélectionnées automatiquement si elles sont disponibles."
   },
   "main_ui": {
     "url_placeholder": "Entrer l'URL de la vidéo ou de la playlist YouTube",
@@ -452,7 +461,8 @@
     "generic_error": "Erreur : {error}",
     "download_failed_return_code_conflict": "Téléchargement échoué avec le code de retour {return_code}. Cela peut être dû à un conflit entre plusieurs installations de yt-dlp. Essayez de désinstaller toute version installée au niveau du système (par ex. via snap ou apt) puis redémarrez l’application.",
     "download_failed_return_code": "Téléchargement échoué avec le code de retour {return_code}",
-    "direct_command_error": "Erreur dans la commande directe : {error}"
+    "direct_command_error": "Erreur dans la commande directe : {error}",
+    "private_video": "Cette vidéo pourrait être privée. Veuillez utiliser des cookies depuis les options personnalisées."
   },
   "update_dialog": {
     "title": "Mise à jour disponible",
@@ -467,7 +477,13 @@
     "unknown": "Playlist inconnue",
     "total_videos": "Total des vidéos : {count}",
     "display_format": "Playlist : {title} | {count} vidéos",
-    "select_videos_title": "Sélectionner les Vidéos de la Playlist"
+    "select_videos_title": "Sélectionner les Vidéos de la Playlist",
+    "save_as": "Enregistrer la playlist sous",
+    "save_success_title": "Succès",
+    "saved_successfully": "Playlist enregistrée avec succès.",
+    "save_error_title": "Erreur d'enregistrement",
+    "no_videos_to_save": "Aucune vidéo de la playlist n'a été récupérée !",
+    "save_error_msg": "Échec de l'enregistrement de la playlist."
   },
   "subtitle_selection": {
     "count_selected": "{count} sélectionné(s)"

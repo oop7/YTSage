@@ -83,7 +83,8 @@
     "select_all": "Выбрать всё",
     "deselect_all": "Снять выделение",
     "open_folder": "Открыть расположение папки",
-    "history": "История"
+    "history": "История",
+    "save_playlist": "Сохранить плейлист как"
   },
   "dialogs": {
     "custom_options": "Пользовательские опции",
@@ -95,7 +96,8 @@
     "filter_languages_placeholder": "Фильтр языков (например, en, ru)...",
     "no_subtitles_available": "Субтитры недоступны",
     "matching": "соответствующие",
-    "ytdlp_log_title": "Журнал yt-dlp"
+    "ytdlp_log_title": "Журнал yt-dlp",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Войти через Cookie",
@@ -129,7 +131,8 @@
     "cleared_message": "Настройки cookie были очищены",
     "active_browser": "✓ Активны: cookie браузера ({browser})",
     "active_file": "✓ Активен: файл cookie ({file})",
-    "none_active": "○ Нет активных cookie"
+    "none_active": "○ Нет активных cookie",
+    "remember_settings": "Запомнить настройки cookie при следующем запуске"
   },
   "custom_command": {
     "help_text": "Введите пользовательскую команду yt-dlp ниже. Текущий URL будет добавлен автоматически.<br><br>Для полного списка опций и примеров использования, <a href=\"{docs_url}\">нажмите здесь для просмотра официальной документации yt-dlp</a>.<br><br>Примечание: Путь загрузки и шаблон имени файла будут обработаны автоматически.",
@@ -342,7 +345,13 @@
     "filename_format_help": "Доступные переменные: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s. Поддерживается стандартный синтаксис шаблона вывода yt-dlp.",
     "tab_general": "Общие",
     "tab_format": "Формат",
-    "tab_file": "Файл"
+    "tab_file": "Файл",
+    "concurrent_fragments": "Одновременные соединения",
+    "concurrent_fragments_help": "Количество соединений на одну загрузку. Более высокие значения позволяют обойти ограничение скорости, но могут вызвать временную блокировку при слишком высоких значениях. По умолчанию: 1.",
+    "defaults_settings": "Настройки выбора по умолчанию",
+    "default_video_quality": "Разрешение видео по умолчанию (высота):",
+    "default_subtitle_language": "Язык(и) субтитров по умолчанию:",
+    "defaults_help": "Установите предпочтительную высоту видео и языки субтитров (через запятую). Они будут выбраны автоматически, إذا كان متاحاً."
   },
   "main_ui": {
     "url_placeholder": "Введите URL видео или плейлиста YouTube",
@@ -452,7 +461,8 @@
     "generic_error": "Ошибка: {error}",
     "download_failed_return_code_conflict": "Загрузка завершилась ошибкой с кодом {return_code}. Это может быть из-за конфликта нескольких установок yt-dlp. Попробуйте удалить системно установленный yt-dlp (например, через snap или apt) и перезапустите приложение.",
     "download_failed_return_code": "Загрузка не удалась, код {return_code}",
-    "direct_command_error": "Ошибка в прямой команде: {error}"
+    "direct_command_error": "Ошибка в прямой команде: {error}",
+    "private_video": "Это видео может быть приватным. Пожалуйста, используйте файлы cookie из пользовательских настроек."
   },
   "update_dialog": {
     "title": "Доступно обновление",
@@ -467,7 +477,13 @@
     "unknown": "Неизвестный плейлист",
     "total_videos": "Всего видео: {count}",
     "display_format": "Плейлист: {title} | {count} видео",
-    "select_videos_title": "Выбрать Видео из Плейлиста"
+    "select_videos_title": "Выбрать Видео из Плейлиста",
+    "save_as": "Сохранить плейлист как",
+    "save_success_title": "Успех",
+    "saved_successfully": "Плейлист успешно сохранен.",
+    "save_error_title": "Ошибка сохранения",
+    "no_videos_to_save": "Записи плейлиста не собраны!",
+    "save_error_msg": "Не удалось сохранить плейлист."
   },
   "subtitle_selection": {
     "count_selected": "выбрано: {count}"

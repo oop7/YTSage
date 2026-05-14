@@ -83,7 +83,8 @@
     "select_all": "Selecionar Tudo",
     "deselect_all": "Desmarcar Tudo",
     "open_folder": "Abrir local da pasta",
-    "history": "Histórico"
+    "history": "Histórico",
+    "save_playlist": "Salvar playlist como"
   },
   "dialogs": {
     "custom_options": "Opções Personalizadas",
@@ -95,7 +96,8 @@
     "filter_languages_placeholder": "Filtrar idiomas (ex., en, pt)...",
     "no_subtitles_available": "Nenhuma legenda disponível",
     "matching": "correspondendo",
-    "ytdlp_log_title": "Log do yt-dlp"
+    "ytdlp_log_title": "Log do yt-dlp",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Entrar com Cookies",
@@ -129,7 +131,8 @@
     "cleared_message": "As configurações de cookies foram limpas",
     "active_browser": "✓ Ativos: cookies do navegador ({browser})",
     "active_file": "✓ Ativo: arquivo de cookies ({file})",
-    "none_active": "○ Nenhum cookie ativo"
+    "none_active": "○ Nenhum cookie ativo",
+    "remember_settings": "Lembrar configurações de cookies na próxima inicialização"
   },
   "custom_command": {
     "help_text": "Digite seu comando yt-dlp personalizado abaixo. A URL atual será anexada automaticamente.<br><br>Para a lista completa de opções e exemplos de uso, <a href=\"{docs_url}\">clique aqui para ver a documentação oficial do yt-dlp</a>.<br><br>Nota: O caminho de download e modelo de nome de arquivo serão tratados automaticamente.",
@@ -342,7 +345,13 @@
     "filename_format_help": "Variáveis disponíveis: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s. A sintaxe padrão de modelo de saída do yt-dlp é suportada.",
     "tab_general": "Geral",
     "tab_format": "Formato",
-    "tab_file": "Arquivo"
+    "tab_file": "Arquivo",
+    "concurrent_fragments": "Conexões simultâneas",
+    "concurrent_fragments_help": "Número de conexões por download. Valores mais altos contornam o limite de velocidade, mas podem causar bloqueios temporários se forem muito altos. Padrão: 1.",
+    "defaults_settings": "Configurações de seleção padrão",
+    "default_video_quality": "Resolução de vídeo padrão (altura):",
+    "default_subtitle_language": "Idioma(s) de legenda padrão:",
+    "defaults_help": "Defina sua altura de vídeo preferida e os idiomas das legendas (separados por vírgula). Eles serão selecionados automaticamente se disponíveis."
   },
   "main_ui": {
     "url_placeholder": "Digite a URL do vídeo ou playlist do YouTube",
@@ -452,7 +461,8 @@
     "generic_error": "Erro: {error}",
     "download_failed_return_code_conflict": "O download falhou com o código de retorno {return_code}. Isso pode ser devido a um conflito com várias instalações do yt-dlp. Tente desinstalar qualquer yt-dlp instalado no sistema (ex.: snap ou apt) e reinicie o aplicativo.",
     "download_failed_return_code": "O download falhou com o código de retorno {return_code}",
-    "direct_command_error": "Erro no comando direto: {error}"
+    "direct_command_error": "Erro no comando direto: {error}",
+    "private_video": "Este vídeo pode ser privado. Por favor, use cookies das opções personalizadas."
   },
   "update_dialog": {
     "title": "Atualização Disponível",
@@ -467,7 +477,13 @@
     "unknown": "Playlist Desconhecida",
     "total_videos": "Total de Vídeos: {count}",
     "display_format": "Playlist: {title} | {count} vídeos",
-    "select_videos_title": "Selecionar Vídeos da Playlist"
+    "select_videos_title": "Selecionar Vídeos da Playlist",
+    "save_as": "Salvar playlist como",
+    "save_success_title": "Sucesso",
+    "saved_successfully": "Playlist salva com sucesso.",
+    "save_error_title": "Erro ao salvar",
+    "no_videos_to_save": "Nenhuma entrada de playlist coletada!",
+    "save_error_msg": "Falha ao salvar a playlist."
   },
   "subtitle_selection": {
     "count_selected": "{count} selecionadas"

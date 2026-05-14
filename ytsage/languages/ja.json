@@ -83,7 +83,8 @@
     "select_all": "すべて選択",
     "deselect_all": "すべて解除",
     "open_folder": "フォルダの場所を開く",
-    "history": "履歴"
+    "history": "履歴",
+    "save_playlist": "プレイリストを別名で保存"
   },
   "dialogs": {
     "custom_options": "カスタムオプション",
@@ -95,7 +96,8 @@
     "filter_languages_placeholder": "言語でフィルタ (例: ja, en)...",
     "no_subtitles_available": "利用可能な字幕がありません",
     "matching": "一致",
-    "ytdlp_log_title": "yt-dlpログ"
+    "ytdlp_log_title": "yt-dlpログ",
+    "filter_playlist_placeholder": "Filter videos..."
   },
   "tabs": {
     "cookies": "Cookieでログイン",
@@ -129,7 +131,8 @@
     "cleared_message": "Cookie設定がクリアされました",
     "active_browser": "✓ 有効: ブラウザーのCookie ({browser})",
     "active_file": "✓ 有効: Cookieファイル ({file})",
-    "none_active": "○ 有効なCookieはありません"
+    "none_active": "○ 有効なCookieはありません",
+    "remember_settings": "次回の起動時にCookie設定を記憶する"
   },
   "custom_command": {
     "help_text": "以下にカスタムyt-dlpコマンドを入力してください。現在のURLは自動的に追加されます。<br><br>オプションの完全なリストと使用例については、<a href=\"{docs_url}\">こちらをクリックしてyt-dlp公式ドキュメントを参照してください</a>。<br><br>注: ダウンロードパスとファイル名テンプレートは自動的に処理されます。",
@@ -342,7 +345,13 @@
     "filename_format_help": "利用可能な変数: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s。標準のyt-dlp出力テンプレート構文がサポートされています。",
     "tab_general": "一般",
     "tab_format": "フォーマット",
-    "tab_file": "ファイル"
+    "tab_file": "ファイル",
+    "concurrent_fragments": "同時接続数",
+    "concurrent_fragments_help": "ダウンロードごとの接続数。値を大きくするとスロットリングを回避できますが、高すぎると一時的なブロックが発生する可能性があります。デフォルト: 1。",
+    "defaults_settings": "デフォルト選択設定",
+    "default_video_quality": "デフォルトのビデオ解像度 (高さ):",
+    "default_subtitle_language": "デフォルトの字幕言語:",
+    "defaults_help": "優先するビデオの高さと字幕言語（カンマ区切り）を設定します。利用可能な場合は自動的に選択されます。"
   },
   "main_ui": {
     "url_placeholder": "YouTubeの動画URLまたはプレイリストURLを入力",
@@ -452,7 +461,8 @@
     "generic_error": "エラー: {error}",
     "download_failed_return_code_conflict": "ダウンロードは戻りコード {return_code} で失敗しました。複数の yt-dlp インストールの競合が原因の可能性があります。システムにインストールされた yt-dlp（例: snap や apt）をアンインストールしてアプリを再起動してください。",
     "download_failed_return_code": "ダウンロードは戻りコード {return_code} で失敗しました",
-    "direct_command_error": "直接コマンドのエラー: {error}"
+    "direct_command_error": "直接コマンドのエラー: {error}",
+    "private_video": "この動画は非公開かもしれません。カスタムオプションからCookieを使用してください。"
   },
   "update_dialog": {
     "title": "アップデートが利用可能です",
@@ -467,7 +477,13 @@
     "unknown": "不明な再生リスト",
     "total_videos": "総動画数: {count}",
     "display_format": "再生リスト: {title} | {count}個の動画",
-    "select_videos_title": "プレイリスト動画を選択"
+    "select_videos_title": "プレイリスト動画を選択",
+    "save_as": "プレイリストを別名で保存",
+    "save_success_title": "成功",
+    "saved_successfully": "プレイリストを正常に保存しました。",
+    "save_error_title": "保存エラー",
+    "no_videos_to_save": "プレイリストのエントリが見つかりません！",
+    "save_error_msg": "プレイリストの保存に失敗しました。"
   },
   "subtitle_selection": {
     "count_selected": "{count}個選択"

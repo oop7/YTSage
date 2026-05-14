@@ -131,8 +131,13 @@ class AnalysisThread(QThread):
             return
 
         if result.returncode != 0:
-            logger.error(f"yt-dlp failed: {result.stderr}")
-            self.analysis_error.emit(_("errors.ytdlp_failed", error=result.stderr))
+            if "Private video" in result.stderr or "Sign in" in result.stderr:
+                logger.error(f"yt-dlp failed (private video): {result.stderr}")
+                self.analysis_error.emit(_("errors.private_video"))
+            else:
+                logger.error(f"yt-dlp failed: {result.stderr}")
+                self.analysis_error.emit(_("errors.ytdlp_failed", error=result.stderr))
+            
             self.playlist_info_visible.emit(False)
             self.playlist_select_btn_visible.emit(False)
             return
@@ -393,6 +398,29 @@ class AnalysisMixin:
         self.available_automatic_subtitles = result_data["available_automatic_subtitles"]
         self.selected_playlist_items = None
         self.selected_subtitles = []
+        
+        from ..utils.ytsage_config_manager import ConfigManager
+        default_sub = ConfigManager.get("default_subtitle_language")
+        if default_sub:
+            if isinstance(default_sub, str):
+                default_sub_list = [s.strip() for s in default_sub.split(",")]
+            else:
+                default_sub_list = []
+            
+            for lang in default_sub_list:
+                if lang in self.available_subtitles:
+                    self.selected_subtitles.append(f"{lang} - Manual")
+                elif lang in self.available_automatic_subtitles:
+                    self.selected_subtitles.append(f"{lang} - Auto-generated")
+            
+            count = len(self.selected_subtitles)
+            try:
+                self.signals.selected_subs_label_text.emit(_("subtitle_selection.count_selected", count=count))
+                self.subtitle_select_btn.setProperty("subtitlesSelected", count > 0)
+                self.subtitle_select_btn.style().unpolish(self.subtitle_select_btn)
+                self.subtitle_select_btn.style().polish(self.subtitle_select_btn)
+            except Exception:
+                pass
 
         # Update UI components (safe - we're in main thread)
         self.update_video_info(self.video_info)
@@ -407,7 +435,11 @@ class AnalysisMixin:
             self.download_thumbnail_file(self.video_url, self.last_path)
 
         # Update subtitle UI
-        self.signals.selected_subs_label_text.emit(_("main_ui.zero_selected"))
+        count = len(self.selected_subtitles)
+        if count > 0:
+            self.signals.selected_subs_label_text.emit(_("subtitle_selection.count_selected", count=count))
+        else:
+            self.signals.selected_subs_label_text.emit(_("main_ui.zero_selected"))
 
         # Update format table
         self.video_button.setChecked(True)

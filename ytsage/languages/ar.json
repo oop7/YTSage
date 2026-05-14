@@ -83,7 +83,8 @@
     "select_all": "تحديد الكل",
     "deselect_all": "إلغاء تحديد الكل",
     "open_folder": "فتح موقع المجلد",
-    "history": "السجل"
+    "history": "السجل",
+    "save_playlist": "حفظ قائمة التشغيل باسم"
   },
   "dialogs": {
     "custom_options": "خيارات مخصصة",
@@ -95,7 +96,8 @@
     "filter_languages_placeholder": "تصفية اللغات (مثال: ar، en)...",
     "no_subtitles_available": "لا توجد ترجمات متاحة",
     "matching": "مطابقة",
-    "ytdlp_log_title": "سجل yt-dlp"
+    "ytdlp_log_title": "سجل yt-dlp",
+    "filter_playlist_placeholder": "تصفية الفيديوهات..."
   },
   "tabs": {
     "cookies": "تسجيل الدخول بالكوكيز",
@@ -129,7 +131,8 @@
     "cleared_message": "تم مسح إعدادات الكوكيز",
     "active_browser": "✓ نشط: كوكيز المتصفح ({browser})",
     "active_file": "✓ نشط: ملف كوكيز ({file})",
-    "none_active": "○ لا توجد كوكيز نشطة"
+    "none_active": "○ لا توجد كوكيز نشطة",
+    "remember_settings": "تذكر إعدادات ملفات تعريف الارتباط عند بدء التشغيل التالي"
   },
   "custom_command": {
     "help_text": "أدخل أمر yt-dlp مخصص أدناه. سيتم إضافة الرابط الحالي تلقائياً.<br><br>للحصول على قائمة كاملة بالخيارات وأمثلة الاستخدام <a href=\"{docs_url}\">انقر هنا لمشاهدة الوثائق الرسمية لـ yt-dlp</a>.<br><br>ملاحظة: يتم التعامل مع مسار التنزيل ونموذج اسم الملف تلقائياً.",
@@ -342,7 +345,13 @@
     "filename_format_help": "المتغيرات المتاحة: %(title)s, %(uploader)s, %(upload_date)s, %(resolution)s, %(id)s, %(ext)s. يتم دعم صيغة قالب إخراج yt-dlp القياسية.",
     "tab_general": "عام",
     "tab_format": "تنسيق",
-    "tab_file": "ملف"
+    "tab_file": "ملف",
+    "concurrent_fragments": "اتصالات متزامنة",
+    "concurrent_fragments_help": "عدد الاتصالات لكل عملية تحميل. القيم الأعلى تتجاوز الاختناق ولكنها قد تسبب حظراً مؤقتاً إذا كانت عالية جداً. الافتراضي: 1.",
+    "defaults_settings": "إعدادات الاختيار الافتراضية",
+    "default_video_quality": "دقة الفيديو الافتراضية (الطول):",
+    "default_subtitle_language": "لغات الترجمة الافتراضية:",
+    "defaults_help": "اضبط ارتفاع الفيديو المفضل ولغات الترجمة (مفصولة بفاصلة). سيتم اختيارها تلقائيًا إذا كانت متوفرة."
   },
   "main_ui": {
     "url_placeholder": "أدخل رابط فيديو يوتيوب أو قائمة تشغيل",
@@ -452,7 +461,8 @@
     "generic_error": "خطأ: {error}",
     "download_failed_return_code_conflict": "فشل التنزيل برمز الإرجاع {return_code}. قد يكون ذلك بسبب تعارض بين عدة عمليات تثبيت لـ yt-dlp. جرّب إزالة أي تثبيت لنظام التشغيل (مثل snap أو apt) ثم أعد تشغيل التطبيق.",
     "download_failed_return_code": "فشل التنزيل برمز الإرجاع {return_code}",
-    "direct_command_error": "خطأ في الأمر المباشر: {error}"
+    "direct_command_error": "خطأ في الأمر المباشر: {error}",
+    "private_video": "قد يكون هذا الفيديو خاصًا. يرجى استخدام ملفات تعريف الارتباط من الخيارات المخصصة."
   },
   "update_dialog": {
     "title": "تحديث متاح",
@@ -467,7 +477,13 @@
     "unknown": "قائمة تشغيل غير معروفة",
     "total_videos": "إجمالي الفيديوهات: {count}",
     "display_format": "قائمة التشغيل: {title} | {count} فيديوهات",
-    "select_videos_title": "اختر مقاطع الفيديو من قائمة التشغيل"
+    "select_videos_title": "اختر مقاطع الفيديو من قائمة التشغيل",
+    "save_as": "حفظ قائمة التشغيل باسم",
+    "save_success_title": "تم بنجاح",
+    "saved_successfully": "تم حفظ قائمة التشغيل بنجاح.",
+    "save_error_title": "خطأ في الحفظ",
+    "no_videos_to_save": "لم يتم العثور على أي مقاطع فيديو لحفظها!",
+    "save_error_msg": "فشل في حفظ قائمة التشغيل."
   },
   "subtitle_selection": {
     "count_selected": "{count} محدد"
