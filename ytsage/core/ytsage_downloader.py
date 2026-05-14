@@ -507,7 +507,7 @@ class DownloadThread(QThread):
                 )
                 return
 
-            if return_code == 0:
+            if return_code == 0 or (self.is_playlist and return_code != 0 and self.current_filename is not None):
                 self.progress_signal.emit(100)
                 
                 # Robust file finding: Always search for the most recent file
@@ -556,7 +556,10 @@ class DownloadThread(QThread):
                     logger.error(f"Error finding final file: {e}", exc_info=True)
                 
                 # Set completion status
-                self.status_signal.emit(_("download.completed"))
+                if return_code != 0:
+                    self.status_signal.emit(_("download.completed") + " (with some errors)")
+                else:
+                    self.status_signal.emit(_("download.completed"))
                 
                 # Clean up subtitle files if they were merged, with a small delay
                 # to ensure the embedding process has completed
