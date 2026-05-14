@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ytsage"
-version = "5.0.10b"
+version = "5.1.0"
 description = "Modern YouTube downloader with a clean PySide6 interface."
 authors = [
     { name = "oop7", email = "oop7_support@proton.me" },

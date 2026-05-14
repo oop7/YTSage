@@ -4,5 +4,5 @@ YTSage - YouTube Video Downloader
 A modern, user-friendly YouTube video downloader built with PySide6.
 """
 
-__version__ = "5.0.10b"
+__version__ = "5.1.0"
 __author__ = "oop7"
