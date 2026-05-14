@@ -1,7 +1,7 @@
 <div align="center">
 
-<img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
-<img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
+<img src="branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
+<img src="branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
@@ -210,16 +210,16 @@ python -m ytsage.main
 <div align="center">
 <table>
   <tr>
-    <td><img src="../branding/screenshots/Download-Settings.png" alt="Download Settings" width="400"/></td>
-    <td><img src="../branding/screenshots/playlist.png" alt="Playlist Download" width="400"/></td>
+    <td><img src="branding/screenshots/Download-Settings.png" alt="Download Settings" width="400"/></td>
+    <td><img src="branding/screenshots/playlist.png" alt="Playlist Download" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Download Settings</em></td>
     <td align="center"><em>Playlist Download</em></td>
   </tr>
   <tr>
-    <td><img src="../branding/screenshots/audio_format.png" alt="Audio Format Selection" width="400"/></td>
-    <td><img src="../branding/screenshots/Custom-Option.png" alt="Custom Options" width="400"/></td>
+    <td><img src="branding/screenshots/audio_format.png" alt="Audio Format Selection" width="400"/></td>
+    <td><img src="branding/screenshots/Custom-Option.png" alt="Custom Options" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><em>Audio Format</em></td>
