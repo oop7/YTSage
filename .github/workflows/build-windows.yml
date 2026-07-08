@@ -256,13 +256,32 @@ jobs:
         # Create ffmpeg directory
         New-Item -ItemType Directory -Path "ffmpeg-temp" -Force
         
-        # Download FFmpeg
-        $ffmpegUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
-        Write-Host "Downloading FFmpeg from: $ffmpegUrl"
-        Invoke-WebRequest -Uri $ffmpegUrl -OutFile "ffmpeg-temp\ffmpeg.zip"
-        
+        # Download FFmpeg (fallback to a mirror if the primary endpoint is unavailable)
+        $ffmpegUrls = @(
+          "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip",
+          "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
+        )
+        $ffmpegZipPath = "ffmpeg-temp\ffmpeg.zip"
+        $downloadSucceeded = $false
+
+        foreach ($ffmpegUrl in $ffmpegUrls) {
+          Write-Host "Downloading FFmpeg from: $ffmpegUrl"
+          try {
+            Invoke-WebRequest -Uri $ffmpegUrl -OutFile $ffmpegZipPath -ErrorAction Stop
+            $downloadSucceeded = $true
+            break
+          } catch {
+            Write-Host "Warning: FFmpeg download failed from $ffmpegUrl - $($_.Exception.Message)"
+          }
+        }
+
+        if (-not $downloadSucceeded) {
+          Write-Host "Error: Failed to download FFmpeg from all configured sources"
+          exit 1
+        }
+
         # Extract FFmpeg
-        Expand-Archive -Path "ffmpeg-temp\ffmpeg.zip" -DestinationPath "ffmpeg-temp" -Force
+        Expand-Archive -Path $ffmpegZipPath -DestinationPath "ffmpeg-temp" -Force
         
         # Find the extracted directory (GyanD ffmpeg has specific naming)
         $ffmpegDir = Get-ChildItem -Path "ffmpeg-temp" -Directory | Where-Object { $_.Name -like "ffmpeg-*" } | Select-Object -First 1
