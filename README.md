@@ -31,6 +31,7 @@ English: [EN](README.md)
 | Russian: [RU](readme-translations/README.ru.md)
 | Turkish: [TR](readme-translations/README.tr.md)
 | Chinese: [ZH](readme-translations/README.zh.md)
+| Persian: [FA](readme-translations/README.fa.md)
 
 <p align="center">
   <a href="#installation">Installation</a> •
@@ -361,6 +362,7 @@ YTSage supports **14 languages** for global accessibility. Select your preferred
 | 🇯🇵 Japanese | `ja` | 🇵🇱 Polish | `pl` |
 | 🇧🇷 Portuguese | `pt` | 🇷🇺 Russian | `ru` |
 | 🇹🇷 Turkish | `tr` | 🇨🇳 Chinese | `zh` |
+| 🇮🇷 Persian | `fa` |
 
 ### README Translations
 
@@ -373,6 +375,7 @@ YTSage supports **14 languages** for global accessibility. Select your preferred
 | 🇯🇵 Japanese | [readme-translations/README.ja.md](readme-translations/README.ja.md) | 🇵🇱 Polish | [readme-translations/README.pl.md](readme-translations/README.pl.md) |
 | 🇧🇷 Portuguese | [readme-translations/README.pt.md](readme-translations/README.pt.md) | 🇷🇺 Russian | [readme-translations/README.ru.md](readme-translations/README.ru.md) |
 | 🇹🇷 Turkish | [readme-translations/README.tr.md](readme-translations/README.tr.md) | 🇨🇳 Chinese | [readme-translations/README.zh.md](readme-translations/README.zh.md) |
+| 🇮🇷 Persian | [readme-translations/README.fa.md](readme-translations/README.fa.md) |
 
 > 💡 **Want to contribute a translation?** Check out the [Contributing](#contributing) section to help us add more languages!
 
