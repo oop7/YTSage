@@ -429,7 +429,7 @@ class YtdlpSetupDialog(QDialog):
         """
         )
 
-        file_path, _ = file_dialog.getOpenFileName(
+        file_path, selected_filter = file_dialog.getOpenFileName(
             self, _("ytdlp_setup.select_executable_title"), "", file_filter
         )
 
