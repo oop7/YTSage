@@ -89,6 +89,7 @@ class LocalizationManager:
         "main_ui": {
             "url_placeholder": "Enter YouTube video or playlist URL",
             "url_placeholder_generic": "Enter video or playlist URL from any supported site",
+            "embed_metadata": "Embed Metadata",
             "settings_tooltip": "Current Path: {path}\nSpeed Limit: {speed_limit}",
             "speed_limit_none": "None"
         },

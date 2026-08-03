@@ -61,6 +61,7 @@ class DownloadThread(QThread):
         playlist_items=None,
         save_description=False,
         embed_chapters=False,
+        embed_metadata=False,
         cookie_file=None,
         browser_cookies=None,
         rate_limit=None,
@@ -91,6 +92,7 @@ class DownloadThread(QThread):
         self.playlist_items = playlist_items
         self.save_description = save_description
         self.embed_chapters = embed_chapters
+        self.embed_metadata = embed_metadata
         self.cookie_file = cookie_file
         self.browser_cookies = browser_cookies
         self.rate_limit = rate_limit
@@ -384,6 +386,10 @@ class DownloadThread(QThread):
         # Add chapters embedding if enabled
         if self.embed_chapters:
             cmd.append("--embed-chapters")
+
+        # Add metadata embedding if enabled
+        if self.embed_metadata:
+            cmd.append("--embed-metadata")
 
         # Add cookies if specified
         if self.cookie_file:

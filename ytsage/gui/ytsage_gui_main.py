@@ -240,6 +240,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.selected_playlist_items = None  # Initialize selection string
         self.save_description = False  # Initialize description state
         self.embed_chapters = False  # Initialize chapters state
+        self.embed_metadata = False  # Initialize metadata state
         self.subtitle_filter = ""
         self.thumbnail_image = None
         self.video_url = ""
@@ -514,6 +515,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.embed_chapters_checkbox.stateChanged.connect(self.toggle_embed_chapters)
         self.embed_chapters_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         self.format_layout.addWidget(self.embed_chapters_checkbox)
+
+        # Add Embed Metadata Checkbox
+        self.embed_metadata_checkbox = QCheckBox(_("main_ui.embed_metadata"))
+        self.embed_metadata_checkbox.setChecked(False)
+        self.embed_metadata_checkbox.stateChanged.connect(self.toggle_embed_metadata)
+        self.embed_metadata_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
+        self.format_layout.addWidget(self.embed_metadata_checkbox)
 
         self.format_layout.addStretch()
 
@@ -843,6 +851,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             playlist_items=playlist_items_to_download,  # Pass the selection string
             save_description=self.save_description,  # Pass the new flag here
             embed_chapters=self.embed_chapters,  # Pass the embed chapters flag
+            embed_metadata=self.embed_metadata,  # Pass the embed metadata flag
             cookie_file=self.cookie_file_path,  # Pass the cookie file path
             browser_cookies=self.browser_cookies_option,  # Pass the browser cookies option
             rate_limit=rate_limit,  # Pass the calculated rate limit
@@ -925,6 +934,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                         "sponsorblock_categories": self.download_thread.sponsorblock_categories,
                         "save_description": self.download_thread.save_description,
                         "embed_chapters": self.download_thread.embed_chapters,
+                        "embed_metadata": self.download_thread.embed_metadata,
                         "download_section": self.download_thread.download_section,
                         "force_keyframes": self.download_thread.force_keyframes,
                     }
@@ -1367,6 +1377,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.embed_chapters = bool(state == 2)  # Compare state directly with 2 (Checked state)
         logger.debug(f"Embed chapters toggled: {self.embed_chapters}")
 
+    def toggle_embed_metadata(self, state) -> None:
+        logger.debug(f"Raw metadata state received: {state}")  # Debug: Print raw state
+        self.embed_metadata = bool(state == 2)  # Compare state directly with 2 (Checked state)
+        logger.debug(f"Embed metadata toggled: {self.embed_metadata}")
+
     # --- End Toggle Methods ---
 
     def open_playlist_selection_dialog(self) -> None:
@@ -1541,6 +1556,14 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 self.embed_chapters_checkbox.setToolTip(tooltip_text)
             else:
                 self.embed_chapters_checkbox.setToolTip("")
+
+        # Embed Metadata checkbox
+        if hasattr(self, "embed_metadata_checkbox"):
+            self.embed_metadata_checkbox.setEnabled(enabled)
+            if not enabled:
+                self.embed_metadata_checkbox.setToolTip(tooltip_text)
+            else:
+                self.embed_metadata_checkbox.setToolTip("")
         
         # Merge Subtitles (only if subtitles are selected and not in audio mode)
         if hasattr(self, "merge_subs_checkbox"):

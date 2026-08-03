@@ -362,6 +362,7 @@
     "save_thumbnail": "Save Thumbnail",
     "save_description": "Save Description",
     "embed_chapters": "Embed Chapters",
+    "embed_metadata": "Embed Metadata",
     "subtitles_selected": "{count} selected",
     "all_selected": "All selected",
     "select_videos_all": "Select Videos... (All selected)",
