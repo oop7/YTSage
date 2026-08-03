@@ -762,6 +762,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         is_audio_only = bool(selected_format.get("is_audio_only"))
         format_has_audio = bool(selected_format.get("has_audio"))
 
+        if self.is_playlist and self.audio_button.isChecked():
+            format_id = "bestaudio/best"
+            is_audio_only = True
+            format_has_audio = False
+
         # Show preparation message
         self.status_label.setText(_('download.preparing'))
         self.progress_bar.setValue(0)  # Reset progress (range is 0-10000)
@@ -781,6 +786,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                     
                     if res_item and res_item.text() != "N/A":
                         resolution = res_item.text().replace("≤ ", "").strip()
+                    if self.is_playlist and self.audio_button.isChecked():
+                        resolution = _('formats.audio_only_resolution')
                     break
 
         # Get subtitle selection if available - Now get the list

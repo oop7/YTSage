@@ -381,7 +381,7 @@
     "analyzing_updating_table": "Mise à jour du tableau des formats...",
     "analysis_complete": "Analyse terminée !",
     "analyzing_extracting_ytdlp": "Extraction d'informations...",
-    "analyzing_fetching_first_video": "Récupération des formats pour la première vidéo...",
+    "analyzing_fetching_first_video": "Récupération des formats de la playlist...",
     "analyzing_processing_data": "Traitement des données...",
     "analyzing_processing_formats_ytdlp": "Traitement des formats...",
     "analyzing_loading_thumbnail_ytdlp": "Chargement de la miniature...",
