@@ -488,11 +488,12 @@ YTSage/
 ├── 📁 .github/                   # GitHub configuration
 │   ├── 📁 ISSUE_TEMPLATE/         # Issue templates
 │   │   └── 🐛-bug-report.md       # Bug report template
-│   ├─── 📁 workflows/              # GitHub Actions workflows
+│   ├─── 📁 workflows/            # GitHub Actions workflows
 │   │   ├── build-linux.yml        # Linux build workflow
 │   │   ├── build-macos.yml        # macOS build workflow
 │   │   │── build-windows.yml      # Windows build workflow
-|   |   └── release-all.yml          # Release master workflow
+|   |   └── release-all.yml        # Release master workflow
+|   |   └── star-history.yml       # Star history workflow
 │   └── 📄 CI_CD_README.md        # CI/CD documentation
 ├──  📁 branding/                 # Branding assets (Screenshots, SVGs)
 │   ├── 📁 icons/                 # App icons
@@ -536,15 +537,7 @@ YTSage/
 
 <div align="center">
 
-## Star History
-
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](./star-history.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 
