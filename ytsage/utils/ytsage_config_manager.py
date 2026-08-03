@@ -88,6 +88,7 @@ class ConfigManager:
         "check_beta_updates": False,
         "last_update_check": 0,
         "concurrent_fragments": 1,
+        "play_notification_sound": True,
         "language": "en",
         "ytdlp_channel": "stable",
         "force_output_format": False,

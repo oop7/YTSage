@@ -269,6 +269,22 @@ class DownloadSettingsDialog(QDialog):
 
         generic_mode_group_box.setLayout(generic_mode_layout)
         general_layout.addWidget(generic_mode_group_box)
+
+        # --- Notification Sounds Section ---
+        notification_group_box = QGroupBox(_("settings.notification_sounds", default="Notification Sounds"))
+        notification_layout = QVBoxLayout()
+
+        self.play_notification_sound_enabled = ConfigManager.get("play_notification_sound")
+        if self.play_notification_sound_enabled is None:
+            self.play_notification_sound_enabled = True
+
+        self.play_notification_sound_checkbox = QCheckBox(_("settings.play_notification_sound", default="Play notification sound when download completes"))
+        self.play_notification_sound_checkbox.setChecked(self.play_notification_sound_enabled)
+        notification_layout.addWidget(self.play_notification_sound_checkbox)
+
+        notification_group_box.setLayout(notification_layout)
+        general_layout.addWidget(notification_group_box)
+
         general_layout.addStretch()
 
         # === Format Tab ===
@@ -613,6 +629,9 @@ class DownloadSettingsDialog(QDialog):
             ConfigManager.set("force_audio_format", force_audio_format)
             ConfigManager.set("preferred_audio_format", preferred_audio_format)
             ConfigManager.set("audio_normalization", audio_normalization)
+
+            # Save notification sound setting
+            ConfigManager.set("play_notification_sound", self.play_notification_sound_checkbox.isChecked())
 
             # Save defaults
             default_vid = self.default_vid_qual_input.text().strip()

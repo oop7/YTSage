@@ -339,6 +339,8 @@
     "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available.",
     "concurrent_fragments": "Concurrent Connections",
     "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",
+    "notification_sounds": "Notification Sounds",
+    "play_notification_sound": "Play notification sound when download completes",
     "preferred_audio_format": "Preferred audio format:",
     "force_audio_format_help": "When enabled, audio-only downloads will be converted to your preferred format. This only applies when downloading audio formats.",
     "audio_format_best": "Best (No conversion)",

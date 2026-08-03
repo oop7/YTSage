@@ -947,7 +947,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 logger.error(f"Error saving to history: {e}", exc_info=True)
 
         # Play notification sound when download completes
-        self.play_notification_sound()
+        if ConfigManager.get("play_notification_sound") is not False:
+            self.play_notification_sound()
 
     def open_download_folder(self) -> None:
         """Open the folder containing the downloaded file and select it if possible"""
