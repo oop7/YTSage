@@ -948,6 +948,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(False)
 
     def download_finished(self) -> None:
+        if self.download_cancelled or (self.current_download and getattr(self.current_download, "cancelled", False)):
+            self.toggle_download_controls(True)
+            self.animate_widget_fade_out(self.pause_btn)
+            self.animate_widget_fade_out(self.cancel_btn)
+            self.open_folder_btn.setVisible(False)
+            self.set_status_message_animated(_("download.cancelled"))
+            self.download_details_label.setText("")
+            self.current_download = None
+            self.download_paused = False
+            self.download_cancelled = False
+            return
+
         self.toggle_download_controls(True)
         self.animate_widget_fade_out(self.pause_btn)
         self.animate_widget_fade_out(self.cancel_btn)
@@ -1017,6 +1029,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         # Play notification sound when download completes
         if ConfigManager.get("play_notification_sound") is not False:
             self.play_notification_sound()
+
+        self.current_download = None
 
     def open_download_folder(self) -> None:
         """Open the folder containing the downloaded file and select it if possible"""
@@ -1754,6 +1768,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
     def cancel_download(self) -> None:
         if self.current_download:
+            self.download_cancelled = True
             self.current_download.cancelled = True
             self.set_status_message_animated(_("status.cancelling"))  # Set status directly
             self.download_details_label.setText("")  # Clear details label on cancellation
