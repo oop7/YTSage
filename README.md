@@ -343,6 +343,7 @@ Notes:
   - **Deno Updates:** Check and update the Deno runtime.
 - **FFmpeg/yt-dlp/Deno Detection:** Automatically detects paths and versions for FFmpeg, yt-dlp, and Deno from the About dialog.
 - **Download History:** View past downloads with thumbnails and statuses from the **History** button.
+- **notification-sound opt-out:** Disable the notification sound for completed downloads in **Download settings → General → Notification Sound**.
 
 </details>
 
