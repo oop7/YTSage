@@ -381,7 +381,7 @@
     "analyzing_updating_table": "جاري تحديث جدول التنسيقات...",
     "analysis_complete": "اكتمل التحليل!",
     "analyzing_extracting_ytdlp": "جاري استخراج المعلومات...",
-    "analyzing_fetching_first_video": "جاري جلب التنسيقات للفيديو الأول...",
+    "analyzing_fetching_first_video": "جاري جلب التنسيقات لقائمة التشغيل...",
     "analyzing_processing_data": "جاري معالجة البيانات...",
     "analyzing_processing_formats_ytdlp": "جاري معالجة التنسيقات...",
     "analyzing_loading_thumbnail_ytdlp": "جاري تحميل الصورة المصغرة...",

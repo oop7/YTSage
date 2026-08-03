@@ -31,6 +31,7 @@ English: [EN](README.md)
 | Russian: [RU](readme-translations/README.ru.md)
 | Turkish: [TR](readme-translations/README.tr.md)
 | Chinese: [ZH](readme-translations/README.zh.md)
+| Persian: [FA](readme-translations/README.fa.md)
 
 <p align="center">
   <a href="#installation">Installation</a> •
@@ -342,6 +343,7 @@ Notes:
   - **Deno Updates:** Check and update the Deno runtime.
 - **FFmpeg/yt-dlp/Deno Detection:** Automatically detects paths and versions for FFmpeg, yt-dlp, and Deno from the About dialog.
 - **Download History:** View past downloads with thumbnails and statuses from the **History** button.
+- **notification-sound opt-out:** Disable the notification sound for completed downloads in **Download settings → General → Notification Sound**.
 
 </details>
 
@@ -361,6 +363,7 @@ YTSage supports **14 languages** for global accessibility. Select your preferred
 | 🇯🇵 Japanese | `ja` | 🇵🇱 Polish | `pl` |
 | 🇧🇷 Portuguese | `pt` | 🇷🇺 Russian | `ru` |
 | 🇹🇷 Turkish | `tr` | 🇨🇳 Chinese | `zh` |
+| 🇮🇷 Persian | `fa` |
 
 ### README Translations
 
@@ -373,6 +376,7 @@ YTSage supports **14 languages** for global accessibility. Select your preferred
 | 🇯🇵 Japanese | [readme-translations/README.ja.md](readme-translations/README.ja.md) | 🇵🇱 Polish | [readme-translations/README.pl.md](readme-translations/README.pl.md) |
 | 🇧🇷 Portuguese | [readme-translations/README.pt.md](readme-translations/README.pt.md) | 🇷🇺 Russian | [readme-translations/README.ru.md](readme-translations/README.ru.md) |
 | 🇹🇷 Turkish | [readme-translations/README.tr.md](readme-translations/README.tr.md) | 🇨🇳 Chinese | [readme-translations/README.zh.md](readme-translations/README.zh.md) |
+| 🇮🇷 Persian | [readme-translations/README.fa.md](readme-translations/README.fa.md) |
 
 > 💡 **Want to contribute a translation?** Check out the [Contributing](#contributing) section to help us add more languages!
 
@@ -484,11 +488,12 @@ YTSage/
 ├── 📁 .github/                   # GitHub configuration
 │   ├── 📁 ISSUE_TEMPLATE/         # Issue templates
 │   │   └── 🐛-bug-report.md       # Bug report template
-│   ├─── 📁 workflows/              # GitHub Actions workflows
+│   ├─── 📁 workflows/            # GitHub Actions workflows
 │   │   ├── build-linux.yml        # Linux build workflow
 │   │   ├── build-macos.yml        # macOS build workflow
 │   │   │── build-windows.yml      # Windows build workflow
-|   |   └── release-all.yml          # Release master workflow
+|   |   └── release-all.yml        # Release master workflow
+|   |   └── star-history.yml       # Star history workflow
 │   └── 📄 CI_CD_README.md        # CI/CD documentation
 ├──  📁 branding/                 # Branding assets (Screenshots, SVGs)
 │   ├── 📁 icons/                 # App icons
@@ -532,15 +537,7 @@ YTSage/
 
 <div align="center">
 
-## Star History
-
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](./branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 

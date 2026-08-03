@@ -240,6 +240,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.selected_playlist_items = None  # Initialize selection string
         self.save_description = False  # Initialize description state
         self.embed_chapters = False  # Initialize chapters state
+        self.embed_metadata = False  # Initialize metadata state
+        self.embed_thumbnail = False  # Initialize thumbnail embedding state
         self.subtitle_filter = ""
         self.thumbnail_image = None
         self.video_url = ""
@@ -508,12 +510,74 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.save_description_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         self.format_layout.addWidget(self.save_description_checkbox)
 
+        # Embed options disclosure with hidden panel
+        self.embed_options_widget = QWidget()
+        self.embed_options_layout = QVBoxLayout(self.embed_options_widget)
+        self.embed_options_layout.setContentsMargins(0, 0, 0, 0)
+        self.embed_options_layout.setSpacing(4)
+        self.embed_options_layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+
+        self.embed_options_toggle = QPushButton("▸ Embed")
+        self.embed_options_toggle.setCheckable(True)
+        self.embed_options_toggle.setChecked(False)
+        self.embed_options_toggle.setStyleSheet(
+            """
+            QPushButton {
+                padding: 5px 11px;
+                background-color: #1d1e22;
+                border: 1px solid #2a2d2e;
+                border-radius: 4px;
+                color: white;
+                font-weight: 600;
+            }
+            QPushButton:hover {
+                background-color: #2a2d36;
+                border-color: #3a3d3e;
+            }
+            QPushButton:checked {
+                background-color: #2a2d36;
+                border-color: #c90000;
+            }
+            """
+        )
+        self.embed_options_toggle.clicked.connect(self.toggle_embed_options)
+        self.embed_options_layout.addWidget(self.embed_options_toggle, alignment=Qt.AlignmentFlag.AlignLeft)
+
+        self.embed_options_panel = QWidget()
+        self.embed_options_panel.setVisible(False)
+        self.embed_options_panel.setStyleSheet("background: #1d1e22; border: 1px solid #2a2d2e; border-radius: 4px;")
+        self.embed_options_panel_layout = QVBoxLayout(self.embed_options_panel)
+        self.embed_options_panel_layout.setContentsMargins(8, 6, 8, 6)
+        self.embed_options_panel_layout.setSpacing(6)
+        self.embed_options_panel_layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+
         # Add Embed Chapters Checkbox
-        self.embed_chapters_checkbox = QCheckBox(_("main_ui.embed_chapters"))
+        self.embed_chapters_checkbox = QCheckBox(_("main_ui.embed_chapters_compact"))
         self.embed_chapters_checkbox.setChecked(False)
         self.embed_chapters_checkbox.stateChanged.connect(self.toggle_embed_chapters)
-        self.embed_chapters_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
-        self.format_layout.addWidget(self.embed_chapters_checkbox)
+        self.embed_chapters_checkbox.setToolTip(_("main_ui.embed_chapters"))
+        self.embed_chapters_checkbox.setStyleSheet(StyleSheet.CHECKBOX + "\nQCheckBox { padding: 1px; margin-left: 4px; font-size: 11px; }")
+        self.embed_options_panel_layout.addWidget(self.embed_chapters_checkbox)
+
+        # Add Embed Metadata Checkbox
+        self.embed_metadata_checkbox = QCheckBox(_("main_ui.embed_metadata_compact"))
+        self.embed_metadata_checkbox.setChecked(False)
+        self.embed_metadata_checkbox.stateChanged.connect(self.toggle_embed_metadata)
+        self.embed_metadata_checkbox.setToolTip(_("main_ui.embed_metadata"))
+        self.embed_metadata_checkbox.setStyleSheet(StyleSheet.CHECKBOX + "\nQCheckBox { padding: 1px; margin-left: 4px; font-size: 11px; }")
+        self.embed_options_panel_layout.addWidget(self.embed_metadata_checkbox)
+
+        # Add Embed Thumbnail Checkbox
+        self.embed_thumbnail_checkbox = QCheckBox(_("main_ui.embed_thumbnail_compact"))
+        self.embed_thumbnail_checkbox.setChecked(False)
+        self.embed_thumbnail_checkbox.stateChanged.connect(self.toggle_embed_thumbnail)
+        self.embed_thumbnail_checkbox.setToolTip(_("main_ui.embed_thumbnail"))
+        self.embed_thumbnail_checkbox.setStyleSheet(StyleSheet.CHECKBOX + "\nQCheckBox { padding: 1px; margin-left: 4px; font-size: 11px; }")
+        self.embed_options_panel_layout.addWidget(self.embed_thumbnail_checkbox)
+
+        self.embed_options_panel_layout.addStretch()
+        self.embed_options_layout.addWidget(self.embed_options_panel, alignment=Qt.AlignmentFlag.AlignLeft)
+        self.format_layout.addWidget(self.embed_options_widget, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.format_layout.addStretch()
 
@@ -762,6 +826,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         is_audio_only = bool(selected_format.get("is_audio_only"))
         format_has_audio = bool(selected_format.get("has_audio"))
 
+        if self.is_playlist and self.audio_button.isChecked():
+            format_id = "bestaudio/best"
+            is_audio_only = True
+            format_has_audio = False
+
         # Show preparation message
         self.status_label.setText(_('download.preparing'))
         self.progress_bar.setValue(0)  # Reset progress (range is 0-10000)
@@ -781,6 +850,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                     
                     if res_item and res_item.text() != "N/A":
                         resolution = res_item.text().replace("≤ ", "").strip()
+                    if self.is_playlist and self.audio_button.isChecked():
+                        resolution = _('formats.audio_only_resolution')
                     break
 
         # Get subtitle selection if available - Now get the list
@@ -836,6 +907,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             playlist_items=playlist_items_to_download,  # Pass the selection string
             save_description=self.save_description,  # Pass the new flag here
             embed_chapters=self.embed_chapters,  # Pass the embed chapters flag
+            embed_metadata=self.embed_metadata,  # Pass the embed metadata flag
+            embed_thumbnail=self.embed_thumbnail,  # Pass the embed thumbnail flag
             cookie_file=self.cookie_file_path,  # Pass the cookie file path
             browser_cookies=self.browser_cookies_option,  # Pass the browser cookies option
             rate_limit=rate_limit,  # Pass the calculated rate limit
@@ -875,6 +948,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(False)
 
     def download_finished(self) -> None:
+        if self.download_cancelled or (self.current_download and getattr(self.current_download, "cancelled", False)):
+            self.toggle_download_controls(True)
+            self.animate_widget_fade_out(self.pause_btn)
+            self.animate_widget_fade_out(self.cancel_btn)
+            self.open_folder_btn.setVisible(False)
+            self.set_status_message_animated(_("download.cancelled"))
+            self.download_details_label.setText("")
+            self.current_download = None
+            self.download_paused = False
+            self.download_cancelled = False
+            return
+
         self.toggle_download_controls(True)
         self.animate_widget_fade_out(self.pause_btn)
         self.animate_widget_fade_out(self.cancel_btn)
@@ -918,6 +1003,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                         "sponsorblock_categories": self.download_thread.sponsorblock_categories,
                         "save_description": self.download_thread.save_description,
                         "embed_chapters": self.download_thread.embed_chapters,
+                        "embed_metadata": self.download_thread.embed_metadata,
+                        "embed_thumbnail": self.download_thread.embed_thumbnail,
                         "download_section": self.download_thread.download_section,
                         "force_keyframes": self.download_thread.force_keyframes,
                     }
@@ -940,7 +1027,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 logger.error(f"Error saving to history: {e}", exc_info=True)
 
         # Play notification sound when download completes
-        self.play_notification_sound()
+        if ConfigManager.get("play_notification_sound") is not False:
+            self.play_notification_sound()
+
+        self.current_download = None
 
     def open_download_folder(self) -> None:
         """Open the folder containing the downloaded file and select it if possible"""
@@ -1359,6 +1449,20 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.embed_chapters = bool(state == 2)  # Compare state directly with 2 (Checked state)
         logger.debug(f"Embed chapters toggled: {self.embed_chapters}")
 
+    def toggle_embed_metadata(self, state) -> None:
+        logger.debug(f"Raw metadata state received: {state}")  # Debug: Print raw state
+        self.embed_metadata = bool(state == 2)  # Compare state directly with 2 (Checked state)
+        logger.debug(f"Embed metadata toggled: {self.embed_metadata}")
+
+    def toggle_embed_thumbnail(self, state) -> None:
+        logger.debug(f"Raw thumbnail embed state received: {state}")  # Debug: Print raw state
+        self.embed_thumbnail = bool(state == 2)  # Compare state directly with 2 (Checked state)
+        logger.debug(f"Embed thumbnail toggled: {self.embed_thumbnail}")
+
+    def toggle_embed_options(self, checked: bool) -> None:
+        self.embed_options_toggle.setText("▾ Embed" if checked else "▸ Embed")
+        self.embed_options_panel.setVisible(checked)
+
     # --- End Toggle Methods ---
 
     def open_playlist_selection_dialog(self) -> None:
@@ -1533,6 +1637,22 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 self.embed_chapters_checkbox.setToolTip(tooltip_text)
             else:
                 self.embed_chapters_checkbox.setToolTip("")
+
+        # Embed Metadata checkbox
+        if hasattr(self, "embed_metadata_checkbox"):
+            self.embed_metadata_checkbox.setEnabled(enabled)
+            if not enabled:
+                self.embed_metadata_checkbox.setToolTip(tooltip_text)
+            else:
+                self.embed_metadata_checkbox.setToolTip("")
+
+        # Embed Thumbnail checkbox
+        if hasattr(self, "embed_thumbnail_checkbox"):
+            self.embed_thumbnail_checkbox.setEnabled(enabled)
+            if not enabled:
+                self.embed_thumbnail_checkbox.setToolTip(tooltip_text)
+            else:
+                self.embed_thumbnail_checkbox.setToolTip("")
         
         # Merge Subtitles (only if subtitles are selected and not in audio mode)
         if hasattr(self, "merge_subs_checkbox"):
@@ -1648,6 +1768,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
     def cancel_download(self) -> None:
         if self.current_download:
+            self.download_cancelled = True
             self.current_download.cancelled = True
             self.set_status_message_animated(_("status.cancelling"))  # Set status directly
             self.download_details_label.setText("")  # Clear details label on cancellation

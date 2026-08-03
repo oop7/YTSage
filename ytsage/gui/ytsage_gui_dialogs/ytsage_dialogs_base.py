@@ -112,6 +112,8 @@ class AboutDialog(QDialog):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._parent = parent  # Store parent to access version etc.
+        self.info_thread = None
+        self.refresh_thread = None
         self.setWindowTitle(_("about.title"))
         self.setMinimumSize(460, 420)  # Slightly increased to accommodate paths
         self.resize(460, 440)  # Slightly increased initial size
@@ -461,6 +463,9 @@ class AboutDialog(QDialog):
 
     def update_system_info(self) -> None:
         """Start background thread to gather system info."""
+        if self.info_thread and self.info_thread.isRunning():
+            return
+
         self.info_thread = SystemInfoThread()
         self.info_thread.info_ready.connect(self._populate_system_info)
         self.info_thread.start()
@@ -585,6 +590,9 @@ class AboutDialog(QDialog):
 
     def refresh_version_info(self) -> None:
         """Refresh version information manually."""
+        if self.refresh_thread and self.refresh_thread.isRunning():
+            return
+
         self.refresh_btn.setText(_('about.refreshing'))
         self.refresh_btn.setEnabled(False)
 
@@ -599,6 +607,24 @@ class AboutDialog(QDialog):
         self.refresh_thread = RefreshThread()
         self.refresh_thread.finished.connect(self.on_refresh_finished)
         self.refresh_thread.start()
+
+    def _wait_for_worker_threads(self) -> None:
+        """Wait for any active worker threads to finish before closing."""
+        for thread in (self.refresh_thread, self.info_thread):
+            if thread and thread.isRunning():
+                thread.wait()
+
+    def closeEvent(self, event) -> None:
+        self._wait_for_worker_threads()
+        super().closeEvent(event)
+
+    def accept(self) -> None:
+        self._wait_for_worker_threads()
+        super().accept()
+
+    def reject(self) -> None:
+        self._wait_for_worker_threads()
+        super().reject()
 
     def on_refresh_finished(self, success) -> None:
         """Handle refresh completion."""

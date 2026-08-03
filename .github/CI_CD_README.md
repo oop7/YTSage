@@ -10,6 +10,7 @@ The workflows are triggered manually via the GitHub Actions "Workflow Dispatch" 
 ### Workflows
 - **Create All Releases** (`release-all.yml`): The master workflow. Triggering this will automatically run the Windows, Linux, macOS, and PyPI builds in parallel with the version you provide.
 - **Platform Specific**: You can also trigger `Build Windows Release`, `Build Linux Release`, `Build macOS Release`, or `Build PyPI Package` individually.
+- **Star History** (`star-history.yml`): Automatically generates and updates the star history chart every week (and can be run manually).
 
 ### Build Process
 1. **Setup**: Uses Python 3.13 on all platforms
@@ -95,11 +96,13 @@ The workflow creates the following files based on the platform:
 
 ### Modifying the Workflow
 The workflow files are located in `.github/workflows/`:
+
 - `release-all.yml` - Master workflow that orchestrates the others
 - `build-windows.yml` - Windows builds logic
 - `build-linux.yml` - Linux builds logic
 - `build-pypi.yml` - PyPI build logic
 - `build-macos.yml` - macOS builds logic
+- `star-history.yml` - Generates the star history chart
 
 ### Key Configuration Options
 - `PYTHON_VERSION`: Python version (currently 3.13)

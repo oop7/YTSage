@@ -206,6 +206,11 @@ class FormatTableMixin:
         if not hasattr(self, "all_formats") or not self.all_formats:
             return
 
+        if hasattr(self, "is_playlist") and self.is_playlist:
+            for row in range(self.format_table.rowCount()):
+                self.format_table.setRowHidden(row, False)
+            return
+
         # Check if we need to rebuild the table (first time or formats changed)
         if not self._table_built:
             self._build_full_format_table()
@@ -295,6 +300,82 @@ class FormatTableMixin:
         self.filter_formats()
         
         # Animate table appearance
+        if hasattr(self, "animate_widget_fade_in"):
+            self.animate_widget_fade_in(self.format_table)
+        else:
+            self.format_table.setVisible(True)
+
+    def _build_playlist_preset_table(self) -> None:
+        """Build the playlist table with hardcoded universal presets."""
+        self = cast("YTSageApp", self)
+
+        self.format_table.setRowCount(0)
+        self.format_checkboxes.clear()
+        self._row_format_type.clear()
+
+        self.format_table.setColumnCount(6)
+        header_labels = [_("formats.select"), _("formats.quality"), _("formats.resolution"), _("formats.fps"), _("formats.hdr"), _("formats.audio")]
+        self.format_table.setHorizontalHeaderLabels(header_labels)
+        self._apply_column_widths(header_labels, is_playlist_mode=True)
+
+        preset_rows = [
+            {"quality": "Best Available", "resolution": "Max Quality", "format_id": "bestvideo+bestaudio/best"},
+            {"quality": "2160p (4K)", "resolution": "≤ 3840x2160", "format_id": "bestvideo[height<=2160]+bestaudio/best/best[height<=2160]"},
+            {"quality": "1440p (2K)", "resolution": "≤ 2560x1440", "format_id": "bestvideo[height<=1440]+bestaudio/best/best[height<=1440]"},
+            {"quality": "1080p (Full HD)", "resolution": "≤ 1920x1080", "format_id": "bestvideo[height<=1080]+bestaudio/best/best[height<=1080]"},
+            {"quality": "720p (HD)", "resolution": "≤ 1280x720", "format_id": "bestvideo[height<=720]+bestaudio/best/best[height<=720]"},
+            {"quality": "480p", "resolution": "≤ 854x480", "format_id": "bestvideo[height<=480]+bestaudio/best/best[height<=480]"},
+            {"quality": "360p", "resolution": "≤ 640x360", "format_id": "bestvideo[height<=360]+bestaudio/best/best[height<=360]"},
+            {"quality": "240p", "resolution": "≤ 426x240", "format_id": "bestvideo[height<=240]+bestaudio/best/best[height<=240]"},
+            {"quality": "144p", "resolution": "≤ 256x144", "format_id": "bestvideo[height<=144]+bestaudio/best/best[height<=144]"},
+            {"quality": "Lowest Available", "resolution": "Worst Available", "format_id": "worstvideo+bestaudio/worst"},
+        ]
+
+        for preset in preset_rows:
+            row = self.format_table.rowCount()
+            self.format_table.insertRow(row)
+            self._row_format_type.append("video")
+
+            checkbox = QCheckBox()
+            checkbox.setStyleSheet("QCheckBox { margin-left: 8px; }")
+            checkbox.format_id = preset["format_id"]
+            checkbox.is_audio_only = False
+            checkbox.has_audio = False
+            checkbox.clicked.connect(lambda checked, cb=checkbox: self.handle_checkbox_click(cb))
+            self.format_checkboxes.append(checkbox)
+
+            checkbox_container = QWidget()
+            checkbox_layout = QHBoxLayout(checkbox_container)
+            checkbox_layout.addWidget(checkbox)
+            checkbox_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            checkbox_layout.setContentsMargins(0, 0, 0, 0)
+            self.format_table.setCellWidget(row, 0, checkbox_container)
+
+            quality_item = QTableWidgetItem(preset["quality"])
+            if preset["quality"] == "Best Available":
+                quality_item.setForeground(QColor("#00ff00"))
+            elif preset["quality"].startswith("2160p") or preset["quality"].startswith("1440p"):
+                quality_item.setForeground(QColor("#00cc00"))
+            elif preset["quality"].startswith("1080p") or preset["quality"].startswith("720p"):
+                quality_item.setForeground(QColor("#ffaa00"))
+            else:
+                quality_item.setForeground(QColor("#ff5555"))
+            self.format_table.setItem(row, 1, quality_item)
+
+            self.format_table.setItem(row, 2, QTableWidgetItem(preset["resolution"]))
+            self.format_table.setItem(row, 3, QTableWidgetItem("Auto"))
+            self.format_table.setItem(row, 4, QTableWidgetItem("Auto"))
+
+            audio_item = QTableWidgetItem(_("formats.will_merge_audio"))
+            audio_item.setForeground(QColor("#ffa500"))
+            self.format_table.setItem(row, 5, audio_item)
+
+        self._table_built = True
+
+        if self.format_checkboxes:
+            self.format_checkboxes[0].setChecked(True)
+            self.handle_checkbox_click(self.format_checkboxes[0])
+
         if hasattr(self, "animate_widget_fade_in"):
             self.animate_widget_fade_in(self.format_table)
         else:
@@ -536,7 +617,10 @@ class FormatTableMixin:
         
         # Mark table as needing rebuild and trigger it
         self._table_built = False
-        self._build_full_format_table()
+        if hasattr(self, "is_playlist") and self.is_playlist:
+            self._build_playlist_preset_table()
+        else:
+            self._build_full_format_table()
 
     def handle_checkbox_click(self, clicked_checkbox) -> None:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
