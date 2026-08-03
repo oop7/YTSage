@@ -366,7 +366,7 @@ YTSage unterstützt **14 Sprachen** für globale Barrierefreiheit. Wählen Sie I
 
 | Sprache | Datei | Sprache | Datei |
 |----------|------|----------|------|
-| 🇺🇸 Englisch | [README.md](README.md) | 🇪🇸 Spanisch | [README.es.md](README.es.md) |
+| 🇺🇸 Englisch | [README.md](../README.md) | 🇪🇸 Spanisch | [README.es.md](README.es.md) |
 | 🇸🇦 Arabisch | [README.ar.md](README.ar.md) | 🇫🇷 Französisch | [README.fr.md](README.fr.md) |
 | 🇩🇪 Deutsch | [README.de.md](README.de.md) | 🇮🇳 Hindi | [README.hi.md](README.hi.md) |
 | 🇮🇩 Indonesisch | [README.id.md](README.id.md) | 🇮🇹 Italienisch | [README.it.md](README.it.md) |
@@ -410,7 +410,7 @@ Einige Antivirenprogramme können `.exe`-Dateien als Fehlalarm (False Positive) 
 
 **Sichere Alternativen:**
 - ✅ **Verwenden Sie die pip-Installation:** `pip install ytsage` (Empfohlen)
-- ✅ **Aus dem Quellcode bauen**: Folgen Sie diesem [Leitfaden](.github/CI_CD_README.md)
+- ✅ **Aus dem Quellcode bauen**: Folgen Sie diesem [Leitfaden](../.github/CI_CD_README.md)
 - ✅ **App auf die Whitelist setzen** in Ihrer Antiviren-Software.
 
 #### 🍎 macOS: "Die App ist beschädigt und kann nicht geöffnet werden"
@@ -546,7 +546,7 @@ YTSage/
 
 ## 📜 Lizenz
 
-Dieses Projekt steht unter der MIT-Lizenz – weitere Details finden Sie in der Datei [LICENSE](LICENSE).
+Dieses Projekt steht unter der MIT-Lizenz – weitere Details finden Sie in der Datei [LICENSE](../LICENSE).
 
 ## 🙏 Danksagungen
 

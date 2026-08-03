@@ -366,7 +366,7 @@ YTSage поддерживает **14 языков**. Выберите нужны
 
 | Язык | Файл | Язык | Файл |
 |----------|------|----------|------|
-| 🇺🇸 Английский | [README.md](README.md) | 🇪🇸 Испанский | [README.es.md](README.es.md) |
+| 🇺🇸 Английский | [README.md](../README.md) | 🇪🇸 Испанский | [README.es.md](README.es.md) |
 | 🇸🇦 Арабский | [README.ar.md](README.ar.md) | 🇫🇷 Французский | [README.fr.md](README.fr.md) |
 | 🇩🇪 Немецкий | [README.de.md](README.de.md) | 🇮🇳 Хинди | [README.hi.md](README.hi.md) |
 | 🇮🇩 Индонезийский | [README.id.md](README.id.md) | 🇮🇹 Итальянский | [README.it.md](README.it.md) |
@@ -410,7 +410,7 @@ YTSage поддерживает **14 языков**. Выберите нужны
 
 **Безопасные варианты:**
 - ✅ **Установка через pip:** `pip install ytsage` (рекомендуется)
-- ✅ **Сборка из исходников**: Инструкция [здесь](.github/CI_CD_README.md)
+- ✅ **Сборка из исходников**: Инструкция [здесь](../.github/CI_CD_README.md)
 - ✅ **Добавить в исключения** антивируса.
 
 #### 🍎 macOS: "App is damaged and cannot be opened"
@@ -537,7 +537,7 @@ YTSage/
 
 ## 📜 Лицензия
 
-Проект распространяется под лицензией MIT — подробности в файле [LICENSE](LICENSE).
+Проект распространяется под лицензией MIT — подробности в файле [LICENSE](../LICENSE).
 
 ## 🙏 Благодарности
 

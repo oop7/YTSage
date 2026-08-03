@@ -366,7 +366,7 @@ YTSage obsługuje **14 języków**. Wybierz preferowany język w **Custom Option
 
 | Język | Plik | Język | Plik |
 |----------|------|----------|------|
-| 🇺🇸 Angielski | [README.md](README.md) | 🇪🇸 Hiszpański | [README.es.md](README.es.md) |
+| 🇺🇸 Angielski | [README.md](../README.md) | 🇪🇸 Hiszpański | [README.es.md](README.es.md) |
 | 🇸🇦 Arabski | [README.ar.md](README.ar.md) | 🇫🇷 Francuski | [README.fr.md](README.fr.md) |
 | 🇩🇪 Niemiecki | [README.de.md](README.de.md) | 🇮🇳 Hindi | [README.hi.md](README.hi.md) |
 | 🇮🇩 Indonezyjski | [README.id.md](README.id.md) | 🇮🇹 Włoski | [README.it.md](README.it.md) |
@@ -410,7 +410,7 @@ Niektóre programy antywirusowe mogą oznaczać pliki `.exe` jako fałszywe alar
 
 **Bezpieczne alternatywy:**
 - ✅ **Użyj instalacji przez pip:** `pip install ytsage` (zalecane)
-- ✅ **Zbuduj ze źródeł**: Postępując zgodnie z tym [przewodnikiem](.github/CI_CD_README.md)
+- ✅ **Zbuduj ze źródeł**: Postępując zgodnie z tym [przewodnikiem](../.github/CI_CD_README.md)
 - ✅ **Dodaj aplikację do wyjątków** w swoim programie antywirusowym.
 
 #### 🍎 macOS: "Aplikacja jest uszkodzona i nie można jej otworzyć"
@@ -546,7 +546,7 @@ YTSage/
 
 ## 📜 Licencja
 
-Ten projekt jest udostępniany na licencji MIT - zobacz plik [LICENSE](LICENSE), aby poznać szczegóły.
+Ten projekt jest udostępniany na licencji MIT - zobacz plik [LICENSE](../LICENSE), aby poznać szczegóły.
 
 ## 🙏 Podziękowania
 

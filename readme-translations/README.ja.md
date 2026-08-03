@@ -366,7 +366,7 @@ YTSage はグローバルに対応するため、**14 言語**をサポートし
 
 | 言語 | ファイル | 言語 | ファイル |
 |----------|------|----------|------|
-| 🇺🇸 英語 | [README.md](README.md) | 🇪🇸 スペイン語 | [README.es.md](README.es.md) |
+| 🇺🇸 英語 | [README.md](../README.md) | 🇪🇸 スペイン語 | [README.es.md](README.es.md) |
 | 🇸🇦 アラビア語 | [README.ar.md](README.ar.md) | 🇫🇷 フランス語 | [README.fr.md](README.fr.md) |
 | 🇩🇪 ドイツ語 | [README.de.md](README.de.md) | 🇮🇳 ヒンディー語 | [README.hi.md](README.hi.md) |
 | 🇮🇩 インドネシア語 | [README.id.md](README.id.md) | 🇮🇹 イタリア語 | [README.it.md](README.it.md) |
@@ -410,7 +410,7 @@ YTSage はグローバルに対応するため、**14 言語**をサポートし
 
 **安全な選択肢：**
 - ✅ **pip インストールを使用する:** `pip install ytsage` (推奨)
-- ✅ **ソースからビルドする**: この[ガイド](.github/CI_CD_README.md)に従ってください。
+- ✅ **ソースからビルドする**: この[ガイド](../.github/CI_CD_README.md)に従ってください。
 - ✅ **アプリケーションをホワイトリストに追加する** (アンチウイルスソフトウェアの設定)。
 
 #### 🍎 macOS: 「アプリが破損しているため開けません」
@@ -546,7 +546,7 @@ YTSage/
 
 ## 📜 ライセンス
 
-このプロジェクトは MIT ライセンスの下でライセンスされています。詳細は [LICENSE](LICENSE) ファイルを参照してください。
+このプロジェクトは MIT ライセンスの下でライセンスされています。詳細は [LICENSE](../LICENSE) ファイルを参照してください。
 
 ## 🙏 謝辞
 

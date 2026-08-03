@@ -366,7 +366,7 @@ YTSage mendukung **14 bahasa** untuk jangkauan global. Pilih bahasa pilihan Anda
 
 | Bahasa | File | Bahasa | File |
 |----------|------|----------|------|
-| 🇺🇸 Inggris | [README.md](README.md) | 🇪🇸 Spanyol | [README.es.md](README.es.md) |
+| 🇺🇸 Inggris | [README.md](../README.md) | 🇪🇸 Spanyol | [README.es.md](README.es.md) |
 | 🇸🇦 Arab | [README.ar.md](README.ar.md) | 🇫🇷 Prancis | [README.fr.md](README.fr.md) |
 | 🇩🇪 Jerman | [README.de.md](README.de.md) | 🇮🇳 Hindi | [README.hi.md](README.hi.md) |
 | 🇮🇩 Indonesia | [README.id.md](README.id.md) | 🇮🇹 Italia | [README.it.md](README.it.md) |
@@ -410,7 +410,7 @@ Beberapa perangkat lunak antivirus mungkin menandai file `.exe` sebagai positif 
 
 **Opsi Aman:**
 - ✅ **Gunakan instalasi pip:** `pip install ytsage` (direkomendasikan)
-- ✅ **Build dari sumber**: Mengikuti [panduan](.github/CI_CD_README.md) ini
+- ✅ **Build dari sumber**: Mengikuti [panduan](../.github/CI_CD_README.md) ini
 - ✅ **Whitelist aplikasi** di perangkat lunak antivirus Anda.
 
 #### 🍎 macOS: "App is damaged and can’t be opened"
@@ -546,7 +546,7 @@ YTSage/
 
 ## 📜 Lisensi
 
-Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](LICENSE) untuk detailnya.
+Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) untuk detailnya.
 
 ## 🙏 Terima Kasih
 

@@ -366,7 +366,7 @@ YTSage soporta **14 idiomas** para accesibilidad global. Selecciona tu idioma pr
 
 | Idioma | Archivo | Idioma | Archivo |
 |----------|------|----------|------|
-| 🇺🇸 Inglés | [README.md](README.md) | 🇪🇸 Español | [README.es.md](README.es.md) |
+| 🇺🇸 Inglés | [README.md](../README.md) | 🇪🇸 Español | [README.es.md](README.es.md) |
 | 🇸🇦 Árabe | [README.ar.md](README.ar.md) | 🇫🇷 Francés | [README.fr.md](README.fr.md) |
 | 🇩🇪 Alemán | [README.de.md](README.de.md) | 🇮🇳 Hindi | [README.hi.md](README.hi.md) |
 | 🇮🇩 Indonesio | [README.id.md](README.id.md) | 🇮🇹 Italiano | [README.it.md](README.it.md) |
@@ -410,7 +410,7 @@ Algunos programas antivirus pueden marcar archivos `.exe` como falsos positivos.
 
 **Alternativas seguras:**
 - ✅ **Usa la instalación de pip:** `pip install ytsage` (Recomendado)
-- ✅ **Construye desde el código fuente**: siguiendo esta [guía](.github/CI_CD_README.md)
+- ✅ **Construye desde el código fuente**: siguiendo esta [guía](../.github/CI_CD_README.md)
 - ✅ **Añade la aplicación a la lista blanca** en tu software antivirus.
 
 #### 🍎 macOS: "La aplicación está dañada y no se puede abrir"
@@ -546,7 +546,7 @@ YTSage/
 
 ## 📜 Licencia
 
-Este proyecto está bajo la Licencia MIT - mira el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT - mira el archivo [LICENSE](../LICENSE) para más detalles.
 
 ## 🙏 Agradecimientos
 

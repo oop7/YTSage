@@ -366,7 +366,7 @@ YTSage, küresel erişim için **14 dili** destekler. Tercih ettiğiniz dili **C
 
 | Dil | Dosya | Dil | Dosya |
 |----------|------|----------|------|
-| 🇺🇸 İngilizce | [README.md](README.md) | 🇪🇸 İspanyolca | [README.es.md](README.es.md) |
+| 🇺🇸 İngilizce | [README.md](../README.md) | 🇪🇸 İspanyolca | [README.es.md](README.es.md) |
 | 🇸🇦 Arapça | [README.ar.md](README.ar.md) | 🇫🇷 Fransızca | [README.fr.md](README.fr.md) |
 | 🇩🇪 Almanca | [README.de.md](README.de.md) | 🇮🇳 Hintçe | [README.hi.md](README.hi.md) |
 | 🇮🇩 Endonezce | [README.id.md](README.id.md) | 🇮🇹 İtalyanca | [README.it.md](README.it.md) |
@@ -410,7 +410,7 @@ Bazı antivirüs yazılımları `.exe` dosyalarını yanlış pozitif olarak iş
 
 **Güvenli Seçenekler:**
 - ✅ **pip kurulumunu kullanın:** `pip install ytsage` (önerilir)
-- ✅ **Kaynaktan derleyin**: Bu [kılavuzu](.github/CI_CD_README.md) takip ederek
+- ✅ **Kaynaktan derleyin**: Bu [kılavuzu](../.github/CI_CD_README.md) takip ederek
 - ✅ **Uygulamayı antivirüs yazılımınızın beyaz listesine ekleyin**.
 
 #### 🍎 macOS: "Uygulama hasarlı ve açılamıyor"
@@ -546,7 +546,7 @@ YTSage/
 
 ## 📜 Lisans
 
-Bu proje MIT Lisansı altında lisanslanmıştır - detaylar için [LICENSE](LICENSE) dosyasına bakın.
+Bu proje MIT Lisansı altında lisanslanmıştır - detaylar için [LICENSE](../LICENSE) dosyasına bakın.
 
 ## 🙏 Teşekkürler
 

@@ -366,7 +366,7 @@ python -m ytsage.main
 
 | اللغة | الملف | اللغة | الملف |
 |----------|------|----------|------|
-| 🇺🇸 الإنجليزية | [README.md](README.md) | 🇪🇸 الإسبانية | [README.es.md](README.es.md) |
+| 🇺🇸 الإنجليزية | [README.md](../README.md) | 🇪🇸 الإسبانية | [README.es.md](README.es.md) |
 | 🇸🇦 العربية | [README.ar.md](README.ar.md) | 🇫🇷 الفرنسية | [README.fr.md](README.fr.md) |
 | 🇩🇪 الألمانية | [README.de.md](README.de.md) | 🇮🇳 الهندية | [README.hi.md](README.hi.md) |
 | 🇮🇩 الإندونيسية | [README.id.md](README.id.md) | 🇮🇹 الإيطالية | [README.it.md](README.it.md) |
@@ -410,7 +410,7 @@ python -m ytsage.main
 
 **البدائل الآمنة:**
 - ✅ **استخدم تثبيت pip:** `pip install ytsage` (موصى به)
-- ✅ **البناء من المصدر:** باتباع هذا [الدليل](.github/CI_CD_README.md)
+- ✅ **البناء من المصدر:** باتباع هذا [الدليل](../.github/CI_CD_README.md)
 - ✅ **إضافة التطبيق للقائمة البيضاء** في برنامج الحماية لديك.
 
 #### 🍎 macOS: "The app is damaged and can’t be opened"
@@ -546,7 +546,7 @@ YTSage/
 
 ## 📜 الرخصة
 
-هذا المشروع مرخص بموجب رخصة MIT - راجع ملف [LICENSE](LICENSE) لمزيد من التفاصيل.
+هذا المشروع مرخص بموجب رخصة MIT - راجع ملف [LICENSE](../LICENSE) لمزيد من التفاصيل.
 
 ## 🙏 شكر وتقدير
 
