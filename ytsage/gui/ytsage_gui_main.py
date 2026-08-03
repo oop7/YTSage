@@ -510,26 +510,74 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.save_description_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         self.format_layout.addWidget(self.save_description_checkbox)
 
+        # Embed options disclosure with hidden panel
+        self.embed_options_widget = QWidget()
+        self.embed_options_layout = QVBoxLayout(self.embed_options_widget)
+        self.embed_options_layout.setContentsMargins(0, 0, 0, 0)
+        self.embed_options_layout.setSpacing(4)
+        self.embed_options_layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+
+        self.embed_options_toggle = QPushButton("▸ Embed")
+        self.embed_options_toggle.setCheckable(True)
+        self.embed_options_toggle.setChecked(False)
+        self.embed_options_toggle.setStyleSheet(
+            """
+            QPushButton {
+                padding: 5px 11px;
+                background-color: #1d1e22;
+                border: 1px solid #2a2d2e;
+                border-radius: 4px;
+                color: white;
+                font-weight: 600;
+            }
+            QPushButton:hover {
+                background-color: #2a2d36;
+                border-color: #3a3d3e;
+            }
+            QPushButton:checked {
+                background-color: #2a2d36;
+                border-color: #c90000;
+            }
+            """
+        )
+        self.embed_options_toggle.clicked.connect(self.toggle_embed_options)
+        self.embed_options_layout.addWidget(self.embed_options_toggle, alignment=Qt.AlignmentFlag.AlignLeft)
+
+        self.embed_options_panel = QWidget()
+        self.embed_options_panel.setVisible(False)
+        self.embed_options_panel.setStyleSheet("background: #1d1e22; border: 1px solid #2a2d2e; border-radius: 4px;")
+        self.embed_options_panel_layout = QVBoxLayout(self.embed_options_panel)
+        self.embed_options_panel_layout.setContentsMargins(8, 6, 8, 6)
+        self.embed_options_panel_layout.setSpacing(6)
+        self.embed_options_panel_layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+
         # Add Embed Chapters Checkbox
-        self.embed_chapters_checkbox = QCheckBox(_("main_ui.embed_chapters"))
+        self.embed_chapters_checkbox = QCheckBox(_("main_ui.embed_chapters_compact"))
         self.embed_chapters_checkbox.setChecked(False)
         self.embed_chapters_checkbox.stateChanged.connect(self.toggle_embed_chapters)
-        self.embed_chapters_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
-        self.format_layout.addWidget(self.embed_chapters_checkbox)
+        self.embed_chapters_checkbox.setToolTip(_("main_ui.embed_chapters"))
+        self.embed_chapters_checkbox.setStyleSheet(StyleSheet.CHECKBOX + "\nQCheckBox { padding: 1px; margin-left: 4px; font-size: 11px; }")
+        self.embed_options_panel_layout.addWidget(self.embed_chapters_checkbox)
 
         # Add Embed Metadata Checkbox
-        self.embed_metadata_checkbox = QCheckBox(_("main_ui.embed_metadata"))
+        self.embed_metadata_checkbox = QCheckBox(_("main_ui.embed_metadata_compact"))
         self.embed_metadata_checkbox.setChecked(False)
         self.embed_metadata_checkbox.stateChanged.connect(self.toggle_embed_metadata)
-        self.embed_metadata_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
-        self.format_layout.addWidget(self.embed_metadata_checkbox)
+        self.embed_metadata_checkbox.setToolTip(_("main_ui.embed_metadata"))
+        self.embed_metadata_checkbox.setStyleSheet(StyleSheet.CHECKBOX + "\nQCheckBox { padding: 1px; margin-left: 4px; font-size: 11px; }")
+        self.embed_options_panel_layout.addWidget(self.embed_metadata_checkbox)
 
         # Add Embed Thumbnail Checkbox
-        self.embed_thumbnail_checkbox = QCheckBox(_("main_ui.embed_thumbnail"))
+        self.embed_thumbnail_checkbox = QCheckBox(_("main_ui.embed_thumbnail_compact"))
         self.embed_thumbnail_checkbox.setChecked(False)
         self.embed_thumbnail_checkbox.stateChanged.connect(self.toggle_embed_thumbnail)
-        self.embed_thumbnail_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
-        self.format_layout.addWidget(self.embed_thumbnail_checkbox)
+        self.embed_thumbnail_checkbox.setToolTip(_("main_ui.embed_thumbnail"))
+        self.embed_thumbnail_checkbox.setStyleSheet(StyleSheet.CHECKBOX + "\nQCheckBox { padding: 1px; margin-left: 4px; font-size: 11px; }")
+        self.embed_options_panel_layout.addWidget(self.embed_thumbnail_checkbox)
+
+        self.embed_options_panel_layout.addStretch()
+        self.embed_options_layout.addWidget(self.embed_options_panel, alignment=Qt.AlignmentFlag.AlignLeft)
+        self.format_layout.addWidget(self.embed_options_widget, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.format_layout.addStretch()
 
@@ -1396,6 +1444,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         logger.debug(f"Raw thumbnail embed state received: {state}")  # Debug: Print raw state
         self.embed_thumbnail = bool(state == 2)  # Compare state directly with 2 (Checked state)
         logger.debug(f"Embed thumbnail toggled: {self.embed_thumbnail}")
+
+    def toggle_embed_options(self, checked: bool) -> None:
+        self.embed_options_toggle.setText("▾ Embed" if checked else "▸ Embed")
+        self.embed_options_panel.setVisible(checked)
 
     # --- End Toggle Methods ---
 
