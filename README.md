@@ -537,7 +537,7 @@ YTSage/
 
 <div align="center">
 
-[![Star History Chart](./star-history.svg)](https://github.com/oop7/YTSage/stargazers)
+[![Star History Chart](./branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 
