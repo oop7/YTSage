@@ -62,6 +62,7 @@ class DownloadThread(QThread):
         save_description=False,
         embed_chapters=False,
         embed_metadata=False,
+        embed_thumbnail=False,
         cookie_file=None,
         browser_cookies=None,
         rate_limit=None,
@@ -93,6 +94,7 @@ class DownloadThread(QThread):
         self.save_description = save_description
         self.embed_chapters = embed_chapters
         self.embed_metadata = embed_metadata
+        self.embed_thumbnail = embed_thumbnail
         self.cookie_file = cookie_file
         self.browser_cookies = browser_cookies
         self.rate_limit = rate_limit
@@ -390,6 +392,10 @@ class DownloadThread(QThread):
         # Add metadata embedding if enabled
         if self.embed_metadata:
             cmd.append("--embed-metadata")
+
+        # Add thumbnail embedding if enabled
+        if self.embed_thumbnail:
+            cmd.append("--embed-thumbnail")
 
         # Add cookies if specified
         if self.cookie_file:
