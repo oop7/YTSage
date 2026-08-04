@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=80.9.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -24,11 +24,11 @@ license = "MIT"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    'Programming Language :: Python :: 3.14',
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Intended Audience :: End Users/Desktop",
     "Operating System :: OS Independent",
     "Operating System :: Microsoft :: Windows",
@@ -40,11 +40,9 @@ classifiers = [
     "Topic :: Desktop Environment",
     "Environment :: X11 Applications :: Qt",
     "Environment :: Win32 (MS Windows)",
-    "Environment :: MacOS X"
+    "Environment :: MacOS X",
 ]
-
 keywords = ["youtube", "downloader", "video", "audio", "PySide6", "yt-dlp", "GUI"]
-
 
 [project.scripts]
 ytsage = "ytsage.main:main"
