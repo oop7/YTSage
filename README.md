@@ -102,6 +102,12 @@ Then launch the application:
 ytsage
 ```
 
+You can also open YTSage with a video or playlist URL prefilled and analyzed immediately:
+
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
+
 ### 📦 Pre-built Executables
 
 > [👉 Download Latest Release](https://github.com/oop7/YTSage/releases/latest)
