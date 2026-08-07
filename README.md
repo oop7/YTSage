@@ -459,7 +459,7 @@ If YTSage saves you time, please consider sponsoring the project. Sponsoring hel
 
 We welcome contributions! Here’s how you can help:
 
-1. 🍴 Fork the repository
+1. 🍴 Fork the **Beta branch**
 2. 🌿 Create your feature branch:
   ```bash
   git checkout -b feature/AmazingFeature
