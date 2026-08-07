@@ -1,5 +1,6 @@
 import sys
 
+from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from .utils.ytsage_logger import logger
@@ -21,7 +22,13 @@ def main():
         app = QApplication(sys.argv)
 
         window = YTSageApp()  # Instantiate the main application class
+        if len(sys.argv) > 1:
+            initial_url = sys.argv[1].strip()
+            if initial_url:
+                window.url_input.setText(initial_url)
         window.show()
+        if len(sys.argv) > 1 and sys.argv[1].strip():
+            QTimer.singleShot(0, window.analyze_url)
         logger.info("Application window shown, entering main loop")
         sys.exit(app.exec())
     except Exception as e:
