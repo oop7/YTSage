@@ -510,38 +510,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.save_description_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         self.format_layout.addWidget(self.save_description_checkbox)
 
-        # Embed options disclosure with hidden panel
+        # Embed options disclosure with hidden panel (expands upward)
         self.embed_options_widget = QWidget()
         self.embed_options_layout = QVBoxLayout(self.embed_options_widget)
         self.embed_options_layout.setContentsMargins(0, 0, 0, 0)
         self.embed_options_layout.setSpacing(4)
-        self.embed_options_layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-
-        self.embed_options_toggle = QPushButton("▸ Embed")
-        self.embed_options_toggle.setCheckable(True)
-        self.embed_options_toggle.setChecked(False)
-        self.embed_options_toggle.setStyleSheet(
-            """
-            QPushButton {
-                padding: 5px 11px;
-                background-color: #1d1e22;
-                border: 1px solid #2a2d2e;
-                border-radius: 4px;
-                color: white;
-                font-weight: 600;
-            }
-            QPushButton:hover {
-                background-color: #2a2d36;
-                border-color: #3a3d3e;
-            }
-            QPushButton:checked {
-                background-color: #2a2d36;
-                border-color: #c90000;
-            }
-            """
-        )
-        self.embed_options_toggle.clicked.connect(self.toggle_embed_options)
-        self.embed_options_layout.addWidget(self.embed_options_toggle, alignment=Qt.AlignmentFlag.AlignLeft)
+        # Align to bottom so panel expands upward from the toggle button
+        self.embed_options_layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignBottom)
 
         self.embed_options_panel = QWidget()
         self.embed_options_panel.setVisible(False)
@@ -576,7 +551,36 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.embed_options_panel_layout.addWidget(self.embed_thumbnail_checkbox)
 
         self.embed_options_panel_layout.addStretch()
+        # Add panel FIRST so it's at the top of the layout, then toggle below it
+        # With AlignBottom, the panel's bottom edge stays fixed while it grows upward
         self.embed_options_layout.addWidget(self.embed_options_panel, alignment=Qt.AlignmentFlag.AlignLeft)
+
+        self.embed_options_toggle = QPushButton("▸ Embed")
+        self.embed_options_toggle.setCheckable(True)
+        self.embed_options_toggle.setChecked(False)
+        self.embed_options_toggle.setStyleSheet(
+            """
+            QPushButton {
+                padding: 5px 11px;
+                background-color: #1d1e22;
+                border: 1px solid #2a2d2e;
+                border-radius: 4px;
+                color: white;
+                font-weight: 600;
+            }
+            QPushButton:hover {
+                background-color: #2a2d36;
+                border-color: #3a3d3e;
+            }
+            QPushButton:checked {
+                background-color: #2a2d36;
+                border-color: #c90000;
+            }
+            """
+        )
+        self.embed_options_toggle.clicked.connect(self.toggle_embed_options)
+        self.embed_options_layout.addWidget(self.embed_options_toggle, alignment=Qt.AlignmentFlag.AlignLeft)
+
         self.format_layout.addWidget(self.embed_options_widget, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.format_layout.addStretch()
