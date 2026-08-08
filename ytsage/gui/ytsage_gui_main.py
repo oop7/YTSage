@@ -1460,8 +1460,124 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         logger.debug(f"Embed thumbnail toggled: {self.embed_thumbnail}")
 
     def toggle_embed_options(self, checked: bool) -> None:
+        """Toggle embed options panel with smooth expand/collapse animation."""
         self.embed_options_toggle.setText("▾ Embed" if checked else "▸ Embed")
-        self.embed_options_panel.setVisible(checked)
+        self._animate_embed_panel(checked)
+
+    def _animate_embed_panel(self, expand: bool) -> None:
+        """Animate the embed options panel with smooth height and opacity transition."""
+        panel = self.embed_options_panel
+        
+        # Stop any running animations
+        if hasattr(panel, '_expand_anim'):
+            try:
+                if panel._expand_anim.state() == QPropertyAnimation.State.Running:
+                    panel._expand_anim.stop()
+            except RuntimeError:
+                pass
+        
+        if hasattr(panel, '_fade_anim'):
+            try:
+                if panel._fade_anim.state() == QPropertyAnimation.State.Running:
+                    panel._fade_anim.stop()
+            except RuntimeError:
+                pass
+
+        if expand:
+            # Calculate the target height based on content
+            panel.setVisible(True)
+            panel.layout().activate()  # Ensure layout is updated
+            target_height = panel.sizeHint().height()
+            
+            # Start from 0 height
+            panel.setMaximumHeight(0)
+            panel.setMinimumHeight(0)
+            
+            # Height animation
+            height_anim = QPropertyAnimation(panel, b"maximumHeight", panel)
+            height_anim.setDuration(250)
+            height_anim.setStartValue(0)
+            height_anim.setEndValue(target_height)
+            height_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+            
+            # Also animate minimumHeight to keep it in sync
+            min_height_anim = QPropertyAnimation(panel, b"minimumHeight", panel)
+            min_height_anim.setDuration(250)
+            min_height_anim.setStartValue(0)
+            min_height_anim.setEndValue(target_height)
+            min_height_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+            
+            # Opacity animation for the content
+            effect = panel.graphicsEffect()
+            if not effect or not isinstance(effect, QGraphicsOpacityEffect):
+                effect = QGraphicsOpacityEffect(panel)
+                panel.setGraphicsEffect(effect)
+            effect.setOpacity(0.0)
+            
+            fade_anim = QPropertyAnimation(effect, b"opacity", panel)
+            fade_anim.setDuration(200)
+            fade_anim.setStartValue(0.0)
+            fade_anim.setEndValue(1.0)
+            fade_anim.setEasingCurve(QEasingCurve.Type.OutQuad)
+            
+            def on_expand_finished():
+                # Remove height constraints after expansion
+                panel.setMaximumHeight(16777215)  # Qt's default max
+                panel.setMinimumHeight(0)
+                panel.setGraphicsEffect(None)
+            
+            height_anim.finished.connect(on_expand_finished)
+            
+            height_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
+            min_height_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
+            fade_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
+            
+            panel._expand_anim = height_anim
+            panel._fade_anim = fade_anim
+        else:
+            # Collapse animation
+            current_height = panel.height()
+            
+            # Height animation
+            height_anim = QPropertyAnimation(panel, b"maximumHeight", panel)
+            height_anim.setDuration(200)
+            height_anim.setStartValue(current_height)
+            height_anim.setEndValue(0)
+            height_anim.setEasingCurve(QEasingCurve.Type.InCubic)
+            
+            min_height_anim = QPropertyAnimation(panel, b"minimumHeight", panel)
+            min_height_anim.setDuration(200)
+            min_height_anim.setStartValue(current_height)
+            min_height_anim.setEndValue(0)
+            min_height_anim.setEasingCurve(QEasingCurve.Type.InCubic)
+            
+            # Opacity animation
+            effect = panel.graphicsEffect()
+            if not effect or not isinstance(effect, QGraphicsOpacityEffect):
+                effect = QGraphicsOpacityEffect(panel)
+                panel.setGraphicsEffect(effect)
+            effect.setOpacity(1.0)
+            
+            fade_anim = QPropertyAnimation(effect, b"opacity", panel)
+            fade_anim.setDuration(150)
+            fade_anim.setStartValue(1.0)
+            fade_anim.setEndValue(0.0)
+            fade_anim.setEasingCurve(QEasingCurve.Type.InQuad)
+            
+            def on_collapse_finished():
+                panel.setVisible(False)
+                panel.setMaximumHeight(16777215)
+                panel.setMinimumHeight(0)
+                panel.setGraphicsEffect(None)
+            
+            height_anim.finished.connect(on_collapse_finished)
+            
+            height_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
+            min_height_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
+            fade_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
+            
+            panel._expand_anim = height_anim
+            panel._fade_anim = fade_anim
 
     # --- End Toggle Methods ---
 
