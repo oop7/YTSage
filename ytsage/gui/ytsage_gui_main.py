@@ -7,7 +7,7 @@ from pathlib import Path
 import markdown
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal, QUrl, QPropertyAnimation, QEasingCurve, QPoint
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal, QUrl, QPropertyAnimation, QEasingCurve, QPoint, QRect, QEvent
 from PySide6.QtGui import QIcon
 from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PySide6.QtWidgets import (
@@ -510,15 +510,41 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.save_description_checkbox.setStyleSheet(StyleSheet.CHECKBOX)
         self.format_layout.addWidget(self.save_description_checkbox)
 
-        # Embed options disclosure with hidden panel (expands upward)
-        self.embed_options_widget = QWidget()
-        self.embed_options_layout = QVBoxLayout(self.embed_options_widget)
-        self.embed_options_layout.setContentsMargins(0, 0, 0, 0)
-        self.embed_options_layout.setSpacing(4)
-        # Align to bottom so panel expands upward from the toggle button
-        self.embed_options_layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignBottom)
+        # Embed options disclosure button. The toggle button lives directly in
+        # format_layout like the other controls, so it never moves. The options
+        # panel below is a free-floating overlay (parented to main_widget, not
+        # placed in any layout) that is shown/hidden and animated by hand, so
+        # expanding/collapsing it can never push the button or any other widget
+        # around - it simply grows upward on top of everything else.
+        self.embed_options_toggle = QPushButton("▸ Embed")
+        self.embed_options_toggle.setCheckable(True)
+        self.embed_options_toggle.setChecked(False)
+        self.embed_options_toggle.setStyleSheet(
+            """
+            QPushButton {
+                padding: 5px 11px;
+                background-color: #1d1e22;
+                border: 1px solid #2a2d2e;
+                border-radius: 4px;
+                color: white;
+                font-weight: 600;
+            }
+            QPushButton:hover {
+                background-color: #2a2d36;
+                border-color: #3a3d3e;
+            }
+            QPushButton:checked {
+                background-color: #2a2d36;
+                border-color: #c90000;
+            }
+            """
+        )
+        self.embed_options_toggle.clicked.connect(self.toggle_embed_options)
+        self.format_layout.addWidget(self.embed_options_toggle)
 
-        self.embed_options_panel = QWidget()
+        # Floating panel: parented to main_widget but NOT added to any layout,
+        # so it overlays other widgets instead of taking up flow space.
+        self.embed_options_panel = QWidget(main_widget)
         self.embed_options_panel.setVisible(False)
         self.embed_options_panel.setStyleSheet("background: #1d1e22; border: 1px solid #2a2d2e; border-radius: 4px;")
         self.embed_options_panel_layout = QVBoxLayout(self.embed_options_panel)
@@ -551,39 +577,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.embed_options_panel_layout.addWidget(self.embed_thumbnail_checkbox)
 
         self.embed_options_panel_layout.addStretch()
-        # Add panel FIRST so it's at the top of the layout, then toggle below it
-        # With AlignBottom, the panel's bottom edge stays fixed while it grows upward
-        self.embed_options_layout.addWidget(self.embed_options_panel, alignment=Qt.AlignmentFlag.AlignLeft)
-
-        self.embed_options_toggle = QPushButton("▸ Embed")
-        self.embed_options_toggle.setCheckable(True)
-        self.embed_options_toggle.setChecked(False)
-        self.embed_options_toggle.setStyleSheet(
-            """
-            QPushButton {
-                padding: 5px 11px;
-                background-color: #1d1e22;
-                border: 1px solid #2a2d2e;
-                border-radius: 4px;
-                color: white;
-                font-weight: 600;
-            }
-            QPushButton:hover {
-                background-color: #2a2d36;
-                border-color: #3a3d3e;
-            }
-            QPushButton:checked {
-                background-color: #2a2d36;
-                border-color: #c90000;
-            }
-            """
-        )
-        self.embed_options_toggle.clicked.connect(self.toggle_embed_options)
-        self.embed_options_layout.addWidget(self.embed_options_toggle, alignment=Qt.AlignmentFlag.AlignLeft)
-
-        self.format_layout.addWidget(self.embed_options_widget, alignment=Qt.AlignmentFlag.AlignLeft)
+        self.embed_options_panel.adjustSize()
 
         self.format_layout.addStretch()
+
+        # Close the floating panel automatically if the user clicks anywhere
+        # outside of it (standard dropdown/popover behavior).
+        QApplication.instance().installEventFilter(self)
 
         layout.addLayout(self.format_layout)
 
@@ -1464,124 +1464,151 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         logger.debug(f"Embed thumbnail toggled: {self.embed_thumbnail}")
 
     def toggle_embed_options(self, checked: bool) -> None:
-        """Toggle embed options panel with smooth expand/collapse animation."""
+        """Toggle the floating embed options panel. The toggle button itself
+        is a normal, fully in-layout widget and never moves or resizes -
+        only the floating panel above it animates open/closed."""
         self.embed_options_toggle.setText("▾ Embed" if checked else "▸ Embed")
         self._animate_embed_panel(checked)
 
-    def _animate_embed_panel(self, expand: bool) -> None:
-        """Animate the embed options panel with smooth height and opacity transition."""
+    def _embed_panel_target_geometry(self) -> QRect:
+        """Compute where the (fully expanded) panel should sit: its bottom-left
+        corner is pinned just above the toggle button's top-left corner, so the
+        panel grows upward from there and the button underneath never shifts."""
+        button = self.embed_options_toggle
         panel = self.embed_options_panel
-        
+        panel.layout().activate()
+
+        content_width = max(panel.sizeHint().width(), button.width())
+        content_height = panel.sizeHint().height()
+
+        gap = 6
+        x = button.x()
+        bottom = button.y() - gap
+        top = bottom - content_height
+
+        # Clamp to the top of the parent so the panel never renders off-screen
+        if top < 0:
+            content_height = max(0, bottom - 0)
+            top = bottom - content_height
+
+        return QRect(x, top, content_width, content_height)
+
+    def _animate_embed_panel(self, expand: bool) -> None:
+        """Animate the floating panel's geometry so it expands/collapses
+        upward from a fixed anchor point, with the bottom edge (and the
+        toggle button beneath it) staying perfectly still throughout."""
+        panel = self.embed_options_panel
+
         # Stop any running animations
-        if hasattr(panel, '_expand_anim'):
-            try:
-                if panel._expand_anim.state() == QPropertyAnimation.State.Running:
-                    panel._expand_anim.stop()
-            except RuntimeError:
-                pass
-        
-        if hasattr(panel, '_fade_anim'):
-            try:
-                if panel._fade_anim.state() == QPropertyAnimation.State.Running:
-                    panel._fade_anim.stop()
-            except RuntimeError:
-                pass
+        for attr in ("_geo_anim", "_fade_anim"):
+            anim = getattr(panel, attr, None)
+            if anim is not None:
+                try:
+                    if anim.state() == QPropertyAnimation.State.Running:
+                        anim.stop()
+                except RuntimeError:
+                    pass
+
+        target_rect = self._embed_panel_target_geometry()
+        # The "collapsed" rect shares the same bottom edge and x position as
+        # the target rect, just with zero height - this is what makes the
+        # panel appear to grow/shrink upward instead of downward.
+        collapsed_rect = QRect(target_rect.x(), target_rect.y() + target_rect.height(), target_rect.width(), 0)
+
+        effect = panel.graphicsEffect()
+        if not effect or not isinstance(effect, QGraphicsOpacityEffect):
+            effect = QGraphicsOpacityEffect(panel)
+            panel.setGraphicsEffect(effect)
 
         if expand:
-            # Calculate the target height based on content
+            panel.setGeometry(collapsed_rect)
             panel.setVisible(True)
-            panel.layout().activate()  # Ensure layout is updated
-            target_height = panel.sizeHint().height()
-            
-            # Start from 0 height
-            panel.setMaximumHeight(0)
-            panel.setMinimumHeight(0)
-            
-            # Height animation
-            height_anim = QPropertyAnimation(panel, b"maximumHeight", panel)
-            height_anim.setDuration(250)
-            height_anim.setStartValue(0)
-            height_anim.setEndValue(target_height)
-            height_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
-            
-            # Also animate minimumHeight to keep it in sync
-            min_height_anim = QPropertyAnimation(panel, b"minimumHeight", panel)
-            min_height_anim.setDuration(250)
-            min_height_anim.setStartValue(0)
-            min_height_anim.setEndValue(target_height)
-            min_height_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
-            
-            # Opacity animation for the content
-            effect = panel.graphicsEffect()
-            if not effect or not isinstance(effect, QGraphicsOpacityEffect):
-                effect = QGraphicsOpacityEffect(panel)
-                panel.setGraphicsEffect(effect)
+            panel.raise_()
             effect.setOpacity(0.0)
-            
+
+            geo_anim = QPropertyAnimation(panel, b"geometry", panel)
+            geo_anim.setDuration(250)
+            geo_anim.setStartValue(collapsed_rect)
+            geo_anim.setEndValue(target_rect)
+            geo_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+
             fade_anim = QPropertyAnimation(effect, b"opacity", panel)
             fade_anim.setDuration(200)
             fade_anim.setStartValue(0.0)
             fade_anim.setEndValue(1.0)
             fade_anim.setEasingCurve(QEasingCurve.Type.OutQuad)
-            
+
             def on_expand_finished():
-                # Remove height constraints after expansion
-                panel.setMaximumHeight(16777215)  # Qt's default max
-                panel.setMinimumHeight(0)
                 panel.setGraphicsEffect(None)
-            
-            height_anim.finished.connect(on_expand_finished)
-            
-            height_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
-            min_height_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
+
+            geo_anim.finished.connect(on_expand_finished)
+
+            geo_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
             fade_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
-            
-            panel._expand_anim = height_anim
+
+            panel._geo_anim = geo_anim
             panel._fade_anim = fade_anim
         else:
-            # Collapse animation
-            current_height = panel.height()
-            
-            # Height animation
-            height_anim = QPropertyAnimation(panel, b"maximumHeight", panel)
-            height_anim.setDuration(200)
-            height_anim.setStartValue(current_height)
-            height_anim.setEndValue(0)
-            height_anim.setEasingCurve(QEasingCurve.Type.InCubic)
-            
-            min_height_anim = QPropertyAnimation(panel, b"minimumHeight", panel)
-            min_height_anim.setDuration(200)
-            min_height_anim.setStartValue(current_height)
-            min_height_anim.setEndValue(0)
-            min_height_anim.setEasingCurve(QEasingCurve.Type.InCubic)
-            
-            # Opacity animation
-            effect = panel.graphicsEffect()
-            if not effect or not isinstance(effect, QGraphicsOpacityEffect):
-                effect = QGraphicsOpacityEffect(panel)
-                panel.setGraphicsEffect(effect)
+            start_rect = panel.geometry()
+            end_rect = QRect(start_rect.x(), start_rect.y() + start_rect.height(), start_rect.width(), 0)
+
             effect.setOpacity(1.0)
-            
+
+            geo_anim = QPropertyAnimation(panel, b"geometry", panel)
+            geo_anim.setDuration(200)
+            geo_anim.setStartValue(start_rect)
+            geo_anim.setEndValue(end_rect)
+            geo_anim.setEasingCurve(QEasingCurve.Type.InCubic)
+
             fade_anim = QPropertyAnimation(effect, b"opacity", panel)
             fade_anim.setDuration(150)
             fade_anim.setStartValue(1.0)
             fade_anim.setEndValue(0.0)
             fade_anim.setEasingCurve(QEasingCurve.Type.InQuad)
-            
+
             def on_collapse_finished():
                 panel.setVisible(False)
-                panel.setMaximumHeight(16777215)
-                panel.setMinimumHeight(0)
                 panel.setGraphicsEffect(None)
-            
-            height_anim.finished.connect(on_collapse_finished)
-            
-            height_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
-            min_height_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
+
+            geo_anim.finished.connect(on_collapse_finished)
+
+            geo_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
             fade_anim.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
-            
-            panel._expand_anim = height_anim
+
+            panel._geo_anim = geo_anim
             panel._fade_anim = fade_anim
+
+    def eventFilter(self, obj, event) -> bool:
+        """Close the floating embed-options panel when the user clicks
+        anywhere outside of it (and outside the toggle button), like a
+        standard dropdown/popover."""
+        panel = getattr(self, "embed_options_panel", None)
+        if panel is not None and panel.isVisible() and event.type() == QEvent.Type.MouseButtonPress:
+            global_pos = event.globalPosition().toPoint()
+            clicked = QApplication.widgetAt(global_pos)
+            toggle = self.embed_options_toggle
+            inside_panel = clicked is not None and (clicked is panel or panel.isAncestorOf(clicked))
+            inside_toggle = clicked is not None and (clicked is toggle or toggle.isAncestorOf(clicked))
+            if not inside_panel and not inside_toggle:
+                self.embed_options_toggle.setChecked(False)
+                self.toggle_embed_options(False)
+        return super().eventFilter(obj, event)
+
+    def resizeEvent(self, event) -> None:
+        """Keep the floating embed-options panel anchored to the toggle
+        button if the window is resized while the panel is open."""
+        super().resizeEvent(event)
+        panel = getattr(self, "embed_options_panel", None)
+        if panel is not None and panel.isVisible():
+            for attr in ("_geo_anim", "_fade_anim"):
+                anim = getattr(panel, attr, None)
+                if anim is not None:
+                    try:
+                        if anim.state() == QPropertyAnimation.State.Running:
+                            anim.stop()
+                    except RuntimeError:
+                        pass
+            panel.setGeometry(self._embed_panel_target_geometry())
 
     # --- End Toggle Methods ---
 
@@ -2169,5 +2196,3 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             painter.drawRect(source_pixmap.rect())
 
         return result
-
-
