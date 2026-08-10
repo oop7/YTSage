@@ -26,6 +26,7 @@ English: [EN](README.md)
 | Indonesian: [ID](readme-translations/README.id.md)
 | Italian: [IT](readme-translations/README.it.md)
 | Japanese: [JA](readme-translations/README.ja.md)
+| Korean: [KO](readme-translations/README.ko.md)
 | Polish: [PL](readme-translations/README.pl.md)
 | Portuguese: [PT](readme-translations/README.pt.md)
 | Russian: [RU](readme-translations/README.ru.md)
@@ -72,7 +73,7 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 | 📑 Chapter Integration | ✂️ Video Section Trimming | 🍪 Login with Cookies |
 | 📜 Download History | 🔄 Version Channel Selection | 🌐 Proxy Support |
 | 🎚️ Audio Format Conversion | 🎬 Video Format Settings | 🆙 Built-in Updater Tab |
-| 🌍 Generic Mode | 🔊 Audio Normalization (EBU R128) | 🌍 Localized in 14 Languages |
+| 🌍 Generic Mode | 🔊 Audio Normalization (EBU R128) | 🌍 Localized in 16 Languages |
 | 💾 Playlist Export | ⚙️ Default Quality & Subtitles | |
 </div>
 
@@ -356,7 +357,7 @@ Notes:
 <details>
 <summary>🌍 Localization</summary>
 
-YTSage supports **14 languages** for global accessibility. Select your preferred language in **Custom Options → Language**.
+YTSage supports **16 languages** for global accessibility. Select your preferred language in **Custom Options → Language**.
 
 ### Supported Languages
 
@@ -366,10 +367,10 @@ YTSage supports **14 languages** for global accessibility. Select your preferred
 | 🇸🇦 Arabic | `ar` | 🇫🇷 French | `fr` |
 | 🇩🇪 German | `de` | 🇮🇳 Hindi | `hi` |
 | 🇮🇩 Indonesian | `id` | 🇮🇹 Italian | `it` |
-| 🇯🇵 Japanese | `ja` | 🇵🇱 Polish | `pl` |
-| 🇧🇷 Portuguese | `pt` | 🇷🇺 Russian | `ru` |
-| 🇹🇷 Turkish | `tr` | 🇨🇳 Chinese | `zh` |
-| 🇮🇷 Persian | `fa` |
+| 🇯🇵 Japanese | `ja` | 🇰🇷 Korean | `ko` |
+| 🇵🇱 Polish | `pl` | 🇧🇷 Portuguese | `pt` |
+| 🇷🇺 Russian | `ru` | 🇹🇷 Turkish | `tr` |
+| 🇨🇳 Chinese | `zh` | 🇮🇷 Persian | `fa` |
 
 ### README Translations
 
@@ -379,10 +380,10 @@ YTSage supports **14 languages** for global accessibility. Select your preferred
 | 🇸🇦 Arabic | [readme-translations/README.ar.md](readme-translations/README.ar.md) | 🇫🇷 French | [readme-translations/README.fr.md](readme-translations/README.fr.md) |
 | 🇩🇪 German | [readme-translations/README.de.md](readme-translations/README.de.md) | 🇮🇳 Hindi | [readme-translations/README.hi.md](readme-translations/README.hi.md) |
 | 🇮🇩 Indonesian | [readme-translations/README.id.md](readme-translations/README.id.md) | 🇮🇹 Italian | [readme-translations/README.it.md](readme-translations/README.it.md) |
-| 🇯🇵 Japanese | [readme-translations/README.ja.md](readme-translations/README.ja.md) | 🇵🇱 Polish | [readme-translations/README.pl.md](readme-translations/README.pl.md) |
-| 🇧🇷 Portuguese | [readme-translations/README.pt.md](readme-translations/README.pt.md) | 🇷🇺 Russian | [readme-translations/README.ru.md](readme-translations/README.ru.md) |
-| 🇹🇷 Turkish | [readme-translations/README.tr.md](readme-translations/README.tr.md) | 🇨🇳 Chinese | [readme-translations/README.zh.md](readme-translations/README.zh.md) |
-| 🇮🇷 Persian | [readme-translations/README.fa.md](readme-translations/README.fa.md) |
+| 🇯🇵 Japanese | [readme-translations/README.ja.md](readme-translations/README.ja.md) | 🇰🇷 Korean | [readme-translations/README.ko.md](readme-translations/README.ko.md) |
+| 🇵🇱 Polish | [readme-translations/README.pl.md](readme-translations/README.pl.md) | 🇧🇷 Portuguese | [readme-translations/README.pt.md](readme-translations/README.pt.md) |
+| 🇷🇺 Russian | [readme-translations/README.ru.md](readme-translations/README.ru.md) | 🇹🇷 Turkish | [readme-translations/README.tr.md](readme-translations/README.tr.md) |
+| 🇨🇳 Chinese | [readme-translations/README.zh.md](readme-translations/README.zh.md) | 🇮🇷 Persian | [readme-translations/README.fa.md](readme-translations/README.fa.md) |
 
 > 💡 **Want to contribute a translation?** Check out the [Contributing](#contributing) section to help us add more languages!
 
