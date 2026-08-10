@@ -5,7 +5,7 @@ Contains basic utility dialogs like LogWindow and AboutDialog.
 
 from datetime import datetime
 
-from PySide6.QtCore import Qt, QThread, QTimer, Signal, QUrl
+from PySide6.QtCore import Qt, QThread, QTimer, Signal, QUrl, QThreadPool
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (
     QDialog,
@@ -36,44 +36,46 @@ class SystemInfoThread(QThread):
     info_ready = Signal(dict)
 
     def run(self):
-        info = {}
-        
-        # yt-dlp Status
-        ytdlp_found = check_ytdlp_installed()
-        info['ytdlp_found'] = ytdlp_found
-        info['ytdlp_version'] = get_ytdlp_version()
-        info['ytdlp_path'] = get_yt_dlp_path() if ytdlp_found else None
+        def get_info():
+            info = {}
+            
+            # yt-dlp Status
+            ytdlp_found = check_ytdlp_installed()
+            info['ytdlp_found'] = ytdlp_found
+            info['ytdlp_version'] = get_ytdlp_version()
+            info['ytdlp_path'] = get_yt_dlp_path() if ytdlp_found else None
 
-        # yt-dlp cache status
-        ytdlp_cache = _version_cache.get("ytdlp", {})
-        info['ytdlp_last_check'] = ytdlp_cache.get("last_check", 0)
-        
-        # FFmpeg Status
-        ffmpeg_found = check_ffmpeg()
-        info['ffmpeg_found'] = ffmpeg_found
-        info['ffmpeg_version'] = get_ffmpeg_version() if ffmpeg_found else _('about.not_available')
-        info['ffmpeg_path'] = get_ffmpeg_path() if ffmpeg_found else None
+            # yt-dlp cache status
+            ytdlp_cache = _version_cache.get("ytdlp", {})
+            info['ytdlp_last_check'] = ytdlp_cache.get("last_check", 0)
+            
+            # FFmpeg Status
+            ffmpeg_found = check_ffmpeg()
+            info['ffmpeg_found'] = ffmpeg_found
+            info['ffmpeg_version'] = get_ffmpeg_version() if ffmpeg_found else _('about.not_available')
+            info['ffmpeg_path'] = get_ffmpeg_path() if ffmpeg_found else None
 
-        # FFmpeg cache status
-        ffmpeg_cache = _version_cache.get("ffmpeg", {})
-        info['ffmpeg_last_check'] = ffmpeg_cache.get("last_check", 0)
-        
-        # Deno Status
-        deno_found = check_deno_installed()
-        info['deno_found'] = deno_found
-        info['deno_version'] = get_deno_version() if deno_found else _('about.not_available')
-        info['deno_path'] = get_deno_path() if deno_found else None
-        
-        # Deno cache status
-        deno_cache = _version_cache.get("deno", {})
-        info['deno_last_check'] = deno_cache.get("last_check", 0)
+            # FFmpeg cache status
+            ffmpeg_cache = _version_cache.get("ffmpeg", {})
+            info['ffmpeg_last_check'] = ffmpeg_cache.get("last_check", 0)
+            
+            # Deno Status
+            deno_found = check_deno_installed()
+            info['deno_found'] = deno_found
+            info['deno_version'] = get_deno_version() if deno_found else _('about.not_available')
+            info['deno_path'] = get_deno_path() if deno_found else None
+            
+            # Deno cache status
+            deno_cache = _version_cache.get("deno", {})
+            info['deno_last_check'] = deno_cache.get("last_check", 0)
 
-        # Check integration with yt-dlp if both are present
-        info['integration_status'] = False
-        if deno_found and ytdlp_found:
-             info['integration_status'] = check_ytdlp_deno_integration()
-             
-        self.info_ready.emit(info)
+            # Check integration with yt-dlp if both are present
+            info['integration_status'] = False
+            if deno_found and ytdlp_found:
+                info['integration_status'] = check_ytdlp_deno_integration()
+                
+            self.info_ready.emit(info)
+        QThreadPool.globalInstance().start(get_info)
 
 
 class LogWindow(QDialog):
