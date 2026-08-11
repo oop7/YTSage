@@ -428,6 +428,8 @@ class FormatTableMixin:
             checkbox.format_id = f["format_id"]
             checkbox.is_audio_only = f.get("vcodec") == "none"
             checkbox.has_audio = f.get("acodec") != "none"
+            if checkbox.is_audio_only and not is_playlist_mode:
+                checkbox.setToolTip(_("formats.audio_track_tooltip"))
             checkbox.clicked.connect(lambda checked, cb=checkbox: self.handle_checkbox_click(cb))
             self.format_checkboxes.append(checkbox)
 
@@ -625,6 +627,32 @@ class FormatTableMixin:
     def handle_checkbox_click(self, clicked_checkbox) -> None:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
 
+        is_audio_row = getattr(clicked_checkbox, "is_audio_only", False)
+        audio_only_download = hasattr(self, "audio_button") and self.audio_button.isChecked()
+        is_playlist_mode = hasattr(self, "is_playlist") and self.is_playlist
+
+        if is_audio_row and not audio_only_download and not is_playlist_mode:
+            # Video mode: the "Audio Only" table doubles as an audio TRACK
+            # picker for the video format that's already selected. Rows here
+            # toggle independently so the user can pick one or several
+            # tracks without clearing the chosen video quality or any other
+            # track they already picked. If nothing is picked, the download
+            # falls back to the best audio automatically (unchanged default).
+            return
+
+        if not is_audio_row and not audio_only_download and not is_playlist_mode:
+            # Video mode: video rows stay a single-select group, but picking
+            # a different quality must not clear any audio track(s) already
+            # chosen to go with it.
+            for checkbox in self.format_checkboxes:
+                if checkbox != clicked_checkbox and not getattr(checkbox, "is_audio_only", False):
+                    checkbox.setChecked(False)
+            return
+
+        # Audio Only download mode (or playlist mode): legacy strict
+        # single-selection across the whole table - picking one row clears
+        # every other row, exactly like before. This keeps "select an audio
+        # format and that's it" working for pure audio-only downloads.
         for checkbox in self.format_checkboxes:
             if checkbox != clicked_checkbox:
                 checkbox.setChecked(False)
@@ -632,14 +660,45 @@ class FormatTableMixin:
     def get_selected_format(self):
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
 
+        video_checkbox = None
+        audio_checkboxes = []
         for checkbox in self.format_checkboxes:
-            if checkbox.isChecked():
+            if not checkbox.isChecked():
+                continue
+            if getattr(checkbox, "is_audio_only", False):
+                audio_checkboxes.append(checkbox)
+            else:
+                video_checkbox = checkbox
+
+        is_playlist_mode = hasattr(self, "is_playlist") and self.is_playlist
+        audio_only_download = hasattr(self, "audio_button") and self.audio_button.isChecked()
+
+        # Pure audio-only download: either the "Audio Only" mode is active,
+        # or (as a safety net) no video format ended up selected at all.
+        if not is_playlist_mode and (audio_only_download or video_checkbox is None):
+            if audio_checkboxes:
+                chosen = audio_checkboxes[0]
                 return {
-                    "format_id": checkbox.format_id,
-                    "is_audio_only": getattr(checkbox, "is_audio_only", False),
-                    "has_audio": getattr(checkbox, "has_audio", False),
+                    "format_id": chosen.format_id,
+                    "is_audio_only": True,
+                    "has_audio": True,
+                    "audio_format_ids": [],
                 }
-        return None
+            if video_checkbox is None:
+                return None
+
+        if video_checkbox is None:
+            return None
+
+        return {
+            "format_id": video_checkbox.format_id,
+            "is_audio_only": False,
+            "has_audio": getattr(video_checkbox, "has_audio", False),
+            # One or more extra audio tracks to merge with the video. Empty
+            # means "no explicit pick" -> the downloader keeps defaulting to
+            # the best available audio, same as the current behavior.
+            "audio_format_ids": [cb.format_id for cb in audio_checkboxes],
+        }
 
     def update_format_table(self, formats) -> None:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.
