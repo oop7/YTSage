@@ -54,7 +54,8 @@
     "high_audio": "High Audio",
     "medium_audio": "Medium Audio",
     "low_audio": "Low Audio",
-    "audio_only_resolution": "Audio only"
+    "audio_only_resolution": "Audio only",
+    "audio_track_tooltip": "Video mode: pick one or more tracks to pair with your video (optional - best audio is used automatically otherwise). Audio Only mode: pick a single track to download as audio only."
   },
   "buttons": {
     "download": "Download",
