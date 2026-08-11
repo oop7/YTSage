@@ -829,34 +829,44 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         format_id = selected_format["format_id"]
         is_audio_only = bool(selected_format.get("is_audio_only"))
         format_has_audio = bool(selected_format.get("has_audio"))
+        # One or more extra audio tracks picked to go with the selected
+        # video format. Empty when the user didn't pick any, in which case
+        # the downloader keeps falling back to the best audio (unchanged).
+        audio_format_ids = list(selected_format.get("audio_format_ids") or [])
 
         if self.is_playlist and self.audio_button.isChecked():
             format_id = "bestaudio/best"
             is_audio_only = True
             format_has_audio = False
+            audio_format_ids = []
 
         # Show preparation message
         self.status_label.setText(_('download.preparing'))
         self.progress_bar.setValue(0)  # Reset progress (range is 0-10000)
         self.open_folder_btn.setVisible(False)  # Hide the open folder button on new download
 
-        # Get resolution for filename
+        # Get resolution for filename. Match the row against the format_id
+        # that was actually resolved above (rather than "first checked row")
+        # since a video row and one or more audio-track rows can now be
+        # checked at the same time - we need the row for whichever one is
+        # actually being downloaded.
         resolution = "default"
-        for row in range(self.format_table.rowCount()):
-            cell_widget = self.format_table.cellWidget(row, 0)
-            if cell_widget:
-                cb = cell_widget.layout().itemAt(0).widget()
-                if isinstance(cb, QCheckBox) and cb.isChecked():
-                    if self.is_playlist:
-                        res_item = self.format_table.item(row, 2)
-                    else:
-                        res_item = self.format_table.item(row, 3)
-                    
-                    if res_item and res_item.text() != "N/A":
-                        resolution = res_item.text().replace("≤ ", "").strip()
-                    if self.is_playlist and self.audio_button.isChecked():
-                        resolution = _('formats.audio_only_resolution')
-                    break
+        if self.is_playlist and self.audio_button.isChecked():
+            resolution = _('formats.audio_only_resolution')
+        else:
+            for row in range(self.format_table.rowCount()):
+                cell_widget = self.format_table.cellWidget(row, 0)
+                if cell_widget:
+                    cb = cell_widget.layout().itemAt(0).widget()
+                    if isinstance(cb, QCheckBox) and cb.isChecked() and getattr(cb, "format_id", None) == format_id:
+                        if self.is_playlist:
+                            res_item = self.format_table.item(row, 2)
+                        else:
+                            res_item = self.format_table.item(row, 3)
+
+                        if res_item and res_item.text() != "N/A":
+                            resolution = res_item.text().replace("≤ ", "").strip()
+                        break
 
         # Get subtitle selection if available - Now get the list
         selected_subs = self.selected_subtitles if hasattr(self, "selected_subtitles") else []
@@ -902,6 +912,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             format_id=format_id,
             is_audio_only=is_audio_only,
             format_has_audio=format_has_audio,
+            audio_format_ids=audio_format_ids,
             subtitle_langs=selected_subs,  # Pass the list of selected subs
             is_playlist=self.is_playlist,  # Use the flag directly
             merge_subs=self.merge_subs_checkbox.isChecked(),
