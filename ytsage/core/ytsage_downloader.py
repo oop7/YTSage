@@ -52,6 +52,7 @@ class DownloadThread(QThread):
         format_id,
         is_audio_only=False,
         format_has_audio=False,
+        audio_format_ids=None,
         subtitle_langs=None,
         is_playlist=False,
         merge_subs=False,
@@ -84,6 +85,10 @@ class DownloadThread(QThread):
         self.format_id = format_id
         self.is_audio_only = is_audio_only
         self.format_has_audio = format_has_audio
+        # Extra audio track(s) explicitly picked to merge with the video
+        # format. Empty/None -> keep defaulting to the best audio, same as
+        # the pre-existing behavior.
+        self.audio_format_ids = list(audio_format_ids) if audio_format_ids else []
         self.subtitle_langs = subtitle_langs if subtitle_langs else []
         self.is_playlist = is_playlist
         self.merge_subs = merge_subs
@@ -275,6 +280,22 @@ class DownloadThread(QThread):
             if self.is_audio_only:
                 cmd.extend(["-f", clean_format_id])
                 logger.debug(f"Using audio-only format selection: {clean_format_id}")
+            # If the user explicitly picked one or more audio tracks, merge
+            # the video with all of them (yt-dlp supports N-way merges via
+            # "+", producing a file with multiple audio tracks when more
+            # than one is given). This takes priority even over a
+            # progressive format, since it's an explicit user choice.
+            elif self.audio_format_ids:
+                clean_audio_ids = [
+                    a.split("-drc")[0] if "-drc" in a else a for a in self.audio_format_ids
+                ]
+                merged_format = "+".join([clean_format_id] + clean_audio_ids)
+                cmd.extend(["-f", merged_format])
+                # yt-dlp only keeps the first audio stream found when merging
+                # multiple formats unless told otherwise - required here so
+                # every explicitly picked track actually ends up in the file.
+                cmd.append("--audio-multistreams")
+                logger.debug(f"Using video format merged with selected audio track(s): {merged_format}")
             # If the selected format already includes an audio track (progressive), no merge needed.
             elif self.format_has_audio:
                 cmd.extend(["-f", clean_format_id])
@@ -289,12 +310,12 @@ class DownloadThread(QThread):
 
         # Force output format if enabled and merging is needed (for video)
         if self.force_output_format and not self.is_audio_only:
-            if self.format_has_audio:
+            if self.format_has_audio and not self.audio_format_ids:
                 # Progressive format (video with audio) - use remux to convert container
                 cmd.extend(["--remux-video", self.preferred_output_format])
                 logger.debug(f"Using --remux-video to force progressive format to: {self.preferred_output_format}")
             else:
-                # Merging video+audio - force merge output format
+                # Merging video+audio (including explicit extra audio track(s)) - force merge output format
                 cmd.extend(["--merge-output-format", self.preferred_output_format])
                 logger.debug(f"Using --merge-output-format to force merged format to: {self.preferred_output_format}")
 
