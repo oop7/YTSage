@@ -55,7 +55,7 @@
     "medium_audio": "Medium Audio",
     "low_audio": "Low Audio",
     "audio_only_resolution": "Audio only",
-    "audio_track_tooltip": "Video mode: pick one or more tracks to pair with your video (optional - best audio is used automatically otherwise). Audio Only mode: pick a single track to download as audio only."
+    "audio_track_tooltip": "Select one or more audio tracks. If a video quality is also selected, the tracks are merged with it; otherwise they download as audio only."
   },
   "buttons": {
     "download": "Download",
@@ -75,7 +75,7 @@
     "paste_url": "Paste URL",
     "select_videos": "Select Videos...",
     "video": "Video",
-    "audio_only": "Audio Only",
+    "audio_only": "Audio",
     "custom_options": "Custom Options",
     "trim_video": "Trim Video",
     "download_settings": "Download Settings",
