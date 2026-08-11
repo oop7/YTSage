@@ -276,10 +276,22 @@ class DownloadThread(QThread):
         elif self.format_id:
             clean_format_id: str = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
 
-            # If the selected format is audio-only, pass it directly.
+            # If the selected format is audio-only, pass it directly - unless
+            # the user also picked extra audio tracks alongside it (no video
+            # selected), in which case merge all of the picked audio tracks
+            # together into a single file with multiple audio streams.
             if self.is_audio_only:
-                cmd.extend(["-f", clean_format_id])
-                logger.debug(f"Using audio-only format selection: {clean_format_id}")
+                if self.audio_format_ids:
+                    clean_audio_ids = [
+                        a.split("-drc")[0] if "-drc" in a else a for a in self.audio_format_ids
+                    ]
+                    merged_format = "+".join([clean_format_id] + clean_audio_ids)
+                    cmd.extend(["-f", merged_format])
+                    cmd.append("--audio-multistreams")
+                    logger.debug(f"Using merged audio-only tracks: {merged_format}")
+                else:
+                    cmd.extend(["-f", clean_format_id])
+                    logger.debug(f"Using audio-only format selection: {clean_format_id}")
             # If the user explicitly picked one or more audio tracks, merge
             # the video with all of them (yt-dlp supports N-way merges via
             # "+", producing a file with multiple audio tracks when more
