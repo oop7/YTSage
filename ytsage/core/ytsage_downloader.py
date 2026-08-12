@@ -431,10 +431,17 @@ class DownloadThread(QThread):
             cmd.append("--embed-thumbnail")
 
         # Add cookies if specified
+        has_cookies = False
         if self.cookie_file:
             cmd.extend(["--cookies", str(self.cookie_file)])
+            has_cookies = True
         elif self.browser_cookies:
             cmd.extend(["--cookies-from-browser", self.browser_cookies])
+            has_cookies = True
+
+        if not has_cookies:
+            # Fallback extractor-args for multi-language audio when no cookies are provided
+            cmd.extend(["--extractor-args", "youtube:player_client=web_embedded,default"])
 
         # Add proxy settings if specified
         if self.proxy_url:
