@@ -1763,12 +1763,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             else:
                 self.subtitle_select_btn.setToolTip("")
         
-        # SponsorBlock (only if not in audio mode)
+        # SponsorBlock - works for audio-only downloads too (it just trims
+        # the file using the video's segment timestamps), so it's not
+        # restricted by video/audio mode - only by analysis being complete.
         if hasattr(self, "sponsorblock_select_btn"):
-            is_audio_mode = self.audio_button.isChecked()
-            self.sponsorblock_select_btn.setEnabled(enabled and not is_audio_mode)
-            if not enabled or is_audio_mode:
-                self.sponsorblock_select_btn.setToolTip(tooltip_text if not enabled else _("main_ui.audio_mode_disabled"))
+            self.sponsorblock_select_btn.setEnabled(enabled)
+            if not enabled:
+                self.sponsorblock_select_btn.setToolTip(tooltip_text)
             else:
                 self.sponsorblock_select_btn.setToolTip("")
         
@@ -1835,16 +1836,19 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         """Enable or disable features based on video/audio mode"""
         # Only allow enabling if analysis is complete
         can_enable = self.analysis_completed
-        
+
+        # SponsorBlock works for audio-only downloads too (it just trims the
+        # file using the video's segment timestamps), so it stays enabled in
+        # both Video and Audio mode - it only depends on analysis being done.
+        if hasattr(self, "sponsorblock_select_btn"):
+            self.sponsorblock_select_btn.setEnabled(can_enable)
+            if not can_enable:
+                self.sponsorblock_select_btn.setToolTip(_("main_ui.analyze_first_tooltip"))
+            else:
+                self.sponsorblock_select_btn.setToolTip("")
+
         if self.audio_button.isChecked():
             # In Audio Only mode, disable video-specific features
-            if hasattr(self, "sponsorblock_select_btn"):
-                self.sponsorblock_select_btn.setEnabled(False)
-                self.sponsorblock_select_btn.setToolTip(_("main_ui.audio_mode_disabled"))
-            if hasattr(self, "selected_sponsorblock_categories"):
-                self.selected_sponsorblock_categories = []  # Clear selection when disabled
-            if hasattr(self, "_update_sponsorblock_display"):
-                self._update_sponsorblock_display()
             self.merge_subs_checkbox.setEnabled(False)
             self.merge_subs_checkbox.setChecked(False)  # Uncheck when disabled
             if not can_enable:
@@ -1861,14 +1865,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                     self.subtitle_select_btn.setToolTip("")
         else:
             # In Video mode, enable video-specific features (if analysis complete)
-            if hasattr(self, "sponsorblock_select_btn"):
-                self.sponsorblock_select_btn.setEnabled(can_enable)
-                if not can_enable:
-                    self.sponsorblock_select_btn.setToolTip(_("main_ui.analyze_first_tooltip"))
-                else:
-                    self.sponsorblock_select_btn.setToolTip("")
-            # Don't automatically restore categories - let user choose when they open the dialog
-
             # Enable merge_subs only if subtitles are selected and analysis is complete
             has_subs_selected = len(getattr(self, "selected_subtitles", [])) > 0
             should_enable_merge = can_enable and has_subs_selected
