@@ -39,6 +39,7 @@
     "file_size": "Размер файла",
     "codec": "Кодек",
     "audio": "Аудио",
+    "language": "Язык",
     "fps": "Кадр/с",
     "hdr": "HDR",
     "will_merge_audio": "Объединит аудио",

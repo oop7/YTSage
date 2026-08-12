@@ -39,6 +39,7 @@
     "file_size": "文件大小",
     "codec": "编解码器",
     "audio": "音频",
+    "language": "语言",
     "fps": "帧率",
     "hdr": "HDR",
     "will_merge_audio": "将合并音频",

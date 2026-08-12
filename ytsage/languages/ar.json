@@ -39,6 +39,7 @@
     "file_size": "حجم الملف",
     "codec": "الترميز",
     "audio": "الصوت",
+    "language": "اللغة",
     "fps": "إطار/ث",
     "hdr": "HDR",
     "will_merge_audio": "سيتم دمج الصوت",

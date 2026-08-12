@@ -50,6 +50,32 @@ class FormatTableMixin:
         
         return codec_str
 
+    def _get_language_display(self, format_info: dict) -> str:
+        """
+        Extract and format language display string from format metadata.
+        Handles format_note with bracketed language codes/names, direct language keys,
+        or format string patterns.
+        """
+        format_note = str(format_info.get("format_note") or "").strip()
+        if format_note:
+            parts = [p.strip() for p in format_note.split(",")]
+            for part in parts:
+                if part.startswith("[") and "]" in part:
+                    return part
+
+        format_str = str(format_info.get("format") or "").strip()
+        if format_str:
+            import re
+            match = re.search(r'(\[[a-zA-Z0-9_-]+\](?:\s*[^\,\|]+)?)', format_str)
+            if match:
+                return match.group(1).strip()
+
+        lang = format_info.get("language")
+        if lang and isinstance(lang, str) and lang.strip():
+            return f"[{lang.strip()}]"
+
+        return "N/A"
+
     def _apply_column_widths(self, header_labels: list[str], is_playlist_mode: bool = False) -> None:
         """Apply responsive column widths to format table."""
         self = cast("YTSageApp", self)
@@ -73,7 +99,7 @@ class FormatTableMixin:
             for i in range(1, 6):
                 self.format_table.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
         else:
-            # Normal mode: 9 columns
+            # Normal mode: 10 columns
             configs = [
                 {"min_width": 70, "padding": 40, "stretch": False},   # Select - fixed
                 {"min_width": 100, "padding": 30, "stretch": True},   # Quality - stretch
@@ -82,6 +108,7 @@ class FormatTableMixin:
                 {"min_width": 90, "padding": 30, "stretch": True},    # File Size - stretch
                 {"min_width": 100, "padding": 30, "stretch": True},   # Codec - stretch
                 {"min_width": 100, "padding": 30, "stretch": True},   # Audio - stretch
+                {"min_width": 120, "padding": 30, "stretch": True},   # Language - stretch
                 {"min_width": 60, "padding": 30, "stretch": False},   # FPS - fixed
                 {"min_width": 60, "padding": 30, "stretch": False},   # HDR - fixed
             ]
@@ -104,7 +131,7 @@ class FormatTableMixin:
         self.format_signals = FormatSignals()
         # Format table with improved styling
         self.format_table = QTableWidget()
-        self.format_table.setColumnCount(9)
+        self.format_table.setColumnCount(10)
         
         # Get translated header labels
         header_labels = [
@@ -115,6 +142,7 @@ class FormatTableMixin:
             _("formats.file_size"),
             _("formats.codec"),
             _("formats.audio"),
+            _("formats.language"),
             _("formats.fps"),
             _("formats.hdr"),
         ]
@@ -397,12 +425,13 @@ class FormatTableMixin:
             self.format_table.setColumnHidden(6, True)
             self.format_table.setColumnHidden(7, True)
             self.format_table.setColumnHidden(8, True)
+            self.format_table.setColumnHidden(9, True)
 
             # Apply responsive column widths for playlist mode
             self._apply_column_widths(header_labels, is_playlist_mode=True)
 
         else:
-            self.format_table.setColumnCount(9)
+            self.format_table.setColumnCount(10)
             header_labels = [
                 _("formats.select"),
                 _("formats.quality"),
@@ -411,10 +440,13 @@ class FormatTableMixin:
                 _("formats.file_size"),
                 _("formats.codec"),
                 _("formats.audio"),
+                _("formats.language"),
                 _("formats.fps"),
                 _("formats.hdr"),
             ]
             self.format_table.setHorizontalHeaderLabels(header_labels)
+            for i in range(10):
+                self.format_table.setColumnHidden(i, False)
             self._apply_column_widths(header_labels, is_playlist_mode=False)
 
         for f, format_type in formats_with_types:
@@ -578,7 +610,16 @@ class FormatTableMixin:
                         codec += f" / {acodec}"
                 self.format_table.setItem(row, 5, QTableWidgetItem(codec))
 
-                # Column 7: FPS (Frame Rate)
+                # Column 7: Language
+                lang_text = self._get_language_display(f)
+                lang_item = QTableWidgetItem(lang_text)
+                if lang_text != "N/A":
+                    lang_item.setForeground(QColor("#4cc9f0"))
+                else:
+                    lang_item.setForeground(QColor("#888888"))
+                self.format_table.setItem(row, 7, lang_item)
+
+                # Column 8: FPS (Frame Rate)
                 fps_value = f.get("fps")
                 if fps_value is not None and fps_value >= 1:
                     fps_text = f"{fps_value:.0f}fps"
@@ -594,9 +635,9 @@ class FormatTableMixin:
                     fps_item.setForeground(QColor("#ff5555"))
                 else:
                     fps_item.setForeground(QColor("#888888"))
-                self.format_table.setItem(row, 7, fps_item)
+                self.format_table.setItem(row, 8, fps_item)
 
-                # Column 8: HDR (Dynamic Range)
+                # Column 9: HDR (Dynamic Range)
                 if f.get("vcodec") == "none":
                     hdr_text = "N/A"
                     hdr_item = QTableWidgetItem(hdr_text)
@@ -611,7 +652,7 @@ class FormatTableMixin:
                         hdr_text = "SDR"
                         hdr_item = QTableWidgetItem(hdr_text)
                         hdr_item.setForeground(QColor("#888888"))
-                self.format_table.setItem(row, 8, hdr_item)
+                self.format_table.setItem(row, 9, hdr_item)
 
     def _update_format_table(self, formats) -> None:
         """Signal handler that triggers a full table rebuild when formats change."""

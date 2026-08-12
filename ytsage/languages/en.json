@@ -39,6 +39,7 @@
     "file_size": "File Size",
     "codec": "Codec",
     "audio": "Audio",
+    "language": "Language",
     "fps": "FPS",
     "hdr": "HDR",
     "will_merge_audio": "Will merge audio",
