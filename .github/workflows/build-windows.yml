@@ -43,24 +43,17 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Cache Python dependencies
-      uses: actions/cache@v6
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
       with:
-        path: |
-          venv
-          ~\AppData\Local\pip\Cache
-        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+        enable-cache: true
 
     - name: Create virtual environment and install dependencies
       shell: powershell
       run: |
-        python -m venv venv
+        uv venv venv
         .\venv\Scripts\Activate.ps1
-        python -m pip install --upgrade pip
-        pip install --no-cache-dir .
-        pip install --no-cache-dir cx_Freeze
+        uv pip install . cx_Freeze
 
     - name: Prepare build variables
       shell: powershell
