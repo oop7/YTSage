@@ -219,6 +219,7 @@
     "description": "Descargador moderno de YouTube con una interfaz limpia de PySide6.",
     "author": "Por: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "Telegram: {channel}",
     "system_info": "Información del Sistema",
     "loading": "🔄 Cargando información del sistema...",
     "refresh": "🔄",

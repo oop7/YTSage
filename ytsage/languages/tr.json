@@ -245,6 +245,7 @@
     "description": "Temiz PySide6 arayüzü ile modern YouTube indiricisi.",
     "author": "Yapımcı: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "Telegram: {channel}",
     "system_info": "Sistem bilgileri",
     "loading": "🔄 Sistem bilgileri yükleniyor...",
     "refresh": "🔄",

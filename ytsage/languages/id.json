@@ -245,6 +245,7 @@
     "description": "Pengunduh YouTube modern dengan antarmuka PySide6 yang bersih.",
     "author": "Oleh: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "Telegram: {channel}",
     "system_info": "Informasi sistem",
     "loading": "🔄 Memuat informasi sistem...",
     "refresh": "🔄",

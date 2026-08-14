@@ -246,6 +246,7 @@
     "description": "具有简洁 PySide6 界面的现代 YouTube 下载器。",
     "author": "作者：{author}",
     "github": "GitHub：{repo}",
+    "telegram": "Telegram：{channel}",
     "system_info": "系统信息",
     "loading": "🔄 正在加载系统信息...",
     "refresh": "🔄",

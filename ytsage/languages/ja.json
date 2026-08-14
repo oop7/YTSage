@@ -245,6 +245,7 @@
     "description": "クリーンなPySide6インターフェースを備えたモダンなYouTubeダウンローダー。",
     "author": "作成者: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "Telegram: {channel}",
     "system_info": "システム情報",
     "loading": "🔄 システム情報を読み込み中...",
     "refresh": "🔄",

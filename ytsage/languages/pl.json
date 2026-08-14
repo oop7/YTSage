@@ -245,6 +245,7 @@
     "description": "Nowoczesny pobieracz YouTube z czystym interfejsem PySide6.",
     "author": "Autor: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "Telegram: {channel}",
     "system_info": "Informacje systemowe",
     "loading": "🔄 Ładowanie informacji systemowych...",
     "refresh": "🔄",

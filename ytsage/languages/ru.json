@@ -246,6 +246,7 @@
     "description": "Современный загрузчик YouTube с чистым интерфейсом PySide6.",
     "author": "Автор: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "Telegram: {channel}",
     "system_info": "Системная информация",
     "loading": "🔄 Загрузка системной информации...",
     "refresh": "🔄",

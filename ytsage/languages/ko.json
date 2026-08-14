@@ -245,6 +245,7 @@
     "description": "깔끔한 PySide6 인터페이스를 갖춘 모던 YouTube 다운로더.",
     "author": "제작: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "텔레그램: {channel}",
     "system_info": "시스템 정보",
     "loading": "🔄 시스템 정보를 불러오는 중...",
     "refresh": "🔄",

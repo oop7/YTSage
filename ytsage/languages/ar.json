@@ -246,6 +246,7 @@
     "description": "برنامج تنزيل يوتيوب حديث مع واجهة PySide6 نظيفة.",
     "author": "المطور: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "تيليجرام: {channel}",
     "system_info": "معلومات النظام",
     "loading": "🔄 جاري تحميل معلومات النظام...",
     "refresh": "🔄",

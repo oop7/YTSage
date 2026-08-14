@@ -139,7 +139,8 @@ class LocalizationManager:
         "about": {
             "open_logs": "📂 Logs",
             "logs_tooltip": "Open application logs folder",
-            "refresh": "🔄"
+            "refresh": "🔄",
+            "telegram": "Telegram: {channel}"
         }
     }
     

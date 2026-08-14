@@ -244,6 +244,13 @@ class AboutDialog(QDialog):
         repo_label.setOpenExternalLinks(True)
         info_layout.addWidget(repo_label)
 
+        telegram_link = '<a href="https://t.me/YTsage_official" style="color: #c90000; text-decoration: none;">Channel</a>'
+        telegram_label = QLabel(
+            f"{_('about.telegram', channel=telegram_link)}"
+        )
+        telegram_label.setOpenExternalLinks(True)
+        info_layout.addWidget(telegram_label)
+
         sponsor_link = '<a href="https://github.com/sponsors/oop7" style="color: #c90000; text-decoration: none;">❤️ Sponsor</a>'
         sponsor_label = QLabel(sponsor_link)
         sponsor_label.setOpenExternalLinks(True)
