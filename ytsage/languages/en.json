@@ -248,6 +248,7 @@
     "author": "By: {author}",
     "github": "GitHub: {repo}",
     "telegram": "Telegram: {channel}",
+    "sponsor": "Support: {sponsor}",
     "system_info": "System Information",
     "loading": "🔄 Loading system information...",
     "refresh": "🔄",

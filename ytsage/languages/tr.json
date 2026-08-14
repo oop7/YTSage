@@ -246,6 +246,7 @@
     "author": "Yapımcı: {author}",
     "github": "GitHub: {repo}",
     "telegram": "Telegram: {channel}",
+    "sponsor": "Destek: {sponsor}",
     "system_info": "Sistem bilgileri",
     "loading": "🔄 Sistem bilgileri yükleniyor...",
     "refresh": "🔄",

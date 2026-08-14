@@ -246,6 +246,7 @@
     "author": "Oleh: {author}",
     "github": "GitHub: {repo}",
     "telegram": "Telegram: {channel}",
+    "sponsor": "Dukungan: {sponsor}",
     "system_info": "Informasi sistem",
     "loading": "🔄 Memuat informasi sistem...",
     "refresh": "🔄",

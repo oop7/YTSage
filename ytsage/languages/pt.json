@@ -246,6 +246,7 @@
     "author": "Por: {author}",
     "github": "GitHub: {repo}",
     "telegram": "Telegram: {channel}",
+    "sponsor": "Apoio: {sponsor}",
     "system_info": "Informações do Sistema",
     "loading": "🔄 Carregando informações do sistema...",
     "refresh": "🔄",

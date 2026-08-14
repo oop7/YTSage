@@ -246,6 +246,7 @@
     "author": "제작: {author}",
     "github": "GitHub: {repo}",
     "telegram": "텔레그램: {channel}",
+    "sponsor": "후원: {sponsor}",
     "system_info": "시스템 정보",
     "loading": "🔄 시스템 정보를 불러오는 중...",
     "refresh": "🔄",

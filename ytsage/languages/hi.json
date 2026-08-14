@@ -246,6 +246,7 @@
     "author": "द्वारा: {author}",
     "github": "GitHub: {repo}",
     "telegram": "Telegram: {channel}",
+    "sponsor": "समर्थन: {sponsor}",
     "system_info": "सिस्टम जानकारी",
     "loading": "🔄 सिस्टम जानकारी लोड हो रही है...",
     "refresh": "🔄",

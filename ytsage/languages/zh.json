@@ -247,6 +247,7 @@
     "author": "作者：{author}",
     "github": "GitHub：{repo}",
     "telegram": "Telegram：{channel}",
+    "sponsor": "支持：{sponsor}",
     "system_info": "系统信息",
     "loading": "🔄 正在加载系统信息...",
     "refresh": "🔄",

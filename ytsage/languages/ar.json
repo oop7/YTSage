@@ -247,6 +247,7 @@
     "author": "المطور: {author}",
     "github": "GitHub: {repo}",
     "telegram": "تيليجرام: {channel}",
+    "sponsor": "الدعم: {sponsor}",
     "system_info": "معلومات النظام",
     "loading": "🔄 جاري تحميل معلومات النظام...",
     "refresh": "🔄",

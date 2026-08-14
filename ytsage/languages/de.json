@@ -247,6 +247,7 @@
     "author": "Von: {author}",
     "github": "GitHub: {repo}",
     "telegram": "Telegram: {channel}",
+    "sponsor": "Unterstützung: {sponsor}",
     "system_info": "Systeminformationen",
     "loading": "🔄 Systeminformationen werden geladen...",
     "refresh": "🔄",
