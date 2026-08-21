@@ -87,14 +87,14 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 Install YTSage via PyPI:
 
 ```bash
-pip install --pre ytsage
+pip install ytsage
 ```
 
 <details>
 <summary>🔄 Update existing installation</summary>
 
 ```bash
-pip install --upgrade --pre ytsage
+pip install --upgrade ytsage
 ```
 
 </details>
