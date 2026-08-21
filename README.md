@@ -3,9 +3,10 @@
 <img src="branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -26,6 +27,7 @@ English: [EN](README.md)
 | Indonesian: [ID](readme-translations/README.id.md)
 | Italian: [IT](readme-translations/README.it.md)
 | Japanese: [JA](readme-translations/README.ja.md)
+| Korean: [KO](readme-translations/README.ko.md)
 | Polish: [PL](readme-translations/README.pl.md)
 | Portuguese: [PT](readme-translations/README.pt.md)
 | Russian: [RU](readme-translations/README.ru.md)
@@ -39,6 +41,7 @@ English: [EN](README.md)
   <a href="#usage">Usage</a> •
   <a href="#screenshots">Screenshots</a> •
   <a href="#troubleshooting">Troubleshooting</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#sponsor">Sponsor</a> •
   <a href="#contributing">Contributing</a>
 </p>
@@ -72,7 +75,7 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 | 📑 Chapter Integration | ✂️ Video Section Trimming | 🍪 Login with Cookies |
 | 📜 Download History | 🔄 Version Channel Selection | 🌐 Proxy Support |
 | 🎚️ Audio Format Conversion | 🎬 Video Format Settings | 🆙 Built-in Updater Tab |
-| 🌍 Generic Mode | 🔊 Audio Normalization (EBU R128) | 🌍 Localized in 14 Languages |
+| 🌍 Generic Mode | 🔊 Audio Normalization (EBU R128) | 🌍 Localized in 16 Languages |
 | 💾 Playlist Export | ⚙️ Default Quality & Subtitles | |
 </div>
 
@@ -84,14 +87,14 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 Install YTSage via PyPI:
 
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 Update existing installation</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -100,6 +103,12 @@ Then launch the application:
 
 ```bash
 ytsage
+```
+
+You can also open YTSage with a video or playlist URL prefilled and analyzed immediately:
+
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
 
 ### 📦 Pre-built Executables
@@ -350,7 +359,7 @@ Notes:
 <details>
 <summary>🌍 Localization</summary>
 
-YTSage supports **14 languages** for global accessibility. Select your preferred language in **Custom Options → Language**.
+YTSage supports **16 languages** for global accessibility. Select your preferred language in **Custom Options → Language**.
 
 ### Supported Languages
 
@@ -360,10 +369,10 @@ YTSage supports **14 languages** for global accessibility. Select your preferred
 | 🇸🇦 Arabic | `ar` | 🇫🇷 French | `fr` |
 | 🇩🇪 German | `de` | 🇮🇳 Hindi | `hi` |
 | 🇮🇩 Indonesian | `id` | 🇮🇹 Italian | `it` |
-| 🇯🇵 Japanese | `ja` | 🇵🇱 Polish | `pl` |
-| 🇧🇷 Portuguese | `pt` | 🇷🇺 Russian | `ru` |
-| 🇹🇷 Turkish | `tr` | 🇨🇳 Chinese | `zh` |
-| 🇮🇷 Persian | `fa` |
+| 🇯🇵 Japanese | `ja` | 🇰🇷 Korean | `ko` |
+| 🇵🇱 Polish | `pl` | 🇧🇷 Portuguese | `pt` |
+| 🇷🇺 Russian | `ru` | 🇹🇷 Turkish | `tr` |
+| 🇨🇳 Chinese | `zh` | 🇮🇷 Persian | `fa` |
 
 ### README Translations
 
@@ -373,10 +382,10 @@ YTSage supports **14 languages** for global accessibility. Select your preferred
 | 🇸🇦 Arabic | [readme-translations/README.ar.md](readme-translations/README.ar.md) | 🇫🇷 French | [readme-translations/README.fr.md](readme-translations/README.fr.md) |
 | 🇩🇪 German | [readme-translations/README.de.md](readme-translations/README.de.md) | 🇮🇳 Hindi | [readme-translations/README.hi.md](readme-translations/README.hi.md) |
 | 🇮🇩 Indonesian | [readme-translations/README.id.md](readme-translations/README.id.md) | 🇮🇹 Italian | [readme-translations/README.it.md](readme-translations/README.it.md) |
-| 🇯🇵 Japanese | [readme-translations/README.ja.md](readme-translations/README.ja.md) | 🇵🇱 Polish | [readme-translations/README.pl.md](readme-translations/README.pl.md) |
-| 🇧🇷 Portuguese | [readme-translations/README.pt.md](readme-translations/README.pt.md) | 🇷🇺 Russian | [readme-translations/README.ru.md](readme-translations/README.ru.md) |
-| 🇹🇷 Turkish | [readme-translations/README.tr.md](readme-translations/README.tr.md) | 🇨🇳 Chinese | [readme-translations/README.zh.md](readme-translations/README.zh.md) |
-| 🇮🇷 Persian | [readme-translations/README.fa.md](readme-translations/README.fa.md) |
+| 🇯🇵 Japanese | [readme-translations/README.ja.md](readme-translations/README.ja.md) | 🇰🇷 Korean | [readme-translations/README.ko.md](readme-translations/README.ko.md) |
+| 🇵🇱 Polish | [readme-translations/README.pl.md](readme-translations/README.pl.md) | 🇧🇷 Portuguese | [readme-translations/README.pt.md](readme-translations/README.pt.md) |
+| 🇷🇺 Russian | [readme-translations/README.ru.md](readme-translations/README.ru.md) | 🇹🇷 Turkish | [readme-translations/README.tr.md](readme-translations/README.tr.md) |
+| 🇨🇳 Chinese | [readme-translations/README.zh.md](readme-translations/README.zh.md) | 🇮🇷 Persian | [readme-translations/README.fa.md](readme-translations/README.fa.md) |
 
 > 💡 **Want to contribute a translation?** Check out the [Contributing](#contributing) section to help us add more languages!
 
@@ -453,7 +462,7 @@ If YTSage saves you time, please consider sponsoring the project. Sponsoring hel
 
 We welcome contributions! Here’s how you can help:
 
-1. 🍴 Fork the repository
+1. 🍴 Fork the **Beta branch**
 2. 🌿 Create your feature branch:
   ```bash
   git checkout -b feature/AmazingFeature

@@ -245,6 +245,8 @@
     "description": "Downloader YouTube moderno con interfaccia PySide6 pulita.",
     "author": "Autore: {author}",
     "github": "GitHub: {repo}",
+    "telegram": "Telegram: {channel}",
+    "sponsor": "Supporto: {sponsor}",
     "system_info": "Informazioni sistema",
     "loading": "🔄 Caricamento informazioni sistema...",
     "refresh": "🔄",

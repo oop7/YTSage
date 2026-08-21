@@ -245,6 +245,8 @@
     "description": "دانلودکننده مدرن یوتیوب با رابط کاربری تمیز PySide6.",
     "author": "توسعه‌دهنده: {author}",
     "github": "گیت‌هاب: {repo}",
+    "telegram": "تلگرام: {channel}",
+    "sponsor": "حمایت: {sponsor}",
     "system_info": "اطلاعات سیستم",
     "loading": "🔄 در حال بارگذاری اطلاعات سیستم...",
     "refresh": "🔄",

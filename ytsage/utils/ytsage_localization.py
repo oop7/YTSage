@@ -128,7 +128,8 @@ class LocalizationManager:
             "please_select_format": "Please select a format"
         },
         "formats": {
-            "show_formats": "Show formats:"
+            "show_formats": "Show formats:",
+            "language": "Language"
         },
         "errors": {
             "download_failed_return_code_conflict": "Download failed with return code {return_code}. This may be due to a conflict with multiple yt-dlp installations. Try uninstalling any system-installed yt-dlp (e.g. through snap or apt) and restart the application.",
@@ -138,7 +139,9 @@ class LocalizationManager:
         "about": {
             "open_logs": "📂 Logs",
             "logs_tooltip": "Open application logs folder",
-            "refresh": "🔄"
+            "refresh": "🔄",
+            "telegram": "Telegram: {channel}",
+            "sponsor": "Support: {sponsor}"
         }
     }
     

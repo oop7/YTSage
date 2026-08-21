@@ -52,6 +52,7 @@ class DownloadThread(QThread):
         format_id,
         is_audio_only=False,
         format_has_audio=False,
+        audio_format_ids=None,
         subtitle_langs=None,
         is_playlist=False,
         merge_subs=False,
@@ -84,6 +85,10 @@ class DownloadThread(QThread):
         self.format_id = format_id
         self.is_audio_only = is_audio_only
         self.format_has_audio = format_has_audio
+        # Extra audio track(s) explicitly picked to merge with the video
+        # format. Empty/None -> keep defaulting to the best audio, same as
+        # the pre-existing behavior.
+        self.audio_format_ids = list(audio_format_ids) if audio_format_ids else []
         self.subtitle_langs = subtitle_langs if subtitle_langs else []
         self.is_playlist = is_playlist
         self.merge_subs = merge_subs
@@ -271,10 +276,38 @@ class DownloadThread(QThread):
         elif self.format_id:
             clean_format_id: str = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
 
-            # If the selected format is audio-only, pass it directly.
+            # If the selected format is audio-only, pass it directly - unless
+            # the user also picked extra audio tracks alongside it (no video
+            # selected), in which case merge all of the picked audio tracks
+            # together into a single file with multiple audio streams.
             if self.is_audio_only:
-                cmd.extend(["-f", clean_format_id])
-                logger.debug(f"Using audio-only format selection: {clean_format_id}")
+                if self.audio_format_ids:
+                    clean_audio_ids = [
+                        a.split("-drc")[0] if "-drc" in a else a for a in self.audio_format_ids
+                    ]
+                    merged_format = "+".join([clean_format_id] + clean_audio_ids)
+                    cmd.extend(["-f", merged_format])
+                    cmd.append("--audio-multistreams")
+                    logger.debug(f"Using merged audio-only tracks: {merged_format}")
+                else:
+                    cmd.extend(["-f", clean_format_id])
+                    logger.debug(f"Using audio-only format selection: {clean_format_id}")
+            # If the user explicitly picked one or more audio tracks, merge
+            # the video with all of them (yt-dlp supports N-way merges via
+            # "+", producing a file with multiple audio tracks when more
+            # than one is given). This takes priority even over a
+            # progressive format, since it's an explicit user choice.
+            elif self.audio_format_ids:
+                clean_audio_ids = [
+                    a.split("-drc")[0] if "-drc" in a else a for a in self.audio_format_ids
+                ]
+                merged_format = "+".join([clean_format_id] + clean_audio_ids)
+                cmd.extend(["-f", merged_format])
+                # yt-dlp only keeps the first audio stream found when merging
+                # multiple formats unless told otherwise - required here so
+                # every explicitly picked track actually ends up in the file.
+                cmd.append("--audio-multistreams")
+                logger.debug(f"Using video format merged with selected audio track(s): {merged_format}")
             # If the selected format already includes an audio track (progressive), no merge needed.
             elif self.format_has_audio:
                 cmd.extend(["-f", clean_format_id])
@@ -289,12 +322,12 @@ class DownloadThread(QThread):
 
         # Force output format if enabled and merging is needed (for video)
         if self.force_output_format and not self.is_audio_only:
-            if self.format_has_audio:
+            if self.format_has_audio and not self.audio_format_ids:
                 # Progressive format (video with audio) - use remux to convert container
                 cmd.extend(["--remux-video", self.preferred_output_format])
                 logger.debug(f"Using --remux-video to force progressive format to: {self.preferred_output_format}")
             else:
-                # Merging video+audio - force merge output format
+                # Merging video+audio (including explicit extra audio track(s)) - force merge output format
                 cmd.extend(["--merge-output-format", self.preferred_output_format])
                 logger.debug(f"Using --merge-output-format to force merged format to: {self.preferred_output_format}")
 
@@ -303,6 +336,10 @@ class DownloadThread(QThread):
             cmd.append("--extract-audio")
             if self.preferred_audio_format and self.preferred_audio_format != "best":
                 cmd.extend(["--audio-format", self.preferred_audio_format])
+                # yt-dlp's ExtractAudio PP maps 'aac' to 'm4a' container internally.
+                # Adding --remux-video aac forces VideoRemuxer PP to produce a raw .aac file.
+                if self.preferred_audio_format == "aac":
+                    cmd.extend(["--remux-video", "aac"])
                 logger.debug(f"Using --extract-audio with --audio-format {self.preferred_audio_format} for audio-only download")
             else:
                 logger.debug("Using --extract-audio with best quality (no conversion) for audio-only download")
@@ -319,9 +356,16 @@ class DownloadThread(QThread):
                 cmd.extend(["--audio-format", "mp3"])
                 logger.debug("Forced audio format to mp3 since normalization requires re-encoding")
 
-            # Scope the argument specifically to ExtractAudio so it doesn't conflict with other PPs
-            cmd.extend(["--postprocessor-args", "ExtractAudio:-af loudnorm=I=-16:LRA=11:TP=-1.5"])
-            logger.debug("Added Audio Normalization (--postprocessor-args ExtractAudio:-af loudnorm=...)")
+            # Scope the argument specifically to ExtractAudio so it doesn't conflict with other PPs.
+            # Explicitly specify audio codec so FFmpeg re-encodes rather than attempting stream copy (-c:a copy).
+            norm_args = "-af loudnorm=I=-16:LRA=11:TP=-1.5"
+            if self.force_audio_format and self.preferred_audio_format in ("aac", "m4a"):
+                norm_args = "-c:a aac " + norm_args
+            elif self.force_audio_format and self.preferred_audio_format != "best":
+                norm_args = f"-c:a {self.preferred_audio_format} " + norm_args
+
+            cmd.extend(["--postprocessor-args", f"ExtractAudio:{norm_args}"])
+            logger.debug(f"Added Audio Normalization (--postprocessor-args ExtractAudio:{norm_args})")
 
         # Output template with resolution in filename
         # Use string concatenation instead of Path.joinpath to avoid Path object issues
@@ -398,10 +442,17 @@ class DownloadThread(QThread):
             cmd.append("--embed-thumbnail")
 
         # Add cookies if specified
+        has_cookies = False
         if self.cookie_file:
             cmd.extend(["--cookies", str(self.cookie_file)])
+            has_cookies = True
         elif self.browser_cookies:
             cmd.extend(["--cookies-from-browser", self.browser_cookies])
+            has_cookies = True
+
+        if not has_cookies:
+            # Fallback extractor-args for multi-language audio when no cookies are provided
+            cmd.extend(["--extractor-args", "youtube:player_client=web_embedded,default"])
 
         # Add proxy settings if specified
         if self.proxy_url:

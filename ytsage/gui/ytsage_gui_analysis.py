@@ -84,11 +84,18 @@ class AnalysisThread(QThread):
 
     def _add_auth_options(self, cmd: List[str]) -> None:
         """Add authentication and proxy options to command."""
+        has_cookies = False
         if self.cookie_file_path:
             cmd.extend(["--cookies", str(self.cookie_file_path)])
+            has_cookies = True
         elif self.browser_cookies_option:
             cmd.extend(["--cookies-from-browser", self.browser_cookies_option])
+            has_cookies = True
         
+        if not has_cookies:
+            # Fallback extractor-args for multi-language audio extraction when no cookies are provided
+            cmd.extend(["--extractor-args", "youtube:player_client=web_embedded,default"])
+
         if self.proxy_url:
             cmd.extend(["--proxy", self.proxy_url])
         
