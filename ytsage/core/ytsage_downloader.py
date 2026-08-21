@@ -336,6 +336,10 @@ class DownloadThread(QThread):
             cmd.append("--extract-audio")
             if self.preferred_audio_format and self.preferred_audio_format != "best":
                 cmd.extend(["--audio-format", self.preferred_audio_format])
+                # yt-dlp's ExtractAudio PP maps 'aac' to 'm4a' container internally.
+                # Adding --remux-video aac forces VideoRemuxer PP to produce a raw .aac file.
+                if self.preferred_audio_format == "aac":
+                    cmd.extend(["--remux-video", "aac"])
                 logger.debug(f"Using --extract-audio with --audio-format {self.preferred_audio_format} for audio-only download")
             else:
                 logger.debug("Using --extract-audio with best quality (no conversion) for audio-only download")
@@ -352,9 +356,16 @@ class DownloadThread(QThread):
                 cmd.extend(["--audio-format", "mp3"])
                 logger.debug("Forced audio format to mp3 since normalization requires re-encoding")
 
-            # Scope the argument specifically to ExtractAudio so it doesn't conflict with other PPs
-            cmd.extend(["--postprocessor-args", "ExtractAudio:-af loudnorm=I=-16:LRA=11:TP=-1.5"])
-            logger.debug("Added Audio Normalization (--postprocessor-args ExtractAudio:-af loudnorm=...)")
+            # Scope the argument specifically to ExtractAudio so it doesn't conflict with other PPs.
+            # Explicitly specify audio codec so FFmpeg re-encodes rather than attempting stream copy (-c:a copy).
+            norm_args = "-af loudnorm=I=-16:LRA=11:TP=-1.5"
+            if self.force_audio_format and self.preferred_audio_format in ("aac", "m4a"):
+                norm_args = "-c:a aac " + norm_args
+            elif self.force_audio_format and self.preferred_audio_format != "best":
+                norm_args = f"-c:a {self.preferred_audio_format} " + norm_args
+
+            cmd.extend(["--postprocessor-args", f"ExtractAudio:{norm_args}"])
+            logger.debug(f"Added Audio Normalization (--postprocessor-args ExtractAudio:{norm_args})")
 
         # Output template with resolution in filename
         # Use string concatenation instead of Path.joinpath to avoid Path object issues
