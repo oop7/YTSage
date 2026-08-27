@@ -433,8 +433,8 @@ class DownloadThread(QThread):
         if self.embed_chapters:
             cmd.append("--embed-chapters")
 
-        # Add metadata embedding if enabled
-        if self.embed_metadata:
+        # Add metadata embedding if enabled or if multi-audio streams are selected
+        if self.embed_metadata or self.audio_format_ids:
             cmd.append("--embed-metadata")
 
         # Add thumbnail embedding if enabled
