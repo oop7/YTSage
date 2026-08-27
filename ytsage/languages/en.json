@@ -340,6 +340,7 @@
     "defaults_settings": "Default Selection Settings",
     "default_video_quality": "Default Video Resolution (Height):",
     "default_subtitle_language": "Default Subtitle Language(s):",
+    "preferred_subtitle_format": "Preferred Subtitle Format:",
     "defaults_help": "Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available.",
     "concurrent_fragments": "Concurrent Connections",
     "concurrent_fragments_help": "Number of connections per download. Higher values bypass throttling but may cause temporary blocks if set too high. Default: 1.",

@@ -416,7 +416,21 @@ class DownloadSettingsDialog(QDialog):
         self.default_sub_input.setPlaceholderText("e.g. en, es")
         sub_layout.addWidget(sub_label)
         sub_layout.addWidget(self.default_sub_input)
-        defaults_layout.addLayout(sub_layout)
+        # Preferred Subtitle Format
+        sub_fmt_layout = QHBoxLayout()
+        sub_fmt_label = QLabel(_("settings.preferred_subtitle_format", default="Preferred Subtitle Format:"))
+        sub_fmt_label.setStyleSheet("color: #ffffff; margin-top: 5px;")
+        self.preferred_sub_fmt_combo = QComboBox()
+        self.preferred_sub_fmt_combo.addItems(["default", "srt", "vtt", "ass", "lrc"])
+        current_sub_fmt = ConfigManager.get("preferred_subtitle_format") or "default"
+        idx = self.preferred_sub_fmt_combo.findText(current_sub_fmt)
+        if idx >= 0:
+            self.preferred_sub_fmt_combo.setCurrentIndex(idx)
+        else:
+            self.preferred_sub_fmt_combo.setCurrentIndex(0)
+        sub_fmt_layout.addWidget(sub_fmt_label)
+        sub_fmt_layout.addWidget(self.preferred_sub_fmt_combo)
+        defaults_layout.addLayout(sub_fmt_layout)
 
         defaults_help = QLabel(_("settings.defaults_help", default="Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."))
         defaults_help.setWordWrap(True)
@@ -638,6 +652,8 @@ class DownloadSettingsDialog(QDialog):
             ConfigManager.set("default_video_quality", default_vid if default_vid else None)
             default_sub = self.default_sub_input.text().strip()
             ConfigManager.set("default_subtitle_language", default_sub if default_sub else None)
+            pref_sub_fmt = self.preferred_sub_fmt_combo.currentText()
+            ConfigManager.set("preferred_subtitle_format", pref_sub_fmt)
 
             # Save filename format
             filename_format = self.get_filename_format()

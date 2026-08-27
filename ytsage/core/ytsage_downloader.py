@@ -78,6 +78,7 @@ class DownloadThread(QThread):
         audio_normalization=False,
         filename_format=None,
         concurrent_fragments=1,
+        preferred_subtitle_format="default",
     ) -> None:
         super().__init__()
         self.url = url
@@ -90,6 +91,7 @@ class DownloadThread(QThread):
         # the pre-existing behavior.
         self.audio_format_ids = list(audio_format_ids) if audio_format_ids else []
         self.subtitle_langs = subtitle_langs if subtitle_langs else []
+        self.preferred_subtitle_format = preferred_subtitle_format
         self.is_playlist = is_playlist
         self.merge_subs = merge_subs
         self.enable_sponsorblock = enable_sponsorblock
@@ -415,6 +417,10 @@ class DownloadThread(QThread):
                 cmd.extend(["--sub-langs", ",".join(lang_codes)])
                 if has_auto_generated:
                     cmd.append("--write-auto-subs")  # Include auto-generated subtitles
+
+                # Convert subtitles to preferred format (e.g. srt, vtt, ass, lrc)
+                if self.preferred_subtitle_format and self.preferred_subtitle_format != "default":
+                    cmd.extend(["--convert-subs", self.preferred_subtitle_format])
 
                 # Only embed subtitles if merge is enabled
                 if self.merge_subs:

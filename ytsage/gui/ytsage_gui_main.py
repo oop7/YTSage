@@ -938,6 +938,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             audio_normalization=self.audio_normalization,  # Pass audio normalization setting
             filename_format=filename_format,  # Pass the filename format
             concurrent_fragments=concurrent_fragments, # Pass the concurrent fragments
+            preferred_subtitle_format=ConfigManager.get("preferred_subtitle_format") or "default",
         )
 
         # Connect signals
