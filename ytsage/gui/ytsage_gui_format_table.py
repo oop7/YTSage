@@ -264,7 +264,7 @@ class FormatTableMixin:
         self._row_format_type.clear()
 
         # Separate and filter formats
-        video_formats = [f for f in self.all_formats if f.get("vcodec") != "none" and f.get("filesize") is not None]
+        video_formats = [f for f in self.all_formats if f.get("vcodec") != "none"]
         audio_formats = [
             f
             for f in self.all_formats
@@ -587,7 +587,12 @@ class FormatTableMixin:
                 self.format_table.setItem(row, 3, QTableWidgetItem(resolution))
 
                 # Column 4: File Size
-                filesize = f"{f.get('filesize', 0) / 1024 / 1024:.2f} MB"
+                size_bytes = f.get("filesize") or f.get("filesize_approx")
+                if size_bytes and isinstance(size_bytes, (int, float)) and size_bytes > 0:
+                    prefix = "~" if not f.get("filesize") and f.get("filesize_approx") else ""
+                    filesize = f"{prefix}{size_bytes / 1024 / 1024:.2f} MB"
+                else:
+                    filesize = "N/A"
                 self.format_table.setItem(row, 4, QTableWidgetItem(filesize))
 
                 # Column 5: Codec
@@ -765,6 +770,12 @@ class FormatTableMixin:
                         height = min(int(parts[0]), int(parts[1]))
                 except:
                     pass
+
+            if height == 0 and format_info.get("height"):
+                try:
+                    height = int(format_info.get("height"))
+                except (ValueError, TypeError):
+                    height = 0
 
             if height >= 2160:
                 return _("formats.best_4k")
