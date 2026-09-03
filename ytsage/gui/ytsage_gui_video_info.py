@@ -277,9 +277,8 @@ class VideoInfoMixin:
                 formatted_date = _("video_info.unknown_date")
 
             # Format duration
-            duration = info.get("duration", 0)
-            minutes = duration // 60
-            seconds = duration % 60
+            duration = int(info.get("duration", 0) or 0)
+            minutes, seconds = divmod(duration, 60)
             duration_str = f"{minutes}:{seconds:02d}"
 
             # Update labels with localized text
