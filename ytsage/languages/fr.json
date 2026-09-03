@@ -465,7 +465,7 @@
     "download_failed_return_code_conflict": "Téléchargement échoué avec le code de retour {return_code}. Cela peut être dû à un conflit entre plusieurs installations de yt-dlp. Essayez de désinstaller toute version installée au niveau du système (par ex. via snap ou apt) puis redémarrez l’application.",
     "download_failed_return_code": "Téléchargement échoué avec le code de retour {return_code}",
     "direct_command_error": "Erreur dans la commande directe : {error}",
-    "private_video": "Cette vidéo pourrait être privée. Veuillez utiliser des cookies depuis les options personnalisées."
+    "private_video": "Cette vidéo est peut-être privée ou votre réseau actuel est bloqué par YouTube. Utilisez des cookies depuis les options personnalisées ou désactivez/changez votre proxy ou VPN."
   },
   "update_dialog": {
     "title": "Mise à jour disponible",

@@ -465,7 +465,7 @@
     "download_failed_return_code_conflict": "Download fehlgeschlagen mit Rückgabecode {return_code}. Dies kann an einem Konflikt mit mehreren yt-dlp-Installationen liegen. Deinstalliere ggf. eine systemweit installierte yt-dlp-Version (z. B. über snap oder apt) und starte die Anwendung neu.",
     "download_failed_return_code": "Download fehlgeschlagen mit Rückgabecode {return_code}",
     "direct_command_error": "Fehler im direkten Befehl: {error}",
-    "private_video": "Dieses Video ist möglicherweise privat. Bitte verwenden Sie Cookies aus den benutzerdefinierten Optionen."
+    "private_video": "Dieses Video ist möglicherweise privat oder Ihr aktuelles Netzwerk wird von YouTube blockiert. Verwenden Sie Cookies aus den benutzerdefinierten Optionen oder deaktivieren/ändern Sie Ihren Proxy bzw. Ihr VPN."
   },
   "update_dialog": {
     "title": "Update verfügbar",

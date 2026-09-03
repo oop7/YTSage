@@ -465,7 +465,7 @@
     "download_failed_return_code_conflict": "下载失败，返回码 {return_code}。这可能是由于存在多个 yt-dlp 安装导致冲突。请卸载系统中安装的 yt-dlp（例如通过 snap 或 apt），然后重启应用。",
     "download_failed_return_code": "下载失败，返回码 {return_code}",
     "direct_command_error": "直接命令出错：{error}",
-    "private_video": "此视频可能是私享视频。请使用自定义选项中的 cookie。"
+    "private_video": "此视频可能是私享视频，或者当前网络已被 YouTube 屏蔽。请使用自定义选项中的 Cookie，或禁用/更换代理或 VPN。"
   },
   "update_dialog": {
     "title": "有可用更新",
