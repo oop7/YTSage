@@ -137,17 +137,21 @@ class AnalysisThread(QThread):
         if self._cancelled:
             return
 
-        stderr = result.stderr or ""
-        stdout = result.stdout or ""
+        stderr = str(result.stderr or "").strip()
+        stdout = str(result.stdout or "").strip()
 
         if result.returncode != 0:
             error_output = stderr or stdout
-            if "Private video" in error_output or "Sign in" in error_output:
-                logger.error(f"yt-dlp failed (private video): {error_output}")
+            if error_output.lower() == "null":
+                error_output = ""
+
+            error_details = error_output or f"process exited with code {result.returncode} without diagnostic output"
+            if "private video" in error_details.lower() or "sign in" in error_details.lower():
+                logger.error(f"yt-dlp failed (private video): {error_details}")
                 self.analysis_error.emit(_("errors.private_video"))
             else:
-                logger.error(f"yt-dlp failed: {error_output}")
-                self.analysis_error.emit(_("errors.ytdlp_failed", error=error_output))
+                logger.error(f"yt-dlp failed: {error_details}")
+                self.analysis_error.emit(_("errors.ytdlp_failed", error=error_details))
             
             self.playlist_info_visible.emit(False)
             self.playlist_select_btn_visible.emit(False)
