@@ -563,7 +563,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
 
 <p>A big thanks to everyone who contributed to this project by opening an issue to suggest an improvement or report a bug.</p>
-<p>Special thanks to <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> for being the first and major donator supporting this project ❤️</p>
+<p>Special thanks to <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> and <p>Thanks to <a href="https://github.com/dj23me"><strong>@dj23me</strong></a> for supporting this project</p> for being the first and major donators supporting this project ❤️</p>
+
 
 <table>
     <tr class="section"><th colspan="2">Core Components</th></tr>
