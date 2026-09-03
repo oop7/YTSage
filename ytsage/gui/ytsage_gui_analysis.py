@@ -145,6 +145,18 @@ class AnalysisThread(QThread):
             if error_output.lower() == "null":
                 error_output = ""
 
+            if not error_output and SUBPROCESS_CREATIONFLAGS:
+                try:
+                    diagnostic_result = subprocess.run(
+                        cmd, capture_output=True, text=True, timeout=30,
+                        creationflags=0
+                    )
+                    error_output = str(diagnostic_result.stderr or diagnostic_result.stdout or "").strip()
+                    if error_output.lower() == "null":
+                        error_output = ""
+                except subprocess.TimeoutExpired:
+                    logger.warning("Diagnostic retry for yt-dlp timed out")
+
             error_details = error_output or f"process exited with code {result.returncode} without diagnostic output"
             if "private video" in error_details.lower() or "sign in" in error_details.lower():
                 logger.error(f"yt-dlp failed (private video): {error_details}")
