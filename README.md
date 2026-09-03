@@ -453,6 +453,7 @@ If you see this error on macOS Sonoma or newer, you need to remove the quarantin
 If YTSage saves you time, please consider sponsoring the project. Sponsoring helps cover development time, testing across all platforms, and future improvements.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
+- Direct Bank Transfer: Contact me via email at [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 - Sponsorship link is also available directly in the app via the About dialog.
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
@@ -562,6 +563,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
 
 <p>A big thanks to everyone who contributed to this project by opening an issue to suggest an improvement or report a bug.</p>
+<p>Special thanks to <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> for being the first and major donator supporting this project ❤️</p>
 
 <table>
     <tr class="section"><th colspan="2">Core Components</th></tr>
@@ -603,6 +605,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
         <td>Logging</td>
     </tr>
     <tr class="section"><th colspan="2">Assets & Contributors</th></tr>
+    <tr>
+        <td><a href="https://github.com/bastik-1001">@bastik-1001</a></td>
+        <td>First & Major Donator Support</td>
+    </tr>
     <tr>
         <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">New Notification 09 by Universfield</a></td>
         <td>Notification Sound</td>
