@@ -60,6 +60,8 @@ Name: "addtopath"; Description: "Add ffmpeg to user PATH environment variable"; 
 
 [Files]
 Source: "{#SourceDir}\{#MyAppSourceExeName}"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
+Source: "{#SourceDir}\ffmpeg.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceDir}\ffprobe.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "*.exe"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [InstallDelete]
