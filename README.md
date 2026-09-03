@@ -454,7 +454,6 @@ If YTSage saves you time, please consider sponsoring the project. Sponsoring hel
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
 - Direct Bank Transfer: Contact me via email at [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
-- Sponsorship link is also available directly in the app via the About dialog.
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
