@@ -474,18 +474,20 @@ jobs:
         
         # Compile
         $exeName = "YTSage-v$version.exe"
-        Write-Host "Compiling installer for $exeName..."
+        $installedExeName = "YTSage.exe"
+        Write-Host "Compiling installer for $exeName as $installedExeName..."
         
         # Note: Setup-windows.iss is in setup-scripts/
         # OutputDir is ..\artifacts (relative to script) -> repo/artifacts
         # SourceDir is ..\dist\YTSage (relative to script) -> repo/dist/YTSage
         
-        iscc /DMyAppVersion="$version" /DMyAppExeName="$exeName" /DSourceDir="..\dist\YTSage" "setup-scripts\Setup-windows.iss"
+        iscc /DMyAppVersion="$version" /DMyAppExeName="$installedExeName" /DMyAppSourceExeName="$exeName" /DSourceDir="..\dist\YTSage" "setup-scripts\Setup-windows.iss"
         
         # Compile FFmpeg Installer
         $exeNameFFmpeg = "YTSage-v$version-ffmpeg.exe"
-        Write-Host "Compiling FFmpeg installer for $exeNameFFmpeg..."
-        iscc /DMyAppVersion="$version" /DMyAppExeName="$exeNameFFmpeg" /DSourceDir="..\dist\YTSage-FFmpeg" "setup-scripts\Setup-windows-ffmpeg.iss"
+        $installedExeNameFFmpeg = "YTSage-ffmpeg.exe"
+        Write-Host "Compiling FFmpeg installer for $exeNameFFmpeg as $installedExeNameFFmpeg..."
+        iscc /DMyAppVersion="$version" /DMyAppExeName="$installedExeNameFFmpeg" /DMyAppSourceExeName="$exeNameFFmpeg" /DSourceDir="..\dist\YTSage-FFmpeg" "setup-scripts\Setup-windows-ffmpeg.iss"
 
         if ($LASTEXITCODE -eq 0) {
           Write-Host "Installer compilation successful."

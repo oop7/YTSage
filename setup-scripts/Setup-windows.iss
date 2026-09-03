@@ -9,6 +9,9 @@
 #ifndef MyAppExeName
   #define MyAppExeName "YTSage.exe"
 #endif
+#ifndef MyAppSourceExeName
+  #define MyAppSourceExeName "YTSage.exe"
+#endif
 #ifndef SourceDir
   #define SourceDir "..\dist\YTSage"
 #endif
@@ -55,8 +58,11 @@ Name: "indonesian"; MessagesFile: "Languages\Unofficial\Indonesian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 
 [Files]
-Source: "{#SourceDir}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourceDir}\{#MyAppSourceExeName}"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
+Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "*.exe"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+[InstallDelete]
+Type: files; Name: "{app}\YTSage-v*.exe"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
