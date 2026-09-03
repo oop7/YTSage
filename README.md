@@ -557,7 +557,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-<details>
 <summary>Show Acknowledgments</summary>
 
 <div align="left">
@@ -621,8 +620,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 </table>
 
 </div>
-
-</details>
 
 ## ⚠️ Disclaimer
 
