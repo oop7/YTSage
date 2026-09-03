@@ -137,19 +137,23 @@ class AnalysisThread(QThread):
         if self._cancelled:
             return
 
+        stderr = result.stderr or ""
+        stdout = result.stdout or ""
+
         if result.returncode != 0:
-            if "Private video" in result.stderr or "Sign in" in result.stderr:
-                logger.error(f"yt-dlp failed (private video): {result.stderr}")
+            error_output = stderr or stdout
+            if "Private video" in error_output or "Sign in" in error_output:
+                logger.error(f"yt-dlp failed (private video): {error_output}")
                 self.analysis_error.emit(_("errors.private_video"))
             else:
-                logger.error(f"yt-dlp failed: {result.stderr}")
-                self.analysis_error.emit(_("errors.ytdlp_failed", error=result.stderr))
+                logger.error(f"yt-dlp failed: {error_output}")
+                self.analysis_error.emit(_("errors.ytdlp_failed", error=error_output))
             
             self.playlist_info_visible.emit(False)
             self.playlist_select_btn_visible.emit(False)
             return
 
-        json_lines = [line.strip() for line in result.stdout.strip().split("\n") if line.strip()]
+        json_lines = [line.strip() for line in stdout.strip().split("\n") if line.strip()]
 
         if not json_lines:
             logger.error("No data returned from yt-dlp")
