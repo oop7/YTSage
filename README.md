@@ -560,8 +560,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-<summary>Show Acknowledgments</summary>
-
 <div align="left">
 
 <p>A big thanks to everyone who contributed to this project by opening an issue to suggest an improvement or report a bug</p>
