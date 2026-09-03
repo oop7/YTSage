@@ -488,6 +488,8 @@ We welcome contributions! Here’s how you can help:
 - If your language is missing, start from `README.md` and create `readme-translations/README.<code>.md`
 
 </details>
+
+<details>
 <summary>📂 Project Structure</summary>
 
 ## YTSage - Project Structure
