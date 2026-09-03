@@ -459,10 +459,10 @@ If YTSage saves you time, please consider sponsoring the project. Sponsoring hel
 
 <a id="contributing"></a>
 
+## 👥 Contributing
+
 <details>
 <summary>Click to expand Contributing Guidelines</summary>
-
-## 👥 Contributing
 
 We welcome contributions! Here’s how you can help:
 
