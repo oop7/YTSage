@@ -458,6 +458,10 @@ If YTSage saves you time, please consider sponsoring the project. Sponsoring hel
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
 <a id="contributing"></a>
+
+<details>
+<summary>Click to expand Contributing Guidelines</summary>
+
 ## 👥 Contributing
 
 We welcome contributions! Here’s how you can help:
@@ -483,7 +487,7 @@ We welcome contributions! Here’s how you can help:
 - Keep app strings synced by editing `ytsage/languages/<code>.json`
 - If your language is missing, start from `README.md` and create `readme-translations/README.<code>.md`
 
-<details>
+</details>
 <summary>📂 Project Structure</summary>
 
 ## YTSage - Project Structure
