@@ -453,7 +453,8 @@ If you see this error on macOS Sonoma or newer, you need to remove the quarantin
 If YTSage saves you time, please consider sponsoring the project. Sponsoring helps cover development time, testing across all platforms, and future improvements.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- Direct Bank Transfer: Contact me via email at [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- Direct bank transfer / SWIFT: Contact me via email at [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
