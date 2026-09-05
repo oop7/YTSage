@@ -108,6 +108,8 @@ Simply download the pre-built installer for your operating system:
 
 #### 🍎 macOS
 
+> ⚠️ **Note:** These installers are natively built for **Apple Silicon (M1/M2/M3/M4)**. If you are using an older Intel Mac, please use the [Python installation method](#-install-via-python--pypi) below.
+
 | Format | Description |
 |--------|-------------|
 | ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **Disk Image Installer (Recommended)** - Open and drag to Applications. |
@@ -158,6 +160,8 @@ Simply download the pre-built installer for your operating system:
 
 ### 🐍 Install via Python / PyPI
 *You can also install YTSage via Python (Requires Python 3.11+)*
+
+> 💡 **Awesome Feature:** If you install via pip on **Windows**, YTSage will automatically detect and help set up FFmpeg for you *(macOS and Linux users can follow our easy **[FFmpeg Installation Guide](https://github.com/oop7/ffmpeg-install-guide)**)*
 
 ```bash
 pip install --pre ytsage
