@@ -186,7 +186,7 @@ ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 ---
 
-### 💻 Manual Source Installation (Advanced Users)
+### 💻 Manual Source Installation (Developer)
 *Run YTSage directly from the source code.*
 
 <details>

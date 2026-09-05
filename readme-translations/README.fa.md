@@ -80,16 +80,89 @@ YTSage برای کاربرانی طراحی شده که به دنبال یک **�
 <a id="installation"></a>
 ## 🚀 نصب
 
-### ⚡ نصب سریع (پیشنهادی)
+### 📦 دانلود برنامه (ساده‌ترین روش)
+*اگر فقط می‌خواهید از YTSage استفاده کنید و نمی‌دانید پایتون چیست، از اینجا شروع کنید*
 
-YTSage را از طریق PyPI نصب کنید:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+به راحتی نصب‌کننده پیش‌ساخته شده برای سیستم‌عامل خود را دانلود کنید:
+
+#### 🪟 Windows
+
+| فرمت | توضیحات |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **نصب‌کننده استاندارد (پیشنهاد شده)** - فقط دوبار کلیک کنید. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | همراه با FFmpeg (اگر FFmpeg ندارید استفاده کنید). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | نسخه پرتابل، بدون نیاز به نصب. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | پرتابل همراه با FFmpeg، فشرده‌شده. |
+
+<details>
+<summary>🛠️ مراحل نصب</summary>
+
+1. **نصب‌کننده EXE (`.exe`)**: روی فایل دوبار کلیک کرده و مراحل نصب را دنبال کنید.
+2. **نسخه پرتابل (`.zip`)**: فایل را در محل مورد نظر استخراج کرده و `ytsage.exe` را اجرا کنید.
+3. **همراه با FFmpeg**: اگر FFmpeg روی سیستم شما نصب نیست، نسخه‌های دارای FFmpeg را انتخاب کنید.
+</details>
+
+#### 🍎 macOS
+
+| فرمت | توضیحات |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **نصب‌کننده ایمیج دیسک (پیشنهاد شده)** - باز کنید و به Applications بکشید. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | برنامه فشرده‌شده برای Apple Silicon. |
+
+<details>
+<summary>🛠️ مراحل نصب</summary>
+
+- **نصب‌کننده DMG (`.dmg`)**: برای نصب دوبار کلیک کنید، سپس `YTSage.app` را به پوشه Applications بکشید.
+- **آرشیو برنامه (`.zip`)**: فایل zip را استخراج کرده و `YTSage.app` را به پوشه Applications منتقل کنید.
+
+*توجه: اگر با خطای "برنامه آسیب دیده است" مواجه شدید، بخش عیب‌یابی زیر را ببینید.*
+</details>
+
+#### 🐧 Linux
+
+| فرمت | توضیحات |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **AppImage پرتابل (پیشنهاد شده)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | پکیج دبیان |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | پکیج RPM |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | پکیج فلت‌پک |
+
+<details>
+<summary>🛠️ مراحل نصب</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: دستورالعمل‌های Flathub را دنبال کنید یا اجرا کنید:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 نصب از طریق پایتون / PyPI
+*همچنین می‌توانید YTSage را از طریق پایتون نصب کنید (نیازمند پایتون 3.11+)*
 
 ```bash
 pip install ytsage
 ```
 
 <details>
-<summary>🔄 به‌روزرسانی یک نصب موجود</summary>
+<summary>🔄 بروزرسانی نصب موجود</summary>
 
 ```bash
 pip install --upgrade ytsage
@@ -103,102 +176,40 @@ pip install --upgrade ytsage
 ytsage
 ```
 
-### 📦 فایل‌های اجرایی از پیش ساخته‌شده
+همچنین می‌توانید YTSage را با یک آدرس ویدیو یا لیست پخش از قبل پرشده باز کنید تا بلافاصله آنالیز شود:
 
-> [👉 دانلود آخرین نسخه](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 ویندوز
-
-| فرمت | توضیحات |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | نصب‌کننده استاندارد |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | همراه با FFmpeg |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | نسخه پرتابل، بدون نیاز به نصب |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | پرتابل همراه با FFmpeg، فشرده‌شده |
-
-<details>
-<summary>🛠️ مراحل نصب</summary>
-
-1. **نصب‌کننده EXE (`.exe`)**: روی فایل دوبار کلیک کرده و مراحل نصب را دنبال کنید.
-2. **نسخه پرتابل (`.zip`)**: آرشیو را در مکان دلخواه استخراج کرده و `ytsage.exe` را اجرا کنید.
-3. **همراه با FFmpeg**: در صورتی که FFmpeg روی سیستم شما نصب نیست، نسخه‌های همراه با FFmpeg را انتخاب کنید.
-</details>
-
-#### 🐧 لینوکس
-
-| فرمت | توضیحات |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | بسته دبیان |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage، پرتابل |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | بسته RPM |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | بسته Flatpak |
-
-<details>
-<summary>🛠️ مراحل نصب</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # در صورت نیاز، وابستگی‌های ناقص را رفع می‌کند
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: دستورالعمل‌های موجود در Flathub را دنبال کنید یا اجرا کنید:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| فرمت | توضیحات |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | برنامه فشرده‌شده برای Apple Silicon |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | نصب‌کننده تصویر دیسک برای Apple Silicon |
-
-<details>
-<summary>🛠️ مراحل نصب</summary>
-
-- **نصب‌کننده DMG (`.dmg`)**: برای مانت کردن دوبار کلیک کنید، سپس `YTSage.app` را به پوشه Applications بکشید.
-- **آرشیو برنامه (`.zip`)**: فایل zip را استخراج کرده و `YTSage.app` را به پوشه Applications منتقل کنید.
-
-*توجه: اگر با خطای "برنامه آسیب دیده است" مواجه شدید، به بخش عیب‌یابی macOS در پایین مراجعه کنید.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 نصب دستی از کد منبع</summary>
+### 💻 نصب دستی از سورس کد (توسعه‌دهندگان)
+*اجرای مستقیم YTSage از روی سورس کد.*
 
-### ۱. کلون کردن مخزن
+<details>
+<summary>مشاهده مراحل نصب دستی</summary>
+
+#### 1. کلون کردن مخزن
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### ۲. نصب وابستگی‌ها
+#### 2. نصب وابستگی‌ها
 
-#### ⚡ با uv
-
+**⚡ با استفاده از uv**
 ```bash
 uv pip install .
 ```
 
-#### 📦 یا با pip استاندارد
-
+**📦 یا با استفاده از pip استاندارد**
 ```bash
 pip install .
 ```
 
-### ۳. اجرای برنامه
+#### 3. اجرای برنامه
 
 ```bash
 python -m ytsage.main

@@ -76,11 +76,85 @@ YTSage, **basit ama güçlü bir YouTube indiricisi** isteyen kullanıcılar iç
 </div>
 
 <a id="kurulum"></a>
+<a id="installation"></a>
 ## 🚀 Kurulum
 
-### ⚡ Hızlı Kurulum (Önerilen)
+### 📦 Uygulamayı İndirin (En Kolay Yöntem)
+*Sadece YTSage'i kullanmak istiyorsanız ve Python'un ne olduğunu bilmiyorsanız, buradan başlayın*
 
-YTSage'i PyPI üzerinden yükleyin:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+İşletim sisteminiz için hazırlanmış yükleyiciyi indirmeniz yeterlidir:
+
+#### 🪟 Windows
+
+| Biçim | Açıklama |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **Standart Yükleyici (Önerilen)** - Yüklemek için çift tıklamanız yeterlidir. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg Dahil (Halihazırda FFmpeg'iniz yoksa bunu kullanın). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Taşınabilir sürüm, kurulum gerektirmez. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg ile taşınabilir, sıkıştırılmış. |
+
+<details>
+<summary>🛠️ Kurulum Adımları</summary>
+
+1. **EXE Yükleyici (`.exe`)**: Dosyaya çift tıklayın ve kurulum sihirbazını takip edin.
+2. **Taşınabilir Sürüm (`.zip`)**: Arşivi istediğiniz konuma çıkarın ve `ytsage.exe` dosyasını çalıştırın.
+3. **FFmpeg Dahil**: Sisteminizde FFmpeg yüklü değilse FFmpeg dahil sürümleri seçin.
+</details>
+
+#### 🍎 macOS
+
+| Biçim | Açıklama |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **Disk Görüntüsü Yükleyici (Önerilen)** - Açın ve Uygulamalar'a sürükleyin. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon için Sıkıştırılmış Uygulama. |
+
+<details>
+<summary>🛠️ Kurulum Adımları</summary>
+
+- **DMG Yükleyici (`.dmg`)**: Bağlamak için çift tıklayın, ardından `YTSage.app` dosyasını Uygulamalar klasörünüze sürükleyin.
+- **Uygulama Arşivi (`.zip`)**: Zip dosyasını çıkarın ve `YTSage.app` dosyasını Uygulamalar klasörünüze taşıyın.
+
+*Not: "Uygulama hasarlı" hatasıyla karşılaşırsanız, aşağıdaki sorun giderme bölümüne bakın.*
+</details>
+
+#### 🐧 Linux
+
+| Biçim | Açıklama |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **Taşınabilir AppImage (Önerilen)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian Paketi |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM Paketi |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak Paketi |
+
+<details>
+<summary>🛠️ Kurulum Adımları</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # Gerekirse eksik bağımlılıkları düzeltin
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: Flathub üzerindeki talimatları izleyin veya çalıştırın:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 Python / PyPI Üzerinden Kurulum
+*YTSage'i Python üzerinden de kurabilirsiniz (Python 3.11+ gerektirir)*
 
 ```bash
 pip install ytsage
@@ -95,108 +169,46 @@ pip install --upgrade ytsage
 
 </details>
 
-Ardından uygulamayı çalıştırın:
+Ardından uygulamayı başlatın:
 
 ```bash
 ytsage
 ```
 
-### 📦 Hazır Çalıştırılabilir Dosyalar (Executable)
+YTSage'i önceden doldurulmuş bir video veya oynatma listesi URL'si ile açıp hemen analiz edilmesini de sağlayabilirsiniz:
 
-> [👉 En Son Sürümü İndir](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| Format | Açıklama |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Standart Kurulum Dosyası |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg Dahil |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Taşınabilir Sürüm, kuruluma gerek yok |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg Dahil Taşınabilir, sıkıştırılmış (ZIP) |
-
-<details>
-<summary>🛠️ Kurulum Adımları</summary>
-
-1. **EXE Yükleyici (`.exe`)**: Dosyaya çift tıklayın ve kurulum sihirbazını takip edin.
-2. **Taşınabilir Sürüm (`.zip`)**: Dosyayı istediğiniz yere çıkarın ve `ytsage.exe` dosyasını çalıştırın.
-3. **Dahili FFmpeg**: Sisteminizde FFmpeg kurulu değilse, FFmpeg dahil olan sürümleri seçin.
-</details>
-
-#### 🐧 Linux
-
-| Format | Açıklama |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian Paketi |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, Taşınabilir |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM Paketi |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak Paketi |
-
-<details>
-<summary>🛠️ Kurulum Adımları</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Gerekirse eksik bağımlılıkları gidermek için
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: Flathub üzerindeki talimatları izleyin veya şunu çalıştırın:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| Format | Açıklama |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon için ZIP Uygulaması |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon için Disk Image Kurulum Dosyası |
-
-<details>
-<summary>🛠️ Kurulum Adımları</summary>
-
-- **DMG Yükleyici (`.dmg`)**: Bağlamak için çift tıklayın ve `YTSage.app` dosyasını Uygulamalar klasörünüze sürükleyin.
-- **Uygulama Arşivi (`.zip`)**: ZIP dosyasını çıkarın ve `YTSage.app` dosyasını Uygulamalar klasörünüze taşıyın.
-
-*Not: "Uygulama hasarlı" hatası alırsanız, aşağıdaki macOS Sorun Giderme bölümüne bakın.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 Kaynak Kodundan Manuel Kurulum</summary>
+### 💻 Kaynak Kodundan Manuel Kurulum (Geliştiriciler)
+*YTSage'i doğrudan kaynak kodundan çalıştırın.*
 
-### 1. Depoyu Klonlayın
+<details>
+<summary>Manuel kurulum adımlarını göster</summary>
+
+#### 1. Depoyu klonlayın
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. Bağımlılıkları Yükleyin
+#### 2. Bağımlılıkları yükleyin
 
-#### ⚡ uv ile
-
+**⚡ uv kullanarak**
 ```bash
 uv pip install .
 ```
 
-#### 📦 Veya standart pip ile
-
+**📦 Veya standart pip kullanarak**
 ```bash
 pip install .
 ```
 
-### 3. Uygulamayı Çalıştırın
+#### 3. Uygulamayı çalıştırın
 
 ```bash
 python -m ytsage.main
@@ -204,7 +216,6 @@ python -m ytsage.main
 
 </details>
 
-<a id="ekran-görüntüleri"></a>
 ## 📸 Ekran Görüntüleri
 
 <div align="center">

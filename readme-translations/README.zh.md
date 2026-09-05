@@ -76,11 +76,85 @@ YTSage 专为寻找 **简单但强大** 的 YouTube 下载器的用户而设计�
 </div>
 
 <a id="安装"></a>
+<a id="installation"></a>
 ## 🚀 安装
 
-### ⚡ 快速安装 (推荐)
+### 📦 下载应用程序 (最简便的方法)
+*如果您只是想使用 YTSage 并且不知道 Python 是什么，请从这里开始*
 
-通过 PyPI 安装 YTSage：
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+只需下载适合您操作系统的预构建安装程序即可:
+
+#### 🪟 Windows
+
+| 格式 | 描述 |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **标准安装程序 (推荐)** - 双击即可安装。 |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 包含 FFmpeg (如果您尚未安装 FFmpeg，请使用此项)。 |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 便携版本，无需安装。 |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 包含 FFmpeg 的便携版 (ZIP 压缩包)。 |
+
+<details>
+<summary>🛠️ 安装步骤</summary>
+
+1. **EXE 安装程序 (`.exe`)**: 双击文件并按照设置向导操作。
+2. **便携版本 (`.zip`)**: 将压缩包解压到您想要的位置并启动 `ytsage.exe`。
+3. **包含 FFmpeg**: 如果您的系统中未安装 FFmpeg，请选择包含 FFmpeg 的版本。
+</details>
+
+#### 🍎 macOS
+
+| 格式 | 描述 |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **磁盘镜像安装程序 (推荐)** - 打开并拖动到应用程序。 |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | 适用于 Apple Silicon 的 ZIP 压缩应用程序。 |
+
+<details>
+<summary>🛠️ 安装步骤</summary>
+
+- **DMG 安装程序 (`.dmg`)**: 双击挂载，然后将 `YTSage.app` 拖到您的应用程序文件夹中。
+- **应用程序归档 (`.zip`)**: 解压 zip 并将 `YTSage.app` 移动到您的应用程序文件夹中。
+
+*注意: 如果遇到“应用程序已损坏”错误，请参阅下面的故障排除部分。*
+</details>
+
+#### 🐧 Linux
+
+| 格式 | 描述 |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **便携式 AppImage (推荐)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian 软件包 |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM 软件包 |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak 软件包 |
+
+<details>
+<summary>🛠️ 安装步骤</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # 如有需要修复缺失的依赖项
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: 按照 Flathub 上的说明操作或运行:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 通过 Python / PyPI 安装
+*您也可以通过 Python 安装 YTSage (需要 Python 3.11+)*
 
 ```bash
 pip install ytsage
@@ -95,108 +169,46 @@ pip install --upgrade ytsage
 
 </details>
 
-然后通过以下命令运行：
+然后启动应用程序:
 
 ```bash
 ytsage
 ```
 
-### 📦 独立可执行文件
+您还可以使用预先填好的视频或播放列表 URL 打开 YTSage 并立即进行解析:
 
-> [👉 下载最新版本](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| 格式 | 说明 |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 标准安装程序 |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 包含 FFmpeg 的安装程序 |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 便携版 (无需安装) |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 包含 FFmpeg 的便携版 (ZIP) |
-
-<details>
-<summary>🛠️ 安装步骤</summary>
-
-1. **EXE 安装程序 (`.exe`)**: 双击并按照安装向导进行操作。
-2. **便携版 (`.zip`)**: 解压到所需位置并运行 `ytsage.exe`。
-3. **内置 FFmpeg**: 如果系统没有安装 FFmpeg，请选择带 `-ffmpeg` 的版本。
-</details>
-
-#### 🐧 Linux
-
-| 格式 | 说明 |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian 软件包 |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | 便携 AppImage |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM 软件包 |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak 软件包 |
-
-<details>
-<summary>🛠️ 安装步骤</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # 如有依赖问题请运行
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: 按照 Flathub 的说明或运行：
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| 格式 | 说明 |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 专用 ZIP 压缩包 |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 专用 DMG 安装程序 |
-
-<details>
-<summary>🛠️ 安装步骤</summary>
-
-- **DMG 安装程序 (`.dmg`)**: 双击挂载，然后将 `YTSage.app` 拖入 Applications 文件夹。
-- **ZIP 应用包 (`.zip`)**: 解压并移动 `YTSage.app` 到 Applications 文件夹。
-
-*注意：如果遇到“应用已损坏”的提示，请参阅下方的 macOS 解决办法。*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 从源码手动安装</summary>
+### 💻 从源码手动安装 (开发者)
+*直接从源代码运行 YTSage。*
 
-### 1. 克隆仓库
+<details>
+<summary>查看手动安装步骤</summary>
+
+#### 1. 克隆仓库
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. 安装依赖
+#### 2. 安装依赖项
 
-#### ⚡ 使用 uv
-
+**⚡ 使用 uv**
 ```bash
 uv pip install .
 ```
 
-#### 📦 或使用标准 pip
-
+**📦 或使用标准 pip**
 ```bash
 pip install .
 ```
 
-### 3. 运行程序
+#### 3. 运行应用程序
 
 ```bash
 python -m ytsage.main
@@ -204,7 +216,6 @@ python -m ytsage.main
 
 </details>
 
-<a id="屏幕截图"></a>
 ## 📸 屏幕截图
 
 <div align="center">

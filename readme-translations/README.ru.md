@@ -76,11 +76,85 @@ YTSage создан для пользователей, которым нужен
 </div>
 
 <a id="установка"></a>
+<a id="installation"></a>
 ## 🚀 Установка
 
-### ⚡ Быстрая установка (Рекомендуется)
+### 📦 Скачать приложение (Самый простой способ)
+*Если вы просто хотите использовать YTSage и не знаете, что такое Python, начните отсюда*
 
-Установите YTSage через PyPI:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+Просто скачайте готовый установщик для вашей операционной системы:
+
+#### 🪟 Windows
+
+| Формат | Описание |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **Стандартный установщик (Рекомендуется)** — Просто дважды щелкните для установки. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | С включенным FFmpeg (используйте, если у вас еще нет FFmpeg). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Портативная версия, установка не требуется. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Портативная версия с FFmpeg, в архиве zip. |
+
+<details>
+<summary>🛠️ Шаги по установке</summary>
+
+1. **Установщик EXE (`.exe`)**: Дважды щелкните файл и следуйте мастеру установки.
+2. **Портативная версия (`.zip`)**: Распакуйте архив в нужное место и запустите `ytsage.exe`.
+3. **Включенный FFmpeg**: Выбирайте версии с включенным FFmpeg, если FFmpeg не установлен в вашей системе.
+</details>
+
+#### 🍎 macOS
+
+| Формат | Описание |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **Установщик образа диска (Рекомендуется)** — Откройте и перетащите в Программы. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Архив приложения для Apple Silicon. |
+
+<details>
+<summary>🛠️ Шаги по установке</summary>
+
+- **Установщик DMG (`.dmg`)**: Дважды щелкните для монтирования, затем перетащите `YTSage.app` в папку "Программы".
+- **Архив приложения (`.zip`)**: Распакуйте zip-файл и переместите `YTSage.app` в папку "Программы".
+
+*Примечание: Если вы столкнулись с ошибкой "Приложение повреждено", см. раздел устранения неполадок ниже.*
+</details>
+
+#### 🐧 Linux
+
+| Формат | Описание |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **Портативный AppImage (Рекомендуется)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Пакет Debian |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Пакет RPM |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Пакет Flatpak |
+
+<details>
+<summary>🛠️ Шаги по установке</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # Исправьте отсутствующие зависимости при необходимости
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: Следуйте инструкциям на Flathub или выполните:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 Установка через Python / PyPI
+*Вы также можете установить YTSage через Python (требуется Python 3.11+)*
 
 ```bash
 pip install ytsage
@@ -101,102 +175,40 @@ pip install --upgrade ytsage
 ytsage
 ```
 
-### 📦 Готовые исполняемые файлы (Executable)
+Вы также можете открыть YTSage с предварительно заполненной ссылкой на видео или плейлист для мгновенного анализа:
 
-> [👉 Скачать последний релиз](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| Формат | Описание |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Стандартный установщик |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | С включенным FFmpeg |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Портативная версия (не требует установки) |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Портативная с FFmpeg, сжатая (ZIP) |
-
-<details>
-<summary>🛠️ Шаги по установке</summary>
-
-1. **EXE установщик (`.exe`)**: Дважды щелкните файл и следуйте инструкциям мастера установки.
-2. **Портативная версия (`.zip`)**: Распакуйте файл в нужное место и запустите `ytsage.exe`.
-3. **Встроенный FFmpeg**: Если в вашей системе не установлен FFmpeg, выбирайте версии со встроенным FFmpeg.
-</details>
-
-#### 🐧 Linux
-
-| Формат | Описание |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Пакет Debian |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, Портативный |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Пакет RPM |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Пакет Flatpak |
-
-<details>
-<summary>🛠️ Шаги по установке</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Если нужно исправить зависимости
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: Следуйте инструкциям на Flathub или выполните:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| Формат | Описание |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Приложение ZIP для Apple Silicon |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Установщик DMG для Apple Silicon |
-
-<details>
-<summary>🛠️ Шаги по установке</summary>
-
-- **DMG установщик (`.dmg`)**: Дважды щелкните, чтобы смонтировать, и перетащите `YTSage.app` в папку Applications (Программы).
-- **Приложение в архиве (`.zip`)**: Распакуйте ZIP и переместите `YTSage.app` в папку Applications.
-
-*Примечание: Если вы получили ошибку "App is damaged", см. раздел по macOS ниже.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 Ручная установка из исходного кода</summary>
+### 💻 Ручная установка из исходного кода (Разработчики)
+*Запуск YTSage непосредственно из исходного кода.*
 
-### 1. Клонировать репозиторий
+<details>
+<summary>Показать шаги ручной установки</summary>
+
+#### 1. Клонировать репозиторий
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. Установить зависимости
+#### 2. Установить зависимости
 
-#### ⚡ С помощью uv
-
+**⚡ С использованием uv**
 ```bash
 uv pip install .
 ```
 
-#### 📦 Или через стандартный pip
-
+**📦 Или с использованием стандартного pip**
 ```bash
 pip install .
 ```
 
-### 3. Запустить приложение
+#### 3. Запустить приложение
 
 ```bash
 python -m ytsage.main
@@ -204,7 +216,6 @@ python -m ytsage.main
 
 </details>
 
-<a id="скриншоты"></a>
 ## 📸 Скриншоты
 
 <div align="center">

@@ -78,9 +78,82 @@ YTSage está diseñado para usuarios que desean un **descargador de YouTube simp
 <a id="installation"></a>
 ## 🚀 Instalación
 
-### ⚡ Instalación rápida (Recomendado)
+### 📦 Descargar la aplicación (Método más fácil)
+*Si solo quieres usar YTSage y no sabes qué es Python, empieza aquí*
 
-Instala YTSage vía PyPI:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+Simplemente descarga el instalador precompilado para tu sistema operativo:
+
+#### 🪟 Windows
+
+| Format | Descripción |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **Instalador estándar (Recomendado)** - Solo haz doble clic para instalar. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Con FFmpeg incluido (Usa esto si aún no tienes FFmpeg). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Versión portable, no requiere instalación. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portable con FFmpeg, comprimido. |
+
+<details>
+<summary>🛠️ Pasos de instalación</summary>
+
+1. **Instalador EXE (`.exe`)**: Haz doble clic en el archivo y sigue el asistente de configuración.
+2. **Versión portable (`.zip`)**: Extrae el archivo en el lugar deseado y ejecuta `ytsage.exe`.
+3. **FFmpeg incluido**: Elige versiones con FFmpeg incluido si no tienes FFmpeg instalado en tu sistema.
+</details>
+
+#### 🍎 macOS
+
+| Format | Descripción |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **Instalador de imagen de disco (Recomendado)** - Abrir y arrastrar a Aplicaciones. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Aplicación comprimida para Apple Silicon. |
+
+<details>
+<summary>🛠️ Pasos de instalación</summary>
+
+- **Instalador DMG (`.dmg`)**: Haz doble clic para montar, luego arrastra `YTSage.app` a tu carpeta de Aplicaciones.
+- **Archivo de aplicación (`.zip`)**: Extrae el zip y mueve `YTSage.app` a tu carpeta de Aplicaciones.
+
+*Nota: Si encuentras el error "La aplicación está dañada", consulta la sección de solución de problemas a continuación.*
+</details>
+
+#### 🐧 Linux
+
+| Format | Descripción |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **AppImage portable (Recomendado)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paquete Debian |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paquete RPM |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Paquete Flatpak |
+
+<details>
+<summary>🛠️ Pasos de instalación</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # Soluciona dependencias faltantes si es necesario
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: Sigue las instrucciones en Flathub o ejecuta:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 Instalación a través de Python / PyPI
+*También puedes instalar YTSage a través de Python (Requiere Python 3.11+)*
 
 ```bash
 pip install ytsage
@@ -95,108 +168,46 @@ pip install --upgrade ytsage
 
 </details>
 
-Luego, ejecuta la aplicación:
+Luego inicia la aplicación:
 
 ```bash
 ytsage
 ```
 
-### 📦 Ejecutables precompilados
+También puedes abrir YTSage con una URL de video o lista de reproducción precargada y analizada de inmediato:
 
-> [👉 Descargar el último lanzamiento](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| Formato | Descripción |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Instalador estándar |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Con FFmpeg incorporado |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Versión portable, no requiere instalación |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portable con FFmpeg, comprimido |
-
-<details>
-<summary>🛠️ Pasos de instalación</summary>
-
-1. **Instalador EXE (`.exe`)**: Haz doble clic en el archivo y sigue el asistente de configuración.
-2. **Versión portable (`.zip`)**: Extrae el archivo en el lugar deseado y ejecuta `ytsage.exe`.
-3. **FFmpeg incorporado**: Elige las versiones con FFmpeg incorporado si no tienes FFmpeg instalado en tu sistema.
-</details>
-
-#### 🐧 Linux
-
-| Formato | Descripción |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paquete Debian |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, portable |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paquete RPM |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak Bundle |
-
-<details>
-<summary>🛠️ Pasos de instalación</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Repara dependencias faltantes si es necesario
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: Sigue las instrucciones en Flathub o ejecuta:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| Formato | Descripción |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Aplicación comprimida para Apple Silicon |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Instalador de imagen de disco para Apple Silicon |
-
-<details>
-<summary>🛠️ Pasos de instalación</summary>
-
-- **Instalador DMG (`.dmg`)**: Haz doble clic para montar, luego arrastra `YTSage.app` a tu carpeta de Aplicaciones.
-- **Archivo de aplicación (`.zip`)**: Extrae el zip y mueve `YTSage.app` a tu carpeta de Aplicaciones.
-
-*Nota: Si encuentras el error "La aplicación está dañada", consulta la sección de solución de problemas de macOS a continuación.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 Instalación manual desde el código fuente</summary>
+### 💻 Instalación manual desde el código fuente (Desarrolladores)
+*Ejecuta YTSage directamente desde el código fuente.*
 
-### 1. Clonar el repositorio
+<details>
+<summary>Ver pasos de instalación manual</summary>
+
+#### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. Instalar dependencias
+#### 2. Instalar dependencias
 
-#### ⚡ Con uv
-
+**⚡ Usando uv**
 ```bash
 uv pip install .
 ```
 
-#### 📦 O con pip estándar
-
+**📦 O usando pip estándar**
 ```bash
 pip install .
 ```
 
-### 3. Ejecutar la aplicación
+#### 3. Ejecutar la aplicación
 
 ```bash
 python -m ytsage.main

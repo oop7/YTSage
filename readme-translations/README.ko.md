@@ -78,11 +78,85 @@ YTSage는 **간단하면서도 강력한 YouTube 다운로더**를 원하는 사
 </div>
 
 <a id="설치"></a>
+<a id="installation"></a>
 ## 🚀 설치
 
-### ⚡ 빠른 설치 (권장)
+### 📦 앱 다운로드 (가장 쉬운 방법)
+*YTSage를 사용하고 싶지만 Python이 무엇인지 모른다면 여기서 시작하세요*
 
-PyPI로 YTSage를 설치합니다:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+사용 중인 운영 체제에 맞는 빌드된 설치 프로그램을 다운로드하면 됩니다:
+
+#### 🪟 Windows
+
+| 포맷 | 설명 |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **표준 설치 프로그램 (권장)** - 더블 클릭하여 설치합니다. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 포함 (FFmpeg가 아직 설치되어 있지 않은 경우 사용). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 포터블 버전, 설치 필요 없음. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 포함 포터블 버전 (ZIP). |
+
+<details>
+<summary>🛠️ 설치 단계</summary>
+
+1. **EXE 설치 프로그램 (`.exe`)**: 파일을 더블 클릭하고 마법사를 따릅니다.
+2. **포터블 버전 (`.zip`)**: 원하는 위치에 압축을 풀고 `ytsage.exe`를 실행합니다.
+3. **FFmpeg 포함**: 시스템에 FFmpeg가 설치되어 있지 않은 경우 FFmpeg가 포함된 버전을 선택하세요.
+</details>
+
+#### 🍎 macOS
+
+| 포맷 | 설명 |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **디스크 이미지 설치 프로그램 (권장)** - 열고 Applications로 드래그합니다. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon용 압축된 애플리케이션. |
+
+<details>
+<summary>🛠️ 설치 단계</summary>
+
+- **DMG 설치 프로그램 (`.dmg`)**: 더블 클릭하여 마운트한 다음 `YTSage.app`을 Applications 폴더로 드래그합니다.
+- **애플리케이션 아카이브 (`.zip`)**: zip 파일 압축을 풀고 `YTSage.app`을 Applications 폴더로 이동합니다.
+
+*참고: "손상된 애플리케이션" 오류가 발생하면 아래 문제 해결 섹션을 참조하세요.*
+</details>
+
+#### 🐧 Linux
+
+| 포맷 | 설명 |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **포터블 AppImage (권장)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | 데비안 패키지 |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM 패키지 |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak 번들 |
+
+<details>
+<summary>🛠️ 설치 단계</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # 누락된 의존성 수정
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: Flathub의 지침을 따르거나 실행하세요:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 Python / PyPI를 통한 설치
+*Python을 통해서도 YTSage를 설치할 수 있습니다 (Python 3.11+ 필요)*
 
 ```bash
 pip install ytsage
@@ -97,108 +171,46 @@ pip install --upgrade ytsage
 
 </details>
 
-그다음 애플리케이션을 실행합니다:
+그런 다음 애플리케이션을 실행합니다:
 
 ```bash
 ytsage
 ```
 
-### 📦 빌드된 실행 파일
+비디오 또는 재생목록 URL이 미리 채워진 상태로 YTSage를 열어 즉시 분석할 수도 있습니다:
 
-> [👉 최신 릴리스 다운로드](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| 형식 | 설명 |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 표준 설치 프로그램 |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 포함 |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 포터블 버전, 설치 불필요 |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 포함 포터블 (ZIP) |
-
-<details>
-<summary>🛠️ 설치 단계</summary>
-
-1. **EXE 설치 프로그램 (`.exe`)**: 파일을 더블클릭한 뒤 설치 마법사를 따릅니다.
-2. **포터블 버전 (`.zip`)**: 원하는 위치에 압축을 풀고 `ytsage.exe`를 실행합니다.
-3. **FFmpeg 포함**: 시스템에 FFmpeg가 없다면 FFmpeg가 포함된 버전을 선택하세요.
-</details>
-
-#### 🐧 Linux
-
-| 형식 | 설명 |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian 패키지 |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, 포터블 |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM 패키지 |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak 번들 |
-
-<details>
-<summary>🛠️ 설치 단계</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # 필요 시 누락된 의존성 해결
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: Flathub 안내를 따르거나 다음을 실행합니다:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| 형식 | 설명 |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon용 ZIP 앱 |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon용 디스크 이미지 설치 프로그램 |
-
-<details>
-<summary>🛠️ 설치 단계</summary>
-
-- **DMG 설치 프로그램 (`.dmg`)**: 더블클릭해 마운트한 뒤 `YTSage.app`을 응용 프로그램 폴더로 드래그합니다.
-- **앱 아카이브 (`.zip`)**: ZIP을 풀고 `YTSage.app`을 응용 프로그램 폴더로 이동합니다.
-
-*참고: "앱이 손상되었습니다" 오류가 나면 아래 macOS 문제 해결 섹션을 참고하세요.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 소스에서 수동 설치</summary>
+### 💻 소스에서 수동 설치 (개발자)
+*소스 코드에서 직접 YTSage를 실행합니다.*
 
-### 1. 저장소 클론
+<details>
+<summary>수동 설치 단계 보기</summary>
+
+#### 1. 리포지토리 클론
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. 의존성 설치
+#### 2. 의존성 설치
 
-#### ⚡ uv 사용
-
+**⚡ uv 사용**
 ```bash
 uv pip install .
 ```
 
-#### 📦 또는 표준 pip 사용
-
+**📦 또는 표준 pip 사용**
 ```bash
 pip install .
 ```
 
-### 3. 애플리케이션 실행
+#### 3. 애플리케이션 실행
 
 ```bash
 python -m ytsage.main
@@ -206,7 +218,6 @@ python -m ytsage.main
 
 </details>
 
-<a id="스크린샷"></a>
 ## 📸 스크린샷
 
 <div align="center">
