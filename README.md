@@ -249,16 +249,17 @@ python -m ytsage.main
 3. **Click "Analyze"**
 4. **Select Format:**
    - `Video` for video downloads
-   - `Audio Only` for audio extraction
+   - `Audio` for audio extraction
+> 💡 You can now select and merge multiple audio tracks from the Audio section into a single video. Whether you want to combine a video with multiple language tracks, or merge several audio streams together.
 5. **Choose Options:**
    - Enable Subtitles and select language
    - Enable Subtitle Merging
    - Save Thumbnail
    - Remove Sponsored Segments
    - Save Description
-   - Embed Chapters
-6. **Select Output Directory**
-7. **Click "Download"**
+   - Embed Chapters (Chapters, Metadata, Thumbnail)
+
+6. **Click "Download"**
 
 > 💡 Default download directory is the user's "Downloads" folder.
 
@@ -273,7 +274,7 @@ python -m ytsage.main
 4. **Choose desired format/quality**
 5. **Click "Download"**
 
-> 💡 The application automatically handles the download queue, and you can export playlist entries as `.txt`, `.csv`, `.m3u`, or `.json`.
+> 💡 You can export playlist entries as (`.txt`, `.csv`, `.m3u`, or `.json`) by clicking on "Save Playlist As" button.
 
 </details>
 
@@ -305,7 +306,7 @@ Notes:
 - **Subtitle Merging:** Merge subtitles into the video file for hardcoded/burned-in subtitles.
 - **Save Description:** Save the video description as a text file.
 - **Save Thumbnail:** Save the video thumbnail as an image file.
-- **Embed Chapters:** Embed chapter markers as metadata for compatible video players.
+- **Embed:** This button allows you to embed chapters, metadata, and thumbnail into the downloaded video file.
 - **Remove Sponsored Segments:** Remove sponsored segments from the video using SponsorBlock.
 - **Trim Video:** Download only specific parts of a video by specifying time ranges in `HH:MM:SS` format.
 
@@ -314,45 +315,43 @@ Notes:
 <details>
 <summary>⚙️ Output & File Settings</summary>
 
-- **Speed Limiter:** Limit download speed, e.g., `500K` for 500 KB/s.
-- **Save Download Path:** Saves the default download path for future downloads. Available in **Download Settings → Download Path**.
-- **Default Video Resolution:** Set your preferred default video resolution for auto-selection (e.g., 1080p, 720p). Available in **Download Settings → Default Video Resolution**.
-- **Default Subtitle Languages:** Set default subtitle languages for auto-selection (comma-separated, e.g., `en,es`). Available in **Download Settings → Default Subtitle Languages**.
-- **Output Filename Format:** Customize the output filename format using variables like `%(title)s`, `%(uploader)s`, `%(playlist_index)s`, and `%(resolution)s`. Available in **Download Settings → Filename Format**.
-- **Force Output Format:** Force video downloads into a specific container format like `mp4`, `webm`, or `mkv`. Available in **Download Settings → Output Format Settings**.
-- **Audio Format Conversion:** Convert audio-only downloads into preferred formats such as `AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, or `Best`. Available in **Download Settings → Audio Format Settings**.
-- **Audio Normalization:** Standardize volume for audio-only downloads using EBU R128.
-- **Concurrent Connections:** Dramatically increase download speed by downloading files in multiple fragments simultaneously. Available in **Download Settings → General → Concurrent Connections** (Default is 1, maximum recommended is 8-10 to avoid IP throttling).
+- **Speed Limiter:** Limit download speed, e.g., `500K` for 500 KB/s. Available in **Download Settings → General → Speed Limit**.
+- **Save Download Path:** Saves default download directory across sessions. Available in **Download Settings → General → Download Path**.
+- **Concurrent Connections:** Accelerate downloads using multiple connections/fragments (1 to 20 fragments). Available in **Download Settings → General → Concurrent Connections**.
+- **Download History Toggle:** Enable or disable saving download history. Available in **Download Settings → General → Download History**.
+- **Notification Sounds:** Enable or disable completion audio notification. Available in **Download Settings → General → Notification Sound**.
+- **Force Output Format:** Force video container format (`mp4`, `webm`, `mkv`). Available in **Download Settings → Format → Output Format Settings**.
+- **Audio Format Conversion:** Convert audio downloads to preferred formats (`AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, or `Best`). Available in **Download Settings → Format → Audio Format Settings**.
+- **Audio Normalization:** Normalize volume using EBU R128 standard for audio downloads. Available in **Download Settings → Format → Audio Format Settings**.
+- **Default Video Resolution & Subtitles:** Auto-select default height (e.g. `1080`, `720`) and preferred subtitle languages (`en`, `es`, etc.) plus subtitle container format (`srt`, `vtt`, `ass`, `lrc`). Available in **Download Settings → Format → Default Selection Settings**.
+- **Output Filename Format:** Customize output naming template using yt-dlp variables (e.g. `%(title)s_%(resolution)s_[%(id)s].%(ext)s`). Reset button included. Available in **Download Settings → File → Filename Format**.
 
 </details>
 
 <details>
 <summary>🌐 Access & Network</summary>
 
-- **Login with Cookies:** Log in to YouTube using cookies to access private content.
-  How to use it:
-  1. **Recommended:** Use the built-in `Extract cookies from browser` option in the app, then select your browser and optionally a profile.
-  2. Alternatively, extract cookies manually:
-     a. Export browser cookies using an extension like [cookie-editor](https://github.com/moustachauve/cookie-editor?tab=readme-ov-file)
-     b. Copy cookies in Netscape format
-     c. Create a file named `cookies.txt` and paste cookies
-     d. Select the `cookies.txt` file in the app
-- **Proxy Support:** Use a proxy server for downloads, e.g., `http://<proxy-server>:<port>`
-- **Generic Mode:** Allows YTSage to analyze and download from non-YouTube sites supported by yt-dlp. Enable from **Download Settings → Generic Mode**.
+- **Login with Cookies:** Access private or age-restricted content. Access via **Custom Options → Cookies**:
+- **Browser Cookie Extraction (Recommended)**
+  - Direct extraction from installed browsers: **Firefox** (preferred), **Chrome**, **Edge**, **Brave**, **Opera**, **Vivaldi**, etc.
+    - Includes optional profile selection.
+  - **Cookie File:** Load a Netscape format `cookies.txt` file.
+- **Proxy & Geo-Verification Proxy Support:** Configure main proxy server and optional geo-verification proxy (SOCKS4/5 or HTTP/HTTPS) to bypass location restrictions. Access via **Custom Options → Proxy**.
+- **Generic Mode:** Allow YTSage to process and download from non-YouTube URLs supported by yt-dlp. Toggle in **Download Settings → General → Generic Mode**.
 
 </details>
 
 <details>
 <summary>🛠️ Tools & Maintenance</summary>
 
-- **Custom Commands:** Access advanced yt-dlp features via command-line arguments.
-- **Updater Tab:** Manage built-in update tools from one place in Custom Options:
-  - **yt-dlp Updates:** Check for updates and toggle between Stable and Nightly release channels.
-  - **FFmpeg Version Checker:** Check your FFmpeg version and open installation guides.
-  - **Deno Updates:** Check and update the Deno runtime.
-- **FFmpeg/yt-dlp/Deno Detection:** Automatically detects paths and versions for FFmpeg, yt-dlp, and Deno from the About dialog.
-- **Download History:** View past downloads with thumbnails and statuses from the **History** button.
-- **notification-sound opt-out:** Disable the notification sound for completed downloads in **Download settings → General → Notification Sound**.
+- **Custom Commands:** Execute custom `yt-dlp` arguments directly with live output logging and execution console. Access via **Custom Options → Custom Command**.
+- **Updater Tab:** Comprehensive tool management inside **Custom Options → Updater**:
+  - **App Updates:** Toggle automatic application update checks and enable/disable **Beta Releases** channel checks.
+  - **yt-dlp Updates & Channel Selection:** Check for yt-dlp updates and switch release channels between **Stable** and **Nightly**.
+  - **FFmpeg Version Checker:** Check local FFmpeg status/version against the latest release with step-by-step setup guides.
+  - **Deno Updater:** Check, install, and upgrade the Deno JavaScript runtime required for yt-dlp ETP plugins.
+- **FFmpeg/yt-dlp/Deno Detection:** Automatic detection and status verification of system dependencies visible from the **About** dialog.
+- **Download History:** Browse, search, filter, and open past download history with thumbnails, original URLs, and local files. Access via the **History** button on the main toolbar.
 
 </details>
 
@@ -397,7 +396,7 @@ YTSage supports **16 languages** for global accessibility. Select your preferred
 <details>
 <summary>Click to view common issues and solutions</summary>
 
-- **Format table not appearing:** Update yt-dlp to latest version and switch to nightly yt-dlp.
+- **Format table not appearing:** Update yt-dlp to the latest version and switch to nightly yt-dlp.
 - **Download failed:** Check your internet connection and ensure the video is available.
 - **Specific Download Errors:**
   - **Private Videos:** Use cookie authentication to access private content.
@@ -409,7 +408,7 @@ YTSage supports **16 languages** for global accessibility. Select your preferred
   - **Invalid URLs:** Ensure the URL is correct and from a supported platform.
   - **Premium Content:** Requires a YouTube Premium subscription.
   - **Copyright Blocks:** Content is blocked due to copyright restrictions.
-- **Video and Audio Files separate after download:** This happens when FFmpeg is missing or not detected. YTSage requires FFmpeg to merge high-quality video and audio streams.
+- **Video and audio files remain separate after download:** This happens when FFmpeg is missing or not detected. YTSage requires FFmpeg to merge high-quality video and audio streams.
   - **Solution:** Ensure FFmpeg is installed and accessible in your system's PATH. For Windows users, the easiest option is to download the `YTSage-v<version>-ffmpeg.exe` file, which comes bundled with FFmpeg.
 
 ---
@@ -611,7 +610,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
     <tr class="section"><th colspan="2">Assets & Contributors</th></tr>
     <tr>
         <td><a href="https://github.com/bastik-1001">@bastik-1001</a></td>
-        <td>First & Major Donator Support</td>
+        <td>First & Major Donor Support</td>
     </tr>
     <tr>
         <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">New Notification 09 by Universfield</a></td>
