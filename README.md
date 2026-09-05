@@ -230,6 +230,15 @@ python -m ytsage.main
 ## 📸 Screenshots
 
 <div align="center">
+<h3>YTSage Demo</h3>
+<video autoplay muted controls width="800">
+  <source src="branding/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+<br><br>
+</div>
+
+<div align="center">
 <table>
   <tr>
     <td><img src="branding/screenshots/Download-Settings.png" alt="Download Settings" width="400"/></td>
