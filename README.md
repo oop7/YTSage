@@ -231,7 +231,10 @@ python -m ytsage.main
 
 <div align="center">
 <h3>YTSage Demo</h3>
-<a href="branding/demo.mp4">▶ Watch the YTSage demo (MP4)</a>
+<video autoplay muted controls width="800">
+  <source src="branding/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 <br><br>
 </div>
 
