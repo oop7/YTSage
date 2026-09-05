@@ -234,21 +234,22 @@ python -m ytsage.main
 <details>
 <summary>🎯 Uso Básico</summary>
 
-1. **Inicie o YTSage**
-2. **Cole uma URL do YouTube** (ou use o botão "Paste URL")
-3. **Clique em "Analyze"**
-4. **Escolha o Formato:**
-   - `Video` para download de vídeo
-   - `Audio Only` para extração de áudio
-5. **Selecione Opções:**
-   - Habilite legendas e escolha o idioma
-   - Habilite a mesclagem de legendas
+1. **Iniciar YTSage**
+2. **Colar URL do YouTube** (ou usar o botão "Colar URL")
+3. **Clicar em "Analisar"**
+4. **Selecionar formato:**
+   - `Video` para downloads de vídeo
+   - `Audio` para extração de áudio
+> 💡 Agora você pode selecionar e mesclar várias faixas de áudio da seção Áudio em um único vídeo. Seja para combinar um vídeo com várias faixas de idioma ou mesclar vários fluxos de áudio.
+5. **Escolher opções:**
+   - Ativar legendas e selecionar idioma
+   - Ativar mesclagem de legendas
    - Salvar miniatura
-   - Remover seções de patrocinadores
+   - Remover segmentos patrocinados
    - Salvar descrição
-   - Incorporar capítulos
-6. **Escolha o Diretório de Saída**
-7. **Clique em "Download"**
+   - Embutir capítulos (Capítulos, Metadados, Miniatura)
+
+6. **Clicar em "Baixar"**
 
 > 💡 O diretório de download padrão é a pasta "Downloads" do usuário.
 
@@ -257,13 +258,13 @@ python -m ytsage.main
 <details>
 <summary>📋 Download de Playlist</summary>
 
-1. **Cole a URL da Playlist**
-2. **Clique em "Analyze"**
-3. **Selecione vídeos do seletor (opcional, padrão todos)**
-4. **Escolha o formato/qualidade desejado**
-5. **Clique em "Download"**
+1. **Colar URL da Playlist**
+2. **Clicar em "Analisar"**
+3. **Selecionar vídeos no seletor de playlist (opcional, padrão todos)**
+4. **Escolher formato/qualidade desejado**
+5. **Clicar em "Baixar"**
 
-> 💡 O aplicativo gerencia automaticamente a fila de download, e você pode exportar as entradas da playlist como arquivos `.txt`, `.csv`, `.m3u` ou `.json`.
+> 💡 Você pode exportar as entradas da playlist como (`.txt`, `.csv`, `.m3u` ou `.json`) clicando no botão "Salvar Playlist Como".
 
 </details>
 

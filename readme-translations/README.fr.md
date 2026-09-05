@@ -234,21 +234,22 @@ python -m ytsage.main
 <details>
 <summary>🎯 Utilisation de base</summary>
 
-1. **Lancez YTSage**
-2. **Collez l'URL YouTube** (ou utilisez le bouton "Paste URL")
-3. **Cliquez sur "Analyze"**
-4. **Sélectionnez le format :**
+1. **Lancer YTSage**
+2. **Coller l'URL YouTube** (ou utiliser le bouton "Coller l'URL")
+3. **Cliquer sur "Analyser"**
+4. **Sélectionner le format:**
    - `Video` pour les téléchargements vidéo
-   - `Audio Only` pour l'extraction audio
-5. **Choisissez les options :**
+   - `Audio` pour l'extraction audio
+> 💡 Vous pouvez désormais sélectionner et fusionner plusieurs pistes audio de la section Audio dans une seule vidéo. Que vous souhaitiez combiner une vidéo avec plusieurs pistes linguistiques ou fusionner plusieurs flux audio ensemble.
+5. **Choisir les options:**
    - Activer les sous-titres et sélectionner la langue
    - Activer la fusion des sous-titres
    - Enregistrer la miniature
    - Supprimer les segments sponsorisés
    - Enregistrer la description
-   - Intégrer les chapitres
-6. **Sélectionnez le répertoire de sortie**
-7. **Cliquez sur "Download"**
+   - Intégrer les chapitres (Chapitres, Métadonnées, Miniature)
+
+6. **Cliquer sur "Télécharger"**
 
 > 💡 Le répertoire de téléchargement par défaut est le dossier "Téléchargements" de l'utilisateur.
 
@@ -257,13 +258,13 @@ python -m ytsage.main
 <details>
 <summary>📋 Téléchargement de playlist</summary>
 
-1. **Collez l'URL de la playlist**
-2. **Cliquez sur "Analyze"**
-3. **Sélectionnez les vidéos du sélecteur de playlist (optionnel, toutes par défaut)**
-4. **Choisissez le format/la qualité souhaitée**
-5. **Cliquez sur "Download"**
+1. **Coller l'URL de la playlist**
+2. **Cliquer sur "Analyser"**
+3. **Sélectionner les vidéos dans le sélecteur de playlist (optionnel, toutes par défaut)**
+4. **Choisir le format/la qualité souhaité(e)**
+5. **Cliquer sur "Télécharger"**
 
-> 💡 L'application gère automatiquement la file d'attente de téléchargement, et vous pouvez exporter les entrées de la playlist au format `.txt`, `.csv`, `.m3u` ou `.json`.
+> 💡 Vous pouvez exporter les entrées de la playlist au format (`.txt`, `.csv`, `.m3u` ou `.json`) en cliquant sur le bouton "Enregistrer la playlist sous".
 
 </details>
 

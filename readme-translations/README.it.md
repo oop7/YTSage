@@ -235,20 +235,21 @@ python -m ytsage.main
 <summary>🎯 Utilizzo Base</summary>
 
 1. **Avvia YTSage**
-2. **Incolla un URL di YouTube** (o usa il pulsante "Incolla URL")
-3. **Clicca su "Analizza"**
-4. **Scegli il formato:**
-   - `Video` per il download del video
-   - `Solo Audio` per l'estrazione dell'audio
-5. **Seleziona le opzioni:**
-   - Abilita i sottotitoli e scegli la lingua
-   - Abilita la fusione dei sottotitoli
-   - Salva l'anteprima (thumbnail)
-   - Rimuovi sezioni sponsor
-   - Salva la descrizione
-   - Incorpora i capitoli
-6. **Scegli la directory di destinazione**
-7. **Clicca su "Download"**
+2. **Incolla l'URL di YouTube** (o usa il pulsante "Incolla URL")
+3. **Fai clic su "Analizza"**
+4. **Seleziona il formato:**
+   - `Video` per i download video
+   - `Audio` per l'estrazione audio
+> 💡 Ora puoi selezionare e unire più tracce audio dalla sezione Audio in un unico video. Che tu voglia combinare un video con più tracce lingua o unire diversi flussi audio insieme.
+5. **Scegli le opzioni:**
+   - Abilita Sottotitoli e seleziona la lingua
+   - Abilita Unione Sottotitoli
+   - Salva Anteprima
+   - Rimuovi Segmenti Sponsorizzati
+   - Salva Descrizione
+   - Incorpora Capitoli (Capitoli, Metadati, Anteprima)
+
+6. **Fai clic su "Download"**
 
 > 💡 La directory di download predefinita è la cartella "Download" dell'utente.
 
@@ -257,13 +258,13 @@ python -m ytsage.main
 <details>
 <summary>📋 Download Playlist</summary>
 
-1. **Incolla l'URL della playlist**
-2. **Clicca su "Analizza"**
-3. **Seleziona i video dal selettore (opzionale, tutti per impostazione predefinita)**
-4. **Scegli il formato/qualità desiderati**
-5. **Clicca su "Download"**
+1. **Incolla URL della Playlist**
+2. **Fai clic su "Analizza"**
+3. **Seleziona i video dal selettore di playlist (opzionale, predefinito tutti)**
+4. **Scegli il formato/qualità desiderato**
+5. **Fai clic su "Download"**
 
-> 💡 L'applicazione gestisce automaticamente la coda di download e puoi esportare le voci della playlist come file `.txt`, `.csv`, `.m3u` o `.json`.
+> 💡 Puoi esportare le voci della playlist come (`.txt`, `.csv`, `.m3u` o `.json`) facendo clic sul pulsante "Salva playlist come".
 
 </details>
 

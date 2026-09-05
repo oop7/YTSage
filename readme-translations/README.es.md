@@ -234,21 +234,22 @@ python -m ytsage.main
 <details>
 <summary>🎯 Uso básico</summary>
 
-1. **Lanza YTSage**
-2. **Pega la URL de YouTube** (o usa el botón "Paste URL")
-3. **Haz clic en "Analyze"**
-4. **Selecciona el formato:**
+1. **Iniciar YTSage**
+2. **Pegar la URL de YouTube** (o usar el botón "Pegar URL")
+3. **Hacer clic en "Analizar"**
+4. **Seleccionar formato:**
    - `Video` para descargas de video
-   - `Audio Only` para extracción de audio
-5. **Elige opciones:**
-   - Activar subtítulos y elegir idioma
-   - Activar fusión de subtítulos
+   - `Audio` para extracción de audio
+> 💡 Ahora puedes seleccionar y fusionar múltiples pistas de audio de la sección de Audio en un solo video. Ya sea que desees combinar un video con múltiples pistas de idioma o fusionar varias transmisiones de audio.
+5. **Elegir opciones:**
+   - Habilitar subtítulos y seleccionar idioma
+   - Habilitar combinación de subtítulos
    - Guardar miniatura
    - Eliminar segmentos patrocinados
    - Guardar descripción
-   - Integrar capítulos
-6. **Selecciona directorio de salida**
-7. **Haz clic en "Download"**
+   - Incrustar capítulos (Capítulos, Metadatos, Miniatura)
+
+6. **Hacer clic en "Descargar"**
 
 > 💡 El directorio de descarga predeterminado es la carpeta "Downloads" del usuario.
 
@@ -257,13 +258,13 @@ python -m ytsage.main
 <details>
 <summary>📋 Descarga de listas de reproducción</summary>
 
-1. **Pega la URL de la lista de reproducción**
-2. **Haz clic en "Analyze"**
-3. **Selecciona videos del selector de listas (opcional, todos por defecto)**
-4. **Elige formato/calidad deseada**
-5. **Haz clic en "Download"**
+1. **Pegar URL de la lista de reproducción**
+2. **Hacer clic en "Analizar"**
+3. **Seleccionar videos en el selector de listas (opcional, todos por defecto)**
+4. **Elegir el formato/calidad deseado**
+5. **Hacer clic en "Descargar"**
 
-> 💡 La aplicación gestiona las colas de descarga automáticamente, y puedes exportar entradas de la lista como archivos `.txt`, `.csv`, `.m3u` o `.json`.
+> 💡 Puedes exportar las entradas de la lista de reproducción como (`.txt`, `.csv`, `.m3u` o `.json`) haciendo clic en el botón "Guardar lista de reproducción como".
 
 </details>
 

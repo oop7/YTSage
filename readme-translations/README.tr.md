@@ -234,36 +234,37 @@ python -m ytsage.main
 <details>
 <summary>🎯 Temel Kullanım</summary>
 
-1. **YTSage'i başlatın**
-2. **Bir YouTube URL'si yapıştırın** (veya "Paste URL" düğmesini kullanın)
-3. **"Analyze" düğmesine tıklayın**
-4. **Formatı Seçin:**
-   - Video indirmek için `Video`
-   - Sadece ses çıkarmak için `Audio Only`
+1. **YTSage'i Başlatın**
+2. **YouTube Bağlantısını Yapıştırın** (veya "URL Yapıştır" düğmesini kullanın)
+3. **"Analiz Et" Düğmesine Tıklayın**
+4. **Biçim Seçin:**
+   - Video indirmeleri için `Video`
+   - Ses çıkarma için `Audio`
+> 💡 Artık Ses bölümünden birden fazla ses parçasını seçip tek bir videoda birleştirebilirsiniz. İster bir videoyu birden fazla dil parçasıyla birleştirmek, ister birden fazla ses akışını bir araya getirmek isteyin.
 5. **Seçenekleri Belirleyin:**
-   - Altyazıları etkinleştirin ve dili seçin
-   - Altyazı birleştirmeyi (Merge subs) etkinleştirin
-   - Küçük resmi kaydet (Save thumbnail)
-   - Sponsor bölümlerini kaldır (SponsorBlock)
-   - Açıklamayı kaydet (Save description)
-   - Bölümleri göm (Embed chapters)
-6. **Çıkış Dizinini Seçin**
-7. **"Download" düğmesine tıklayın**
+   - Altyazıları etkinleştirin ve dil seçin
+   - Altyazı Birleştirmeyi etkinleştirin
+   - Küçük Resmi Kaydedin
+   - Sponsorlu Segmentleri Kaldırın
+   - Açıklamayı Kaydedin
+   - Bölümleri Gömün (Bölümler, Meta Veriler, Küçük Resim)
 
-> 💡 Varsayılan indirme dizini kullanıcının "İndirmeler" klasörüdür.
+6. **"İndir" Düğmesine Tıklayın**
+
+> 💡 Varsayılan indirme dizini kullanıcının "İndirilenler" klasörüdür.
 
 </details>
 
 <details>
 <summary>📋 Oynatma Listesi İndirme</summary>
 
-1. **Oynatma Listesi URL'sini yapıştırın**
-2. **"Analyze" düğmesine tıklayın**
-3. **Seçiciden videoları seçin (varsayılan olarak tümü seçilidir)**
-4. **İstediğiniz formatı/kaliteyi seçin**
-5. **"Download" düğmesine tıklayın**
+1. **Oynatma Listesi Bağlantısını Yapıştırın**
+2. **"Analiz Et" Düğmesine Tıklayın**
+3. **Oynatma listesi seçiciden videoları seçin (isteğe bağlı, varsayılan tümü)**
+4. **İstenen biçim/kaliteyi seçin**
+5. **"İndir" Düğmesine Tıklayın**
 
-> 💡 Uygulama indirme kuyruğunu otomatik olarak yönetir ve oynatma listesi girişlerini `.txt`, `.csv`, `.m3u` veya `.json` dosyaları olarak dışa aktarabilirsiniz.
+> 💡 "Oynatma Listesini Farklı Kaydet" düğmesine tıklayarak oynatma listesi girdilerini (`.txt`, `.csv`, `.m3u` veya `.json`) olarak dışa aktarabilirsiniz.
 
 </details>
 

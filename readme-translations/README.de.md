@@ -235,35 +235,36 @@ python -m ytsage.main
 <summary>🎯 Grundlegende Bedienung</summary>
 
 1. **YTSage starten**
-2. **YouTube-URL einfügen** (oder die Schaltfläche "Paste URL" verwenden)
-3. **Auf "Analyze" klicken**
+2. **YouTube-URL einfügen** (oder die Schaltfläche "URL einfügen" verwenden)
+3. **Auf "Analysieren" klicken**
 4. **Format auswählen:**
    - `Video` für Video-Downloads
-   - `Audio Only` für Audio-Extraktion
+   - `Audio` für Audio-Extraktion
+> 💡 Sie können jetzt mehrere Tonspuren aus dem Bereich "Audio" auswählen und in ein einzelnes Video zusammenführen. Egal, ob Sie ein Video mit mehreren Sprachspuren kombinieren oder mehrere Audiostreams zusammenfügen möchten.
 5. **Optionen wählen:**
-   - Untertitel aktivieren & Sprache auswählen
-   - Untertitel-Merging aktivieren
-   - Thumbnail speichern
-   - Sponsoren-Segmente entfernen
+   - Untertitel aktivieren und Sprache auswählen
+   - Untertitel-Zusammenführung aktivieren
+   - Vorschaubild speichern
+   - Gesponserte Segmente entfernen
    - Beschreibung speichern
-   - Kapitel integrieren
-6. **Ausgabeverzeichnis wählen**
-7. **Auf "Download" klicken**
+   - Kapitel einbetten (Kapitel, Metadaten, Vorschaubild)
 
-> 💡 Das Standard-Download-Verzeichnis ist der "Downloads"-Ordner des Benutzers.
+6. **Auf "Herunterladen" klicken**
+
+> 💡 Standard-Download-Verzeichnis ist der Ordner "Downloads" des Benutzers.
 
 </details>
 
 <details>
-<summary>📋 Playlist-Download</summary>
+<summary>📋 Wiedergabelisten-Download</summary>
 
-1. **Playlist-URL einfügen**
-2. **Auf "Analyze" klicken**
-3. **Videos aus dem Playlist-Selector auswählen (optional, standardmäßig alle)**
+1. **Wiedergabelisten-URL einfügen**
+2. **Auf "Analysieren" klicken**
+3. **Videos aus der Wiedergabelistenauswahl auswählen (optional, standardmäßig alle)**
 4. **Gewünschtes Format/Qualität wählen**
-5. **Auf "Download" klicken**
+5. **Auf "Herunterladen" klicken**
 
-> 💡 Die Anwendung verwaltet die Download-Warteschlange automatisch, und Sie können Playlist-Einträge als `.txt`, `.csv`, `.m3u` oder `.json` exportieren.
+> 💡 Sie können Wiedergabelisteneinträge als (`.txt`, `.csv`, `.m3u` oder `.json`) exportieren, indem Sie auf die Schaltfläche "Wiedergabeliste speichern unter" klicken.
 
 </details>
 

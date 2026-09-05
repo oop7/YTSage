@@ -234,23 +234,24 @@ python -m ytsage.main
 <details>
 <summary>🎯 Penggunaan Dasar</summary>
 
-1. **Luncurkan YTSage**
-2. **Tempel URL YouTube** (atau gunakan tombol "Paste URL")
-3. **Klik "Analyze"**
+1. **Jalankan YTSage**
+2. **Tempel URL YouTube** (atau gunakan tombol "Tempel URL")
+3. **Klik "Analisis"**
 4. **Pilih Format:**
    - `Video` untuk unduhan video
-   - `Audio Only` untuk ekstraksi audio
+   - `Audio` untuk ekstraksi audio
+> 💡 Sekarang Anda dapat memilih dan menggabungkan beberapa trek audio dari bagian Audio ke dalam satu video. Baik Anda ingin menggabungkan video dengan beberapa trek bahasa, atau menggabungkan beberapa aliran audio secara bersamaan.
 5. **Pilih Opsi:**
-   - Aktifkan subtitle dan pilih bahasa
-   - Aktifkan penggabungan subtitle
-   - Simpan thumbnail
-   - Hapus bagian sponsor
-   - Simpan deskripsi
-   - Masukkan bab (chapters)
-6. **Pilih Direktori Output**
-7. **Klik "Download"**
+   - Aktifkan Subtitle dan pilih bahasa
+   - Aktifkan Penggabungan Subtitle
+   - Simpan Thumbnail
+   - Hapus Segmen Sponsor
+   - Simpan Deskripsi
+   - Sematkan Bab (Bab, Metadata, Thumbnail)
 
-> 💡 Direktori unduhan bawaan adalah folder "Downloads" pengguna.
+6. **Klik "Unduh"**
+
+> 💡 Direktori unduhan default adalah folder "Downloads" pengguna.
 
 </details>
 
@@ -258,12 +259,12 @@ python -m ytsage.main
 <summary>📋 Unduhan Playlist</summary>
 
 1. **Tempel URL Playlist**
-2. **Klik "Analyze"**
+2. **Klik "Analisis"**
 3. **Pilih video dari pemilih playlist (opsional, default semua)**
 4. **Pilih format/kualitas yang diinginkan**
-5. **Klik "Download"**
+5. **Klik "Unduh"**
 
-> 💡 Aplikasi secara otomatis mengelola antrean unduhan, dan Anda dapat mengekspor entri playlist sebagai file `.txt`, `.csv`, `.m3u`, atau `.json`.
+> 💡 Anda dapat mengekspor entri playlist sebagai (`.txt`, `.csv`, `.m3u`, atau `.json`) dengan mengklik tombol "Simpan Playlist Sebagai".
 
 </details>
 

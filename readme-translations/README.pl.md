@@ -235,22 +235,23 @@ python -m ytsage.main
 <summary>🎯 Podstawowe użycie</summary>
 
 1. **Uruchom YTSage**
-2. **Wklej URL z YouTube** (lub użyj przycisku "Wklej URL")
+2. **Wklej adres URL YouTube** (lub użyj przycisku "Wklej URL")
 3. **Kliknij "Analizuj"**
 4. **Wybierz format:**
-   - `Wideo` dla pobierania wideo
-   - `Tylko audio` dla wyodrębniania dźwięku
+   - `Video` dla pobierania wideo
+   - `Audio` dla ekstrakcji dźwięku
+> 💡 Możesz teraz wybierać i łączyć wiele ścieżek dźwiękowych z sekcji Audio w jeden film. Niezależnie od tego, czy chcesz połączyć wideo z wieloma ścieżkami językowymi, czy scalić strumienie audio.
 5. **Wybierz opcje:**
    - Włącz napisy i wybierz język
    - Włącz scalanie napisów
    - Zapisz miniaturę
-   - Usuń sekcje sponsorowane
+   - Usuń segmenty sponsorowane
    - Zapisz opis
-   - Osadź rozdziały
-6. **Wybierz folder wyjściowy**
-7. **Kliknij "Pobierz"**
+   - Osadź rozdziały (Rozdziały, Metadane, Miniatura)
 
-> 💡 Domyślny folder pobierania to folder "Pobrane" użytkownika.
+6. **Kliknij "Pobierz"**
+
+> 💡 Domyślnym katalogiem pobierania jest folder "Pobrane" użytkownika.
 
 </details>
 
@@ -259,11 +260,11 @@ python -m ytsage.main
 
 1. **Wklej URL playlisty**
 2. **Kliknij "Analizuj"**
-3. **Wybierz filmy z selektora (opcjonalnie, domyślnie wszystkie)**
+3. **Wybierz filmy z selektora playlisty (opcjonalnie, domyślnie wszystkie)**
 4. **Wybierz żądany format/jakość**
 5. **Kliknij "Pobierz"**
 
-> 💡 Aplikacja automatycznie zarządza kolejką pobierania, a wpisy playlisty możesz eksportować do plików `.txt`, `.csv`, `.m3u` lub `.json`.
+> 💡 Możesz eksportować wpisy playlisty jako (`.txt`, `.csv`, `.m3u` lub `.json`), klikając przycisk "Zapisz playlistę jako".
 
 </details>
 
