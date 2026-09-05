@@ -83,7 +83,7 @@ YTSage is designed for users who want a **simple yet powerful YouTube downloader
 ## 🚀 Installation
 
 ### 📦 Download the App (Easiest Method)
-*If you just want to use YTSage and don't know what Python is, start here!*
+*If you just want to use YTSage and don't know what Python is, start here*
 
 [![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
 
