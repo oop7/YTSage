@@ -206,26 +206,36 @@ class AnalysisThread(QThread):
                 self.playlist_select_btn_visible.emit(False)
                 return
 
-            # Fetch full info for the first video to get formats
+            # Fetch full info for an accessible video to get formats. Playlists
+            # can contain private, deleted, or otherwise unavailable entries.
             self.status_update.emit(_("main_ui.analyzing_fetching_first_video"))
             self.progress_update.emit(70)
-            first_video_entry = playlist_entries[0]
-            first_video_url = first_video_entry.get("url")
+            result_data["video_info"] = None
+            for video_entry in playlist_entries:
+                first_video_url = video_entry.get("url") or video_entry.get("webpage_url")
+                if not first_video_url:
+                    continue
 
-            cmd_single = [yt_dlp_path, "--dump-single-json", "--no-warnings", first_video_url]
-            self._add_auth_options(cmd_single)
+                cmd_single = [yt_dlp_path, "--dump-single-json", "--no-warnings", first_video_url]
+                self._add_auth_options(cmd_single)
 
-            try:
-                result_single = subprocess.run(
-                    cmd_single, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60,
-                    creationflags=SUBPROCESS_CREATIONFLAGS
-                )
-                if result_single.returncode == 0:
-                    result_data["video_info"] = json.loads(result_single.stdout)
-                else:
-                    result_data["video_info"] = first_video_entry
-            except subprocess.TimeoutExpired:
-                result_data["video_info"] = first_video_entry
+                try:
+                    result_single = subprocess.run(
+                        cmd_single, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60,
+                        creationflags=SUBPROCESS_CREATIONFLAGS
+                    )
+                    if result_single.returncode == 0:
+                        candidate_info = json.loads(result_single.stdout)
+                        if candidate_info.get("formats"):
+                            result_data["video_info"] = candidate_info
+                            break
+                    else:
+                        logger.debug(
+                            f"Skipping unavailable playlist entry {video_entry.get('id')}: "
+                            f"{(result_single.stderr or '').strip()}"
+                        )
+                except (subprocess.TimeoutExpired, json.JSONDecodeError) as error:
+                    logger.debug(f"Skipping playlist entry {video_entry.get('id')}: {error}")
 
             if self._cancelled:
                 return
