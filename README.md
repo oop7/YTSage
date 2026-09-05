@@ -223,6 +223,7 @@ python -m ytsage.main
 
 </details>
 
+<p align="right"><a href="#readme">⬆️ Back to Top</a></p>
 <a id="screenshots"></a>
 ## 📸 Screenshots
 
@@ -247,6 +248,7 @@ python -m ytsage.main
 </table>
 </div>
 
+<p align="right"><a href="#readme">⬆️ Back to Top</a></p>
 <a id="usage"></a>
 ## 📖 Usage
 
@@ -399,6 +401,7 @@ YTSage supports **16 languages** for global accessibility. Select your preferred
 
 </details>
 
+<p align="right"><a href="#readme">⬆️ Back to Top</a></p>
 <a id="troubleshooting"></a>
 ## 🛠️ Troubleshooting
 
@@ -455,6 +458,7 @@ If you see this error on macOS Sonoma or newer, you need to remove the quarantin
 
 </details>
 
+<p align="right"><a href="#readme">⬆️ Back to Top</a></p>
 <a id="sponsor"></a>
 ## 💖 Sponsor
 
@@ -557,6 +561,7 @@ YTSage/
 
 </details>
 
+<p align="right"><a href="#readme">⬆️ Back to Top</a></p>
 ## ⭐️ Star History
 
 <div align="center">
