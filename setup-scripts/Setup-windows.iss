@@ -17,7 +17,7 @@
 #endif
 
 [Setup]
-AppId={{AE618DBF-DD56-462D-9C09-2C2B7A41B201}
+AppId={{56997322-2A3A-4338-AEF1-C3C8BB28AC4F}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
@@ -65,6 +65,9 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "*.exe"; Flags: ignorevers
 
 [InstallDelete]
 Type: files; Name: "{app}\YTSage-v*.exe"
+Type: files; Name: "{app}\YTSage-ffmpeg.exe"
+Type: files; Name: "{app}\ffmpeg.exe"
+Type: files; Name: "{app}\ffprobe.exe"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

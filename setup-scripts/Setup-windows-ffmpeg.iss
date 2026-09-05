@@ -68,6 +68,7 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "*.exe"; Flags: ignorevers
 
 [InstallDelete]
 Type: files; Name: "{app}\YTSage-v*-ffmpeg.exe"
+Type: files; Name: "{app}\YTSage.exe"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
