@@ -443,13 +443,18 @@ YTSage از **۱۴ زبان** برای دسترسی‌پذیری جهانی پش
 
 اگر YTSage در وقت شما صرفه‌جویی می‌کند، حمایت مالی از این پروژه را در نظر بگیرید. حمایت مالی به پوشش زمان توسعه، آزمایش روی همه پلتفرم‌ها و بهبودهای آینده کمک می‌کند.
 
-- حامیان مالی گیت‌هاب: https://github.com/sponsors/oop7
-- لینک حمایت مالی همچنین مستقیماً از طریق پنجره درباره در داخل برنامه در دسترس است.
+- GitHub Sponsors: https://github.com/sponsors/oop7
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- انتقال مستقیم بانکی / SWIFT: تماس از طریق ایمیل با [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="contributing"></a>
 ## 👥 مشارکت
+
+<details>
+<summary>برای مشاهده راهنمای مشارکت کلیک کنید</summary>
 
 ما با کمال میل از مشارکت‌ها استقبال می‌کنیم! در اینجا نحوه کمک شما آمده است:
 
@@ -473,6 +478,8 @@ YTSage از **۱۴ زبان** برای دسترسی‌پذیری جهانی پش
 - فایل README محلی‌شده مربوطه را به‌روزرسانی کنید (مثلاً `readme-translations/README.fr.md`)
 - با ویرایش `ytsage/languages/<code>.json` رشته‌های برنامه را همگام نگه دارید
 - اگر زبان شما موجود نیست، از `README.md` شروع کرده و `README.<code>.md` را ایجاد کنید
+
+</details>
 
 <details>
 <summary>📂 ساختار پروژه</summary>
@@ -554,9 +561,6 @@ YTSage/
 
 ## 🙏 قدردانی
 
-<details>
-<summary>نمایش قدردانی</summary>
-
 <div align="center">
 
 <p>تشکر فراوان از همه کسانی که با باز کردن یک تیکت برای پیشنهاد بهبود یا گزارش باگ، در این پروژه مشارکت کرده‌اند.</p>
@@ -613,7 +617,6 @@ YTSage/
 
 </div>
 
-</details>
 
 ## ⚠️ سلب مسئولیت
 

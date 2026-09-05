@@ -440,12 +440,17 @@ python -m ytsage.main
 إذا وفر لك YTSage الوقت، يرجى التفكير في دعم المشروع. يساعد الدعم في تغطية وقت التطوير، الاختبار على المنصات المختلفة، والتحسينات المستقبلية.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- رابط الدعم متاح أيضًا داخل التطبيق عبر نافذة "About".
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- التحويل المصرفي المباشر / SWIFT: تواصل معي عبر البريد الإلكتروني على [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="contributing"></a>
 ## 👥 المساهمة
+
+<details>
+<summary>انقر لتوسيع إرشادات المساهمة</summary>
 
 نرحب بالمساهمات! إليك كيف يمكنك المساعدة:
 
@@ -469,6 +474,8 @@ python -m ytsage.main
 - حدث ملف README المترجم (مثل `readme-translations/README.ar.md`)
 - حافظ على تزامن نصوص التطبيق بتعديل `ytsage/languages/<code>.json`
 - إذا كانت لغتك غير موجودة، ابدأ من `README.md` وأنشئ ملفًا جديدًا باسم `README.<code>.md`
+
+</details>
 
 <details>
 <summary>📂 هيكل المشروع</summary>
@@ -550,9 +557,6 @@ YTSage/
 
 ## 🙏 شكر وتقدير
 
-<details>
-<summary>عرض الشكر والتقدير</summary>
-
 <div align="center">
 
 <p>شكر كبير لكل من ساهم في هذا المشروع بفتح تذكرة لاقتراح تحسين أو الإبلاغ عن خطأ.</p>
@@ -609,7 +613,6 @@ YTSage/
 
 </div>
 
-</details>
 
 ## ⚠️ إخلاء مسؤولية
 

@@ -430,9 +430,11 @@ YTSage 支持 **14 种语言**。您可以在 **Custom Options → Language** �
 如果 YTSage 节省了您的时间，请考虑资助本项目。赞助收入将用于多平台测试环境的维护和新功能开发。
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- 您也可以通过应用内的“About (关于)”窗口找到捐赠链接。
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- 直接银行转账 / SWIFT: 请通过电子邮件联系 [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![赞助 YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
+
 
 <a id="贡献"></a>
 ## 👥 贡献
@@ -504,9 +506,6 @@ YTSage/
 
 ## 🙏 鸣谢
 
-<details>
-<summary>查看致谢名单</summary>
-
 <div align="center">
 
 <p>特别鸣谢所有通过反馈、建议或代码合并来完善此工具的贡献者。</p>
@@ -563,7 +562,6 @@ YTSage/
 
 </div>
 
-</details>
 
 ## ⚠️ 免责声明
 

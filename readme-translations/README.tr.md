@@ -435,17 +435,26 @@ macOS Sonoma veya daha yeni sürümlerde bu hatayı görüyorsanız, karantina �
 </details>
 
 <a id="sponsor-olun"></a>
-## 💖 Sponsor Olun
+## 💖 Sponsor
+
+Olun
 
 YTSage size zaman kazandırıyorsa, projeye sponsor olmayı düşünün. Sponsorluklar geliştirme süresini, tüm platformlarda test yapmayı ve gelecekteki iyileştirmeleri karşılamaya yardımcı olur.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- Sponsorluk bağlantısı uygulamadaki Hakkında diyaloğu üzerinden doğrudan mevcuttur.
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- Doğrudan banka havalesi / SWIFT: [`oop7_support@proton.me`](mailto:oop7_support@proton.me) adresinden e-posta ile iletişime geçin
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="katkıda-bulunma"></a>
-## 👥 Katkıda Bulunma
+## 👥 Katkıda
+
+<details>
+<summary>Katkıda Bulunma Yönergelerini genişletmek için tıklayın</summary>
+
+Bulunma
 
 Katkılarınız bekliyoruz! İşte nasıl yardımcı olabileceğiniz:
 
@@ -469,6 +478,8 @@ Katkılarınız bekliyoruz! İşte nasıl yardımcı olabileceğiniz:
 - İlgili yerelleştirilmiş README dosyasını güncelleyin (örn: `readme-translations/README.tr.md`)
 - Uygulama dizelerini `ytsage/languages/<code>.json` dosyasını düzenleyerek senkronize tutun
 - Diliniz eksikse, `README.md` dosyasından başlayın ve `README.<code>.md` dosyasını oluşturun
+
+</details>
 
 <details>
 <summary>📂 Proje Yapısı</summary>
@@ -550,9 +561,6 @@ Bu proje MIT Lisansı altında lisanslanmıştır - detaylar için [LICENSE](../
 
 ## 🙏 Teşekkürler
 
-<details>
-<summary>Teşekkürleri Göster</summary>
-
 <div align="center">
 
 <p>İyileştirmeler önermek veya hataları bildirmek için sorunlar açarak bu projeye katkıda bulunan herkese çok teşekkürler.</p>
@@ -609,7 +617,6 @@ Bu proje MIT Lisansı altında lisanslanmıştır - detaylar için [LICENSE](../
 
 </div>
 
-</details>
 
 ## ⚠️ Feragatname
 

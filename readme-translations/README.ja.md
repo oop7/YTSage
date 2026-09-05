@@ -440,12 +440,17 @@ macOS Sonoma 以降でこのエラーが表示される場合は、 quarantine�
 YTSage があなたの時間を節約できたなら、プロジェクトのスポンサーになることを検討してください。スポンサーシップは、開発時間、全プラットフォームでのテスト、および将来の改善に役立てられます。
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- スポンサーリンクは、アプリ内の About ダイアログから直接利用可能です。
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- 銀行振込 / SWIFT: メール [`oop7_support@proton.me`](mailto:oop7_support@proton.me) までお問い合わせください
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="貢献"></a>
 ## 👥 貢献
+
+<details>
+<summary>クリックして貢献ガイドラインを展開</summary>
 
 貢献を歓迎します！以下のように手助けができます：
 
@@ -469,6 +474,8 @@ YTSage があなたの時間を節約できたなら、プロジェクトのス�
 - 関連するローカライズ版 README ファイルを更新する (例: `readme-translations/README.ja.md`)
 - `ytsage/languages/<code>.json` を編集して、アプリの文字列を同期させる
 - お使いの言語がない場合は、 `README.md` をベースに `README.<code>.md` を作成してください。
+
+</details>
 
 <details>
 <summary>📂 プロジェクト構造</summary>
@@ -550,9 +557,6 @@ YTSage/
 
 ## 🙏 謝辞
 
-<details>
-<summary>謝辞を表示</summary>
-
 <div align="center">
 
 <p>改善の提案やバグの報告のためにイシューを開いてこのプロジェクトに貢献してくださったすべての方々に感謝いたします。</p>
@@ -609,7 +613,6 @@ YTSage/
 
 </div>
 
-</details>
 
 ## ⚠️ 免責事項
 

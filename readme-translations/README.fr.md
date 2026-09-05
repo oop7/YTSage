@@ -439,10 +439,12 @@ Si vous voyez cette erreur sur macOS Sonoma ou une version plus récente, vous d
 
 Si YTSage vous fait gagner du temps, envisagez de sponsoriser le projet. Le parrainage aide à couvrir le temps de développement, les tests sur toutes les plateformes et les améliorations futures.
 
-- GitHub Sponsors : https://github.com/sponsors/oop7
-- Le lien de parrainage est également disponible directement dans l'application via la boîte de dialogue À propos.
+- GitHub Sponsors: https://github.com/sponsors/oop7
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- Virement bancaire direct / SWIFT: Contactez-moi par e-mail à [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
+
 
 <a id="contributing"></a>
 ## 👥 Contribution

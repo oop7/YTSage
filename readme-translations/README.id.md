@@ -440,12 +440,17 @@ Jika Anda melihat kesalahan ini di macOS Sonoma atau yang lebih baru, Anda perlu
 Jika YTSage menghemat waktu Anda, pertimbangkan untuk mensponsori proyek ini. Sponsor membantu mencakup waktu pengembangan, pengujian di semua platform, dan peningkatan di masa mendatang.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- Tautan sponsor tersedia langsung melalui dialog About di dalam aplikasi.
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- Transfer bank langsung / SWIFT: Hubungi saya via email di [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="kontribusi"></a>
 ## 👥 Kontribusi
+
+<details>
+<summary>Klik untuk membuka Panduan Kontribusi</summary>
 
 Kami menerima kontribusi! Berikut cara Anda dapat membantu:
 
@@ -469,6 +474,8 @@ Kami menerima kontribusi! Berikut cara Anda dapat membantu:
 - Perbarui file README lokal yang relevan (misalnya `readme-translations/README.id.md`)
 - Jaga agar string aplikasi tetap sinkron dengan mengedit `ytsage/languages/<code>.json`
 - Jika bahasa Anda belum ada, mulailah dari `README.md` dan buat `README.<code>.md`
+
+</details>
 
 <details>
 <summary>📂 Struktur Proyek</summary>
@@ -550,9 +557,6 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) 
 
 ## 🙏 Terima Kasih
 
-<details>
-<summary>Tampilkan Terima Kasih</summary>
-
 <div align="center">
 
 <p>Terima kasih banyak kepada semua orang yang telah berkontribusi pada proyek ini dengan membuka masalah untuk menyarankan perbaikan atau melaporkan bug.</p>
@@ -609,7 +613,6 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) 
 
 </div>
 
-</details>
 
 ## ⚠️ Penafian
 

@@ -445,12 +445,17 @@ macOS Sonoma 이상에서 이 오류가 나면 quarantine 속성을 제거해야
 YTSage가 시간을 아끼게 해 주었다면 프로젝트 후원을 고려해 주세요. 후원은 개발 시간, 전 플랫폼 테스트, 향후 개선에 사용됩니다.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- 앱 정보 대화상자에서도 스폰서 링크를 이용할 수 있습니다.
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- 직접 계좌 이체 / SWIFT: 이메일 [`oop7_support@proton.me`](mailto:oop7_support@proton.me)로 문의하세요
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="기여"></a>
 ## 👥 기여
+
+<details>
+<summary>기여 가이드라인을 펼치려면 클릭하세요</summary>
 
 기여를 환영합니다! 다음처럼 도울 수 있습니다:
 
@@ -474,6 +479,8 @@ YTSage가 시간을 아끼게 해 주었다면 프로젝트 후원을 고려해 
 - 해당 언어 README를 업데이트합니다 (예: `readme-translations/README.ko.md`)
 - `ytsage/languages/<code>.json`을 편집해 앱 문자열을 동기화합니다
 - 언어가 없다면 `README.md`를 기준으로 `readme-translations/README.<code>.md`를 만드세요
+
+</details>
 
 <details>
 <summary>📂 프로젝트 구조</summary>
@@ -533,3 +540,91 @@ YTSage/
 ```
 
 </details>
+
+## ⭐️ 스타 히스토리
+
+<div align="center">
+
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
+
+</div>
+
+## 📜 라이선스
+
+이 프로젝트는 MIT 라이선스에 따라 라이선스가 부여됩니다. 자세한 내용은 [LICENSE](../LICENSE) 파일을 참조하세요.
+
+## 🙏 감사 인사
+
+<div align="left">
+
+<p>개선 사항을 제안하거나 버그를 신고하기 위해 이슈를 열어 이 프로젝트에 기여해 주신 모든 분들께 감사드립니다</p>
+<p>이 프로젝트를 지원해 주신 최초 및 주요 기부자 <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> 님과 <a href="https://github.com/dj23me"><strong>@dj23me</strong></a> 님께 특별히 감사드립니다 ❤️</p>
+
+
+<table>
+    <tr class="section"><th colspan="2">핵심 구성 요소</th></tr>
+    <tr>
+        <td width="35%"><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></td>
+        <td>다운로드 엔진</td>
+    </tr>
+    <tr>
+        <td><a href="https://ffmpeg.org/">FFmpeg</a></td>
+        <td>미디어 처리</td>
+    </tr>
+    <tr>
+        <td><a href="https://deno.com/">Deno</a></td>
+        <td>yt-dlp 플러그인용 런타임</td>
+    </tr>
+    <tr class="section"><th colspan="2">라이브러리 및 프레임워크</th></tr>
+    <tr>
+        <td><a href="https://wiki.qt.io/Qt_for_Python">PySide6</a></td>
+        <td>GUI 프레임워크</td>
+    </tr>
+    <tr>
+        <td><a href="https://python-pillow.org/">Pillow</a></td>
+        <td>이미지 처리</td>
+    </tr>
+    <tr>
+        <td><a href="https://requests.readthedocs.io/">requests</a></td>
+        <td>HTTP 요청</td>
+    </tr>
+    <tr>
+        <td><a href="https://packaging.python.org/">packaging</a></td>
+        <td>버전/패키지 관리</td>
+    </tr>
+    <tr>
+        <td><a href="https://python-markdown.github.io/">markdown</a></td>
+        <td>마크다운 렌더링</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/Delgan/loguru">loguru</a></td>
+        <td>로깅</td>
+    </tr>
+    <tr class="section"><th colspan="2">자산 및 기여자에 대한 감사</th></tr>
+    <tr>
+        <td><a href="https://github.com/bastik-1001">@bastik-1001</a></td>
+        <td>최초 및 주요 기부자 지원</td>
+    </tr>
+    <tr>
+        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">New Notification 09 by Universfield</a></td>
+        <td>알림 소리</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/viru185">viru185</a></td>
+        <td>코드 기여자</td>
+    </tr>
+</table>
+
+</div>
+
+## ⚠️ 면책 조항
+
+이 도구는 개인적인 용도로만 사용해야 합니다. YouTube의 서비스 약관 및 콘텐츠 제작자의 권리를 준수해 주세요.
+
+---
+
+<div align="center">
+
+Made with ❤️ by [oop7](https://github.com/oop7)
+
+</div>

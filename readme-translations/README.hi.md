@@ -440,12 +440,17 @@ YTSage वैश्विक पहुँच के लिए **14 भाषा�
 यदि YTSage आपका समय बचाता है, तो कृपया प्रोजेक्ट को प्रायोजित करने पर विचार करें। प्रायोजन विकास समय, सभी प्लेटफ़ॉर्म पर परीक्षण और भविष्य के सुधारों को कवर करने में मदद करता है।
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- प्रायोजन लिंक ऐप में अबाउट डायलॉग के माध्यम से सीधे उपलब्ध है।
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- सीधा बैंक ट्रांसफर / SWIFT: [`oop7_support@proton.me`](mailto:oop7_support@proton.me) पर ईमेल से संपर्क करें
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="contributing"></a>
 ## 👥 योगदान
+
+<details>
+<summary>योगदान दिशानिर्देश देखने के लिए क्लिक करें</summary>
 
 हम योगदान का स्वागत करते हैं! यहाँ बताया गया है कि आप कैसे मदद कर सकते हैं:
 
@@ -469,6 +474,8 @@ YTSage वैश्विक पहुँच के लिए **14 भाषा�
 - संबंधित स्थानीयकृत README फ़ाइल को अपडेट करें (जैसे `readme-translations/README.hi.md`)
 - `ytsage/languages/<code>.json` को संपादित करके ऐप स्ट्रिंग्स को सिंक में रखें
 - यदि आपकी भाषा गायब है, तो `README.md` से शुरू करें और `README.<code>.md` बनाएँ
+
+</details>
 
 <details>
 <summary>📂 प्रोजेक्ट संरचना</summary>
@@ -550,9 +557,6 @@ YTSage/
 
 ## 🙏 धन्यवाद
 
-<details>
-<summary>धन्यवाद प्रदर्शित करें</summary>
-
 <div align="center">
 
 <p>उन सभी को बहुत-बहुत धन्यवाद जिन्होंने सुधार का सुझाव देने या बग की रिपोर्ट करने के लिए इश्यू खोलकर इस प्रोजेक्ट में योगदान दिया है।</p>
@@ -609,7 +613,6 @@ YTSage/
 
 </div>
 
-</details>
 
 ## ⚠️ अस्वीकरण
 

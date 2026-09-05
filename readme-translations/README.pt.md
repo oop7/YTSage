@@ -440,12 +440,17 @@ Se você vir este erro no macOS Sonoma ou mais recente, você precisa remover o 
 Se o YTSage economiza seu tempo, considere patrocinar o projeto. Os patrocínios ajudam a cobrir o tempo de desenvolvimento, testes em todas as plataformas e melhorias futuras.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- O link de patrocínio está disponível diretamente através do diálogo Sobre no aplicativo.
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- Transferência bancária direta / SWIFT: Entre em contato comigo por e-mail em [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="contribuindo"></a>
 ## 👥 Contribuindo
+
+<details>
+<summary>Clique para expandir as Diretrizes de Contribuição</summary>
 
 Contribuições são bem-vindas! Veja como você pode ajudar:
 
@@ -469,6 +474,8 @@ Contribuições são bem-vindas! Veja como você pode ajudar:
 - Atualize o arquivo README localizado relevante (ex: `readme-translations/README.pt.md`)
 - Mantenha as strings do aplicativo em sincronia editando `ytsage/languages/<code>.json`
 - Se o seu idioma estiver ausente, comece pelo `README.md` e crie `README.<code>.md`
+
+</details>
 
 <details>
 <summary>📂 Estrutura do Projeto</summary>
@@ -550,9 +557,6 @@ Este projeto é licenciado sob a Licença MIT - consulte o arquivo [LICENSE](../
 
 ## 🙏 Agradecimentos
 
-<details>
-<summary>Mostrar Agradecimentos</summary>
-
 <div align="center">
 
 <p>Muito obrigado a todos que contribuíram para este projeto abrindo problemas para sugerir melhorias ou relatar erros.</p>
@@ -609,7 +613,6 @@ Este projeto é licenciado sob a Licença MIT - consulte o arquivo [LICENSE](../
 
 </div>
 
-</details>
 
 ## ⚠️ Isenção de Responsabilidade
 

@@ -440,12 +440,19 @@ YTSage поддерживает **14 языков**. Выберите нужны
 Если YTSage экономит ваше время, поддержите разработку проекта. Спонсорство помогает поддерживать тестирование на всех платформах и внедрять новые функции.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- Ссылка на спонсорство также есть в окне "About" в приложении.
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- Прямой банковский перевод / SWIFT: Свяжитесь со мной по электронной почте [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="участие-в-проекте"></a>
-## 👥 Участие в проекте
+## 👥 Участие
+
+<details>
+<summary>Нажмите, чтобы развернуть руководство по участию в проекте</summary>
+
+в проекте
 
 Мы рады любой помощи!
 
@@ -460,6 +467,8 @@ YTSage поддерживает **14 языков**. Выберите нужны
 - Обновите файл README (например, `readme-translations/README.ru.md`)
 - Обновите строки интерфейса в `ytsage/languages/<code>.json`
 - Если ваш язык отсутствует, начните с `README.md` и создайте `README.<code>.md`
+
+</details>
 
 <details>
 <summary>📂 Структура проекта</summary>
@@ -541,9 +550,6 @@ YTSage/
 
 ## 🙏 Благодарности
 
-<details>
-<summary>Показать благодарности</summary>
-
 <div align="center">
 
 <p>Большое спасибо всем, кто внес свой вклад в этот проект, открывая проблемы с предложениями по улучшению или отчетами об ошибках.</p>
@@ -600,7 +606,6 @@ YTSage/
 
 </div>
 
-</details>
 
 ## ⚠️ Отказ от ответственности
 
