@@ -1002,45 +1002,46 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             # Show the open folder button
             self.animate_widget_fade_in(self.open_folder_btn)
             
-            # Save to history
-            try:
-                if self.download_thread.last_file_path and self.video_info:
-                    # Get video information
-                    title = self.video_info.get("title", _("video_info.unknown_title"))
-                    channel = self.video_info.get("channel", None) or self.video_info.get("uploader", None)
-                    duration = self.video_info.get("duration_string", None)
+            # Save to history when enabled in settings
+            if ConfigManager.get("keep_history") is not False:
+                try:
+                    if self.download_thread.last_file_path and self.video_info:
+                        # Get video information
+                        title = self.video_info.get("title", _("video_info.unknown_title"))
+                        channel = self.video_info.get("channel", None) or self.video_info.get("uploader", None)
+                        duration = self.video_info.get("duration_string", None)
                     
-                    # Prepare download options
-                    download_options = {
-                        "format_id": self.download_thread.format_id,
-                        "subtitle_langs": self.download_thread.subtitle_langs,
-                        "merge_subs": self.download_thread.merge_subs,
-                        "enable_sponsorblock": self.download_thread.enable_sponsorblock,
-                        "sponsorblock_categories": self.download_thread.sponsorblock_categories,
-                        "save_description": self.download_thread.save_description,
-                        "embed_chapters": self.download_thread.embed_chapters,
-                        "embed_metadata": self.download_thread.embed_metadata,
-                        "embed_thumbnail": self.download_thread.embed_thumbnail,
-                        "download_section": self.download_thread.download_section,
-                        "force_keyframes": self.download_thread.force_keyframes,
-                    }
+                        # Prepare download options
+                        download_options = {
+                            "format_id": self.download_thread.format_id,
+                            "subtitle_langs": self.download_thread.subtitle_langs,
+                            "merge_subs": self.download_thread.merge_subs,
+                            "enable_sponsorblock": self.download_thread.enable_sponsorblock,
+                            "sponsorblock_categories": self.download_thread.sponsorblock_categories,
+                            "save_description": self.download_thread.save_description,
+                            "embed_chapters": self.download_thread.embed_chapters,
+                            "embed_metadata": self.download_thread.embed_metadata,
+                            "embed_thumbnail": self.download_thread.embed_thumbnail,
+                            "download_section": self.download_thread.download_section,
+                            "force_keyframes": self.download_thread.force_keyframes,
+                        }
                     
-                    # Add to history
-                    HistoryManager.add_entry(
-                        title=title,
-                        url=self.video_url,
-                        thumbnail_url=self.thumbnail_url,
-                        file_path=str(self.download_thread.last_file_path),
-                        format_id=self.download_thread.format_id,
-                        is_audio_only=self.download_thread.is_audio_only,
-                        resolution=self.download_thread.resolution,
-                        channel=channel,
-                        duration=duration,
-                        download_options=download_options,
-                    )
-                    logger.info(f"Added download to history: {title}")
-            except Exception as e:
-                logger.error(f"Error saving to history: {e}", exc_info=True)
+                        # Add to history
+                        HistoryManager.add_entry(
+                            title=title,
+                            url=self.video_url,
+                            thumbnail_url=self.thumbnail_url,
+                            file_path=str(self.download_thread.last_file_path),
+                            format_id=self.download_thread.format_id,
+                            is_audio_only=self.download_thread.is_audio_only,
+                            resolution=self.download_thread.resolution,
+                            channel=channel,
+                            duration=duration,
+                            download_options=download_options,
+                        )
+                        logger.info(f"Added download to history: {title}")
+                except Exception as e:
+                    logger.error(f"Error saving to history: {e}", exc_info=True)
 
         # Play notification sound when download completes
         if ConfigManager.get("play_notification_sound") is not False:

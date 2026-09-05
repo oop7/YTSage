@@ -285,6 +285,23 @@ class DownloadSettingsDialog(QDialog):
         notification_group_box.setLayout(notification_layout)
         general_layout.addWidget(notification_group_box)
 
+        # --- History Section ---
+        history_group_box = QGroupBox(_("settings.history", default="Download History"))
+        history_layout = QVBoxLayout()
+
+        self.keep_history_enabled = ConfigManager.get("keep_history")
+        if self.keep_history_enabled is None:
+            self.keep_history_enabled = True
+
+        self.keep_history_checkbox = QCheckBox(
+            _("settings.keep_history", default="Keep download history")
+        )
+        self.keep_history_checkbox.setChecked(self.keep_history_enabled)
+        history_layout.addWidget(self.keep_history_checkbox)
+
+        history_group_box.setLayout(history_layout)
+        general_layout.addWidget(history_group_box)
+
         general_layout.addStretch()
 
         # === Format Tab ===
@@ -646,6 +663,7 @@ class DownloadSettingsDialog(QDialog):
 
             # Save notification sound setting
             ConfigManager.set("play_notification_sound", self.play_notification_sound_checkbox.isChecked())
+            ConfigManager.set("keep_history", self.keep_history_checkbox.isChecked())
 
             # Save defaults
             default_vid = self.default_vid_qual_input.text().strip()
