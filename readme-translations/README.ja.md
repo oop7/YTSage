@@ -219,6 +219,14 @@ python -m ytsage.main
 ## 📸 スクリーンショット
 
 <div align="center">
+<h3>YTSage デモ</h3>
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/4a73b39e-2503-4fd9-a810-420676c9e557" width="800" controls></video>
+</div>
+<br><br>
+</div>
+
+<div align="center">
 <table>
   <tr>
     <td><img src="../branding/screenshots/Download-Settings.png" alt="ダウンロード設定" width="400"/></td>
