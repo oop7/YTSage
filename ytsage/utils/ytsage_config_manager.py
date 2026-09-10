@@ -50,6 +50,7 @@ Exceptions
 """
 
 import json
+from copy import deepcopy
 import threading
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -79,6 +80,7 @@ class ConfigManager:
         "cookie_browser_profile": "",
         "cookie_file_path": None,
         "cookie_active": False,  # True only if user explicitly applied cookies
+        "cookie_remember": True,
         "last_used_cookie_file": None,
         "proxy_url": None,
         "geo_proxy_url": None,
@@ -97,6 +99,9 @@ class ConfigManager:
         "force_audio_format": False,
         "preferred_audio_format": "best",
         "audio_normalization": False,
+        "default_video_quality": None,
+        "default_subtitle_language": None,
+        "preferred_subtitle_format": "default",
         "filename_format": "%(title)s_%(resolution)s_[%(id)s].%(ext)s",
         "window_geometry": None,
         "window_state": None,
@@ -120,10 +125,10 @@ class ConfigManager:
                         cls._settings = json.load(f)
                     logger.info("Config loaded from file.")
                 except json.JSONDecodeError:
-                    cls._settings = cls._default_config.copy()
+                    cls._settings = deepcopy(cls._default_config)
                     logger.warning("Config file corrupt, loaded defaults.")
             else:
-                cls._settings = cls._default_config.copy()
+                cls._settings = deepcopy(cls._default_config)
                 cls._save()
                 logger.info("Config file not found, created default config.")
 
@@ -145,6 +150,15 @@ class ConfigManager:
                 logger.exception(f"Failed to save config: {e}")
             except Exception as e:
                 logger.exception(f"Unexpected error while saving config: {e}")
+
+    @classmethod
+    def reset_to_defaults(cls) -> Dict[str, Any]:
+        """Replace all saved settings with a fresh copy of the defaults."""
+        with cls._lock:
+            cls._settings = deepcopy(cls._default_config)
+            cls._save()
+            logger.info("Config reset to defaults.")
+            return deepcopy(cls._settings)
 
     @classmethod
     def get(cls, key: str) -> Optional[Any]:

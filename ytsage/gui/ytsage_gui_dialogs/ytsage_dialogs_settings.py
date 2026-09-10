@@ -500,13 +500,18 @@ class DownloadSettingsDialog(QDialog):
 
         # Dialog buttons (OK/Cancel)
         button_box = QDialogButtonBox()
+        reset_button = button_box.addButton(
+            _("buttons.reset_all", default="Reset All Settings"),
+            QDialogButtonBox.ButtonRole.ResetRole,
+        )
         ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
         cancel_button = button_box.addButton(_("buttons.cancel"), QDialogButtonBox.ButtonRole.RejectRole)
+        reset_button.clicked.connect(self.reset_all_settings)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         
         # Style the buttons to look identical to Custom Options dialog
-        for btn in [ok_button, cancel_button]:
+        for btn in [reset_button, ok_button, cancel_button]:
             btn.setMinimumHeight(35)
             btn.setMinimumWidth(80)
             btn.setStyleSheet(
@@ -526,6 +531,53 @@ class DownloadSettingsDialog(QDialog):
             )
 
         layout.addWidget(button_box)
+
+    def reset_all_settings(self) -> None:
+        """Reset persisted settings and refresh every control in this dialog."""
+        confirmation = QMessageBox.question(
+            self,
+            _("settings.reset_all_settings_title", default="Reset All Settings"),
+            _(
+                "settings.reset_all_settings_message",
+                default="Reset all settings to their defaults? This cannot be undone.",
+            ),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        if confirmation != QMessageBox.StandardButton.Yes:
+            return
+
+        defaults = ConfigManager.reset_to_defaults()
+        self.current_path = defaults["download_path"]
+        self.current_limit = ""
+        self.current_unit_index = defaults["speed_limit_unit_index"]
+        self.path_display.setText(self.current_path)
+        self.speed_limit_input.clear()
+        self.speed_limit_unit.setCurrentIndex(self.current_unit_index)
+        self.connections_input.setCurrentText(str(defaults["concurrent_fragments"]))
+        self.generic_mode_checkbox.setChecked(defaults["generic_mode"])
+        self.play_notification_sound_checkbox.setChecked(defaults["play_notification_sound"])
+        self.keep_history_checkbox.setChecked(defaults["keep_history"])
+        self.force_format_checkbox.setChecked(defaults["force_output_format"])
+        self.format_combo.setCurrentIndex({"mp4": 0, "webm": 1, "mkv": 2}[defaults["preferred_output_format"]])
+        self.force_audio_format_checkbox.setChecked(defaults["force_audio_format"])
+        self.audio_normalization_checkbox.setChecked(defaults["audio_normalization"])
+        self.audio_format_combo.setCurrentIndex(
+            {"best": 0, "aac": 1, "mp3": 2, "flac": 3, "wav": 4, "opus": 5, "m4a": 6, "vorbis": 7}[defaults["preferred_audio_format"]]
+        )
+        self.default_vid_qual_input.clear()
+        self.default_sub_input.clear()
+        self.preferred_sub_fmt_combo.setCurrentText(defaults["preferred_subtitle_format"])
+        self.filename_format_input.setText(defaults["filename_format"])
+
+        QMessageBox.information(
+            self,
+            _("settings.reset_all_settings_title", default="Reset All Settings"),
+            _(
+                "settings.reset_all_settings_done",
+                default="All settings have been reset to their defaults.",
+            ),
+        )
 
     def _on_audio_normalization_toggled(self, state: int) -> None:
         """Handle logic when audio normalization is toggled."""
