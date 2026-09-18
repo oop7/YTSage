@@ -465,7 +465,7 @@
     "analysis_timeout": "오류: 분석 시간이 초과되었습니다. 다시 시도하세요.",
     "invalid_speed_limit": "❌ 오류: 설정에 잘못된 속도 제한 값이 지정되어 있습니다.",
     "ytdlp_failed": "오류: yt-dlp 실패: {error}",
-    "private_video": "이 동영상은 비공개일 수 있습니다. 사용자 지정 옵션에서 쿠키를 사용하세요.",
+    "private_video": "이 동영상은 비공개이거나 현재 네트워크가 YouTube에 의해 차단되었을 수 있습니다. 사용자 지정 옵션에서 쿠키를 사용하거나 프록시 또는 VPN을 해제/변경하세요.",
     "parse_failed": "오류: yt-dlp 출력 파싱 실패: {error}",
     "analysis_failed": "오류: 분석 실패: {error}",
     "generic_error": "오류: {error}",

@@ -64,6 +64,7 @@ class LocalizationManager:
             "clear": "Clear",
             "ok": "OK",
             "apply": "Apply",
+            "reset_all": "Reset All Settings",
             "close": "Close"
         },
         "dialogs": {
@@ -78,7 +79,11 @@ class LocalizationManager:
             "play_notification_sound": "Play notification sound when download completes",
             "app_updates_title": "YTSage Updates",
             "check_app_updates": "Check for YTSage updates on startup",
-            "check_beta_updates": "Receive Beta Updates"
+            "check_beta_updates": "Receive Beta Updates",
+            "preferred_subtitle_format": "Preferred Subtitle Format:",
+            "reset_all_settings_title": "Reset All Settings",
+            "reset_all_settings_message": "Reset all settings to their defaults? This cannot be undone.",
+            "reset_all_settings_done": "All settings have been reset to their defaults."
         },
         "tabs": {
             "cookies": "Login with Cookies",

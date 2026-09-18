@@ -285,6 +285,23 @@ class DownloadSettingsDialog(QDialog):
         notification_group_box.setLayout(notification_layout)
         general_layout.addWidget(notification_group_box)
 
+        # --- History Section ---
+        history_group_box = QGroupBox(_("settings.history", default="Download History"))
+        history_layout = QVBoxLayout()
+
+        self.keep_history_enabled = ConfigManager.get("keep_history")
+        if self.keep_history_enabled is None:
+            self.keep_history_enabled = True
+
+        self.keep_history_checkbox = QCheckBox(
+            _("settings.keep_history", default="Keep download history")
+        )
+        self.keep_history_checkbox.setChecked(self.keep_history_enabled)
+        history_layout.addWidget(self.keep_history_checkbox)
+
+        history_group_box.setLayout(history_layout)
+        general_layout.addWidget(history_group_box)
+
         general_layout.addStretch()
 
         # === Format Tab ===
@@ -416,7 +433,21 @@ class DownloadSettingsDialog(QDialog):
         self.default_sub_input.setPlaceholderText("e.g. en, es")
         sub_layout.addWidget(sub_label)
         sub_layout.addWidget(self.default_sub_input)
-        defaults_layout.addLayout(sub_layout)
+        # Preferred Subtitle Format
+        sub_fmt_layout = QHBoxLayout()
+        sub_fmt_label = QLabel(_("settings.preferred_subtitle_format", default="Preferred Subtitle Format:"))
+        sub_fmt_label.setStyleSheet("color: #ffffff; margin-top: 5px;")
+        self.preferred_sub_fmt_combo = QComboBox()
+        self.preferred_sub_fmt_combo.addItems(["default", "srt", "vtt", "ass", "lrc"])
+        current_sub_fmt = ConfigManager.get("preferred_subtitle_format") or "default"
+        idx = self.preferred_sub_fmt_combo.findText(current_sub_fmt)
+        if idx >= 0:
+            self.preferred_sub_fmt_combo.setCurrentIndex(idx)
+        else:
+            self.preferred_sub_fmt_combo.setCurrentIndex(0)
+        sub_fmt_layout.addWidget(sub_fmt_label)
+        sub_fmt_layout.addWidget(self.preferred_sub_fmt_combo)
+        defaults_layout.addLayout(sub_fmt_layout)
 
         defaults_help = QLabel(_("settings.defaults_help", default="Set your preferred video height and subtitle languages (comma-separated). They will be auto-selected if available."))
         defaults_help.setWordWrap(True)
@@ -469,13 +500,18 @@ class DownloadSettingsDialog(QDialog):
 
         # Dialog buttons (OK/Cancel)
         button_box = QDialogButtonBox()
+        reset_button = button_box.addButton(
+            _("buttons.reset_all", default="Reset All Settings"),
+            QDialogButtonBox.ButtonRole.ResetRole,
+        )
         ok_button = button_box.addButton(_("buttons.ok"), QDialogButtonBox.ButtonRole.AcceptRole)
         cancel_button = button_box.addButton(_("buttons.cancel"), QDialogButtonBox.ButtonRole.RejectRole)
+        reset_button.clicked.connect(self.reset_all_settings)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         
         # Style the buttons to look identical to Custom Options dialog
-        for btn in [ok_button, cancel_button]:
+        for btn in [reset_button, ok_button, cancel_button]:
             btn.setMinimumHeight(35)
             btn.setMinimumWidth(80)
             btn.setStyleSheet(
@@ -495,6 +531,53 @@ class DownloadSettingsDialog(QDialog):
             )
 
         layout.addWidget(button_box)
+
+    def reset_all_settings(self) -> None:
+        """Reset persisted settings and refresh every control in this dialog."""
+        confirmation = QMessageBox.question(
+            self,
+            _("settings.reset_all_settings_title", default="Reset All Settings"),
+            _(
+                "settings.reset_all_settings_message",
+                default="Reset all settings to their defaults? This cannot be undone.",
+            ),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        if confirmation != QMessageBox.StandardButton.Yes:
+            return
+
+        defaults = ConfigManager.reset_to_defaults()
+        self.current_path = defaults["download_path"]
+        self.current_limit = ""
+        self.current_unit_index = defaults["speed_limit_unit_index"]
+        self.path_display.setText(self.current_path)
+        self.speed_limit_input.clear()
+        self.speed_limit_unit.setCurrentIndex(self.current_unit_index)
+        self.connections_input.setCurrentText(str(defaults["concurrent_fragments"]))
+        self.generic_mode_checkbox.setChecked(defaults["generic_mode"])
+        self.play_notification_sound_checkbox.setChecked(defaults["play_notification_sound"])
+        self.keep_history_checkbox.setChecked(defaults["keep_history"])
+        self.force_format_checkbox.setChecked(defaults["force_output_format"])
+        self.format_combo.setCurrentIndex({"mp4": 0, "webm": 1, "mkv": 2}[defaults["preferred_output_format"]])
+        self.force_audio_format_checkbox.setChecked(defaults["force_audio_format"])
+        self.audio_normalization_checkbox.setChecked(defaults["audio_normalization"])
+        self.audio_format_combo.setCurrentIndex(
+            {"best": 0, "aac": 1, "mp3": 2, "flac": 3, "wav": 4, "opus": 5, "m4a": 6, "vorbis": 7}[defaults["preferred_audio_format"]]
+        )
+        self.default_vid_qual_input.clear()
+        self.default_sub_input.clear()
+        self.preferred_sub_fmt_combo.setCurrentText(defaults["preferred_subtitle_format"])
+        self.filename_format_input.setText(defaults["filename_format"])
+
+        QMessageBox.information(
+            self,
+            _("settings.reset_all_settings_title", default="Reset All Settings"),
+            _(
+                "settings.reset_all_settings_done",
+                default="All settings have been reset to their defaults.",
+            ),
+        )
 
     def _on_audio_normalization_toggled(self, state: int) -> None:
         """Handle logic when audio normalization is toggled."""
@@ -632,12 +715,15 @@ class DownloadSettingsDialog(QDialog):
 
             # Save notification sound setting
             ConfigManager.set("play_notification_sound", self.play_notification_sound_checkbox.isChecked())
+            ConfigManager.set("keep_history", self.keep_history_checkbox.isChecked())
 
             # Save defaults
             default_vid = self.default_vid_qual_input.text().strip()
             ConfigManager.set("default_video_quality", default_vid if default_vid else None)
             default_sub = self.default_sub_input.text().strip()
             ConfigManager.set("default_subtitle_language", default_sub if default_sub else None)
+            pref_sub_fmt = self.preferred_sub_fmt_combo.currentText()
+            ConfigManager.set("preferred_subtitle_format", pref_sub_fmt)
 
             # Save filename format
             filename_format = self.get_filename_format()

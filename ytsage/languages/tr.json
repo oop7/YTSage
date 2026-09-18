@@ -464,7 +464,7 @@
     "download_failed_return_code_conflict": "İndirme {return_code} dönüş koduyla başarısız oldu. Bunun nedeni birden fazla yt-dlp kurulumunun çakışması olabilir. Sistem kurulumlu yt-dlp'yi (örn. snap veya apt) kaldırıp uygulamayı yeniden başlatmayı deneyin.",
     "download_failed_return_code": "İndirme {return_code} dönüş koduyla başarısız oldu",
     "direct_command_error": "Doğrudan komutta hata: {error}",
-    "private_video": "Bu video gizli olabilir. Lütfen özel seçeneklerden çerezleri kullanın."
+    "private_video": "Bu video gizli olabilir veya mevcut ağınız YouTube tarafından engellenmiş olabilir. Özel seçeneklerden çerezleri kullanın ya da proxy/VPN'inizi devre dışı bırakıp değiştirin."
   },
   "update_dialog": {
     "title": "Güncelleme Mevcut",

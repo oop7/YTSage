@@ -76,11 +76,85 @@ YTSageは、**シンプルでありながら強力なYouTubeダウンローダ�
 </div>
 
 <a id="インストール"></a>
+<a id="installation"></a>
 ## 🚀 インストール
 
-### ⚡ クイックインストール (推奨)
+### 📦 アプリをダウンロード (最も簡単な方法)
+*YTSage を使用したいだけで Python が何かわからない場合は、ここから始めてください*
 
-PyPI経由でYTSageをインストールします：
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+お使いのオペレーティングシステム用のビルド済みインストーラーをダウンロードするだけです:
+
+#### 🪟 Windows
+
+| フォーマット | 説明 |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **標準インストーラー (推奨)** - ダブルクリックしてインストール。 |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 同梱版 (FFmpeg をまだ導入していない場合に推奨)。 |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | ポータブル版、インストール不要。 |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 同梱ポータブル版 (ZIP)。 |
+
+<details>
+<summary>🛠️ インストール手順</summary>
+
+1. **EXE インストーラー (`.exe`)**: ファイルをダブルクリックし、セットアップウィザードに従います。
+2. **ポータブル版 (`.zip`)**: 希望の場所にアーカイブを解凍し、`ytsage.exe` を起動します。
+3. **FFmpeg 同梱版**: システムに FFmpeg がインストールされていない場合は、FFmpeg 同梱版を選択してください。
+</details>
+
+#### 🍎 macOS
+
+| フォーマット | 説明 |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **ディスクイメージインストーラー (推奨)** - 開いて Applications にドラッグ。 |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 用 ZIP 圧縮アプリケーション。 |
+
+<details>
+<summary>🛠️ インストール手順</summary>
+
+- **DMG インストーラー (`.dmg`)**: ダブルクリックしてマウントし、`YTSage.app` をアプリケーションフォルダにドラッグします。
+- **アプリケーションアーカイブ (`.zip`)**: ZIP を解凍し、`YTSage.app` をアプリケーションフォルダに移動します。
+
+*注: 「アプリケーションが破損しています」というエラーが発生した場合は、以下のトラブルシューティングセクションを参照してください。*
+</details>
+
+#### 🐧 Linux
+
+| フォーマット | 説明 |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **ポータブル AppImage (推奨)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian パッケージ |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM パッケージ |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak バンドル |
+
+<details>
+<summary>🛠️ インストール手順</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # 必要に応じて依存関係を修復
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: Flathub の指示に従うか、以下を実行します:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 Python / PyPI 経由でインストール
+*Python 経由で YTSage をインストールすることもできます (Python 3.11+ が必要)*
 
 ```bash
 pip install ytsage
@@ -95,108 +169,46 @@ pip install --upgrade ytsage
 
 </details>
 
-その後、アプリケーションを実行します：
+その後、アプリケーションを起動します:
 
 ```bash
 ytsage
 ```
 
-### 📦 ビルド済み実行ファイル (Executable)
+動画またはプレイリストの URL をあらかじめ入力し、すぐに解析した状態で YTSage を開くこともできます:
 
-> [👉 最新リリースをダウンロード](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| フォーマット | 説明 |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 標準インストーラー |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg同梱 |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | ポータブル版、インストール不要 |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg同梱、ポータブル版 (ZIP縮小) |
-
-<details>
-<summary>🛠️ インストール手順</summary>
-
-1. **EXE インストーラー (`.exe`)**: ファイルをダブルクリックし、セットアップウィザードに従います。
-2. **ポータブル版 (`.zip`)**: アーカイブを任意の場所に展開し、`ytsage.exe` を実行します。
-3. **内蔵 FFmpeg**: システムに FFmpeg がインストールされていない場合は、FFmpeg 同梱版を選択してください。
-</details>
-
-#### 🐧 Linux
-
-| フォーマット | 説明 |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian パッケージ |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage、ポータブル |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM パッケージ |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak バンドル |
-
-<details>
-<summary>🛠️ インストール手順</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # 必要に応じて不足している依存関係を修正
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: Flathub の指示に従うか、以下を実行します：
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| フォーマット | 説明 |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 用 ZIP アプリ |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon 用ディスクイメージインストーラー |
-
-<details>
-<summary>🛠️ インストール手順</summary>
-
-- **DMG インストーラー (`.dmg`)**: ダブルクリックしてマウントし、`YTSage.app` をアプリケーションフォルダにドラッグします。
-- **App アーカイブ (`.zip`)**: ZIP を展開し、`YTSage.app` をアプリケーションフォルダに移動します。
-
-*注意: 「アプリが破損しています」というエラーが表示される場合は、以下の macOS トラブルシューティング セクションを参照してください。*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 ソースからの手動インストール</summary>
+### 💻 ソースからの手動インストール (開発者向け)
+*ソースコードから直接 YTSage を実行します。*
 
-### 1. リポジトリをクローンする
+<details>
+<summary>手動インストールの手順を表示</summary>
+
+#### 1. リポジトリをクローン
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. 依存関係をインストールする
+#### 2. 依存関係をインストール
 
-#### ⚡ uv を使用する場合
-
+**⚡ uv を使用**
 ```bash
 uv pip install .
 ```
 
-#### 📦 または標準の pip を使用する場合
-
+**📦 または標準の pip を使用**
 ```bash
 pip install .
 ```
 
-### 3. アプリケーションを実行する
+#### 3. アプリケーションを実行
 
 ```bash
 python -m ytsage.main
@@ -204,8 +216,15 @@ python -m ytsage.main
 
 </details>
 
-<a id="スクリーンショット"></a>
 ## 📸 スクリーンショット
+
+<div align="center">
+<h3>YTSage デモ</h3>
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/4a73b39e-2503-4fd9-a810-420676c9e557" width="800" controls></video>
+</div>
+<br><br>
+</div>
 
 <div align="center">
 <table>
@@ -234,36 +253,37 @@ python -m ytsage.main
 <details>
 <summary>🎯 基本的な使い方</summary>
 
-1. **YTSage を起動する**
-2. **YouTube の URL を貼り付ける** (または「URL を貼り付け」ボタンを使用)
-3. **「分析」をクリックする**
-4. **フォーマットを選択する：**
-   - ビデオダウンロードの場合は `Video`
-   - オーディオ抽出の場合は `Audio Only`
-5. **オプションを選択する：**
+1. **YTSage を起動**
+2. **YouTube URL を貼り付け** (または「URL を貼り付け」ボタンを使用)
+3. **「解析」をクリック**
+4. **フォーマットを選択:**
+   - 動画ダウンロードは `Video`
+   - 音声抽出は `Audio`
+> 💡 音声セクションから複数の音声トラックを選択して 1 つの動画に結合できるようになりました。複数の言語トラックを動画に組み合わせる場合でも、複数の音声ストリームを結合する場合でも対応しています。
+5. **オプションを選択:**
    - 字幕を有効にして言語を選択
-   - 字幕結合を有効化
+   - 字幕の結合を有効化
    - サムネイルを保存
-   - スポンサーセクションを削除
-   - 説明を保存
-   - チャプターを埋め込む
-6. **出力ディレクトリを選択する**
-7. **「ダウンロード」をクリックする**
+   - スポンサーセグメントを削除
+   - 説明文を保存
+   - チャプターを埋め込み (チャプター、メタデータ、サムネイル)
 
-> 💡 デフォルトのダウンロードディレクトリは、ユーザーの「ダウンロード」フォルダです。
+6. **「ダウンロード」をクリック**
+
+> 💡 デフォルトのダウンロードディレクトリはユーザーの「ダウンロード」フォルダです。
 
 </details>
 
 <details>
 <summary>📋 プレイリストのダウンロード</summary>
 
-1. **プレイリストの URL を貼り付ける**
-2. **「分析」をクリックする**
-3. **プレイリストセレクターからビデオを選択する (任意、デフォルトはすべて)**
-4. **希望のフォーマット/品質を選択する**
-5. **「ダウンロード」をクリックする**
+1. **プレイリストの URL を貼り付け**
+2. **「解析」をクリック**
+3. **プレイリストセレクターから動画を選択 (オプション、デフォルトはすべて)**
+4. **希望のフォーマット/画質を選択**
+5. **「ダウンロード」をクリック**
 
-> 💡 アプリケーションはダウンロードキューを自動的に管理し、プレイリストのエントリを `.txt`, `.csv`, `.m3u`, または `.json` ファイルとしてエクスポートできます。
+> 💡 「プレイリストの名前を付けて保存」ボタンをクリックすると、プレイリストの項目を (`.txt`、`.csv`、`.m3u`、または `.json`) としてエクスポートできます。
 
 </details>
 
@@ -440,12 +460,17 @@ macOS Sonoma 以降でこのエラーが表示される場合は、 quarantine�
 YTSage があなたの時間を節約できたなら、プロジェクトのスポンサーになることを検討してください。スポンサーシップは、開発時間、全プラットフォームでのテスト、および将来の改善に役立てられます。
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- スポンサーリンクは、アプリ内の About ダイアログから直接利用可能です。
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- 銀行振込 / SWIFT: メール [`oop7_support@proton.me`](mailto:oop7_support@proton.me) までお問い合わせください
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="貢献"></a>
 ## 👥 貢献
+
+<details>
+<summary>クリックして貢献ガイドラインを展開</summary>
 
 貢献を歓迎します！以下のように手助けができます：
 
@@ -469,6 +494,8 @@ YTSage があなたの時間を節約できたなら、プロジェクトのス�
 - 関連するローカライズ版 README ファイルを更新する (例: `readme-translations/README.ja.md`)
 - `ytsage/languages/<code>.json` を編集して、アプリの文字列を同期させる
 - お使いの言語がない場合は、 `README.md` をベースに `README.<code>.md` を作成してください。
+
+</details>
 
 <details>
 <summary>📂 プロジェクト構造</summary>
@@ -550,9 +577,6 @@ YTSage/
 
 ## 🙏 謝辞
 
-<details>
-<summary>謝辞を表示</summary>
-
 <div align="center">
 
 <p>改善の提案やバグの報告のためにイシューを開いてこのプロジェクトに貢献してくださったすべての方々に感謝いたします。</p>
@@ -609,7 +633,6 @@ YTSage/
 
 </div>
 
-</details>
 
 ## ⚠️ 免責事項
 

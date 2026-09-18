@@ -3,7 +3,9 @@ import os
 import shutil
 import subprocess
 import tempfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+from threading import Lock
 
 import requests
 
@@ -18,6 +20,9 @@ from ..utils.ytsage_constants import (
 )
 
 
+FFMPEG_DOWNLOAD_CONNECTIONS = 16
+
+
 def check_7zip_installed() -> bool:
     """Check if 7-Zip is installed on Windows."""
     try:
@@ -28,23 +33,78 @@ def check_7zip_installed() -> bool:
 
 
 def download_file(url, dest_path, progress_callback=None) -> bool:
-    """Download a file from URL to destination path with progress indication."""
-    try:
-        response = requests.get(url, stream=True, timeout=30)  # Added timeout
-        response.raise_for_status()  # Check for HTTP errors
-        total_size = int(response.headers.get("content-length", 0))
+    """Download a file using parallel byte ranges when supported by the server."""
 
-        with open(dest_path, "wb") as f:
-            if total_size == 0:
-                f.write(response.content)
-            else:
-                downloaded = 0
-                for data in response.iter_content(chunk_size=8192):
-                    downloaded += len(data)
-                    f.write(data)
-                    if progress_callback:
-                        progress = int((downloaded / total_size) * 100)
-                        progress_callback(f"⚡ Downloading FFmpeg components... {progress}%")
+    def download_sequential(total_size=0):
+        response = requests.get(url, stream=True, timeout=30)
+        response.raise_for_status()
+        total = total_size or int(response.headers.get("content-length", 0))
+        downloaded = 0
+
+        with open(dest_path, "wb") as file_handle:
+            for data in response.iter_content(chunk_size=8192):
+                if not data:
+                    continue
+                downloaded += len(data)
+                file_handle.write(data)
+                if progress_callback and total:
+                    progress_callback(f"⚡ Downloading FFmpeg components... {int((downloaded / total) * 100)}%")
+
+    try:
+        try:
+            metadata = requests.head(url, allow_redirects=True, timeout=30)
+            metadata.raise_for_status()
+        except requests.RequestException:
+            download_sequential()
+            return True
+
+        total_size = int(metadata.headers.get("content-length", 0))
+        supports_ranges = metadata.headers.get("accept-ranges", "").lower() == "bytes"
+
+        if not total_size or not supports_ranges:
+            download_sequential(total_size)
+            return True
+
+        chunk_size = max(1, (total_size + FFMPEG_DOWNLOAD_CONNECTIONS - 1) // FFMPEG_DOWNLOAD_CONNECTIONS)
+        ranges = [
+            (start, min(start + chunk_size - 1, total_size - 1))
+            for start in range(0, total_size, chunk_size)
+        ]
+        progress_lock = Lock()
+        downloaded = 0
+
+        with open(dest_path, "wb") as file_handle:
+            file_handle.truncate(total_size)
+
+        def download_range(byte_range):
+            nonlocal downloaded
+            start, end = byte_range
+            response = requests.get(
+                url,
+                headers={"Range": f"bytes={start}-{end}"},
+                stream=True,
+                timeout=30,
+            )
+            response.raise_for_status()
+            if response.status_code != 206:
+                raise requests.RequestException("Server ignored byte-range request")
+
+            with open(dest_path, "r+b") as file_handle:
+                file_handle.seek(start)
+                for data in response.iter_content(chunk_size=1024 * 1024):
+                    if data:
+                        file_handle.write(data)
+                        with progress_lock:
+                            downloaded += len(data)
+                            if progress_callback:
+                                progress = int((downloaded / total_size) * 100)
+                                progress_callback(f"⚡ Downloading FFmpeg components... {progress}%")
+
+        with ThreadPoolExecutor(max_workers=FFMPEG_DOWNLOAD_CONNECTIONS) as executor:
+            futures = [executor.submit(download_range, byte_range) for byte_range in ranges]
+            for future in as_completed(futures):
+                future.result()
+
         return True
     except requests.RequestException as e:
         logger.info(f"Download error: {e}")

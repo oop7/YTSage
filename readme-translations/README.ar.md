@@ -78,16 +78,89 @@
 <a id="installation"></a>
 ## 🚀 التثبيت
 
-### ⚡ التثبيت السريع (موصى به)
+### 📦 تنزيل التطبيق (الطريقة الأسهل)
+*إذا كنت تريد فقط استخدام YTSage ولا تعرف ما هو Python، ابدأ من هنا*
 
-تثبيت YTSage عبر PyPI:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+ببساطة قم بتنزيل مثبت التطبيق المجهز مسبقًا لنظام التشغيل الخاص بك:
+
+#### 🪟 Windows
+
+| الشكل | الوصف |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **المثبت القياسي (موصى به)** - فقط انقر مرتين للتثبيت. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | يتضمن FFmpeg (استخدم هذا إذا لم يكن لديك FFmpeg مسبقًا). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | نسخة محمولة، لا تحتاج إلى تثبيت. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | نسخة محمولة مع FFmpeg، مضغوطة. |
+
+<details>
+<summary>🛠️ خطوات التثبيت</summary>
+
+1. **مثبت EXE (`.exe`)**: انقر مرتين على الملف واتبع معالج الإعداد.
+2. **النسخة المحمولة (`.zip`)**: فك الضغط عن الأرشيف في المكان المطلوب وشغّل `ytsage.exe`.
+3. **تضمين FFmpeg**: اختر الإصدارات التي تحتوي على FFmpeg إذا لم يكن لديك FFmpeg مثبتًا على نظامك.
+</details>
+
+#### 🍎 macOS
+
+| الشكل | الوصف |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **مثبت صورة القرص (موصى به)** - افتح واسحب إلى التطبيقات. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | تطبيق مضغوط لأجهزة Apple Silicon. |
+
+<details>
+<summary>🛠️ خطوات التثبيت</summary>
+
+- **مثبت DMG (`.dmg`)**: انقر مرتين للتثبيت، ثم اسحب `YTSage.app` إلى مجلد التطبيقات.
+- **أرشيف التطبيق (`.zip`)**: فك الضغط عن ملف zip وانقل `YTSage.app` إلى مجلد التطبيقات.
+
+*ملاحظة: إذا واجهت خطأ "التطبيق تالف"، راجع قسم استكشاف الأخطاء وإصلاحها أدناه.*
+</details>
+
+#### 🐧 Linux
+
+| الشكل | الوصف |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **AppImage محمول (موصى به)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | حزمة Debian |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | حزمة RPM |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | حزمة Flatpak |
+
+<details>
+<summary>🛠️ خطوات التثبيت</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # إصلاح التبعيات المفقودة إذا لزم الأمر
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: اتبع الإرشادات على Flathub أو نفّذ:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 التثبيت عبر Python / PyPI
+*يمكنك أيضًا تثبيت YTSage عبر Python (يتطلب Python 3.11+)*
 
 ```bash
 pip install ytsage
 ```
 
 <details>
-<summary>🔄 تحديث نسخة مثبتة</summary>
+<summary>🔄 تحديث التثبيت الحالي</summary>
 
 ```bash
 pip install --upgrade ytsage
@@ -101,102 +174,40 @@ pip install --upgrade ytsage
 ytsage
 ```
 
-### 📦 حزم جاهزة للتشغيل
+يمكنك أيضًا فتح YTSage مع رابط فيديو أو قائمة تشغيل مملوء مسبقًا وتحليله فورًا:
 
-> [👉 تحميل أحدث إصدار](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| الصيغة | الوصف |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | مثبت قياسي |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | مع FFmpeg مدمج |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | نسخة محمولة، لا تحتاج لتثبيت |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | محمولة مع FFmpeg، مضغوطة |
-
-<details>
-<summary>🛠️ خطوات التثبيت</summary>
-
-1. **مثبت EXE (`.exe`)**: انقر نقرًا مزدوجًا على الملف واتبع معالج التثبيت.
-2. **النسخة المحمولة (`.zip`)**: استخرج الملف في أي مكان وشغل `ytsage.exe`.
-3. **FFmpeg المدمج**: اختر النسخة التي تحتوي على FFmpeg إذا لم يكن مثبتًا على نظامك.
-</details>
-
-#### 🐧 Linux
-
-| الصيغة | الوصف |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | حزمة Debian |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage، محمولة |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | حزمة RPM |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak Bundle |
-
-<details>
-<summary>🛠️ خطوات التثبيت</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # لإصلاح الاعتمادات الناقصة إذا لزم الأمر
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: اتبع التعليمات على Flathub أو شغل:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| الصيغة | الوصف |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | تطبيق مضغوط لـ Apple Silicon |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | صورة قرص لـ Apple Silicon |
-
-<details>
-<summary>🛠️ خطوات التثبيت</summary>
-
-- **مثبت DMG (`.dmg`)**: انقر نقرًا مزدوجًا لفتح القرص، ثم اسحب `YTSage.app` إلى مجلد Applications.
-- **تطبيق مضغوط (`.zip`)**: استخرج الملف وانقل `YTSage.app` إلى مجلد Applications.
-
-*ملاحظة: إذا واجهت خطأ "التطبيق تالف"، راجع قسم استكشاف الأخطاء لنظام macOS أدناه.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 التثبيت اليدوي من المصدر</summary>
+### 💻 التثبيت اليدوي من المصدر (للمطورين)
+*تشغيل YTSage مباشرة من الكود المصدري.*
 
-### 1. نسخ المستودع
+<details>
+<summary>عرض خطوات التثبيت اليدوي</summary>
+
+#### 1. استنساخ المستودع
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. تثبيت الاعتمادات
+#### 2. تثبيت التبعيات
 
-#### ⚡ باستخدام uv
-
+**⚡ باستخدام uv**
 ```bash
 uv pip install .
 ```
 
-#### 📦 أو باستخدام pip العادي
-
+**📦 أو باستخدام pip القياسي**
 ```bash
 pip install .
 ```
 
-### 3. تشغيل التطبيق
+#### 3. تشغيل التطبيق
 
 ```bash
 python -m ytsage.main
@@ -206,6 +217,14 @@ python -m ytsage.main
 
 <a id="screenshots"></a>
 ## 📸 لقطات الشاشة
+
+<div align="center">
+<h3>عرض YTSage التجريبي</h3>
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/4a73b39e-2503-4fd9-a810-420676c9e557" width="800" controls></video>
+</div>
+<br><br>
+</div>
 
 <div align="center">
 <table>
@@ -234,36 +253,37 @@ python -m ytsage.main
 <details>
 <summary>🎯 الاستخدام الأساسي</summary>
 
-1. **شغل YTSage**
-2. **الصق رابط يوتيوب** (أو استخدم زر "Paste URL")
-3. **اضغط على "Analyze"**
-4. **اختر الصيغة:**
-   - `Video` للتحميلات المرئية
-   - `Audio Only` لاستخراج الصوت فقط
+1. **تشغيل YTSage**
+2. **لصق رابط يوتيوب** (أو استخدام زر "لصق الرابط")
+3. **النقر على "تحليل"**
+4. **تحديد التنسيق:**
+   - `Video` لتنزيل الفيديو
+   - `Audio` لاستخراج الصوت
+> 💡 يمكنك الآن تحديد ودمج عدة مسارات صوتية من قسم الصوت في فيديو واحد. سواء كنت ترغب في دمج فيديو مع مسارات بلغات متعددة، أو دمج عدة تدفقات صوتية معًا.
 5. **اختر الخيارات:**
-   - تفعيل الترجمات واختيار اللغة
-   - تفعيل دمج الترجمات
+   - تمكين الترجمات واختيار اللغة
+   - تمكين دمج الترجمة
    - حفظ الصورة المصغرة
-   - حذف المقاطع الإعلانية (Sponsor segments)
+   - إزالة المقاطع المروجة
    - حفظ الوصف
-   - دمج الفصول (Chapters)
-6. **اختر مجلد الحفظ**
-7. **اضغط على "Download"**
+   - تضمين الفصول (الفصول، البيانات الوصفية، الصورة المصغرة)
 
-> 💡 مجلد التحميل الافتراضي هو مجلد "Downloads" للمستخدم.
+6. **النقر على "تنزيل"**
+
+> 💡 مجلد التنزيل الافتراضي هو مجلد "Downloads" الخاص بالمستخدم.
 
 </details>
 
 <details>
-<summary>📋 تحميل قائمة تشغيل (Playlist)</summary>
+<summary>📋 تنزيل قائمة التشغيل</summary>
 
-1. **الصق رابط قائمة التشغيل**
-2. **اضغط على "Analyze"**
-3. **اختر الفيديوهات من محدد القائمة (اختياري، يتم اختيار الكل تلقائيًا)**
-4. **اختر الصيغة/الجودة المطلوبة**
-5. **اضغط على "Download"**
+1. **لصق رابط قائمة التشغيل**
+2. **النقر على "تحليل"**
+3. **تحديد الفيديوهات من محدد قائمة التشغيل (اختياري، افتراضيًا الكل)**
+4. **اختيار التنسيق/الجودة المطلوبة**
+5. **النقر على "تنزيل"**
 
-> 💡 التطبيق يتعامل مع طابور التحميل تلقائيًا، ويمكنك تصدير مدخلات القائمة كملفات `.txt` أو `.csv` أو `.m3u` أو `.json`.
+> 💡 يمكنك تصدير عناصر قائمة التشغيل كملفات (`.txt` أو `.csv` أو `.m3u` أو `.json`) بالنقر على زر "حفظ قائمة التشغيل باسم".
 
 </details>
 
@@ -440,12 +460,17 @@ python -m ytsage.main
 إذا وفر لك YTSage الوقت، يرجى التفكير في دعم المشروع. يساعد الدعم في تغطية وقت التطوير، الاختبار على المنصات المختلفة، والتحسينات المستقبلية.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- رابط الدعم متاح أيضًا داخل التطبيق عبر نافذة "About".
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- التحويل المصرفي المباشر / SWIFT: تواصل معي عبر البريد الإلكتروني على [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="contributing"></a>
 ## 👥 المساهمة
+
+<details>
+<summary>انقر لتوسيع إرشادات المساهمة</summary>
 
 نرحب بالمساهمات! إليك كيف يمكنك المساعدة:
 
@@ -469,6 +494,8 @@ python -m ytsage.main
 - حدث ملف README المترجم (مثل `readme-translations/README.ar.md`)
 - حافظ على تزامن نصوص التطبيق بتعديل `ytsage/languages/<code>.json`
 - إذا كانت لغتك غير موجودة، ابدأ من `README.md` وأنشئ ملفًا جديدًا باسم `README.<code>.md`
+
+</details>
 
 <details>
 <summary>📂 هيكل المشروع</summary>
@@ -550,9 +577,6 @@ YTSage/
 
 ## 🙏 شكر وتقدير
 
-<details>
-<summary>عرض الشكر والتقدير</summary>
-
 <div align="center">
 
 <p>شكر كبير لكل من ساهم في هذا المشروع بفتح تذكرة لاقتراح تحسين أو الإبلاغ عن خطأ.</p>
@@ -609,7 +633,6 @@ YTSage/
 
 </div>
 
-</details>
 
 ## ⚠️ إخلاء مسؤولية
 

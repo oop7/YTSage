@@ -464,7 +464,7 @@
     "download_failed_return_code_conflict": "Pobieranie nie powiodło się z kodem {return_code}. Może to wynikać z konfliktu wielu instalacji yt-dlp. Spróbuj odinstalować systemowo zainstalowane yt-dlp (np. przez snap lub apt) i uruchom aplikację ponownie.",
     "download_failed_return_code": "Pobieranie nie powiodło się z kodem {return_code}",
     "direct_command_error": "Błąd w bezpośrednim poleceniu: {error}",
-    "private_video": "Ten film może być prywatny. Proszę użyć plików cookie z opcji niestandardowych."
+    "private_video": "Ten film może być prywatny lub bieżąca sieć może być zablokowana przez YouTube. Użyj plików cookie z opcji niestandardowych albo wyłącz/zmień proxy lub VPN."
   },
   "update_dialog": {
     "title": "Dostępna aktualizacja",

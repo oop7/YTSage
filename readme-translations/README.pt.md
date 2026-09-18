@@ -76,11 +76,85 @@ O YTSage foi projetado para usuários que desejam um **downloader de YouTube sim
 </div>
 
 <a id="instalação"></a>
+<a id="installation"></a>
 ## 🚀 Instalação
 
-### ⚡ Instalação Rápida (Recomendada)
+### 📦 Baixar o Aplicativo (Método Mais Fácil)
+*Se você quer apenas usar o YTSage e não sabe o que é Python, comece aqui*
 
-Instale o YTSage via PyPI:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+Basta baixar o instalador pré-compilado para o seu sistema operacional:
+
+#### 🪟 Windows
+
+| Formato | Descrição |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **Instalador Padrão (Recomendado)** - Basta clicar duas vezes para instalar. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Com FFmpeg Incluso (Use este se ainda não tiver o FFmpeg). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Versão portátil, sem necessidade de instalação. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portátil com FFmpeg, compactado. |
+
+<details>
+<summary>🛠️ Passos para Instalação</summary>
+
+1. **Instalador EXE (`.exe`)**: Clique duas vezes no arquivo e siga o assistente de configuração.
+2. **Versão Portátil (`.zip`)**: Extraia o arquivo para o local desejado e execute `ytsage.exe`.
+3. **FFmpeg Incluso**: Escolha versões com FFmpeg incluso se você não tiver o FFmpeg instalado em seu sistema.
+</details>
+
+#### 🍎 macOS
+
+| Formato | Descrição |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **Instalador de Imagem de Disco (Recomendado)** - Abra e arraste para Aplicativos. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Aplicativo Compactado para Apple Silicon. |
+
+<details>
+<summary>🛠️ Passos para Instalação</summary>
+
+- **Instalador DMG (`.dmg`)**: Clique duas vezes para montar e, em seguida, arraste o `YTSage.app` para a pasta Aplicativos.
+- **Arquivo de Aplicativo (`.zip`)**: Extraia o arquivo zip e mova o `YTSage.app` para a pasta Aplicativos.
+
+*Nota: Se você encontrar o erro "O aplicativo está danificado", consulte a seção de solução de problemas abaixo.*
+</details>
+
+#### 🐧 Linux
+
+| Formato | Descrição |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **AppImage Portátil (Recomendado)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Pacote Debian |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Pacote RPM |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Pacote Flatpak |
+
+<details>
+<summary>🛠️ Passos para Instalação</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # Corrija dependências ausentes se necessário
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: Siga as instruções no Flathub ou execute:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 Instalar via Python / PyPI
+*Você também pode instalar o YTSage via Python (Requer Python 3.11+)*
 
 ```bash
 pip install ytsage
@@ -95,108 +169,46 @@ pip install --upgrade ytsage
 
 </details>
 
-Em seguida, execute o aplicativo:
+Em seguida, inicie o aplicativo:
 
 ```bash
 ytsage
 ```
 
-### 📦 Executáveis Pré-compilados (Executable)
+Você também pode abrir o YTSage com um URL de vídeo ou playlist preenchido e analisado imediatamente:
 
-> [👉 Baixar Lançamento Mais Recente](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| Formato | Descrição |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Instalador Padrão |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Com FFmpeg incluído |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Versão Portátil, sem necessidade de instalação |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portátil com FFmpeg, compactado (ZIP) |
-
-<details>
-<summary>🛠️ Passos para Instalação</summary>
-
-1. **Instalador EXE (`.exe`)**: Clique duas vezes no arquivo e siga o assistente de configuração.
-2. **Versão Portátil (`.zip`)**: Extraia o arquivo para o local desejado e execute `ytsage.exe`.
-3. **FFmpeg Integrado**: Se você não possui o FFmpeg instalado no sistema, escolha as versões com FFmpeg integrado.
-</details>
-
-#### 🐧 Linux
-
-| Formato | Descrição |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Pacote Debian |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, Portátil |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Pacote RPM |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Pacote Flatpak |
-
-<details>
-<summary>🛠️ Passos para Instalação</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Se necessário para corrigir dependências ausentes
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: Siga as instruções no Flathub ou execute:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| Formato | Descrição |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Aplicativo ZIP para Apple Silicon |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Instalador Disk Image para Apple Silicon |
-
-<details>
-<summary>🛠️ Passos para Instalação</summary>
-
-- **Instalador DMG (`.dmg`)**: Clique duas vezes para montar e arraste `YTSage.app` para a sua pasta Aplicativos.
-- **Arquivo do Aplicativo (`.zip`)**: Extraia o ZIP e mova `YTSage.app` para a sua pasta Aplicativos.
-
-*Nota: Se você receber o erro "App está danificado", veja a seção de Problemos no macOS abaixo.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 Instalação Manual a partir do Código-Fonte</summary>
+### 💻 Instalação Manual a partir do Código-Fonte (Desenvolvedores)
+*Execute o YTSage diretamente do código-fonte.*
 
-### 1. Clonar o Repositório
+<details>
+<summary>Ver passos da instalação manual</summary>
+
+#### 1. Clonar o repositório
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. Instalar Dependências
+#### 2. Instalar dependências
 
-#### ⚡ Com uv
-
+**⚡ Usando uv**
 ```bash
 uv pip install .
 ```
 
-#### 📦 Ou com pip padrão
-
+**📦 Ou usando pip padrão**
 ```bash
 pip install .
 ```
 
-### 3. Executar o Aplicativo
+#### 3. Executar o aplicativo
 
 ```bash
 python -m ytsage.main
@@ -204,8 +216,15 @@ python -m ytsage.main
 
 </details>
 
-<a id="capturas-de-tela"></a>
 ## 📸 Capturas de Tela
+
+<div align="center">
+<h3>Demo do YTSage</h3>
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/4a73b39e-2503-4fd9-a810-420676c9e557" width="800" controls></video>
+</div>
+<br><br>
+</div>
 
 <div align="center">
 <table>
@@ -234,21 +253,22 @@ python -m ytsage.main
 <details>
 <summary>🎯 Uso Básico</summary>
 
-1. **Inicie o YTSage**
-2. **Cole uma URL do YouTube** (ou use o botão "Paste URL")
-3. **Clique em "Analyze"**
-4. **Escolha o Formato:**
-   - `Video` para download de vídeo
-   - `Audio Only` para extração de áudio
-5. **Selecione Opções:**
-   - Habilite legendas e escolha o idioma
-   - Habilite a mesclagem de legendas
+1. **Iniciar YTSage**
+2. **Colar URL do YouTube** (ou usar o botão "Colar URL")
+3. **Clicar em "Analisar"**
+4. **Selecionar formato:**
+   - `Video` para downloads de vídeo
+   - `Audio` para extração de áudio
+> 💡 Agora você pode selecionar e mesclar várias faixas de áudio da seção Áudio em um único vídeo. Seja para combinar um vídeo com várias faixas de idioma ou mesclar vários fluxos de áudio.
+5. **Escolher opções:**
+   - Ativar legendas e selecionar idioma
+   - Ativar mesclagem de legendas
    - Salvar miniatura
-   - Remover seções de patrocinadores
+   - Remover segmentos patrocinados
    - Salvar descrição
-   - Incorporar capítulos
-6. **Escolha o Diretório de Saída**
-7. **Clique em "Download"**
+   - Embutir capítulos (Capítulos, Metadados, Miniatura)
+
+6. **Clicar em "Baixar"**
 
 > 💡 O diretório de download padrão é a pasta "Downloads" do usuário.
 
@@ -257,13 +277,13 @@ python -m ytsage.main
 <details>
 <summary>📋 Download de Playlist</summary>
 
-1. **Cole a URL da Playlist**
-2. **Clique em "Analyze"**
-3. **Selecione vídeos do seletor (opcional, padrão todos)**
-4. **Escolha o formato/qualidade desejado**
-5. **Clique em "Download"**
+1. **Colar URL da Playlist**
+2. **Clicar em "Analisar"**
+3. **Selecionar vídeos no seletor de playlist (opcional, padrão todos)**
+4. **Escolher formato/qualidade desejado**
+5. **Clicar em "Baixar"**
 
-> 💡 O aplicativo gerencia automaticamente a fila de download, e você pode exportar as entradas da playlist como arquivos `.txt`, `.csv`, `.m3u` ou `.json`.
+> 💡 Você pode exportar as entradas da playlist como (`.txt`, `.csv`, `.m3u` ou `.json`) clicando no botão "Salvar Playlist Como".
 
 </details>
 
@@ -440,12 +460,17 @@ Se você vir este erro no macOS Sonoma ou mais recente, você precisa remover o 
 Se o YTSage economiza seu tempo, considere patrocinar o projeto. Os patrocínios ajudam a cobrir o tempo de desenvolvimento, testes em todas as plataformas e melhorias futuras.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- O link de patrocínio está disponível diretamente através do diálogo Sobre no aplicativo.
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- Transferência bancária direta / SWIFT: Entre em contato comigo por e-mail em [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="contribuindo"></a>
 ## 👥 Contribuindo
+
+<details>
+<summary>Clique para expandir as Diretrizes de Contribuição</summary>
 
 Contribuições são bem-vindas! Veja como você pode ajudar:
 
@@ -469,6 +494,8 @@ Contribuições são bem-vindas! Veja como você pode ajudar:
 - Atualize o arquivo README localizado relevante (ex: `readme-translations/README.pt.md`)
 - Mantenha as strings do aplicativo em sincronia editando `ytsage/languages/<code>.json`
 - Se o seu idioma estiver ausente, comece pelo `README.md` e crie `README.<code>.md`
+
+</details>
 
 <details>
 <summary>📂 Estrutura do Projeto</summary>
@@ -550,9 +577,6 @@ Este projeto é licenciado sob a Licença MIT - consulte o arquivo [LICENSE](../
 
 ## 🙏 Agradecimentos
 
-<details>
-<summary>Mostrar Agradecimentos</summary>
-
 <div align="center">
 
 <p>Muito obrigado a todos que contribuíram para este projeto abrindo problemas para sugerir melhorias ou relatar erros.</p>
@@ -609,7 +633,6 @@ Este projeto é licenciado sob a Licença MIT - consulte o arquivo [LICENSE](../
 
 </div>
 
-</details>
 
 ## ⚠️ Isenção de Responsabilidade
 

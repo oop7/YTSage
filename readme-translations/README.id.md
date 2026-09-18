@@ -76,18 +76,92 @@ YTSage dirancang untuk pengguna yang menginginkan **pengunduh YouTube yang seder
 </div>
 
 <a id="instalasi"></a>
+<a id="installation"></a>
 ## 🚀 Instalasi
 
-### ⚡ Instalasi Cepat (Direkomendasikan)
+### 📦 Unduh Aplikasi (Metode Termudah)
+*Jika Anda hanya ingin menggunakan YTSage dan tidak tahu apa itu Python, mulai dari sini*
 
-Instal YTSage melalui PyPI:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+Cukup unduh penginstal siap pakai untuk sistem operasi Anda:
+
+#### 🪟 Windows
+
+| Format | Deskripsi |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **Penginstal Standar (Direkomendasikan)** - Cukup klik ganda untuk menginstal. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Termasuk FFmpeg (Gunakan ini jika Anda belum memiliki FFmpeg). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Versi portabel, tidak memerlukan instalasi. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portabel dengan FFmpeg, diarsip zip. |
+
+<details>
+<summary>🛠️ Langkah Instalasi</summary>
+
+1. **Penginstal EXE (`.exe`)**: Klik ganda file dan ikuti wisaya penyiapan.
+2. **Versi Portabel (`.zip`)**: Ekstrak arsip ke lokasi yang diinginkan dan jalankan `ytsage.exe`.
+3. **Termasuk FFmpeg**: Pilih versi dengan FFmpeg terintegrasi jika Anda tidak memiliki FFmpeg di sistem Anda.
+</details>
+
+#### 🍎 macOS
+
+| Format | Deskripsi |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **Penginstal Image Disk (Direkomendasikan)** - Buka dan seret ke Aplikasi. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Aplikasi Diarsip Zip untuk Apple Silicon. |
+
+<details>
+<summary>🛠️ Langkah Instalasi</summary>
+
+- **Penginstal DMG (`.dmg`)**: Klik ganda untuk memasang, lalu seret `YTSage.app` ke folder Aplikasi Anda.
+- **Arsip Aplikasi (`.zip`)**: Ekstrak zip dan pindahkan `YTSage.app` ke folder Aplikasi Anda.
+
+*Catatan: Jika Anda mengalami kesalahan "Aplikasi rusak", lihat bagian pemecahan masalah di bawah.*
+</details>
+
+#### 🐧 Linux
+
+| Format | Deskripsi |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **AppImage Portabel (Direkomendasikan)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paket Debian |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paket RPM |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Bundel Flatpak |
+
+<details>
+<summary>🛠️ Langkah Instalasi</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # Perbaiki dependensi yang hilang jika perlu
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: Ikuti petunjuk di Flathub atau jalankan:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 Instal via Python / PyPI
+*Anda juga dapat menginstal YTSage via Python (Membutuhkan Python 3.11+)*
 
 ```bash
 pip install ytsage
 ```
 
 <details>
-<summary>🔄 Perbarui Instalasi yang Ada</summary>
+<summary>🔄 Perbarui instalasi yang ada</summary>
 
 ```bash
 pip install --upgrade ytsage
@@ -101,102 +175,40 @@ Kemudian jalankan aplikasi:
 ytsage
 ```
 
-### 📦 Executable Siap Pakai (Executable)
+Anda juga dapat membuka YTSage dengan URL video atau playlist yang terisi otomatis dan langsung dianalisis:
 
-> [👉 Unduh Rilis Terbaru](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| Format | Deskripsi |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Installer Standar |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Dilengkapi dengan FFmpeg |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Versi Portabel, tidak perlu instalasi |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | Portabel dengan FFmpeg, dikompresi (ZIP) |
-
-<details>
-<summary>🛠️ Langkah Instalasi</summary>
-
-1. **Installer EXE (`.exe`)**: Klik dua kali pada file dan ikuti wizard pengaturan.
-2. **Versi Portabel (`.zip`)**: Ekstrak arsip ke lokasi yang diinginkan dan jalankan `ytsage.exe`.
-3. **FFmpeg Bawaan**: Jika Anda tidak memiliki FFmpeg di sistem Anda, pilih versi dengan FFmpeg bawaan.
-</details>
-
-#### 🐧 Linux
-
-| Format | Deskripsi |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paket Debian |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, Portabel |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Paket RPM |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Bundel Flatpak |
-
-<details>
-<summary>🛠️ Langkah Instalasi</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # Jika perlu perbaiki dependensi yang kurang
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: Ikuti instruksi di Flathub atau jalankan:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| Format | Deskripsi |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Aplikasi ZIP untuk Apple Silicon |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Installer Disk Image untuk Apple Silicon |
-
-<details>
-<summary>🛠️ Langkah Instalasi</summary>
-
-- **Installer DMG (`.dmg`)**: Klik dua kali untuk memasang, lalu tarik `YTSage.app` ke folder Applications Anda.
-- **Arsip Aplikasi (`.zip`)**: Ekstrak ZIP dan pindahkan `YTSage.app` ke folder Applications Anda.
-
-*Catatan: Jika Anda mendapatkan kesalahan "App is damaged", lihat bagian Troubleshooting macOS di bawah ini.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 Instalasi Manual dari Sumber (Source)</summary>
+### 💻 Instalasi Manual dari Sumber (Pengembang)
+*Jalankan YTSage langsung dari kode sumber.*
 
-### 1. Kloning Repositori
+<details>
+<summary>Lihat langkah instalasi manual</summary>
+
+#### 1. Klon repositori
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. Instal Dependensi
+#### 2. Instal dependensi
 
-#### ⚡ Dengan uv
-
+**⚡ Menggunakan uv**
 ```bash
 uv pip install .
 ```
 
-#### 📦 Atau dengan pip standar
-
+**📦 Atau menggunakan pip standar**
 ```bash
 pip install .
 ```
 
-### 3. Jalankan Aplikasi
+#### 3. Jalankan aplikasi
 
 ```bash
 python -m ytsage.main
@@ -204,8 +216,15 @@ python -m ytsage.main
 
 </details>
 
-<a id="screenshot"></a>
 ## 📸 Screenshot
+
+<div align="center">
+<h3>Demo YTSage</h3>
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/4a73b39e-2503-4fd9-a810-420676c9e557" width="800" controls></video>
+</div>
+<br><br>
+</div>
 
 <div align="center">
 <table>
@@ -234,23 +253,24 @@ python -m ytsage.main
 <details>
 <summary>🎯 Penggunaan Dasar</summary>
 
-1. **Luncurkan YTSage**
-2. **Tempel URL YouTube** (atau gunakan tombol "Paste URL")
-3. **Klik "Analyze"**
+1. **Jalankan YTSage**
+2. **Tempel URL YouTube** (atau gunakan tombol "Tempel URL")
+3. **Klik "Analisis"**
 4. **Pilih Format:**
    - `Video` untuk unduhan video
-   - `Audio Only` untuk ekstraksi audio
+   - `Audio` untuk ekstraksi audio
+> 💡 Sekarang Anda dapat memilih dan menggabungkan beberapa trek audio dari bagian Audio ke dalam satu video. Baik Anda ingin menggabungkan video dengan beberapa trek bahasa, atau menggabungkan beberapa aliran audio secara bersamaan.
 5. **Pilih Opsi:**
-   - Aktifkan subtitle dan pilih bahasa
-   - Aktifkan penggabungan subtitle
-   - Simpan thumbnail
-   - Hapus bagian sponsor
-   - Simpan deskripsi
-   - Masukkan bab (chapters)
-6. **Pilih Direktori Output**
-7. **Klik "Download"**
+   - Aktifkan Subtitle dan pilih bahasa
+   - Aktifkan Penggabungan Subtitle
+   - Simpan Thumbnail
+   - Hapus Segmen Sponsor
+   - Simpan Deskripsi
+   - Sematkan Bab (Bab, Metadata, Thumbnail)
 
-> 💡 Direktori unduhan bawaan adalah folder "Downloads" pengguna.
+6. **Klik "Unduh"**
+
+> 💡 Direktori unduhan default adalah folder "Downloads" pengguna.
 
 </details>
 
@@ -258,12 +278,12 @@ python -m ytsage.main
 <summary>📋 Unduhan Playlist</summary>
 
 1. **Tempel URL Playlist**
-2. **Klik "Analyze"**
+2. **Klik "Analisis"**
 3. **Pilih video dari pemilih playlist (opsional, default semua)**
 4. **Pilih format/kualitas yang diinginkan**
-5. **Klik "Download"**
+5. **Klik "Unduh"**
 
-> 💡 Aplikasi secara otomatis mengelola antrean unduhan, dan Anda dapat mengekspor entri playlist sebagai file `.txt`, `.csv`, `.m3u`, atau `.json`.
+> 💡 Anda dapat mengekspor entri playlist sebagai (`.txt`, `.csv`, `.m3u`, atau `.json`) dengan mengklik tombol "Simpan Playlist Sebagai".
 
 </details>
 
@@ -440,12 +460,17 @@ Jika Anda melihat kesalahan ini di macOS Sonoma atau yang lebih baru, Anda perlu
 Jika YTSage menghemat waktu Anda, pertimbangkan untuk mensponsori proyek ini. Sponsor membantu mencakup waktu pengembangan, pengujian di semua platform, dan peningkatan di masa mendatang.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- Tautan sponsor tersedia langsung melalui dialog About di dalam aplikasi.
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- Transfer bank langsung / SWIFT: Hubungi saya via email di [`oop7_support@proton.me`](mailto:oop7_support@proton.me)
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="kontribusi"></a>
 ## 👥 Kontribusi
+
+<details>
+<summary>Klik untuk membuka Panduan Kontribusi</summary>
 
 Kami menerima kontribusi! Berikut cara Anda dapat membantu:
 
@@ -469,6 +494,8 @@ Kami menerima kontribusi! Berikut cara Anda dapat membantu:
 - Perbarui file README lokal yang relevan (misalnya `readme-translations/README.id.md`)
 - Jaga agar string aplikasi tetap sinkron dengan mengedit `ytsage/languages/<code>.json`
 - Jika bahasa Anda belum ada, mulailah dari `README.md` dan buat `README.<code>.md`
+
+</details>
 
 <details>
 <summary>📂 Struktur Proyek</summary>
@@ -550,9 +577,6 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) 
 
 ## 🙏 Terima Kasih
 
-<details>
-<summary>Tampilkan Terima Kasih</summary>
-
 <div align="center">
 
 <p>Terima kasih banyak kepada semua orang yang telah berkontribusi pada proyek ini dengan membuka masalah untuk menyarankan perbaikan atau melaporkan bug.</p>
@@ -609,7 +633,6 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) 
 
 </div>
 
-</details>
 
 ## ⚠️ Penafian
 

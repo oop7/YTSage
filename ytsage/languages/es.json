@@ -465,7 +465,7 @@
     "download_failed_return_code_conflict": "La descarga falló con el código de salida {return_code}. Esto puede deberse a un conflicto con varias instalaciones de yt-dlp. Intenta desinstalar cualquier yt-dlp instalado en el sistema (p. ej., mediante snap o apt) y reinicia la aplicación.",
     "download_failed_return_code": "La descarga falló con el código de salida {return_code}",
     "direct_command_error": "Error en el comando directo: {error}",
-    "private_video": "Este video podría ser privado. Por favor, utiliza cookies desde las opciones personalizadas."
+    "private_video": "Este video puede ser privado o YouTube puede estar bloqueando tu red actual. Usa cookies desde las opciones personalizadas o desactiva/cambia tu proxy o VPN."
   },
   "update_dialog": {
     "title": "Actualización disponible",

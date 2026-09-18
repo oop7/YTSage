@@ -9,6 +9,9 @@
 #ifndef MyAppExeName
   #define MyAppExeName "YTSage-ffmpeg.exe"
 #endif
+#ifndef MyAppSourceExeName
+  #define MyAppSourceExeName "YTSage-ffmpeg.exe"
+#endif
 #ifndef SourceDir
   #define SourceDir "..\dist\YTSage-FFmpeg"
 #endif
@@ -47,17 +50,25 @@ Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
-Name: "chinesesimplified"; MessagesFile: "Languages\Unofficial\ChineseSimplified.isl"
+Name: "chinesesimplified"; MessagesFile: "Languages\ChineseSimplified.isl"
+Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "hindi"; MessagesFile: "Languages\Unofficial\Hindi.islu"
 Name: "indonesian"; MessagesFile: "Languages\Unofficial\Indonesian.isl"
+Name: "farsi"; MessagesFile: "Languages\Unofficial\Farsi.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 Name: "addtopath"; Description: "Add ffmpeg to user PATH environment variable"; GroupDescription: "Additional options:"; Flags: unchecked
 
 [Files]
-Source: "{#SourceDir}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourceDir}\{#MyAppSourceExeName}"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
+Source: "{#SourceDir}\ffmpeg.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceDir}\ffprobe.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "*.exe"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+[InstallDelete]
+Type: files; Name: "{app}\YTSage-v*-ffmpeg.exe"
+Type: files; Name: "{app}\YTSage.exe"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -110,8 +121,10 @@ begin
   else if ActiveLanguage = 'spanish' then LanguageCode := 'es'
   else if ActiveLanguage = 'turkish' then LanguageCode := 'tr'
   else if ActiveLanguage = 'chinesesimplified' then LanguageCode := 'zh'
+  else if ActiveLanguage = 'korean' then LanguageCode := 'ko'
   else if ActiveLanguage = 'hindi' then LanguageCode := 'hi'
   else if ActiveLanguage = 'indonesian' then LanguageCode := 'id'
+  else if ActiveLanguage = 'farsi' then LanguageCode := 'fa'
   else LanguageCode := 'en';
 
   ConfigPath := ExpandConstant('{localappdata}\YTSage\data\ytsage_config.json');

@@ -78,11 +78,85 @@ YTSage는 **간단하면서도 강력한 YouTube 다운로더**를 원하는 사
 </div>
 
 <a id="설치"></a>
+<a id="installation"></a>
 ## 🚀 설치
 
-### ⚡ 빠른 설치 (권장)
+### 📦 앱 다운로드 (가장 쉬운 방법)
+*YTSage를 사용하고 싶지만 Python이 무엇인지 모른다면 여기서 시작하세요*
 
-PyPI로 YTSage를 설치합니다:
+[![Download Latest Release](https://img.shields.io/github/v/release/oop7/YTSage?label=Download%20Latest%20Release&style=for-the-badge&color=2ea44f&logo=github)](https://github.com/oop7/YTSage/releases/latest)
+
+사용 중인 운영 체제에 맞는 빌드된 설치 프로그램을 다운로드하면 됩니다:
+
+#### 🪟 Windows
+
+| 포맷 | 설명 |
+|--------|-------------|
+| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | **표준 설치 프로그램 (권장)** - 더블 클릭하여 설치합니다. |
+| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 포함 (FFmpeg가 아직 설치되어 있지 않은 경우 사용). |
+| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 포터블 버전, 설치 필요 없음. |
+| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 포함 포터블 버전 (ZIP). |
+
+<details>
+<summary>🛠️ 설치 단계</summary>
+
+1. **EXE 설치 프로그램 (`.exe`)**: 파일을 더블 클릭하고 마법사를 따릅니다.
+2. **포터블 버전 (`.zip`)**: 원하는 위치에 압축을 풀고 `ytsage.exe`를 실행합니다.
+3. **FFmpeg 포함**: 시스템에 FFmpeg가 설치되어 있지 않은 경우 FFmpeg가 포함된 버전을 선택하세요.
+</details>
+
+#### 🍎 macOS
+
+| 포맷 | 설명 |
+|--------|-------------|
+| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **디스크 이미지 설치 프로그램 (권장)** - 열고 Applications로 드래그합니다. |
+| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon용 압축된 애플리케이션. |
+
+<details>
+<summary>🛠️ 설치 단계</summary>
+
+- **DMG 설치 프로그램 (`.dmg`)**: 더블 클릭하여 마운트한 다음 `YTSage.app`을 Applications 폴더로 드래그합니다.
+- **애플리케이션 아카이브 (`.zip`)**: zip 파일 압축을 풀고 `YTSage.app`을 Applications 폴더로 이동합니다.
+
+*참고: "손상된 애플리케이션" 오류가 발생하면 아래 문제 해결 섹션을 참조하세요.*
+</details>
+
+#### 🐧 Linux
+
+| 포맷 | 설명 |
+|--------|-------------|
+| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | **포터블 AppImage (권장)** |
+| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | 데비안 패키지 |
+| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM 패키지 |
+| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak 번들 |
+
+<details>
+<summary>🛠️ 설치 단계</summary>
+
+- **AppImage (`.AppImage`)**:
+  ```bash
+  chmod +x YTSage-*.AppImage
+  ./YTSage-*.AppImage
+  ```
+- **DEB (`.deb`)**:
+  ```bash
+  sudo dpkg -i ytsage_*.deb
+  sudo apt-get install -f # 누락된 의존성 수정
+  ```
+- **RPM (`.rpm`)**:
+  ```bash
+  sudo rpm -i ytsage-*.rpm
+  ```
+- **Flatpak**: Flathub의 지침을 따르거나 실행하세요:
+  ```bash
+  flatpak install flathub io.github.oop7.ytsage
+  ```
+</details>
+
+---
+
+### 🐍 Python / PyPI를 통한 설치
+*Python을 통해서도 YTSage를 설치할 수 있습니다 (Python 3.11+ 필요)*
 
 ```bash
 pip install ytsage
@@ -97,108 +171,46 @@ pip install --upgrade ytsage
 
 </details>
 
-그다음 애플리케이션을 실행합니다:
+그런 다음 애플리케이션을 실행합니다:
 
 ```bash
 ytsage
 ```
 
-### 📦 빌드된 실행 파일
+비디오 또는 재생목록 URL이 미리 채워진 상태로 YTSage를 열어 즉시 분석할 수도 있습니다:
 
-> [👉 최신 릴리스 다운로드](https://github.com/oop7/YTSage/releases/latest)
-
-#### 🪟 Windows
-
-| 형식 | 설명 |
-|--------|-------------|
-| ![Windows EXE](https://img.shields.io/badge/Windows-EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 표준 설치 프로그램 |
-| ![Windows FFmpeg](https://img.shields.io/badge/Windows-FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 포함 |
-| ![Windows Portable](https://img.shields.io/badge/Windows-Portable-0078D6?style=for-the-badge&logo=windows&logoColor=white) | 포터블 버전, 설치 불필요 |
-| ![Windows Portable FFmpeg](https://img.shields.io/badge/Windows-Portable%20FFmpeg-0078D6?style=for-the-badge&logo=windows&logoColor=white) | FFmpeg 포함 포터블 (ZIP) |
-
-<details>
-<summary>🛠️ 설치 단계</summary>
-
-1. **EXE 설치 프로그램 (`.exe`)**: 파일을 더블클릭한 뒤 설치 마법사를 따릅니다.
-2. **포터블 버전 (`.zip`)**: 원하는 위치에 압축을 풀고 `ytsage.exe`를 실행합니다.
-3. **FFmpeg 포함**: 시스템에 FFmpeg가 없다면 FFmpeg가 포함된 버전을 선택하세요.
-</details>
-
-#### 🐧 Linux
-
-| 형식 | 설명 |
-|--------|-------------|
-| ![Linux DEB](https://img.shields.io/badge/Linux-DEB-FCC624?style=for-the-badge&logo=linux&logoColor=black) | Debian 패키지 |
-| ![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black) | AppImage, 포터블 |
-| ![Linux RPM](https://img.shields.io/badge/Linux-RPM-FCC624?style=for-the-badge&logo=linux&logoColor=black) | RPM 패키지 |
-| ![Flathub](https://img.shields.io/badge/Linux-Flatpak-FCC624?style=for-the-badge&logo=flathub&logoColor=black) | Flatpak 번들 |
-
-<details>
-<summary>🛠️ 설치 단계</summary>
-
-- **DEB (`.deb`)**:
-  ```bash
-  sudo dpkg -i ytsage_*.deb
-  sudo apt-get install -f # 필요 시 누락된 의존성 해결
-  ```
-- **RPM (`.rpm`)**:
-  ```bash
-  sudo rpm -i ytsage-*.rpm
-  ```
-- **AppImage (`.AppImage`)**:
-  ```bash
-  chmod +x YTSage-*.AppImage
-  ./YTSage-*.AppImage
-  ```
-- **Flatpak**: Flathub 안내를 따르거나 다음을 실행합니다:
-  ```bash
-  flatpak install flathub io.github.oop7.ytsage
-  ```
-</details>
-
-#### 🍎 macOS
-
-| 형식 | 설명 |
-|--------|-------------|
-| ![macOS ARM64 APP](https://img.shields.io/badge/macOS-ARM64%20APP-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon용 ZIP 앱 |
-| ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | Apple Silicon용 디스크 이미지 설치 프로그램 |
-
-<details>
-<summary>🛠️ 설치 단계</summary>
-
-- **DMG 설치 프로그램 (`.dmg`)**: 더블클릭해 마운트한 뒤 `YTSage.app`을 응용 프로그램 폴더로 드래그합니다.
-- **앱 아카이브 (`.zip`)**: ZIP을 풀고 `YTSage.app`을 응용 프로그램 폴더로 이동합니다.
-
-*참고: "앱이 손상되었습니다" 오류가 나면 아래 macOS 문제 해결 섹션을 참고하세요.*
-</details>
+```bash
+ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
 
 ---
 
-<details>
-<summary>💻 소스에서 수동 설치</summary>
+### 💻 소스에서 수동 설치 (개발자)
+*소스 코드에서 직접 YTSage를 실행합니다.*
 
-### 1. 저장소 클론
+<details>
+<summary>수동 설치 단계 보기</summary>
+
+#### 1. 리포지토리 클론
 
 ```bash
 git clone https://github.com/oop7/YTSage.git
 cd YTSage
 ```
 
-### 2. 의존성 설치
+#### 2. 의존성 설치
 
-#### ⚡ uv 사용
-
+**⚡ uv 사용**
 ```bash
 uv pip install .
 ```
 
-#### 📦 또는 표준 pip 사용
-
+**📦 또는 표준 pip 사용**
 ```bash
 pip install .
 ```
 
-### 3. 애플리케이션 실행
+#### 3. 애플리케이션 실행
 
 ```bash
 python -m ytsage.main
@@ -206,8 +218,15 @@ python -m ytsage.main
 
 </details>
 
-<a id="스크린샷"></a>
 ## 📸 스크린샷
+
+<div align="center">
+<h3>YTSage 데모</h3>
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/4a73b39e-2503-4fd9-a810-420676c9e557" width="800" controls></video>
+</div>
+<br><br>
+</div>
 
 <div align="center">
 <table>
@@ -237,22 +256,23 @@ python -m ytsage.main
 <summary>🎯 기본 사용</summary>
 
 1. **YTSage 실행**
-2. **YouTube URL 붙여넣기** ("URL 붙여넣기" 버튼 사용 가능)
+2. **YouTube URL 붙여넣기** (또는 "URL 붙여넣기" 버튼 사용)
 3. **"분석" 클릭**
-4. **형식 선택:**
-   - 동영상 다운로드: `동영상`
-   - 오디오 추출: `오디오 전용`
+4. **포맷 선택:**
+   - 비디오 다운로드는 `Video`
+   - 오디오 추출은 `Audio`
+> 💡 이제 오디오 섹션에서 여러 오디오 트랙을 선택하여 하나의 비디오로 병합할 수 있습니다. 비디오에 여러 언어 트랙을 결합하거나 여러 오디오 스트림을 함께 병합할 수 있습니다.
 5. **옵션 선택:**
-   - 자막 사용 및 언어 선택
-   - 자막 병합
+   - 자막 활성화 및 언어 선택
+   - 자막 병합 활성화
    - 썸네일 저장
    - 스폰서 구간 제거
    - 설명 저장
-   - 챕터 포함
-6. **출력 디렉터리 선택**
-7. **"다운로드" 클릭**
+   - 챕터 임베드 (챕터, 메타데이터, 썸네일)
 
-> 💡 기본 다운로드 디렉터리는 사용자의 "다운로드" 폴더입니다.
+6. **"다운로드" 클릭**
+
+> 💡 기본 다운로드 디렉토리는 사용자의 "다운로드" 폴더입니다.
 
 </details>
 
@@ -261,11 +281,11 @@ python -m ytsage.main
 
 1. **재생목록 URL 붙여넣기**
 2. **"분석" 클릭**
-3. **재생목록 선택기에서 동영상 선택 (선택 사항, 기본값은 전체)**
-4. **원하는 형식/화질 선택**
+3. **재생목록 선택기에서 비디오 선택 (선택 사항, 기본값은 전체)**
+4. **원하는 포맷/화질 선택**
 5. **"다운로드" 클릭**
 
-> 💡 앱이 다운로드 큐를 자동으로 처리하며, 재생목록 항목을 `.txt`, `.csv`, `.m3u`, `.json`으로 내보낼 수 있습니다.
+> 💡 "다른 이름으로 재생목록 저장" 버튼을 클릭하여 재생목록 항목을 (`.txt`, `.csv`, `.m3u`, 또는 `.json`)으로 내보낼 수 있습니다.
 
 </details>
 
@@ -445,12 +465,17 @@ macOS Sonoma 이상에서 이 오류가 나면 quarantine 속성을 제거해야
 YTSage가 시간을 아끼게 해 주었다면 프로젝트 후원을 고려해 주세요. 후원은 개발 시간, 전 플랫폼 테스트, 향후 개선에 사용됩니다.
 
 - GitHub Sponsors: https://github.com/sponsors/oop7
-- 앱 정보 대화상자에서도 스폰서 링크를 이용할 수 있습니다.
+- Buy Me a Coffee: https://www.buymeacoffee.com/oop7
+- 직접 계좌 이체 / SWIFT: 이메일 [`oop7_support@proton.me`](mailto:oop7_support@proton.me)로 문의하세요
 
 [![Sponsor YTSage](https://img.shields.io/badge/Sponsor-YTSage-EA4AAA?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/oop7)
 
+
 <a id="기여"></a>
 ## 👥 기여
+
+<details>
+<summary>기여 가이드라인을 펼치려면 클릭하세요</summary>
 
 기여를 환영합니다! 다음처럼 도울 수 있습니다:
 
@@ -474,6 +499,8 @@ YTSage가 시간을 아끼게 해 주었다면 프로젝트 후원을 고려해 
 - 해당 언어 README를 업데이트합니다 (예: `readme-translations/README.ko.md`)
 - `ytsage/languages/<code>.json`을 편집해 앱 문자열을 동기화합니다
 - 언어가 없다면 `README.md`를 기준으로 `readme-translations/README.<code>.md`를 만드세요
+
+</details>
 
 <details>
 <summary>📂 프로젝트 구조</summary>
@@ -533,3 +560,91 @@ YTSage/
 ```
 
 </details>
+
+## ⭐️ 스타 히스토리
+
+<div align="center">
+
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
+
+</div>
+
+## 📜 라이선스
+
+이 프로젝트는 MIT 라이선스에 따라 라이선스가 부여됩니다. 자세한 내용은 [LICENSE](../LICENSE) 파일을 참조하세요.
+
+## 🙏 감사 인사
+
+<div align="left">
+
+<p>개선 사항을 제안하거나 버그를 신고하기 위해 이슈를 열어 이 프로젝트에 기여해 주신 모든 분들께 감사드립니다</p>
+<p>이 프로젝트를 지원해 주신 최초 및 주요 기부자 <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> 님과 <a href="https://github.com/dj23me"><strong>@dj23me</strong></a> 님께 특별히 감사드립니다 ❤️</p>
+
+
+<table>
+    <tr class="section"><th colspan="2">핵심 구성 요소</th></tr>
+    <tr>
+        <td width="35%"><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></td>
+        <td>다운로드 엔진</td>
+    </tr>
+    <tr>
+        <td><a href="https://ffmpeg.org/">FFmpeg</a></td>
+        <td>미디어 처리</td>
+    </tr>
+    <tr>
+        <td><a href="https://deno.com/">Deno</a></td>
+        <td>yt-dlp 플러그인용 런타임</td>
+    </tr>
+    <tr class="section"><th colspan="2">라이브러리 및 프레임워크</th></tr>
+    <tr>
+        <td><a href="https://wiki.qt.io/Qt_for_Python">PySide6</a></td>
+        <td>GUI 프레임워크</td>
+    </tr>
+    <tr>
+        <td><a href="https://python-pillow.org/">Pillow</a></td>
+        <td>이미지 처리</td>
+    </tr>
+    <tr>
+        <td><a href="https://requests.readthedocs.io/">requests</a></td>
+        <td>HTTP 요청</td>
+    </tr>
+    <tr>
+        <td><a href="https://packaging.python.org/">packaging</a></td>
+        <td>버전/패키지 관리</td>
+    </tr>
+    <tr>
+        <td><a href="https://python-markdown.github.io/">markdown</a></td>
+        <td>마크다운 렌더링</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/Delgan/loguru">loguru</a></td>
+        <td>로깅</td>
+    </tr>
+    <tr class="section"><th colspan="2">자산 및 기여자에 대한 감사</th></tr>
+    <tr>
+        <td><a href="https://github.com/bastik-1001">@bastik-1001</a></td>
+        <td>최초 및 주요 기부자 지원</td>
+    </tr>
+    <tr>
+        <td><a href="https://pixabay.com/sound-effects/new-notification-09-352705/">New Notification 09 by Universfield</a></td>
+        <td>알림 소리</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/viru185">viru185</a></td>
+        <td>코드 기여자</td>
+    </tr>
+</table>
+
+</div>
+
+## ⚠️ 면책 조항
+
+이 도구는 개인적인 용도로만 사용해야 합니다. YouTube의 서비스 약관 및 콘텐츠 제작자의 권리를 준수해 주세요.
+
+---
+
+<div align="center">
+
+Made with ❤️ by [oop7](https://github.com/oop7)
+
+</div>
