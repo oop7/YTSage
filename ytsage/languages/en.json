@@ -119,6 +119,7 @@
     "browser_selection": "Browser Selection",
     "browser_help": "Select the browser to extract cookies from:",
     "browser_label": "Browser:",
+    "firefox_recommended": "Firefox recommended",
     "profile_label": "Profile:",
     "profile_placeholder": "default",
     "browser_extract_message": "Browser cookies will be extracted when applied",

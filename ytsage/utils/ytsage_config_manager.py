@@ -76,7 +76,7 @@ class ConfigManager:
         "speed_limit_value": None,
         "speed_limit_unit_index": 0,
         "cookie_source": "browser",  # "browser" or "file"
-        "cookie_browser": "chrome",
+        "cookie_browser": "firefox",
         "cookie_browser_profile": "",
         "cookie_file_path": None,
         "cookie_active": False,  # True only if user explicitly applied cookies

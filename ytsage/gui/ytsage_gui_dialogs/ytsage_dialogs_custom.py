@@ -182,8 +182,9 @@ class CustomOptionsDialog(QDialog):
         browser_select_layout.addWidget(QLabel(_('cookies.browser_label')))
 
         self.browser_combo = QComboBox()
-        self.browser_combo.addItems(["chrome", "firefox", "safari", "edge", "opera", "brave", "chromium", "vivaldi"])
+        self.browser_combo.addItems(["firefox", "chrome", "safari", "edge", "opera", "brave", "chromium", "vivaldi"])
         browser_select_layout.addWidget(self.browser_combo)
+        browser_select_layout.addWidget(QLabel(_('cookies.firefox_recommended')))
         browser_layout.addLayout(browser_select_layout)
 
         # Optional profile field
@@ -679,7 +680,7 @@ class CustomOptionsDialog(QDialog):
         """Initialize the dialog with current cookie settings from config"""
         # Load saved cookie settings from ConfigManager
         saved_source = ConfigManager.get("cookie_source") or "browser"
-        saved_browser = ConfigManager.get("cookie_browser") or "chrome"
+        saved_browser = ConfigManager.get("cookie_browser") or "firefox"
         saved_profile = ConfigManager.get("cookie_browser_profile") or ""
         saved_file_path = ConfigManager.get("cookie_file_path")
         
