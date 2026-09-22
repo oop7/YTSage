@@ -613,25 +613,24 @@ def setup_deno(parent_widget=None):
 
 def get_latest_deno_version() -> Optional[str]:
     """
-    Fetch the latest Deno version from GitHub API.
+    Fetch the latest Deno version from Deno's release endpoint.
     
     Returns:
         str: Version string (e.g., "2.5.6") or None if fetch failed
     """
     try:
         response = requests.get(
-            "https://api.github.com/repos/denoland/deno/releases/latest",
+            "https://dl.deno.land/release-latest.txt",
             timeout=10
         )
         response.raise_for_status()
-        data = response.json()
-        
-        # Get tag_name (e.g., "v2.5.6") and remove 'v' prefix
-        tag_name = data.get("tag_name", "")
-        if tag_name.startswith("v"):
-            version = tag_name[1:]
-        else:
-            version = tag_name
+
+        version = response.text.strip()
+        if version.startswith("v"):
+            version = version[1:]
+        if not version:
+            logger.error("Deno release endpoint returned an empty version")
+            return None
         
         logger.info(f"Latest Deno version: {version}")
         return version
