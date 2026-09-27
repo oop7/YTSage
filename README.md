@@ -348,6 +348,7 @@ Notes:
 - **Default Video Resolution & Subtitles:** Auto-select default height (e.g. `1080`, `720`) and preferred subtitle languages (`en`, `es`, etc.) plus subtitle container format (`srt`, `vtt`, `ass`, `lrc`). Available in **Download Settings → Format → Default Selection Settings**.
 - **Output Filename Format:** Customize output naming template using yt-dlp variables (e.g. `%(title)s_%(resolution)s_[%(id)s].%(ext)s`). Reset button included. Available in **Download Settings → File → Filename Format**.
 - **Reset All Settings:** Restore every YTSage setting to its default value. Available in **Download Settings → Reset All Settings**.
+- **Configuration** Export/Import: Export or import your YTSage settings to a JSON file for backup or sharing. Available in **Download Settings → File → **Export/Import**.
 
 </details>
 
