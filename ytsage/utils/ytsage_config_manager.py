@@ -161,6 +161,33 @@ class ConfigManager:
             return deepcopy(cls._settings)
 
     @classmethod
+    def export_to_file(cls, file_path: str | Path) -> None:
+        """Export the current settings to a user-selected JSON file."""
+        with cls._lock:
+            if not cls._settings:
+                cls._load()
+            with open(file_path, "w", encoding="utf-8") as file:
+                json.dump(cls._settings, file, indent=4)
+            logger.info(f"Config exported to {file_path}.")
+
+    @classmethod
+    def import_from_file(cls, file_path: str | Path) -> Dict[str, Any]:
+        """Import settings from a JSON file and persist them atomically in memory."""
+        with open(file_path, "r", encoding="utf-8") as file:
+            imported_settings = json.load(file)
+
+        if not isinstance(imported_settings, dict):
+            raise ValueError("The selected file must contain a JSON object.")
+
+        with cls._lock:
+            settings = deepcopy(cls._default_config)
+            settings.update(imported_settings)
+            cls._settings = settings
+            cls._save()
+            logger.info(f"Config imported from {file_path}.")
+            return deepcopy(cls._settings)
+
+    @classmethod
     def get(cls, key: str) -> Optional[Any]:
         """
         Retrieve a configuration value using a dotted key notation.

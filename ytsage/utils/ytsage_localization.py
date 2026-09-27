@@ -83,7 +83,17 @@ class LocalizationManager:
             "preferred_subtitle_format": "Preferred Subtitle Format:",
             "reset_all_settings_title": "Reset All Settings",
             "reset_all_settings_message": "Reset all settings to their defaults? This cannot be undone.",
-            "reset_all_settings_done": "All settings have been reset to their defaults."
+            "reset_all_settings_done": "All settings have been reset to their defaults.",
+            "configuration": "Configuration",
+            "export_settings": "Export Settings",
+            "import_settings": "Import Settings",
+            "import_confirmation": "Importing settings will replace your current settings. Continue?",
+            "export_success_title": "Settings Exported",
+            "export_success_message": "Settings were exported successfully.",
+            "import_success_title": "Settings Imported",
+            "import_success_message": "Settings were imported successfully.",
+            "export_error_message": "Could not export settings: {error}",
+            "import_error_message": "Could not import settings: {error}"
         },
         "tabs": {
             "cookies": "Login with Cookies",

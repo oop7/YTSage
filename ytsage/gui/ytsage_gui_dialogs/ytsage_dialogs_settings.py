@@ -3,6 +3,7 @@ Settings-related dialogs for YTSage application.
 Contains dialogs for configuring download settings.
 """
 
+import json
 import threading
 import time
 from datetime import datetime
@@ -491,6 +492,17 @@ class DownloadSettingsDialog(QDialog):
         
         filename_format_group_box.setLayout(filename_layout)
         file_layout.addWidget(filename_format_group_box)
+
+        config_group_box = QGroupBox(_("settings.configuration"))
+        config_layout = QHBoxLayout()
+        export_button = QPushButton(_("settings.export_settings"))
+        export_button.clicked.connect(self.export_settings)
+        import_button = QPushButton(_("settings.import_settings"))
+        import_button.clicked.connect(self.import_settings)
+        config_layout.addWidget(export_button)
+        config_layout.addWidget(import_button)
+        config_group_box.setLayout(config_layout)
+        file_layout.addWidget(config_group_box)
         file_layout.addStretch()
 
         # Add tabs to tab widget
@@ -578,6 +590,77 @@ class DownloadSettingsDialog(QDialog):
                 default="All settings have been reset to their defaults.",
             ),
         )
+
+    def export_settings(self) -> None:
+        """Export all persisted application settings to a JSON file."""
+        file_path, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            _("settings.export_settings"),
+            "ytsage-settings.json",
+            "JSON files (*.json)",
+        )
+        if not file_path:
+            return
+
+        try:
+            ConfigManager.export_to_file(file_path)
+            QMessageBox.information(self, _("settings.export_success_title"), _("settings.export_success_message"))
+        except (OSError, TypeError, ValueError) as error:
+            logger.exception(f"Failed to export settings: {error}")
+            QMessageBox.critical(self, _("settings.error_title"), _("settings.export_error_message", error=str(error)))
+
+    def import_settings(self) -> None:
+        """Import all persisted application settings from a JSON file."""
+        file_path, selected_filter = QFileDialog.getOpenFileName(
+            self,
+            _("settings.import_settings"),
+            "",
+            "JSON files (*.json)",
+        )
+        if not file_path:
+            return
+
+        confirmation = QMessageBox.question(
+            self,
+            _("settings.import_settings"),
+            _("settings.import_confirmation"),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        if confirmation != QMessageBox.StandardButton.Yes:
+            return
+
+        try:
+            imported_settings = ConfigManager.import_from_file(file_path)
+            self._refresh_from_settings(imported_settings)
+            QMessageBox.information(self, _("settings.import_success_title"), _("settings.import_success_message"))
+        except (OSError, json.JSONDecodeError, TypeError, ValueError) as error:
+            logger.exception(f"Failed to import settings: {error}")
+            QMessageBox.critical(self, _("settings.error_title"), _("settings.import_error_message", error=str(error)))
+
+    def _refresh_from_settings(self, settings: dict) -> None:
+        """Refresh controls after importing persisted settings."""
+        self.current_path = settings["download_path"]
+        self.current_limit = settings["speed_limit_value"] or ""
+        self.current_unit_index = settings["speed_limit_unit_index"]
+        self.path_display.setText(self.current_path)
+        self.speed_limit_input.setText(str(self.current_limit))
+        self.speed_limit_unit.setCurrentIndex(self.current_unit_index)
+        self.connections_input.setCurrentText(str(settings["concurrent_fragments"]))
+        self.generic_mode_checkbox.setChecked(settings["generic_mode"])
+        self.play_notification_sound_checkbox.setChecked(settings["play_notification_sound"])
+        self.keep_history_checkbox.setChecked(settings["keep_history"])
+        self.force_format_checkbox.setChecked(settings["force_output_format"])
+        self.format_combo.setCurrentIndex({"mp4": 0, "webm": 1, "mkv": 2}.get(settings["preferred_output_format"], 0))
+        self.force_audio_format_checkbox.setChecked(settings["force_audio_format"])
+        self.audio_normalization_checkbox.setChecked(settings["audio_normalization"])
+        self.audio_format_combo.setCurrentIndex(
+            {"best": 0, "aac": 1, "mp3": 2, "flac": 3, "wav": 4, "opus": 5, "m4a": 6, "vorbis": 7}.get(settings["preferred_audio_format"], 0)
+        )
+        self.default_vid_qual_input.setText(settings["default_video_quality"] or "")
+        self.default_sub_input.setText(settings["default_subtitle_language"] or "")
+        self.preferred_sub_fmt_combo.setCurrentText(settings["preferred_subtitle_format"])
+        self.filename_format_input.setText(settings["filename_format"])
 
     def _on_audio_normalization_toggled(self, state: int) -> None:
         """Handle logic when audio normalization is toggled."""
