@@ -283,11 +283,11 @@ class VideoInfoMixin:
 
             # Update labels with localized text
             self.title_label.setText(info.get("title", _("video_info.unknown_title")))
-            self.channel_label.setText(f"{_("video_info.channel")}: {info.get('uploader', _("video_info.unknown_channel"))}")
-            self.views_label.setText(f"{_("video_info.views")}: {formatted_views}")
-            self.like_count_label.setText(f"{_("video_info.likes")}: {formatted_likes}")
-            self.date_label.setText(f"{_("video_info.upload_date")}: {formatted_date}")
-            self.duration_label.setText(f"{_("video_info.duration")}: {duration_str}")
+            self.channel_label.setText(f"{_('video_info.channel')}: {info.get('uploader', _('video_info.unknown_channel'))}")
+            self.views_label.setText(f"{_('video_info.views')}: {formatted_views}")
+            self.like_count_label.setText(f"{_('video_info.likes')}: {formatted_likes}")
+            self.date_label.setText(f"{_('video_info.upload_date')}: {formatted_date}")
+            self.duration_label.setText(f"{_('video_info.duration')}: {duration_str}")
 
     def open_subtitle_dialog(self) -> None:
         self = cast("YTSageApp", self)  # for autocompletion and type inference.

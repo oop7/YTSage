@@ -157,8 +157,6 @@ Simply download the pre-built installer for your operating system:
   ```
 </details>
 
----
-
 ### 🐍 Install via Python / PyPI
 *You can also install YTSage via Python (Requires Python 3.11+)*
 
@@ -188,6 +186,44 @@ You can also open YTSage with a video or playlist URL prefilled and analyzed imm
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+#### 🐳 Run with Docker
+*Run YTSage in a browser without installing Python, Qt, or FFmpeg on the host.*
+
+Docker Desktop is required on Windows and macOS. Docker Engine with Docker Compose is supported on Linux.
+
+##### 1. Clone the repository
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. Start YTSage
+
+```bash
+docker compose up -d
+```
+
+Open [http://localhost:3000](http://localhost:3000) in a browser. YTSage runs as a browser-streamed desktop inside the container.
+
+Downloaded files are saved to the host's `downloads` folder. Settings and history are saved in the `config` folder.
+
+##### Docker lifecycle commands
+
+```bash
+# Stop YTSage
+docker compose down
+
+# Start it again later
+docker compose up -d
+
+# Rebuild after changing the application or Docker files
+docker compose build
+docker compose up -d --force-recreate
+```
+
+For more Docker details, see the [Docker guide](docker/README.md).
 
 ---
 

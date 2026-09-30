@@ -1,0 +1,19 @@
+services:
+  ytsage:
+    image: ytsage:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: ytsage
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - TITLE=YTSage
+    volumes:
+      - ./config:/config
+      - ./downloads:/downloads
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    restart: unless-stopped

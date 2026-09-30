@@ -50,6 +50,7 @@ Exceptions
 """
 
 import json
+import os
 from copy import deepcopy
 import threading
 from pathlib import Path
@@ -71,7 +72,9 @@ class ConfigManager:
     _config_file: Path = APP_CONFIG_FILE
     _settings: Dict[str, Any] = {}
     _default_config: Dict[str, Any] = {
-        "download_path": str(USER_HOME_DIR / "Downloads"),
+        "download_path": os.environ.get("YTSAGE_DOWNLOAD_PATH")
+        or os.environ.get("YTSAGE_DOWNLOAD_DIR")
+        or str(USER_HOME_DIR / "Downloads"),
         "generic_mode": True,
         "speed_limit_value": None,
         "speed_limit_unit_index": 0,

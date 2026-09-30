@@ -390,7 +390,12 @@ def load_saved_path(main_window_instance: Any) -> None:
                     pass
 
         # Fallback to Downloads folder
-        downloads_path = USER_HOME_DIR / "Downloads"
+        download_env = os.environ.get("YTSAGE_DOWNLOAD_PATH") or os.environ.get("YTSAGE_DOWNLOAD_DIR")
+        if download_env and Path(download_env).exists() and os.access(download_env, os.W_OK):
+            downloads_path = Path(download_env)
+        else:
+            downloads_path = USER_HOME_DIR / "Downloads"
+
         if downloads_path.exists() and os.access(downloads_path, os.W_OK):
             main_window_instance.last_path = downloads_path
         else:

@@ -129,7 +129,11 @@ else:  # Linux and other UNIX-like
 
     # Always use user data directory for app data, logs, config, and binaries
     # Even when frozen, we don't want to create these folders next to the executable
-    APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
+    _app_dir_env = os.environ.get("YTSAGE_DATA_DIR")
+    if _app_dir_env:
+        APP_DIR: Path = Path(_app_dir_env)
+    else:
+        APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
     APP_LOG_DIR: Path = APP_DIR / "logs"

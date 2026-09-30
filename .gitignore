@@ -2,10 +2,12 @@
 __pycache__/
 *.py[cod]
 
-# Local configuration
+# Local configuration and docker volumes
 *.ini
 *.key
 *.env
+config/
+downloads/
 
 # Packaging artifacts
 *.egg-info/

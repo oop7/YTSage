@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Wait briefly for Openbox/desktop environment to initialize
+sleep 1
+
+# Launch YTSage in a loop so it automatically restarts if closed
+while true; do
+    /opt/venv/bin/ytsage
+    sleep 1
+done

@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 import threading
 import webbrowser
@@ -1056,16 +1057,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 file_path = Path(self.download_thread.last_file_path)
                 
                 if file_path.exists():
-                    # On Windows, use explorer with /select to highlight the file
                     if subprocess.sys.platform == "win32":
                         subprocess.run(['explorer', '/select,', str(file_path)], creationflags=SUBPROCESS_CREATIONFLAGS)
-                    # On macOS, use open with -R to reveal in Finder
                     elif subprocess.sys.platform == "darwin":
                         subprocess.run(['open', '-R', str(file_path)])
-                    # On Linux, try to open the folder (file selection not widely supported)
                     else:
                         folder_path = file_path.parent
-                        subprocess.run(['xdg-open', str(folder_path)])
+                        self._open_linux_folder(folder_path)
                     
                     logger.info(f"Opened folder for: {file_path}")
                 else:
@@ -1077,7 +1075,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                         elif subprocess.sys.platform == "darwin":
                             subprocess.run(['open', str(folder_path)])
                         else:
-                            subprocess.run(['xdg-open', str(folder_path)])
+                                self._open_linux_folder(folder_path)
                     else:
                         logger.warning(f"Download folder does not exist: {folder_path}")
             else:
@@ -1089,13 +1087,21 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                     elif subprocess.sys.platform == "darwin":
                         subprocess.run(['open', str(folder_path)])
                     else:
-                        subprocess.run(['xdg-open', str(folder_path)])
+                            self._open_linux_folder(folder_path)
                 else:
                     logger.warning(f"Download folder does not exist: {folder_path}")
                     
         except Exception as e:
             logger.exception(f"Error opening download folder: {e}")
             QMessageBox.warning(self, _("main_ui.error_title"), _("main_ui.open_folder_error", error=str(e)))
+
+    @staticmethod
+    def _open_linux_folder(folder_path: Path) -> None:
+        """Open a folder in the container's graphical file manager."""
+        file_manager = shutil.which("pcmanfm") or shutil.which("xdg-open")
+        if not file_manager:
+            raise FileNotFoundError("No graphical file manager is installed")
+        subprocess.Popen([file_manager, str(folder_path)], start_new_session=True)
 
     def download_error(self, error_message) -> None:
         self.toggle_download_controls(True)

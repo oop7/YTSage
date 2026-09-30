@@ -844,7 +844,7 @@ class AutoUpdateSettingsDialog(QDialog):
         layout = QVBoxLayout(self)
 
         # Title
-        title_label = QLabel(f"<h2>{_("settings.auto_update_header")}</h2>")
+        title_label = QLabel(f"<h2>{_('settings.auto_update_header')}</h2>")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
 
