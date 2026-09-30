@@ -187,7 +187,7 @@ You can also open YTSage with a video or playlist URL prefilled and analyzed imm
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
 
-#### 🐳 Run with Docker
+### 🐳 Run with Docker
 *Run YTSage in a browser without installing Python, Qt, or FFmpeg on the host.*
 
 Docker Desktop is required on Windows and macOS. Docker Engine with Docker Compose is supported on Linux.
