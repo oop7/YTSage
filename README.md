@@ -324,6 +324,23 @@ python -m ytsage.main
 </details>
 
 <details>
+<summary>📋 Download Queue</summary>
+
+Use the download queue to configure several downloads first and start them together:
+
+1. **Paste a video or playlist URL**
+2. **Click "Analyze"**
+3. **Choose the format, quality, subtitles, and other download options**
+4. **Click "Add to queue"** instead of `"Download"`
+5. Repeat the steps above for each download you want to schedule
+6. Click **"Queue"** to review, remove, or clear queued jobs
+7. Click **"Start queue"** in the queue dialog
+
+Queued downloads run sequentially, using the exact settings selected when each job was added. The queue is saved between application launches. Failed or cancelled jobs remain in the queue and can be retried.
+
+</details>
+
+<details>
 <summary>📋 Playlist Download</summary>
 
 1. **Paste Playlist URL**
