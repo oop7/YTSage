@@ -1826,6 +1826,17 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             self.analyze_button.setEnabled(False)
         self.format_table.setEnabled(enabled)  # Changed from format_scroll_area to format_table
         self.download_btn.setEnabled(enabled)
+        for button in (
+            self.custom_options_btn,
+            self.about_btn,
+            self.history_btn,
+            self.time_range_btn,
+            self.settings_button,
+            self.add_queue_btn,
+            self.queue_btn,
+        ):
+            button.setVisible(enabled)
+            button.setEnabled(enabled)
         if hasattr(self, "subtitle_combo"):
             self.subtitle_combo.setEnabled(enabled)  # type: ignore[reportAttributeAccessIssue]
         self.video_button.setEnabled(enabled)
