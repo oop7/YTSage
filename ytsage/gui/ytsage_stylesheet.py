@@ -1,5 +1,30 @@
 
 class StyleSheet:
+    DOWNLOAD_BUTTON = """
+            QPushButton {
+                padding: 8px 18px;
+                background-color: #c90000;
+                border: 2px solid #ff3b3b;
+                border-radius: 5px;
+                color: white;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #e00000;
+                border-color: #ff7777;
+            }
+            QPushButton:pressed {
+                background-color: #a50000;
+                border-color: #ff4d4d;
+                padding: 10px 16px 6px 20px;
+            }
+            QPushButton:disabled {
+                background-color: #3d3d3d;
+                border-color: #555555;
+                color: #888888;
+            }
+    """
+
     MAIN = """
             QMainWindow {
                 background-color: #15181b;
@@ -429,4 +454,3 @@ class StyleSheet:
                 background-color: #a50000;
             }
     """
-

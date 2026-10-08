@@ -32,6 +32,7 @@ from PySide6.QtWidgets import (
     QGraphicsBlurEffect,
     QGraphicsScene,
     QGraphicsPixmapItem,
+    QGraphicsDropShadowEffect,
 )
 from PySide6.QtGui import QIcon, QPixmap, QPainter, QBrush, QColor
 
@@ -622,6 +623,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         self.download_btn = QPushButton(_("buttons.download"))
         self.download_btn.clicked.connect(self.start_download)
+        self.download_btn.setStyleSheet(StyleSheet.DOWNLOAD_BUTTON)
+        download_glow = QGraphicsDropShadowEffect(self.download_btn)
+        download_glow.setColor(QColor("#ff1f1f"))
+        download_glow.setBlurRadius(18)
+        download_glow.setOffset(0, 0)
+        self.download_btn.setGraphicsEffect(download_glow)
 
         self.add_queue_btn = QPushButton(_("buttons.add_to_queue"))
         self.add_queue_btn.clicked.connect(lambda: self.start_download(queue_only=True))
