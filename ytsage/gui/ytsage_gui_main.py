@@ -644,9 +644,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         download_layout.addWidget(self.history_btn)
         download_layout.addWidget(self.time_range_btn)  # New button position
         download_layout.addWidget(self.settings_button)
-        download_layout.addWidget(self.download_btn)
         download_layout.addWidget(self.add_queue_btn)
         download_layout.addWidget(self.queue_btn)
+        download_layout.addWidget(self.download_btn)
         download_layout.addWidget(self.pause_btn)
         download_layout.addWidget(self.cancel_btn)
 
