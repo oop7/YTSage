@@ -1,8 +1,10 @@
 """Download queue dialog."""
 
 from PySide6.QtCore import Signal
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QDialog,
+    QGraphicsDropShadowEffect,
     QHBoxLayout,
     QLabel,
     QListWidget,
@@ -14,6 +16,7 @@ from PySide6.QtWidgets import (
 
 from ...utils.ytsage_download_queue import DownloadQueue
 from ...utils.ytsage_localization import _
+from ..ytsage_stylesheet import StyleSheet
 
 
 class QueueDialog(QDialog):
@@ -37,6 +40,12 @@ class QueueDialog(QDialog):
         self.clear_button.clicked.connect(self.clear_finished)
         self.start_button = QPushButton(_("queue.start"))
         self.start_button.clicked.connect(self.start_requested.emit)
+        self.start_button.setStyleSheet(StyleSheet.DOWNLOAD_BUTTON)
+        start_glow = QGraphicsDropShadowEffect(self.start_button)
+        start_glow.setColor(QColor("#ff1f1f"))
+        start_glow.setBlurRadius(18)
+        start_glow.setOffset(0, 0)
+        self.start_button.setGraphicsEffect(start_glow)
         close_button = QPushButton(_("buttons.close"))
         close_button.clicked.connect(self.accept)
         buttons.addWidget(self.remove_button)
