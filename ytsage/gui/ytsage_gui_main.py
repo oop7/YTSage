@@ -47,6 +47,7 @@ from .ytsage_gui_dialogs import (  # use of src\gui\ytsage_gui_dialogs\__init__.
     DownloadSettingsDialog,
     FFmpegCheckDialog,
     HistoryDialog,
+    QueueDialog,
     PlaylistSelectionDialog,
     TimeRangeDialog,
     YTDLPUpdateDialog,
@@ -66,6 +67,7 @@ from ..utils.ytsage_logger import logger
 from ..utils.ytsage_config_manager import ConfigManager
 from ..utils.ytsage_localization import LocalizationManager, _
 from ..utils.ytsage_history_manager import HistoryManager
+from ..utils.ytsage_download_queue import DownloadQueue
 from .ytsage_stylesheet import StyleSheet
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -226,6 +228,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.signals = SignalManager()
         self.download_paused = False
         self.current_download = None
+        self.current_queue_job = None
+        self.queue_running = False
         self.download_cancelled = False
         self.is_updating_ytdlp = False  # Initialize update flag
         self.is_analyzing = False  # Initialize analysis flag
@@ -619,6 +623,12 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.download_btn = QPushButton(_("buttons.download"))
         self.download_btn.clicked.connect(self.start_download)
 
+        self.add_queue_btn = QPushButton(_("buttons.add_to_queue"))
+        self.add_queue_btn.clicked.connect(lambda: self.start_download(queue_only=True))
+
+        self.queue_btn = QPushButton(_("buttons.queue"))
+        self.queue_btn.clicked.connect(self.show_queue_dialog)
+
         # Add pause and cancel buttons
         self.pause_btn = QPushButton(_("buttons.pause"))
         self.pause_btn.clicked.connect(self.toggle_pause)
@@ -635,6 +645,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         download_layout.addWidget(self.time_range_btn)  # New button position
         download_layout.addWidget(self.settings_button)
         download_layout.addWidget(self.download_btn)
+        download_layout.addWidget(self.add_queue_btn)
+        download_layout.addWidget(self.queue_btn)
         download_layout.addWidget(self.pause_btn)
         download_layout.addWidget(self.cancel_btn)
 
@@ -791,7 +803,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             if path_changed or limit_changed or format_changed or audio_format_changed or generic_mode_changed:
                 self._update_settings_tooltip()
 
-    def start_download(self) -> None:
+    def start_download(self, queue_only: bool = False) -> None:
         if self.is_updating_ytdlp:
             QMessageBox.warning(self, _("update.update_in_progress_title"), _("update.update_in_progress_message"))
             return
@@ -893,74 +905,75 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 return
         # --- End speed limit update ---
 
-        # Save thumbnail if enabled
-        if self.save_thumbnail:
-            # Consider moving thumbnail download *after* successful video download
-            # Or handle errors more gracefully if thumbnail download fails
+        job = {
+            "title": (self.video_info or {}).get("title", url),
+            "thumbnail_url": self.thumbnail_url,
+            "save_thumbnail": self.save_thumbnail,
+            "url": url,
+            "path": path,
+            "format_id": format_id,
+            "is_audio_only": is_audio_only,
+            "format_has_audio": format_has_audio,
+            "audio_format_ids": audio_format_ids,
+            "subtitle_langs": selected_subs,
+            "is_playlist": self.is_playlist,
+            "merge_subs": self.merge_subs_checkbox.isChecked(),
+            "enable_sponsorblock": len(self.selected_sponsorblock_categories) > 0,
+            "sponsorblock_categories": self.selected_sponsorblock_categories,
+            "resolution": resolution,
+            "playlist_items": playlist_items_to_download,
+            "save_description": self.save_description,
+            "embed_chapters": self.embed_chapters,
+            "embed_metadata": self.embed_metadata,
+            "embed_thumbnail": self.embed_thumbnail,
+            "cookie_file": self.cookie_file_path,
+            "browser_cookies": self.browser_cookies_option,
+            "rate_limit": rate_limit,
+            "download_section": self.download_section,
+            "force_keyframes": self.force_keyframes,
+            "proxy_url": self.proxy_url,
+            "geo_proxy_url": self.geo_proxy_url,
+            "force_output_format": self.force_output_format,
+            "preferred_output_format": self.preferred_output_format,
+            "force_audio_format": self.force_audio_format,
+            "preferred_audio_format": self.preferred_audio_format,
+            "audio_normalization": self.audio_normalization,
+            "filename_format": ConfigManager.get("filename_format"),
+            "concurrent_fragments": ConfigManager.get("concurrent_fragments") or 1,
+            "preferred_subtitle_format": ConfigManager.get("preferred_subtitle_format") or "default",
+        }
+        if queue_only:
+            DownloadQueue.add(job)
+            self.set_status_message_animated(_("queue.add_success"))
+            return
+        self._start_download_job(job)
+
+    def _start_download_job(self, job: dict) -> None:
+        """Start one immutable queue job or an immediate download."""
+        self.video_url = job["url"]
+        self.thumbnail_url = job.get("thumbnail_url")
+        self.video_info = {"title": job.get("title", job["url"])}
+        if job.get("save_thumbnail") and job.get("thumbnail_url"):
             try:
-                self.download_thumbnail_file(url, path)
-            except Exception as e:
-                logger.warning(f"Thumbnail download failed: {e}", exc_info=True)
-                # Optionally inform the user, but don't stop the main download
+                self.download_thumbnail_file(job["url"], job["path"])
+            except Exception as error:
+                logger.warning(f"Thumbnail download failed: {error}", exc_info=True)
 
-        # Get filename format from config
-        filename_format = ConfigManager.get("filename_format")
-        concurrent_fragments = ConfigManager.get("concurrent_fragments") or 1
-
-        # Create download thread with resolution in output template
-        self.download_thread = DownloadThread(
-            url=url,
-            path=path,
-            format_id=format_id,
-            is_audio_only=is_audio_only,
-            format_has_audio=format_has_audio,
-            audio_format_ids=audio_format_ids,
-            subtitle_langs=selected_subs,  # Pass the list of selected subs
-            is_playlist=self.is_playlist,  # Use the flag directly
-            merge_subs=self.merge_subs_checkbox.isChecked(),
-            enable_sponsorblock=len(self.selected_sponsorblock_categories) > 0,
-            sponsorblock_categories=self.selected_sponsorblock_categories,
-            resolution=resolution,
-            playlist_items=playlist_items_to_download,  # Pass the selection string
-            save_description=self.save_description,  # Pass the new flag here
-            embed_chapters=self.embed_chapters,  # Pass the embed chapters flag
-            embed_metadata=self.embed_metadata,  # Pass the embed metadata flag
-            embed_thumbnail=self.embed_thumbnail,  # Pass the embed thumbnail flag
-            cookie_file=self.cookie_file_path,  # Pass the cookie file path
-            browser_cookies=self.browser_cookies_option,  # Pass the browser cookies option
-            rate_limit=rate_limit,  # Pass the calculated rate limit
-            download_section=self.download_section,  # Pass the download section
-            force_keyframes=self.force_keyframes,  # Pass the force keyframes setting
-            proxy_url=self.proxy_url,  # Pass the proxy URL
-            geo_proxy_url=self.geo_proxy_url,  # Pass the geo-verification proxy URL
-            force_output_format=self.force_output_format,  # Pass force output format setting
-            preferred_output_format=self.preferred_output_format,  # Pass preferred format
-            force_audio_format=self.force_audio_format,  # Pass force audio format setting
-            preferred_audio_format=self.preferred_audio_format,  # Pass preferred audio format
-            audio_normalization=self.audio_normalization,  # Pass audio normalization setting
-            filename_format=filename_format,  # Pass the filename format
-            concurrent_fragments=concurrent_fragments, # Pass the concurrent fragments
-            preferred_subtitle_format=ConfigManager.get("preferred_subtitle_format") or "default",
-        )
-
-        # Connect signals
+        self.download_thread = DownloadThread(**{
+            key: value for key, value in job.items()
+            if key not in {"id", "title", "thumbnail_url", "save_thumbnail", "queued_at", "status", "error"}
+        })
         self.download_thread.progress_signal.connect(self.update_progress_bar)
         self.download_thread.status_signal.connect(self.set_status_message_animated)
         self.download_thread.update_details.connect(self.download_details_label.setText)
         self.download_thread.finished_signal.connect(self.download_finished)
         self.download_thread.error_signal.connect(self.download_error)
         self.download_thread.file_exists_signal.connect(self.file_already_exists)
-
-        # Reset download state
         self.download_paused = False
         self.download_cancelled = False
-
-        # Show pause/cancel buttons
         self.pause_btn.setText(_("buttons.pause"))
         self.animate_widget_fade_in(self.pause_btn)
         self.animate_widget_fade_in(self.cancel_btn)
-
-        # Start download thread
         self.current_download = self.download_thread
         self.download_thread.start()
         self.toggle_download_controls(False)
@@ -974,6 +987,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             self.set_status_message_animated(_("download.cancelled"))
             self.download_details_label.setText("")
             self.current_download = None
+            if self.queue_running:
+                if self.current_queue_job:
+                    DownloadQueue.update(self.current_queue_job["id"], status="cancelled")
+                self.current_queue_job = None
+                QTimer.singleShot(0, self._start_next_queued_job)
             self.download_paused = False
             self.download_cancelled = False
             return
@@ -1050,6 +1068,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             self.play_notification_sound()
 
         self.current_download = None
+        if self.queue_running:
+            if self.current_queue_job:
+                DownloadQueue.update(self.current_queue_job["id"], status="completed")
+            self.current_queue_job = None
+            QTimer.singleShot(0, self._start_next_queued_job)
 
     def open_download_folder(self) -> None:
         """Open the folder containing the downloaded file and select it if possible"""
@@ -1110,6 +1133,54 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.cancel_btn.setVisible(False)
         self.status_label.setText(_("errors.generic_error", error=error_message))
         self.download_details_label.setText("")  # Clear details label on error
+        if self.queue_running:
+            if self.current_queue_job:
+                DownloadQueue.update(
+                    self.current_queue_job["id"],
+                    status="failed",
+                    error=str(error_message),
+                )
+            self.current_queue_job = None
+            self.current_download = None
+            QTimer.singleShot(0, self._start_next_queued_job)
+
+    def show_queue_dialog(self) -> None:
+        """Show queued jobs and allow starting or editing the queue."""
+        dialog = QueueDialog(self)
+        dialog.start_requested.connect(self.start_queue)
+        self.run_dialog_with_blur(dialog)
+
+    def start_queue(self) -> None:
+        """Start queued jobs sequentially."""
+        if self.queue_running or (self.current_download and self.current_download.isRunning()):
+            self.set_status_message_animated(_("download.already_in_progress"))
+            return
+        jobs = DownloadQueue.get_all()
+        if not any(job.get("status") in {"queued", "failed", "cancelled"} for job in jobs):
+            self.set_status_message_animated(_("queue.empty"))
+            return
+        for job in jobs:
+            if job.get("status") in {"failed", "cancelled"}:
+                DownloadQueue.update(job["id"], status="queued", error=None)
+        self.queue_running = True
+        self.set_status_message_animated(_("queue.started"))
+        self._start_next_queued_job()
+
+    def _start_next_queued_job(self) -> None:
+        if not self.queue_running:
+            return
+        jobs = DownloadQueue.get_all()
+        next_job = next(
+            (job for job in jobs if job.get("status") == "queued"),
+            None,
+        )
+        if next_job is None:
+            self.queue_running = False
+            self.set_status_message_animated(_("queue.all_done"))
+            return
+        DownloadQueue.update(next_job["id"], status="downloading", error=None)
+        self.current_queue_job = next_job
+        self._start_download_job(next_job)
 
     def update_progress_bar(self, value) -> None:
         try:

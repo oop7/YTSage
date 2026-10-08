@@ -57,6 +57,8 @@ class LocalizationManager:
         },
         "buttons": {
             "download": "Download",
+            "add_to_queue": "Add to queue",
+            "queue": "Queue",
             "pause": "Pause", 
             "resume": "Resume",
             "cancel": "Cancel",
@@ -144,7 +146,24 @@ class LocalizationManager:
             "please_set_path": "Please set a download path using 'Change Path'",
             "please_enter_url": "Please enter a URL",
             "please_enter_url_and_path": "Please enter URL and set download path",
-            "please_select_format": "Please select a format"
+            "please_select_format": "Please select a format",
+            "already_in_progress": "A download is already in progress."
+        },
+        "queue": {
+            "title": "Download queue",
+            "empty": "The download queue is empty.",
+            "untitled": "Untitled download",
+            "add_success": "Added to download queue.",
+            "start": "Start queue",
+            "remove": "Remove",
+            "clear_finished": "Clear finished",
+            "status_queued": "Queued",
+            "status_downloading": "Downloading",
+            "status_completed": "Completed",
+            "status_failed": "Failed",
+            "status_cancelled": "Cancelled",
+            "started": "Download queue started.",
+            "all_done": "All queued downloads completed.",
         },
         "formats": {
             "show_formats": "Show formats:",

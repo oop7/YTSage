@@ -97,6 +97,7 @@ if OS_NAME == "Windows":
     APP_LOG_DIR: Path = APP_DIR / "logs"
     APP_CONFIG_FILE: Path = APP_DATA_DIR / "ytsage_config.json"
     APP_HISTORY_FILE: Path = APP_DATA_DIR / "ytsage_history.json"
+    APP_QUEUE_FILE: Path = APP_DATA_DIR / "ytsage_download_queue.json"
     APP_THUMBNAILS_DIR: Path = APP_DATA_DIR / "thumbnails"
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
@@ -116,6 +117,7 @@ elif OS_NAME == "Darwin":  # macOS
     APP_LOG_DIR: Path = APP_DIR / "logs"
     APP_CONFIG_FILE: Path = APP_DATA_DIR / "ytsage_config.json"
     APP_HISTORY_FILE: Path = APP_DATA_DIR / "ytsage_history.json"
+    APP_QUEUE_FILE: Path = APP_DATA_DIR / "ytsage_download_queue.json"
     APP_THUMBNAILS_DIR: Path = APP_DATA_DIR / "thumbnails"
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
@@ -139,6 +141,7 @@ else:  # Linux and other UNIX-like
     APP_LOG_DIR: Path = APP_DIR / "logs"
     APP_CONFIG_FILE: Path = APP_DATA_DIR / "ytsage_config.json"
     APP_HISTORY_FILE: Path = APP_DATA_DIR / "ytsage_history.json"
+    APP_QUEUE_FILE: Path = APP_DATA_DIR / "ytsage_download_queue.json"
     APP_THUMBNAILS_DIR: Path = APP_DATA_DIR / "thumbnails"
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"

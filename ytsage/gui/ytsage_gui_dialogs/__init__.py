@@ -16,6 +16,7 @@ from .ytsage_dialogs_base import AboutDialog, LogWindow
 from .ytsage_dialogs_custom import CustomOptionsDialog, TimeRangeDialog
 from .ytsage_dialogs_ffmpeg import FFmpegCheckDialog, FFmpegInstallThread
 from .ytsage_dialogs_history import HistoryDialog
+from .ytsage_dialogs_queue import QueueDialog
 from .ytsage_dialogs_selection import (
     PlaylistSelectionDialog,
     SponsorBlockCategoryDialog,
@@ -58,4 +59,5 @@ __all__ = [
     
     # History dialog
     "HistoryDialog",
+    "QueueDialog",
 ]
