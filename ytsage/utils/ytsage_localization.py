@@ -71,6 +71,10 @@ class LocalizationManager:
             "custom_options": "Custom Options",
             "settings": "Settings"
         },
+        "playlist": {
+            "reverse_order": "Reverse playlist order",
+            "reverse_order_tooltip": "Download selected videos from last to first"
+        },
         "settings": {
             "generic_mode": "Generic Mode",
             "enable_generic_mode": "Enable Generic Mode (support non-YouTube sites)",

@@ -422,6 +422,7 @@ class AnalysisMixin:
         self.available_subtitles = result_data["available_subtitles"]
         self.available_automatic_subtitles = result_data["available_automatic_subtitles"]
         self.selected_playlist_items = None
+        self.selected_playlist_reversed = False
         self.selected_subtitles = []
         
         from ..utils.ytsage_config_manager import ConfigManager

@@ -239,6 +239,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.video_info = None
         self.playlist_entries = []  # Initialize playlist entries
         self.selected_playlist_items = None  # Initialize selection string
+        self.selected_playlist_reversed = False  # Initialize playlist order
         self.save_description = False  # Initialize description state
         self.embed_chapters = False  # Initialize chapters state
         self.embed_metadata = False  # Initialize metadata state
@@ -1636,10 +1637,16 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             logger.info("No playlist data available to select from.")
             return
 
-        dialog = PlaylistSelectionDialog(self.playlist_entries, self.selected_playlist_items, self)
+        dialog = PlaylistSelectionDialog(
+            self.playlist_entries,
+            self.selected_playlist_items,
+            self,
+            previously_reversed=self.selected_playlist_reversed,
+        )
 
         if self.run_dialog_with_blur(dialog):
             self.selected_playlist_items = dialog.get_selected_items_string()
+            self.selected_playlist_reversed = dialog.is_reverse_order()
             logger.info(f"Playlist items selected: {self.selected_playlist_items}")
 
             # Update button text (this call is safe as it happens in the main thread after dialog closes)
@@ -1651,7 +1658,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 display_text = (
                     self.selected_playlist_items if len(self.selected_playlist_items) < 30 else f"{count} videos selected"
                 )
-                button_text = f"Select Videos... ({display_text})"
+                order_text = f" - {_('playlist.reverse_order')}" if self.selected_playlist_reversed else ""
+                button_text = f"Select Videos... ({display_text}{order_text})"
             self.playlist_select_btn.setText(button_text)  # Direct call is fine here
 
     def save_playlist_to_file(self) -> None:

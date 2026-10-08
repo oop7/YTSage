@@ -503,6 +503,8 @@
     "total_videos": "Total Videos: {count}",
     "display_format": "Playlist: {title} | {count} videos",
     "select_videos_title": "Select Playlist Videos",
+    "reverse_order": "Reverse playlist order",
+    "reverse_order_tooltip": "Download selected videos from last to first",
     "save_as": "Save Playlist As",
     "save_success_title": "Success",
     "saved_successfully": "Playlist saved successfully.",
