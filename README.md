@@ -379,7 +379,7 @@ Notes:
 - **Download History Toggle:** Enable or disable saving download history. Available in **Download Settings → General → Download History**.
 - **Notification Sounds:** Enable or disable completion audio notification. Available in **Download Settings → General → Notification Sound**.
 - **Force Output Format:** Force video container format (`mp4`, `webm`, `mkv`). Available in **Download Settings → Format → Output Format Settings**.
-- **Audio Format Conversion:** Convert audio downloads to preferred formats (`AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, or `Best`). Available in **Download Settings → Format → Audio Format Settings**.
+- **Audio Format Conversion:** Convert audio-only or the audio attached to videos to preferred formats (`AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, or `Best`). Video is copied without re-encoding when possible. Available in **Download Settings → Format → Audio Format Settings**.
 - **Audio Normalization:** Normalize volume using EBU R128 standard for audio downloads. Available in **Download Settings → Format → Audio Format Settings**.
 - **Default Video Resolution & Subtitles:** Auto-select default height (e.g. `1080`, `720`) and preferred subtitle languages (`en`, `es`, etc.) plus subtitle container format (`srt`, `vtt`, `ass`, `lrc`). Available in **Download Settings → Format → Default Selection Settings**.
 - **Output Filename Format:** Customize output naming template using yt-dlp variables (e.g. `%(title)s_%(resolution)s_[%(id)s].%(ext)s`). Reset button included. Available in **Download Settings → File → Filename Format**.

@@ -350,7 +350,7 @@ class DownloadSettingsDialog(QDialog):
         output_format_group_box.setLayout(output_format_layout)
         format_layout.addWidget(output_format_group_box)
 
-        # --- Audio Format Settings Section (for audio-only downloads) ---
+        # --- Audio Format Settings Section ---
         audio_format_group_box = QGroupBox(_("settings.audio_format_settings"))
         audio_format_layout = QVBoxLayout()
 
