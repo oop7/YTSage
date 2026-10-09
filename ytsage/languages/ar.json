@@ -69,6 +69,7 @@
     "clear": "مسح",
     "ok": "موافق",
     "apply": "تطبيق",
+    "reset_all": "إعادة تعيين جميع الإعدادات",
     "close": "إغلاق",
     "run_command": "تشغيل الأمر",
     "custom_command_help": "مساعدة",

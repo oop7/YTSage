@@ -69,6 +69,7 @@
     "clear": "クリア",
     "ok": "OK",
     "apply": "適用",
+    "reset_all": "すべての設定をリセット",
     "close": "閉じる",
     "run_command": "コマンド実行",
     "custom_command_help": "ヘルプ",

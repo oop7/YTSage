@@ -69,6 +69,7 @@
     "clear": "지우기",
     "ok": "확인",
     "apply": "적용",
+    "reset_all": "모든 설정 초기화",
     "close": "닫기",
     "run_command": "명령 실행",
     "custom_command_help": "도움말",

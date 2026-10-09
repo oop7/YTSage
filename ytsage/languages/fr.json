@@ -69,6 +69,7 @@
     "clear": "Effacer",
     "ok": "OK",
     "apply": "Appliquer",
+    "reset_all": "Réinitialiser tous les paramètres",
     "close": "Fermer",
     "run_command": "Exécuter la commande",
     "custom_command_help": "Aide",

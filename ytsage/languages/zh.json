@@ -69,6 +69,7 @@
     "clear": "清除",
     "ok": "确定",
     "apply": "应用",
+    "reset_all": "重置所有设置",
     "close": "关闭",
     "run_command": "运行命令",
     "custom_command_help": "帮助",

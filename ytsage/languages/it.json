@@ -69,6 +69,7 @@
     "clear": "Cancella",
     "ok": "OK",
     "apply": "Applica",
+    "reset_all": "Reimposta tutte le impostazioni",
     "close": "Chiudi",
     "run_command": "Esegui comando",
     "custom_command_help": "Aiuto",

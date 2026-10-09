@@ -69,6 +69,7 @@
     "clear": "Temizle",
     "ok": "Tamam",
     "apply": "Uygula",
+    "reset_all": "Tüm Ayarları Sıfırla",
     "close": "Kapat",
     "run_command": "Komutu çalıştır",
     "custom_command_help": "Yardım",

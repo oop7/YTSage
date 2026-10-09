@@ -69,6 +69,7 @@
     "clear": "Löschen",
     "ok": "OK",
     "apply": "Anwenden",
+    "reset_all": "Alle Einstellungen zurücksetzen",
     "close": "Schließen",
     "run_command": "Befehl ausführen",
     "custom_command_help": "Hilfe",
