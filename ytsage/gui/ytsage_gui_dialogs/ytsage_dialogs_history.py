@@ -444,6 +444,18 @@ class HistoryDialog(QDialog):
         self.loader_thread.thumbnail_loaded.connect(self.on_thumbnail_loaded)
         self.loader_thread.start()
 
+    def _stop_loader_thread(self):
+        """Stop the history loader before the dialog or its model is destroyed."""
+        loader_thread = getattr(self, "loader_thread", None)
+        if loader_thread is None or not loader_thread.isRunning():
+            return
+
+        loader_thread.requestInterruption()
+        if not loader_thread.wait(2000):
+            logger.warning("History loader did not stop in time; terminating it.")
+            loader_thread.terminate()
+            loader_thread.wait(1000)
+
     def on_entries_loaded(self, entries):
         self.model.update_entries(entries)
         
@@ -565,6 +577,7 @@ class HistoryDialog(QDialog):
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
         )
         if reply == QMessageBox.StandardButton.Yes:
+            self._stop_loader_thread()
             HistoryManager.clear_history()
             self.model.update_entries([])
             self.clear_btn.setEnabled(False)
@@ -574,3 +587,7 @@ class HistoryDialog(QDialog):
         results = HistoryManager.search_entries(query)
         self.model.update_entries(results)
         self.load_cached_thumbnails(results)
+
+    def closeEvent(self, event):
+        self._stop_loader_thread()
+        super().closeEvent(event)
