@@ -982,8 +982,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.animate_widget_fade_in(self.pause_btn)
         self.animate_widget_fade_in(self.cancel_btn)
         self.current_download = self.download_thread
-        self.download_thread.start()
         self.toggle_download_controls(False)
+        self.download_thread.start()
 
     def download_finished(self) -> None:
         if self.download_cancelled or (self.current_download and getattr(self.current_download, "cancelled", False)):
@@ -1818,13 +1818,32 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
     def toggle_download_controls(self, enabled=True) -> None:
         """Enable or disable download-related controls"""
-        self.url_input.setEnabled(enabled)
+        controls = (
+            self.url_input,
+            self.paste_button,
+            self.format_table,
+            self.video_button,
+            self.audio_button,
+            self.merge_subs_checkbox,
+            self.save_thumbnail_checkbox,
+            self.save_description_checkbox,
+            self.embed_options_toggle,
+            self.embed_chapters_checkbox,
+            self.embed_metadata_checkbox,
+            self.embed_thumbnail_checkbox,
+            self.subtitle_select_btn,
+            self.sponsorblock_select_btn,
+            self.playlist_select_btn,
+            self.save_playlist_btn,
+        )
+        for control in controls:
+            control.setEnabled(enabled)
+
         # Analyze button should only be enabled if there's text in the URL input
         if enabled:
             self.analyze_button.setEnabled(bool(self.url_input.text().strip()))
         else:
             self.analyze_button.setEnabled(False)
-        self.format_table.setEnabled(enabled)  # Changed from format_scroll_area to format_table
         self.download_btn.setEnabled(enabled)
         for button in (
             self.custom_options_btn,
@@ -1837,16 +1856,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         ):
             button.setVisible(enabled)
             button.setEnabled(enabled)
-        if hasattr(self, "subtitle_combo"):
-            self.subtitle_combo.setEnabled(enabled)  # type: ignore[reportAttributeAccessIssue]
-        self.video_button.setEnabled(enabled)
-        self.audio_button.setEnabled(enabled)
-        if hasattr(self, "sponsorblock_select_btn"):
-            self.sponsorblock_select_btn.setEnabled(enabled)
-        self.merge_subs_checkbox.setEnabled(enabled)  # Enable/disable merge subs checkbox
-        self.custom_options_btn.setEnabled(enabled)  # Enable/disable custom options button
-        self.time_range_btn.setEnabled(enabled)  # Enable/disable time range button
-        self.settings_button.setEnabled(enabled)  # Enable/disable settings button
+
+        # These controls also depend on a completed analysis. Reapply that
+        # state after a download so a reset does not enable stale options.
+        if hasattr(self, "analysis_completed"):
+            self.toggle_analysis_dependent_controls(enabled and self.analysis_completed)
 
         # Clear progress/status when controls are re-enabled
         if enabled:
