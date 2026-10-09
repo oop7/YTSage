@@ -26,7 +26,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         fetch-depth: 0
 
@@ -35,16 +35,20 @@ jobs:
       shell: bash
       run: |
         version="${{ inputs.version || github.event.inputs.version }}"
+        if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([A-Za-z][0-9A-Za-z.-]*|[-.][0-9A-Za-z.-]+)?$ ]]; then
+          echo "Invalid version '$version'. Expected semantic version format such as 1.2.3 or 1.2.3b2." >&2
+          exit 1
+        fi
         echo "Extracted version: $version"
         echo "VERSION=$version" >> "$GITHUB_OUTPUT"
 
     - name: Setup Python
-      uses: actions/setup-python@v7
+      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v10.0.0
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       with:
         enable-cache: true
 
@@ -53,7 +57,7 @@ jobs:
       run: |
         uv venv venv
         source venv/bin/activate
-        uv pip install . cx_Freeze dmgbuild
+        uv pip install . cx_Freeze
 
     - name: Prepare build variables
       shell: bash
@@ -69,138 +73,30 @@ jobs:
         fi
         echo "Prepared build variables for version: $version on $(uname -a)"
 
-    - name: Create cx_Freeze setup script
-      shell: bash
-      run: |
-        # Create entry point script
-        cat > ytsage_entry.py <<'ENTRY'
-        from ytsage.main import main
-        if __name__ == "__main__":
-            main()
-        ENTRY
-
-        cat > setup_cxfreeze.py <<'PY'
-        import os
-        from cx_Freeze import setup, Executable
-
-        version = os.environ.get("VERSION", "0.0.0")
-
-        build_exe_options = dict(
-            optimize=2,
-            silent=True,
-            packages=[
-                "ytsage",
-                "PySide6.QtCore",
-                "PySide6.QtGui",
-                "PySide6.QtWidgets",
-                "PySide6.QtMultimedia",
-                "PySide6.QtNetwork",
-                "PySide6.QtDBus",
-                "requests",
-                "PIL",
-                "packaging",
-                "markdown",
-                "loguru",
-                "setuptools",
-            ],
-            zip_include_packages=[
-                "PySide6",
-                "shiboken6",
-                "requests",
-                "PIL",
-                "packaging",
-            ],
-            excludes=[
-                "PySide6.QtBluetooth",
-                "PySide6.QtOpenGL",
-                "PySide6.QtPrintSupport",
-                "PySide6.QtSvg",
-                "PySide6.QtTest",
-                "PySide6.QtXml",
-                "PySide6.QtSql",
-                "PySide6.QtHelp",
-                "PySide6.QtQml",
-                "PySide6.QtQuick",
-                "PySide6.QtWebEngineCore",
-                "PIL.ImageDraw",
-                "PIL.ImageFont",
-                "numpy",
-                "scipy",
-                "wx",
-                "pandas",
-                "tkinter",
-                "yt_dlp",
-                "unittest",
-                "test",
-                "tests",
-                "pydoc",
-                "doctest",
-                "email",
-            ],
-            include_files=[
-                ("ytsage/assets/Icon", "lib/assets/Icon"),
-                ("ytsage/assets/sound", "lib/assets/sound"),
-                ("ytsage/languages", "lib/languages"),
-                ("branding/icons", "lib/assets/branding/icons"),
-            ],
-        )
-
-        executables = [
-            Executable(
-                script="ytsage_entry.py",
-                target_name=f"YTSage-v{version}",
-                icon="branding/icons/icon.icns",
-            )
-        ]
-
-        setup(
-            name="YTSage",
-            version=version,
-            description="YTSage",
-            options={
-                "build_exe": build_exe_options,
-                "bdist_mac": {
-                    "iconfile": "branding/icons/icon.icns",
-                    "bundle_name": f"YTSage-v{version}",
-                },
-                "bdist_dmg": {
-                    "volume_label": f"YTSage v{version}",
-                    "applications_shortcut": True,
-                    "format": "UDZO",
-                    "filesystem": "HFS+",
-                    "default_view": "icon-view",
-                },
-            },
-            executables=executables,
-        )
-        PY
-
     - name: Build .app bundle (bdist_mac)
       shell: bash
       run: |
         source venv/bin/activate
-        python -OO setup_cxfreeze.py bdist_mac
+        python -OO setup-scripts/setup_cxfreeze_macos.py bdist_mac
+
+        app_path="$(find "$GITHUB_WORKSPACE/dist" "$GITHUB_WORKSPACE/build" -maxdepth 3 -type d -name "YTSage-v${VERSION}.app" -print -quit 2>/dev/null || true)"
+        if [ -z "$app_path" ]; then
+          echo "Expected app bundle was not found for version $VERSION" >&2
+          exit 1
+        fi
+        app_path="$(cd "$(dirname "$app_path")" && pwd)/$(basename "$app_path")"
+        echo "APP_PATH=$app_path" >> "$GITHUB_ENV"
+        echo "Found app bundle at: $app_path"
         
     - name: Trim unnecessary files from App bundle
       shell: bash
       run: |
-        version="${{ steps.get_version.outputs.VERSION }}"
-        
-        # Locate the built .app
-        app_path=""
-        for cand in "dist/YTSage-v${version}.app" "build/dist/YTSage-v${version}.app" "build/YTSage-v${version}.app"; do
-          if [ -d "$cand" ]; then app_path="$cand"; break; fi
-        done
-        if [ -z "$app_path" ]; then
-          app_path=$(ls -d dist/*.app build/dist/*.app build/*.app 2>/dev/null | head -n1 || true)
-        fi
-        
-        if [ -n "$app_path" ]; then
-          echo "Processing App Bundle at: $app_path"
+        if [ -n "${APP_PATH:-}" ] && [ -d "$APP_PATH" ]; then
+          echo "Processing App Bundle at: $APP_PATH"
           
           # Simplified discovery of library directories
           # We search for 'lib' folders and then verify if they look like the python library folder
-          find "$app_path/Contents" -type d -name "lib" | while read -r lib_dir; do
+          find "$APP_PATH/Contents" -type d -name "lib" | while read -r lib_dir; do
               # Check if this lib dir is a python library dir (contains asyncio or PySide6 or ytsage)
               if [ -d "$lib_dir/asyncio" ] || [ -d "$lib_dir/PySide6" ] || [ -d "$lib_dir/ytsage" ]; then
                   echo "Cleaning Library Directory: $lib_dir"
@@ -246,11 +142,11 @@ jobs:
           
           # Final sanity verification
           echo "Trim complete. Remaining contents of lib (first 2 levels):"
-          find "$app_path/Contents" -type d -name "lib" -exec ls -R {} \; | head -n 50 || true
+          find "$APP_PATH/Contents" -type d -name "lib" -exec ls -R {} \; | head -n 50 || true
           
         else
-           echo "Error: Could not find .app bundle to trim!"
-           exit 1
+          echo "Error: App bundle path is missing or invalid: ${APP_PATH:-<unset>}" >&2
+          exit 1
         fi
 
     - name: Package and prepare release artifacts (.app.zip and .dmg)
@@ -259,28 +155,19 @@ jobs:
         version="${{ steps.get_version.outputs.VERSION }}"
         echo "Preparing artifacts for version: $version"
         mkdir -p artifacts
-
-        # Find the .app bundle
-        app_path=""
-        for cand in "dist/YTSage-v${version}.app" "build/dist/YTSage-v${version}.app" "build/YTSage-v${version}.app"; do
-          if [ -d "$cand" ]; then app_path="$cand"; break; fi
-        done
-        if [ -z "$app_path" ]; then
-          app_path=$(ls -d dist/*.app build/dist/*.app build/*.app 2>/dev/null | head -n1 || true)
-        fi
         
-        if [ -n "$app_path" ] && [ -d "$app_path" ]; then
-          app_base="$(basename "$app_path")"
-          app_parent="$(dirname "$app_path")"
+        if [ -n "${APP_PATH:-}" ] && [ -d "$APP_PATH" ]; then
+          app_base="$(basename "$APP_PATH")"
+          app_parent="$(dirname "$APP_PATH")"
           
           # Create ZIP
           (cd "$app_parent" && zip -r "${GITHUB_WORKSPACE}/artifacts/YTSage-v${version}-${ARCH_SUFFIX}.app.zip" "$app_base")
           echo "Created: artifacts/YTSage-v${version}-${ARCH_SUFFIX}.app.zip"
           
           # Create DMG (Manual)
-          echo "Creating DMG from $app_path..."
+          echo "Creating DMG from $APP_PATH..."
           mkdir -p dmg_stage
-          cp -R "$app_path" "dmg_stage/"
+          cp -R "$APP_PATH" "dmg_stage/"
           ln -s /Applications "dmg_stage/Applications"
           
           hdiutil create -volname "YTSage v${version}" -srcfolder "dmg_stage" -ov -format UDZO "artifacts/YTSage-v${version}-${ARCH_SUFFIX}.dmg"
@@ -288,26 +175,35 @@ jobs:
           
           rm -rf dmg_stage
         else
-          echo "Error: .app bundle not found in dist/ or build/"
+          echo "Error: App bundle path is missing or invalid: ${APP_PATH:-<unset>}" >&2
           exit 1
         fi
 
+        zip_path="artifacts/YTSage-v${version}-${ARCH_SUFFIX}.app.zip"
+        dmg_path="artifacts/YTSage-v${version}-${ARCH_SUFFIX}.dmg"
+        for artifact in "$zip_path" "$dmg_path"; do
+          if [ ! -s "$artifact" ]; then
+            echo "Missing or empty artifact: $artifact" >&2
+            exit 1
+          fi
+        done
+
         echo "Final artifacts:"
-        ls -lh artifacts || true
+        ls -lh "$zip_path" "$dmg_path"
 
     - name: Create/Update draft release
-      uses: softprops/action-gh-release@v3
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
       with:
         tag_name: v${{ steps.get_version.outputs.VERSION }}
         name: YTSage v${{ steps.get_version.outputs.VERSION }}
         draft: true
         prerelease: false
         append_body: true
-        fail_on_unmatched_files: false
+        fail_on_unmatched_files: true
         body: |
           # YTSage v${{ steps.get_version.outputs.VERSION }}
 
-          **Release Date**: ${{ github.event.head_commit.timestamp }}
+          **Release Date**: ${{ github.run_started_at }}
         files: |
           artifacts/*
       env:
