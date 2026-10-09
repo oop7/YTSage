@@ -4,53 +4,66 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version name for the release (e.g., 1.0.0)'
+        description: 'Version (e.g. 1.0.0)'
         required: true
         type: string
   workflow_call:
     inputs:
       version:
-        description: 'Version name for the release (e.g., 1.0.0)'
         required: true
         type: string
 
 permissions:
   contents: write
 
+env:
+  PYTHON_VERSION: '3.13'
+
 jobs:
   build-pypi:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v7
-    
-    - name: Set up Python
-      uses: actions/setup-python@v7
-      with:
-        python-version: '3.13'
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v10.0.0
-      with:
-        enable-cache: true
+      - name: Get version
+        id: get_version
+        run: |
+          version="${{ inputs.version || github.event.inputs.version }}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([A-Za-z][0-9A-Za-z.-]*|[-.][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid version '$version'" >&2
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$version" >> "$GITHUB_ENV"
 
-    - name: Install build dependencies
-      run: |
-        uv pip install --system build
-        
-    - name: Build PyPI package
-      run: |
-        python build_release.py
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Upload Release Assets
-      uses: softprops/action-gh-release@v3
-      with:
-        tag_name: v${{ inputs.version || github.event.inputs.version }}
-        name: YTSage v${{ inputs.version || github.event.inputs.version }}
-        draft: true
-        prerelease: false
-        files: |
-          dist/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          enable-cache: true
+
+      - name: Build
+        run: |
+          uv venv venv
+          source venv/bin/activate
+          uv pip install build
+          # ensure build_release.py (or hatch/setuptools) uses $VERSION
+          python build_release.py
+
+      - name: Verify artifacts
+        run: |
+          ls -lh dist/
+          test -n "$(find dist -name '*.whl' | head -1)"
+          test -n "$(find dist -name '*.tar.gz' | head -1)"
+
+      - uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: YTSage v${{ steps.get_version.outputs.VERSION }}
+          draft: true
+          fail_on_unmatched_files: true
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
