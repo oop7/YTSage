@@ -91,63 +91,11 @@ jobs:
     - name: Trim unnecessary files from App bundle
       shell: bash
       run: |
-        if [ -n "${APP_PATH:-}" ] && [ -d "$APP_PATH" ]; then
-          echo "Processing App Bundle at: $APP_PATH"
-          
-          # Simplified discovery of library directories
-          # We search for 'lib' folders and then verify if they look like the python library folder
-          find "$APP_PATH/Contents" -type d -name "lib" | while read -r lib_dir; do
-              # Check if this lib dir is a python library dir (contains asyncio or PySide6 or ytsage)
-              if [ -d "$lib_dir/asyncio" ] || [ -d "$lib_dir/PySide6" ] || [ -d "$lib_dir/ytsage" ]; then
-                  echo "Cleaning Library Directory: $lib_dir"
-                  
-                  # 1. Remove screenshots
-                  rm -rf "$lib_dir/assets/branding/screenshots"
-                  
-                  # 2. Remove unused Qt translations (Recursively find 'translations' folder inside PySide6)
-                  find "$lib_dir" -type d -path "*/PySide6/*/translations" -exec rm -rf {} + 2>/dev/null || true
-                  find "$lib_dir" -type d -path "*/PySide6/translations" -exec rm -rf {} + 2>/dev/null || true
-                  
-                  # 3. Remove unused Qt plugins 
-                  # Determine plugins path
-                  plugins_path=""
-                  if [ -d "$lib_dir/PySide6/plugins" ]; then plugins_path="$lib_dir/PySide6/plugins"; fi
-                  if [ -d "$lib_dir/PySide6/Qt/plugins" ]; then plugins_path="$lib_dir/PySide6/Qt/plugins"; fi
-                  
-                  if [ -n "$plugins_path" ]; then
-                      echo "Found plugins at: $plugins_path"
-                      for plugin in designer pdf svg sql help qml quick webengine bluetooth opengl printsupport test xml; do
-                         rm -rf "$plugins_path/$plugin"
-                      done
-                      
-                      # Specific cleanups
-                      find "$plugins_path" -name "libqpdf.*" -delete
-                  fi
-                  
-                  # 4. Remove bloat Qt libraries / Frameworks
-                  # Iterate specifically over unwanted Qt modules
-                  # Matches both 'QtQml' (file) and 'QtQml.abi3.so' etc
-                  for bloat in QtQml QtQmlMeta QtQmlModels QtQmlWorkerScript QtQuick QtQuickControls2 QtQuickTemplates2 QtWebEngine QtWebEngineCore QtVirtualKeyboard QtVirtualKeyboardQml QtOpenGL QtOpenGLWidgets QtPdf QtPdfWidgets; do
-                      find "$lib_dir" -maxdepth 2 -name "$bloat" -delete
-                      find "$lib_dir" -maxdepth 2 -name "${bloat}.*" -delete 
-                      find "$lib_dir" -maxdepth 2 -name "*$bloat*" -delete 
-                  done
-                  
-                  # 5. Remove build tools and unused python modules
-                  for tool in setuptools wheel pkg_resources _distutils_hack curses _pyrepl; do
-                     rm -rf "$lib_dir/$tool"
-                  done
-              fi
-          done
-          
-          # Final sanity verification
-          echo "Trim complete. Remaining contents of lib (first 2 levels):"
-          find "$APP_PATH/Contents" -type d -name "lib" -exec ls -R {} \; | head -n 50 || true
-          
-        else
-          echo "Error: App bundle path is missing or invalid: ${APP_PATH:-<unset>}" >&2
+        if [ -z "${APP_PATH:-}" ]; then
+          echo "App bundle path is not set." >&2
           exit 1
         fi
+        bash setup-scripts/trim-build-macos.sh "$APP_PATH"
 
     - name: Package and prepare release artifacts (.app.zip and .dmg)
       shell: bash
