@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,20 +19,24 @@ Unduh video dalam kualitas apa pun, ekstrak audio, dapatkan subtitle, dan banyak
 
 ### 🌍 Bahasa README
 
-Inggris: [EN](../README.md)
-| Arab: [AR](README.ar.md)
-| Jerman: [DE](README.de.md)
-| Spanyol: [ES](README.es.md)
-| Prancis: [FR](README.fr.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
 | Hindi: [HI](README.hi.md)
-| Indonesia: [ID](README.id.md)
-| Italia: [IT](README.it.md)
-| Jepang: [JA](README.ja.md)
-| Polandia: [PL](README.pl.md)
-| Portugis: [PT](README.pt.md)
-| Rusia: [RU](README.ru.md)
-| Turki: [TR](README.tr.md)
-| Mandarin: [ZH](README.zh.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 <p align="center">
   <a href="#instalasi">Instalasi</a> •
@@ -38,6 +44,7 @@ Inggris: [EN](../README.md)
   <a href="#penggunaan">Penggunaan</a> •
   <a href="#screenshot">Screenshot</a> •
   <a href="#troubleshooting">Troubleshooting</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#sponsor">Sponsor</a> •
   <a href="#kontribusi">Kontribusi</a>
 </p>
@@ -71,7 +78,7 @@ YTSage dirancang untuk pengguna yang menginginkan **pengunduh YouTube yang seder
 | 📑 Integrasi Bab (Chapters) | ✂️ Potong Bagian Video | 🍪 Login Cookie |
 | 📜 Riwayat Unduhan | 🔄 Pilihan Saluran Rilis | 🌐 Dukungan Proxy |
 | 🎚️ Konversi Format Audio | 🎬 Pengaturan Format Video | 🆙 Tab Pembaruan Terintegrasi |
-| 🌍 Mode Generik | 🔊 Normalisasi Audio (EBU R128) | 🌍 Lokalisasi dalam 14 Bahasa |
+| 🌍 Mode Generik | 🔊 Normalisasi Audio (EBU R128) | 🌍 Lokalisasi dalam 16 Bahasa |
 | 💾 Ekspor Playlist | ⚙️ Kualitas & Subtitle Default | |
 </div>
 
@@ -104,6 +111,8 @@ Cukup unduh penginstal siap pakai untuk sistem operasi Anda:
 </details>
 
 #### 🍎 macOS
+
+> ⚠️ **Catatan:** Pemasang ini dibuat secara native untuk **Apple Silicon (M1/M2/M3/M4)**. Jika Anda menggunakan Mac Intel, silakan gunakan [metode instalasi Python](#-instal-via-python--pypi) di bawah.
 
 | Format | Deskripsi |
 |--------|-------------|
@@ -156,15 +165,17 @@ Cukup unduh penginstal siap pakai untuk sistem operasi Anda:
 ### 🐍 Instal via Python / PyPI
 *Anda juga dapat menginstal YTSage via Python (Membutuhkan Python 3.11+)*
 
+> 💡 **Fitur Menarik:** Jika Anda menginstal via pip di **Windows**, YTSage akan otomatis mendeteksi dan membantu menyiapkan FFmpeg *(pengguna macOS dan Linux dapat mengikuti **[Panduan Instalasi FFmpeg](https://github.com/oop7/ffmpeg-install-guide)** kami)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 Perbarui instalasi yang ada</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -180,6 +191,46 @@ Anda juga dapat membuka YTSage dengan URL video atau playlist yang terisi otomat
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 Jalankan dengan Docker
+*Jalankan YTSage di peramban web tanpa perlu menginstal Python, Qt, atau FFmpeg di sistem host.*
+
+Docker Desktop diperlukan di Windows dan macOS. Docker Engine dengan Docker Compose didukung di Linux.
+
+##### 1. Klon repositori
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. Jalankan YTSage
+
+```bash
+docker compose up -d
+```
+
+Buka [http://localhost:3000](http://localhost:3000) di peramban. YTSage berjalan sebagai desktop streaming di dalam kontainer.
+
+File unduhan disimpan di folder `downloads` host, pengaturan dan riwayat disimpan di folder `config`.
+
+##### Perintah Siklus Hidup Docker
+
+```bash
+# Hentikan YTSage
+docker compose down
+
+# Mulai lagi nanti
+docker compose up -d
+
+# Bangun ulang setelah perubahan
+docker compose build
+docker compose up -d --force-recreate
+```
+
+Untuk detail lebih lanjut, lihat [panduan Docker](../docker/README.md).
 
 ---
 
@@ -247,6 +298,8 @@ python -m ytsage.main
 </table>
 </div>
 
+<p align="right"><a href="#top">⬆️ Kembali ke atas</a></p>
+
 <a id="penggunaan"></a>
 ## 📖 Penggunaan
 
@@ -271,6 +324,23 @@ python -m ytsage.main
 6. **Klik "Unduh"**
 
 > 💡 Direktori unduhan default adalah folder "Downloads" pengguna.
+
+</details>
+
+<details>
+<summary>📋 Antrean Unduhan (Download Queue)</summary>
+
+Gunakan antrean unduhan untuk mengonfigurasi beberapa unduhan terlebih dahulu dan menjalankannya bersama:
+
+1. **Tempel URL video atau playlist**
+2. **Klik "Analisis"**
+3. **Pilih format, kualitas, subtitle, dan opsi lainnya**
+4. **Klik "Tambah ke antrean" (Add to queue)** daripada `"Unduh"`
+5. Ulangi langkah di atas untuk setiap unduhan yang ingin Anda jadwalkan
+6. Klik **"Antrean" (Queue)** untuk meninjau atau mengatur tugas
+7. Klik **"Mulai antrean" (Start queue)** di dialog antrean
+
+Unduhan dalam antrean berjalan secara berurutan sesuai pengaturan yang dipilih saat ditambahkan. Antrean tetap tersimpan meskipun aplikasi ditutup.
 
 </details>
 
@@ -315,6 +385,7 @@ Catatan:
 - **Penggabungan Subtitle:** Menggabungkan subtitle ke dalam file video untuk subtitle permanen (hardcoded).
 - **Simpan Deskripsi:** Simpan deskripsi video sebagai file teks.
 - **Simpan Thumbnail:** Simpan thumbnail video sebagai file gambar.
+- **Sematkan (Embed):** Tombol ini memungkinkan Anda menyematkan bab, metadata, dan gambar mini ke dalam file unduhan.
 - **Masukkan Bab (Chapters):** Sertakan penanda bab sebagai metadata untuk pemutar video yang kompatibel.
 - **Hapus Bagian Sponsor:** Gunakan SponsorBlock untuk menghapus segmen sponsor dari video.
 - **Potong Video:** Unduh hanya bagian tertentu dari video dengan menentukan rentang waktu dalam format `JJ:MM:DD`.
@@ -368,7 +439,7 @@ Catatan:
 <details>
 <summary>🌍 Lokalisasi</summary>
 
-YTSage mendukung **14 bahasa** untuk jangkauan global. Pilih bahasa pilihan Anda di **Custom Options → Language**.
+YTSage mendukung **16 bahasa** untuk jangkauan global. Pilih bahasa pilihan Anda di **Custom Options → Language**.
 
 ### Bahasa yang Didukung
 
@@ -429,7 +500,7 @@ Beberapa perangkat lunak antivirus mungkin menandai file `.exe` sebagai positif 
 - Heuristik antivirus mungkin salah mengidentifikasi executable yang dipaketkan sebagai mencurigakan.
 
 **Opsi Aman:**
-- ✅ **Gunakan instalasi pip:** `pip install ytsage` (direkomendasikan)
+- ✅ **Gunakan instalasi pip:** `pip install --pre ytsage` (direkomendasikan)
 - ✅ **Build dari sumber**: Mengikuti [panduan](../.github/CI_CD_README.md) ini
 - ✅ **Whitelist aplikasi** di perangkat lunak antivirus Anda.
 
@@ -561,13 +632,7 @@ YTSage/
 
 ## Star History
 
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 
@@ -580,6 +645,7 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](../LICENSE) 
 <div align="center">
 
 <p>Terima kasih banyak kepada semua orang yang telah berkontribusi pada proyek ini dengan membuka masalah untuk menyarankan perbaikan atau melaporkan bug.</p>
+<p>Terima kasih khusus kepada <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> dan <a href="https://github.com/dj23me"><strong>@dj23me</strong></a> atas dukungan sebagai donatur pertama dan utama proyek ini ❤️</p>
 
 <table>
     <tr class="section"><th colspan="2">Komponen Utama</th></tr>

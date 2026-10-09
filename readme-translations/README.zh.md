@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="YTSage 界面"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI 下载量](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub 下载量](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![支持平台](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,20 +19,24 @@
 
 ### 🌍 README 语言
 
-英语: [EN](../README.md)
-| 阿拉伯语: [AR](README.ar.md)
-| 德语: [DE](README.de.md)
-| 西班牙语: [ES](README.es.md)
-| 法语: [FR](README.fr.md)
-| 印地语: [HI](README.hi.md)
-| 印尼语: [ID](README.id.md)
-| 意大利语: [IT](README.it.md)
-| 日语: [JA](README.ja.md)
-| 波兰语: [PL](README.pl.md)
-| 葡萄牙语: [PT](README.pt.md)
-| 俄语: [RU](README.ru.md)
-| 土耳其语: [TR](README.tr.md)
-| 中文: [ZH](README.zh.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
+| Hindi: [HI](README.hi.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 <p align="center">
   <a href="#安装">安装</a> •
@@ -38,6 +44,7 @@
   <a href="#使用说明">使用说明</a> •
   <a href="#屏幕截图">屏幕截图</a> •
   <a href="#故障排除">故障排除</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#赞助支持">赞助支持</a> •
   <a href="#贡献">贡献</a>
 </p>
@@ -71,7 +78,7 @@ YTSage 专为寻找 **简单但强大** 的 YouTube 下载器的用户而设计�
 | 📑 视频列表集成 | ✂️ 视频剪辑 | 🍪 Cookie 登录集成 |
 | 📜 下载历史记录 | 🔄 更新版本分支选择 | 🌐 代理支持 |
 | 🎚️ 音频格式转换 | 🎬 视频格式设置 | 🆙 内置更新页签 |
-| 🌍 通用模式 | 🔊 音频归一化 (EBU R128) | 🌍 支持 14 种语言 |
+| 🌍 通用模式 | 🔊 音频归一化 (EBU R128) | 🌍 支持 16 种语言 |
 | 💾 播放列表导出 | ⚙️ 默认质量与字幕设置 | |
 </div>
 
@@ -104,6 +111,8 @@ YTSage 专为寻找 **简单但强大** 的 YouTube 下载器的用户而设计�
 </details>
 
 #### 🍎 macOS
+
+> ⚠️ **注意：** 此安装程序专为 **Apple Silicon (M1/M2/M3/M4)** 原生构建。如果您使用的是较旧的 Intel Mac，请使用下方的 [Python 安装方式](#-通过-python--pypi-安装)。
 
 | 格式 | 描述 |
 |--------|-------------|
@@ -156,15 +165,17 @@ YTSage 专为寻找 **简单但强大** 的 YouTube 下载器的用户而设计�
 ### 🐍 通过 Python / PyPI 安装
 *您也可以通过 Python 安装 YTSage (需要 Python 3.11+)*
 
+> 💡 **便捷特性：** 在 **Windows** 上通过 pip 安装时，YTSage 会自动检测并协助配置 FFmpeg *(macOS 和 Linux 用户可参考我们的 **[FFmpeg 安装指南](https://github.com/oop7/ffmpeg-install-guide)**)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 更新现有安装</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -180,6 +191,46 @@ ytsage
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 使用 Docker 运行
+*无需在主机上安装 Python、Qt 或 FFmpeg，直接在浏览器中运行 YTSage。*
+
+Windows 和 macOS 需要安装 Docker Desktop。Linux 原生支持 Docker Engine 与 Docker Compose。
+
+##### 1. 克隆代码仓库
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. 启动 YTSage
+
+```bash
+docker compose up -d
+```
+
+在浏览器中打开 [http://localhost:3000](http://localhost:3000)。YTSage 将以基于浏览器的远程桌面形式运行。
+
+下载的文件保存在主机的 `downloads` 目录，配置与历史记录保存在 `config` 目录。
+
+##### Docker 常用生命周期命令
+
+```bash
+# 停止 YTSage
+docker compose down
+
+# 稍后重新启动
+docker compose up -d
+
+# 更新代码或构建配置后重新构建
+docker compose build
+docker compose up -d --force-recreate
+```
+
+了解更多详情，请参阅 [Docker 说明文档](../docker/README.md)。
 
 ---
 
@@ -247,6 +298,8 @@ python -m ytsage.main
 </table>
 </div>
 
+<p align="right"><a href="#top">⬆️ 返回顶部</a></p>
+
 <a id="使用说明"></a>
 ## 📖 使用说明
 
@@ -271,6 +324,23 @@ python -m ytsage.main
 6. **点击“下载”**
 
 > 💡 默认下载目录为用户的“下载”文件夹。
+
+</details>
+
+<details>
+<summary>📋 下载队列 (Download Queue)</summary>
+
+使用下载队列可以预先配置多个下载任务，然后统一依次下载：
+
+1. **粘贴视频或播放列表 URL**
+2. **点击“解析”**
+3. **选择格式、画质、字幕以及其他下载选项**
+4. **点击“加入队列” (Add to queue)** 而不是“下载”
+5. 对所有想要下载的项目重复上述步骤
+6. 点击主界面上的 **“队列” (Queue)** 查看或管理任务
+7. 在队列弹窗中点击 **“开始队列” (Start queue)**
+
+队列任务将按照添加时的精确配置依次下载。退出程序后队列内容也会自动保存并在下次启动时恢复。
 
 </details>
 
@@ -315,6 +385,7 @@ python -m ytsage.main
 - **字幕合并:** 将字幕“烧录”到视频中（硬字幕）。
 - **保存描述:** 将视频描述保存为独立的文本文档。
 - **保存缩略图:** 下载视频的高清封面。
+- **嵌入 (Embed)：** 允许将章节标记、媒体元数据和视频缩略图直接嵌入到下载的文件中。
 - **嵌入章节:** 允许将视频章节标记写入媒体元数据。
 - **赞助商跳过:** 配合 SponsorBlock 自动跳过或剪辑掉广告段落。
 - **视频剪裁:** 输入 `HH:MM:SS` 时间点来实现部分下载。
@@ -362,7 +433,7 @@ python -m ytsage.main
 <details>
 <summary>🌍 语言支持</summary>
 
-YTSage 支持 **14 种语言**。您可以在 **Custom Options → Language** 中更改。
+YTSage 支持 **16 种语言**。您可以在 **Custom Options → Language** 中更改。
 
 ### 支持的界面语言
 
@@ -419,7 +490,7 @@ YTSage 支持 **14 种语言**。您可以在 **Custom Options → Language** �
 - 启发式查杀可能会误认为打包的可执行文件是恶意软件。
 
 **安全建议:**
-- ✅ **通过 pip 安装:** `pip install ytsage`（推荐）
+- ✅ **通过 pip 安装:** `pip install --pre ytsage`（推荐）
 - ✅ **自行构建**: 参照 [CI_CD 指南](../.github/CI_CD_README.md)
 - ✅ **添加排除项**。
 
@@ -510,13 +581,7 @@ YTSage/
 
 ## Star History
 
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 
@@ -529,6 +594,7 @@ YTSage/
 <div align="center">
 
 <p>特别鸣谢所有通过反馈、建议或代码合并来完善此工具的贡献者。</p>
+<p>特别感谢首位及主要捐赠者 <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> 与 <a href="https://github.com/dj23me"><strong>@dj23me</strong></a> 对本项目的鼎力支持 ❤️</p>
 
 <table>
     <tr class="section"><th colspan="2">核心组件</th></tr>

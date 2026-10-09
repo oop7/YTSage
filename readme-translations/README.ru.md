@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="Интерфейс YTSage"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,20 +19,24 @@
 
 ### 🌍 Языки README
 
-Английский: [EN](../README.md)
-| Арабский: [AR](README.ar.md)
-| Немецкий: [DE](README.de.md)
-| Испанский: [ES](README.es.md)
-| Французский: [FR](README.fr.md)
-| Хинди: [HI](README.hi.md)
-| Индонезийский: [ID](README.id.md)
-| Итальянский: [IT](README.it.md)
-| Японский: [JA](README.ja.md)
-| Польский: [PL](README.pl.md)
-| Португальский: [PT](README.pt.md)
-| Русский: [RU](README.ru.md)
-| Турецкий: [TR](README.tr.md)
-| Китайский: [ZH](README.zh.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
+| Hindi: [HI](README.hi.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 <p align="center">
   <a href="#установка">Установка</a> •
@@ -38,6 +44,7 @@
   <a href="#использование">Использование</a> •
   <a href="#скриншоты">Скриншоты</a> •
   <a href="#решение-проблем">Решение проблем</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#спонсорство">Спонсорство</a> •
   <a href="#участие-в-проекте">Участие в проекте</a>
 </p>
@@ -71,7 +78,7 @@ YTSage создан для пользователей, которым нужен
 | 📑 Интеграция разделов | ✂️ Обрезка видео | 🍪 Вход через Cookies |
 | 📜 История загрузок | 🔄 Выбор канала выпуска | 🌐 Поддержка прокси |
 | 🎚️ Конвертация аудиоформатов | 🎬 Настройки видеоформата | 🆙 Встроенная вкладка обновления |
-| 🌍 Общий режим | 🔊 Нормализация звука (EBU R128) | 🌍 Локализация на 14 языков |
+| 🌍 Общий режим | 🔊 Нормализация звука (EBU R128) | 🌍 Локализация на 16 языков |
 | 💾 Экспорт плейлиста | ⚙️ Качество и субтитры по умолчанию | |
 </div>
 
@@ -104,6 +111,8 @@ YTSage создан для пользователей, которым нужен
 </details>
 
 #### 🍎 macOS
+
+> ⚠️ **Примечание:** Эти установщики собраны для **Apple Silicon (M1/M2/M3/M4)**. Если вы используете Mac на процессоре Intel, используйте [установку через Python](#-установка-через-python--pypi) ниже.
 
 | Формат | Описание |
 |--------|-------------|
@@ -156,15 +165,17 @@ YTSage создан для пользователей, которым нужен
 ### 🐍 Установка через Python / PyPI
 *Вы также можете установить YTSage через Python (требуется Python 3.11+)*
 
+> 💡 **Отличная возможность:** При установке через pip на **Windows**, YTSage автоматически обнаружит и поможет настроить FFmpeg *(пользователи macOS и Linux могут использовать наше простое **[Руководство по установке FFmpeg](https://github.com/oop7/ffmpeg-install-guide)**)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 Обновить существующую установку</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -180,6 +191,46 @@ ytsage
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 Запуск через Docker
+*Запуск YTSage прямо в браузере без необходимости устанавливать Python, Qt или FFmpeg в систему.*
+
+Требуется Docker Desktop на Windows и macOS. Docker Engine с Docker Compose поддерживается на Linux.
+
+##### 1. Клонировать репозиторий
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. Запустить YTSage
+
+```bash
+docker compose up -d
+```
+
+Откройте [http://localhost:3000](http://localhost:3000) в браузере. YTSage работает как транслируемый рабочий стол внутри контейнера.
+
+Скачанные файлы сохраняются в папку `downloads` на хосте, а настройки и история — в `config`.
+
+##### Команды управления Docker
+
+```bash
+# Остановить YTSage
+docker compose down
+
+# Запустить снова
+docker compose up -d
+
+# Пересобрать после обновлений
+docker compose build
+docker compose up -d --force-recreate
+```
+
+Подробнее см. в [руководстве по Docker](../docker/README.md).
 
 ---
 
@@ -246,6 +297,8 @@ python -m ytsage.main
   </tr>
 </table>
 </div>
+
+<p align="right"><a href="#top">⬆️ Наверх</a></p>
 
 <a id="использование"></a>
 ## 📖 Использование
@@ -315,6 +368,7 @@ python -m ytsage.main
 - **Объединение субтитров:** "Вшивает" субтитры в видеофайл (hardcode).
 - **Сохранить описание:** Сохраняет описание видео в текстовый файл.
 - **Сохранить обложку:** Сохраняет превью видео как изображение.
+- **Встроить (Embed):** Кнопка позволяет встроить главы, метаданные и миниатюру непосредственно в загруженный видеофайл.
 - **Внедрить главы:** Добавляет маркеры глав в метаданные для совместимых медиаплееров.
 - **Удалить спонсорские вставки:** Использует SponsorBlock для удаления рекламных сегментов из видео.
 - **Обрезать видео:** Загружайте только части видео, указав временной интервал в формате `HH:MM:SS`.
@@ -368,7 +422,7 @@ python -m ytsage.main
 <details>
 <summary>🌍 Локализация</summary>
 
-YTSage поддерживает **14 языков**. Выберите нужный в **Custom Options → Language**.
+YTSage поддерживает **16 языков**. Выберите нужный в **Custom Options → Language**.
 
 ### Поддерживаемые языки
 
@@ -429,7 +483,7 @@ YTSage поддерживает **14 языков**. Выберите нужны
 - Эвристические алгоритмы антивирусов могут ошибочно идентифицировать упакованные исполняемые файлы как подозрительные.
 
 **Безопасные варианты:**
-- ✅ **Установка через pip:** `pip install ytsage` (рекомендуется)
+- ✅ **Установка через pip:** `pip install --pre ytsage` (рекомендуется)
 - ✅ **Сборка из исходников**: Инструкция [здесь](../.github/CI_CD_README.md)
 - ✅ **Добавить в исключения** антивируса.
 
@@ -554,13 +608,7 @@ YTSage/
 
 ## Star History
 
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 
@@ -573,6 +621,7 @@ YTSage/
 <div align="center">
 
 <p>Большое спасибо всем, кто внес свой вклад в этот проект, открывая проблемы с предложениями по улучшению или отчетами об ошибках.</p>
+<p>Особая благодарность <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> и <a href="https://github.com/dj23me"><strong>@dj23me</strong></a> как первым и главным спонсорам проекта ❤️</p>
 
 <table>
     <tr class="section"><th colspan="2">Основные компоненты</th></tr>

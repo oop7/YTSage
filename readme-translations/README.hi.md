@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,20 +19,24 @@
 
 ### 🌍 README भाषाएँ
 
-अंग्रेज़ी: [EN](../README.md)
-| अरबी: [AR](README.ar.md)
-| जर्मन: [DE](README.de.md)
-| स्पेनिश: [ES](README.es.md)
-| फ्रेंच: [FR](README.fr.md)
-| हिंदी: [HI](README.hi.md)
-| इंडोनेशियाई: [ID](README.id.md)
-| इतालवी: [IT](README.it.md)
-| जापानी: [JA](README.ja.md)
-| पोलिश: [PL](README.pl.md)
-| पुर्तगाली: [PT](README.pt.md)
-| रूसी: [RU](README.ru.md)
-| तुर्की: [TR](README.tr.md)
-| चीनी: [ZH](README.zh.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
+| Hindi: [HI](README.hi.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 <p align="center">
   <a href="#installation">स्थापना</a> •
@@ -38,6 +44,7 @@
   <a href="#usage">उपयोग</a> •
   <a href="#screenshots">स्क्रीनशॉट</a> •
   <a href="#troubleshooting">समस्या निवारण</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#sponsor">प्रायोजक</a> •
   <a href="#contributing">योगदान</a>
 </p>
@@ -71,7 +78,7 @@ YTSage उन उपयोगकर्ताओं के लिए डिज़
 | 📑 अध्याय एकीकरण | ✂️ वीडियो अनुभाग ट्रिम करें | 🍪 कुकी लॉगिन |
 | 📜 डाउनलोड इतिहास | 🔄 रिलीज़ चैनल चयन | 🌐 प्रॉक्सी समर्थन |
 | 🎚️ ऑडियो प्रारूप रूपांतरण | 🎬 वीडियो प्रारूप सेटिंग्स | 🆙 एकीकृत अपडेट टैब |
-| 🌍 जेनेरिक मोड | 🔊 ऑडियो सामान्यीकरण (EBU R128) | 🌍 14 भाषाओं में स्थानीयकरण |
+| 🌍 जेनेरिक मोड | 🔊 ऑडियो सामान्यीकरण (EBU R128) | 🌍 16 भाषाओं में स्थानीयकरण |
 | 💾 प्लेलिस्ट निर्यात | ⚙️ डिफ़ॉल्ट गुणवत्ता और उपशीर्षक | |
 </div>
 
@@ -103,6 +110,8 @@ YTSage उन उपयोगकर्ताओं के लिए डिज़
 </details>
 
 #### 🍎 macOS
+
+> ⚠️ **नोट:** ये इंस्टॉलर विशेष रूप से **Apple Silicon (M1/M2/M3/M4)** के लिए बनाए गए हैं। यदि आप पुराने Intel Mac का उपयोग कर रहे हैं, तो कृपया नीचे दी गई [Python स्थापना विधि](#-python--pypi-के-माध्यम-से-स्थापना) का उपयोग करें।
 
 | फ़ॉर्मेट | विवरण |
 |--------|-------------|
@@ -155,15 +164,17 @@ YTSage उन उपयोगकर्ताओं के लिए डिज़
 ### 🐍 Python / PyPI के माध्यम से स्थापना
 *आप Python के माध्यम से भी YTSage इंस्टॉल कर सकते हैं (Python 3.11+ की आवश्यकता है)*
 
+> 💡 **विशेष सुविधा:** यदि आप **Windows** पर pip के माध्यम से इंस्टॉल करते हैं, तो YTSage स्वचालित रूप से FFmpeg का पता लगाएगा और इसे सेटअप करने में सहायता करेगा *(macOS और Linux उपयोगकर्ता हमारे आसान **[FFmpeg स्थापना गाइड](https://github.com/oop7/ffmpeg-install-guide)** का पालन कर सकते हैं)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 मौजूदा स्थापना को अपडेट करें</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -179,6 +190,46 @@ ytsage
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 Docker के साथ चलाएँ
+*होस्ट पर Python, Qt, या FFmpeg इंस्टॉल किए बिना ब्राउज़र में YTSage चलाएँ।*
+
+Windows और macOS पर Docker Desktop की आवश्यकता है। Linux पर Docker Compose के साथ Docker Engine समर्थित है।
+
+##### 1. रिपॉजिटरी क्लोन करें
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. YTSage प्रारंभ करें
+
+```bash
+docker compose up -d
+```
+
+ब्राउज़र में [http://localhost:3000](http://localhost:3000) खोलें। YTSage कंटेनर के भीतर ब्राउज़र-स्ट्रीम डेस्कटॉप के रूप में चलता है।
+
+डाउनलोड की गई फ़ाइलें होस्ट के `downloads` फ़ोल्डर में और सेटिंग्स `config` फ़ोल्डर में सहेजी जाती हैं।
+
+##### Docker कमांड
+
+```bash
+# YTSage रोकें
+docker compose down
+
+# पुनः प्रारंभ करें
+docker compose up -d
+
+# अद्यतन के बाद पुनः निर्माण करें
+docker compose build
+docker compose up -d --force-recreate
+```
+
+अधिक जानकारी के लिए [Docker गाइड](../docker/README.md) देखें।
 
 ---
 
@@ -247,6 +298,8 @@ python -m ytsage.main
 </table>
 </div>
 
+<p align="right"><a href="#top">⬆️ वापस ऊपर जाएँ</a></p>
+
 <a id="usage"></a>
 ## 📖 उपयोग
 
@@ -271,6 +324,23 @@ python -m ytsage.main
 6. **"डाउनलोड करें" पर क्लिक करें**
 
 > 💡 डिफ़ॉल्ट डाउनलोड निर्देशिका उपयोगकर्ता का "Downloads" फ़ोल्डर है।
+
+</details>
+
+<details>
+<summary>📋 डाउनलोड कतार (Download Queue)</summary>
+
+पहले कई डाउनलोड कॉन्फ़िगर करने और उन्हें एक साथ शुरू करने के लिए डाउनलोड कतार का उपयोग करें:
+
+1. **वीडियो या प्लेलिस्ट URL पेस्ट करें**
+2. **"विश्लेषण करें" पर क्लिक करें**
+3. **फ़ॉर्मेट, गुणवत्ता, उपशीर्षक और अन्य विकल्प चुनें**
+4. `"डाउनलोड करें"` के स्थान पर **"कतार में जोड़ें" (Add to queue)** पर क्लिक करें
+5. प्रत्येक डाउनलोड के लिए उपरोक्त चरणों को दोहराएँ
+6. नौकरियों की समीक्षा या प्रबंधन के लिए **"कतार" (Queue)** पर क्लिक करें
+7. कतार संवाद में **"कतार शुरू करें" (Start queue)** पर क्लिक करें
+
+कतारबद्ध डाउनलोड एक के बाद एक क्रमिक रूप से चलते हैं। ऐप बंद करने पर भी कतार सुरक्षित रहती है।
 
 </details>
 
@@ -315,6 +385,7 @@ python -m ytsage.main
 - **उपशीर्षक मर्जिंग:** हार्डकोडेड उपशीर्षक के लिए वीडियो फ़ाइल में उपशीर्षक मर्ज करें।
 - **विवरण सहेजें:** वीडियो विवरण को टेक्स्ट फ़ाइल के रूप में सहेजें।
 - **थंबनेल सहेजें:** वीडियो थंबनेल को छवि फ़ाइल के रूप में सहेजें।
+- **एम्बेड (Embed):** यह बटन आपको डाउनलोड की गई वीडियो फ़ाइल में अध्याय, मेटाडेटा और थंबनेल एम्बेड करने की अनुमति देता है।
 - **अध्याय एम्बेड करें:** संगत वीडियो प्लेयर के लिए मेटाडेटा के रूप में अध्याय मार्कर शामिल करें।
 - **प्रायोजित अनुभाग हटाएँ:** SponsorBlock का उपयोग करके वीडियो से प्रायोजित अनुभाग हटाएँ।
 - **वीडियो ट्रिम करें:** `HH:MM:SS` प्रारूप में समय सीमा निर्दिष्ट करके वीडियो के केवल विशिष्ट भागों को डाउनलोड करें।
@@ -368,7 +439,7 @@ python -m ytsage.main
 <details>
 <summary>🌍 स्थानीयकरण</summary>
 
-YTSage वैश्विक पहुँच के लिए **14 भाषाओं** का समर्थन करता है। **Custom Options → Language** में अपनी पसंदीदा भाषा चुनें।
+YTSage वैश्विक पहुँच के लिए **16 भाषाओं** का समर्थन करता है। **Custom Options → Language** में अपनी पसंदीदा भाषा चुनें।
 
 ### समर्थित भाषाएँ
 
@@ -429,7 +500,7 @@ YTSage वैश्विक पहुँच के लिए **14 भाषा�
 - एंटीवायरस हिउरिस्टिक्स पैक किए गए एक्जीक्यूटेबल्स को संदिग्ध के रूप में गलत तरीके से पहचान सकते हैं।
 
 **सुरक्षित विकल्प:**
-- ✅ **pip स्थापना का उपयोग करें:** `pip install ytsage` (अनुशंसित)
+- ✅ **pip स्थापना का उपयोग करें:** `pip install --pre ytsage` (अनुशंसित)
 - ✅ **स्रोत से बिल्ड करें**: इस [गाइड](../.github/CI_CD_README.md) का पालन करते हुए
 - ✅ **एप्लिकेशन को व्हाइटलिस्ट करें** अपने एंटीवायरस सॉफ़्टवेयर में।
 
@@ -561,13 +632,7 @@ YTSage/
 
 ## Star History
 
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 

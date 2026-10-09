@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,20 +19,24 @@
 
 ### 🌍 README 言語
 
-英語: [EN](../README.md)
-| アラビア語: [AR](README.ar.md)
-| ドイツ語: [DE](README.de.md)
-| スペイン語: [ES](README.es.md)
-| フランス語: [FR](README.fr.md)
-| ヒンディー語: [HI](README.hi.md)
-| インドネシア語: [ID](README.id.md)
-| イタリア語: [IT](README.it.md)
-| 日本語: [JA](README.ja.md)
-| ポーランド語: [PL](README.pl.md)
-| ポルトガル語: [PT](README.pt.md)
-| ロシア語: [RU](README.ru.md)
-| トルコ語: [TR](README.tr.md)
-| 中国語: [ZH](README.zh.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
+| Hindi: [HI](README.hi.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 <p align="center">
   <a href="#インストール">インストール</a> •
@@ -38,6 +44,7 @@
   <a href="#使い方">使い方</a> •
   <a href="#スクリーンショット">スクリーンショット</a> •
   <a href="#トラブルシューティング">トラブルシューティング</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#スポンサー">スポンサー</a> •
   <a href="#貢献">貢献</a>
 </p>
@@ -105,6 +112,8 @@ YTSageは、**シンプルでありながら強力なYouTubeダウンローダ�
 
 #### 🍎 macOS
 
+> ⚠️ **注意:** これらのインストーラーは **Apple Silicon (M1/M2/M3/M4)** 向けにネイティブビルドされています。以前の Intel Mac をご利用の場合は、下記の [Python 経由でのインストール](#-python--pypi-経由でインストール) をご使用ください。
+
 | フォーマット | 説明 |
 |--------|-------------|
 | ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **ディスクイメージインストーラー (推奨)** - 開いて Applications にドラッグ。 |
@@ -156,15 +165,17 @@ YTSageは、**シンプルでありながら強力なYouTubeダウンローダ�
 ### 🐍 Python / PyPI 経由でインストール
 *Python 経由で YTSage をインストールすることもできます (Python 3.11+ が必要)*
 
+> 💡 **便利な機能:** **Windows** 環境で pip 経由でインストールした場合、YTSage は自動的に FFmpeg を検出してセットアップを支援します *(macOS および Linux ユーザーはわかりやすい **[FFmpeg インストールガイド](https://github.com/oop7/ffmpeg-install-guide)** をご覧ください)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 既存のインストールを更新する</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -180,6 +191,46 @@ ytsage
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 Docker で実行
+*ホストに Python、Qt、FFmpeg をインストールすることなく、ブラウザ上で YTSage を動かせます。*
+
+Windows および macOS では Docker Desktop が必要です。Linux では Docker Engine と Docker Compose がサポートされています。
+
+##### 1. リポジトリをクローン
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. YTSage を起動
+
+```bash
+docker compose up -d
+```
+
+ブラウザで [http://localhost:3000](http://localhost:3000) を開きます。YTSage はコンテナ内のブラウザ配信デスクトップとして動作します。
+
+ダウンロードしたファイルはホストの `downloads` フォルダに、設定や履歴は `config` フォルダに保存されます。
+
+##### Docker 管理コマンド
+
+```bash
+# YTSage の停止
+docker compose down
+
+# 再起動
+docker compose up -d
+
+# 設定や更新後の再ビルド
+docker compose build
+docker compose up -d --force-recreate
+```
+
+詳細は [Docker ガイド](../docker/README.md) を参照してください。
 
 ---
 
@@ -247,6 +298,8 @@ python -m ytsage.main
 </table>
 </div>
 
+<p align="right"><a href="#top">⬆️ トップに戻る</a></p>
+
 <a id="使い方"></a>
 ## 📖 使い方
 
@@ -271,6 +324,23 @@ python -m ytsage.main
 6. **「ダウンロード」をクリック**
 
 > 💡 デフォルトのダウンロードディレクトリはユーザーの「ダウンロード」フォルダです。
+
+</details>
+
+<details>
+<summary>📋 ダウンロードキュー (Download Queue)</summary>
+
+ダウンロードキューを使用すると、複数のダウンロードをあらかじめ設定しておき、まとめて順次ダウンロードできます:
+
+1. **ビデオまたはプレイリストの URL を貼り付け**
+2. **「解析」をクリック**
+3. **フォーマット、画質、字幕、その他のオプションを選択**
+4. 「ダウンロード」の代わりに **「キューに追加」 (Add to queue)** をクリック
+5. 予約したいダウンロードごとに上記を繰り返す
+6. **「キュー」 (Queue)** をクリックしてジョブを確認・整理
+7. ダイアログ内で **「キューを開始」 (Start queue)** をクリック
+
+キュー内のダウンロードは、各ジョブが追加された際の設定通りに順番に実行されます。キューの状態はアプリ終了後も保持されます。
 
 </details>
 
@@ -315,6 +385,7 @@ Dailymotion、CBC Gem、TikTok など、yt-dlp がサポートするサイトか
 - **字幕結合:** 字幕をビデオファイルにマージして、焼き付け字幕（ハードコード）にします。
 - **説明の保存:** ビデオの説明をテキストファイルとして保存します。
 - **サムネイルの保存:** ビデオのサムネイルを画像ファイルとして保存します。
+- **埋め込み (Embed):** チャプター、メタデータ、サムネイル画像をダウンロードした動画ファイルに直接埋め込みます。
 - **チャプターの埋め込み:** 対応しているビデオプレーヤー用に、チャプターマーカーをメタデータとして含めます。
 - **スポンサーセクションを削除:** SponsorBlock を使用して、ビデオからスポンサーセグメントを削除します。
 - **ビデオのトリミング:** `HH:MM:SS` 形式で時間範囲を指定して、ビデオの特定のセクションのみをダウンロードします。
@@ -429,7 +500,7 @@ YTSage はグローバルに対応するため、**14 言語**をサポートし
 - アンチウイルスのヒューリスティック機能が、パッケージ化された実行ファイルを疑わしいものとして誤認することがあります。
 
 **安全な選択肢：**
-- ✅ **pip インストールを使用する:** `pip install ytsage` (推奨)
+- ✅ **pip インストールを使用する:** `pip install --pre ytsage` (推奨)
 - ✅ **ソースからビルドする**: この[ガイド](../.github/CI_CD_README.md)に従ってください。
 - ✅ **アプリケーションをホワイトリストに追加する** (アンチウイルスソフトウェアの設定)。
 
@@ -561,13 +632,7 @@ YTSage/
 
 ## Star History
 
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 
