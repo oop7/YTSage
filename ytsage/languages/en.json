@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "Path to cookies.txt file...",
     "browser_selection": "Browser Selection",
     "browser_help": "Select the browser to extract cookies from:",
+    "browser_cookie_note": "If Chrome or Brave cookie extraction fails, export a Netscape-format cookies.txt file with a trusted browser extension and select 'Use cookie file'. Firefox direct extraction is often more reliable.",
     "browser_label": "Browser:",
     "firefox_recommended": "Firefox recommended",
     "profile_label": "Profile:",

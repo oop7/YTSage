@@ -412,6 +412,7 @@ Notes:
 - **Browser Cookie Extraction (Recommended)**
   - Direct extraction from installed browsers: **Firefox** (preferred), **Chrome**, **Edge**, **Brave**, **Opera**, **Vivaldi**, etc.
     - Includes optional profile selection.
+    - If Chrome or Brave extraction fails on Windows, export a Netscape-format `cookies.txt` file with a trusted browser extension and select **Use cookie file** instead. Firefox direct extraction is often more reliable.
   - **Cookie File:** Load a Netscape format `cookies.txt` file.
 - **Proxy & Geo-Verification Proxy Support:** Configure main proxy server and optional geo-verification proxy (SOCKS4/5 or HTTP/HTTPS) to bypass location restrictions. Access via **Custom Options → Proxy**.
 - **Generic Mode:** Allow YTSage to process and download from non-YouTube URLs supported by yt-dlp. Toggle in **Download Settings → General → Generic Mode**.

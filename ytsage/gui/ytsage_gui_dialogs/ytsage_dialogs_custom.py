@@ -178,6 +178,11 @@ class CustomOptionsDialog(QDialog):
         browser_help.setStyleSheet("color: #999999; font-size: 11px;")
         browser_layout.addWidget(browser_help)
 
+        browser_cookie_note = QLabel(_('cookies.browser_cookie_note'))
+        browser_cookie_note.setWordWrap(True)
+        browser_cookie_note.setStyleSheet("color: #c9a227; font-size: 11px;")
+        browser_layout.addWidget(browser_cookie_note)
+
         browser_select_layout = QHBoxLayout()
         browser_select_layout.addWidget(QLabel(_('cookies.browser_label')))
 

@@ -107,6 +107,9 @@ class LocalizationManager:
             "proxy": "Proxy",
             "language": "Language"
         },
+        "cookies": {
+            "browser_cookie_note": "If Chrome or Brave cookie extraction fails, export a Netscape-format cookies.txt file with a trusted browser extension and select 'Use cookie file'. Firefox direct extraction is often more reliable."
+        },
         "main_ui": {
             "url_placeholder": "Enter YouTube video or playlist URL",
             "url_placeholder_generic": "Enter video or playlist URL from any supported site",
