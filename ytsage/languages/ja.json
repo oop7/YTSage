@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "cookies.txtへのパス...",
     "browser_selection": "ブラウザ選択",
     "browser_help": "Cookieを抽出するブラウザを選択してください:",
+    "browser_cookie_note": "ChromeまたはBraveからCookieを抽出できない場合は、信頼できるブラウザ拡張機能でNetscape形式のcookies.txtファイルをエクスポートし、「Cookieファイルを使用」を選択してください。Firefoxからの直接抽出の方が安定することがよくあります。",
     "browser_label": "ブラウザ:",
     "firefox_recommended": "Firefox推奨",
     "profile_label": "プロファイル:",

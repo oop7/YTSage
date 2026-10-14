@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "cookies.txt 파일 경로...",
     "browser_selection": "브라우저 선택",
     "browser_help": "쿠키를 추출할 브라우저를 선택하세요:",
+    "browser_cookie_note": "Chrome 또는 Brave에서 쿠키 추출에 실패하면 신뢰할 수 있는 브라우저 확장 프로그램으로 Netscape 형식의 cookies.txt 파일을 내보낸 후 «쿠키 파일 사용»을 선택하세요. Firefox에서 직접 추출하는 방법이 더 안정적인 경우가 많습니다.",
     "browser_label": "브라우저:",
     "firefox_recommended": "Firefox 권장",
     "profile_label": "프로필:",

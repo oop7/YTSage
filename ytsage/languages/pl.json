@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "Ścieżka do pliku cookies.txt...",
     "browser_selection": "Wybór przeglądarki",
     "browser_help": "Wybierz przeglądarkę do wyodrębnienia ciasteczek:",
+    "browser_cookie_note": "Jeśli wyodrębnianie ciasteczek z Chrome lub Brave nie powiedzie się, wyeksportuj plik cookies.txt w formacie Netscape za pomocą zaufanego rozszerzenia przeglądarki i wybierz opcję „Użyj pliku ciasteczek”. Bezpośrednie wyodrębnianie z Firefoksa jest często bardziej niezawodne.",
     "browser_label": "Przeglądarka:",
     "firefox_recommended": "Zalecany Firefox",
     "profile_label": "Profil:",

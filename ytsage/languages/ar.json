@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "مسار ملف cookies.txt...",
     "browser_selection": "اختيار المتصفح",
     "browser_help": "اختر المتصفح لاستخراج ملفات تعريف الارتباط منه:",
+    "browser_cookie_note": "إذا فشل استخراج ملفات تعريف الارتباط من Chrome أو Brave، فصدّر ملف cookies.txt بتنسيق Netscape باستخدام إضافة موثوقة للمتصفح واختر «استخدام ملف ملفات تعريف الارتباط». غالبًا ما يكون الاستخراج المباشر من Firefox أكثر موثوقية.",
     "browser_label": "المتصفح:",
     "firefox_recommended": "يوصى بمتصفح Firefox",
     "profile_label": "الملف الشخصي:",

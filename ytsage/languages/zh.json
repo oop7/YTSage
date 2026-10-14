@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "cookies.txt 文件路径...",
     "browser_selection": "浏览器选择",
     "browser_help": "选择要从中提取 cookie 的浏览器：",
+    "browser_cookie_note": "如果无法从 Chrome 或 Brave 提取 Cookie，请使用可信的浏览器扩展导出 Netscape 格式的 cookies.txt 文件，然后选择“使用 Cookie 文件”。直接从 Firefox 提取通常更可靠。",
     "browser_label": "浏览器：",
     "firefox_recommended": "推荐使用 Firefox",
     "profile_label": "配置文件：",

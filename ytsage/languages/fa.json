@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "مسیر فایل cookies.txt...",
     "browser_selection": "انتخاب مرورگر",
     "browser_help": "مرورگری که کوکی از آن استخراج شود را انتخاب کنید:",
+    "browser_cookie_note": "اگر استخراج کوکی از Chrome یا Brave ناموفق بود، با استفاده از یک افزونه قابل اعتماد مرورگر، فایل cookies.txt را با قالب Netscape صادر کنید و گزینه «استفاده از فایل کوکی» را انتخاب کنید. استخراج مستقیم از Firefox اغلب قابل اعتمادتر است.",
     "browser_label": "مرورگر:",
     "firefox_recommended": "فایرفاکس توصیه می‌شود",
     "profile_label": "پروفایل:",

@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "Pfad zur cookies.txt-Datei...",
     "browser_selection": "Browser-Auswahl",
     "browser_help": "Wählen Sie den Browser aus, aus dem Cookies extrahiert werden sollen:",
+    "browser_cookie_note": "Falls der Cookie-Export aus Chrome oder Brave fehlschlägt, exportieren Sie mit einer vertrauenswürdigen Browser-Erweiterung eine cookies.txt-Datei im Netscape-Format und wählen Sie „Cookie-Datei verwenden“. Der direkte Export aus Firefox ist oft zuverlässiger.",
     "browser_label": "Browser:",
     "firefox_recommended": "Firefox empfohlen",
     "profile_label": "Profil:",

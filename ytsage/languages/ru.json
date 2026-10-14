@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "Путь к файлу cookies.txt...",
     "browser_selection": "Выбор браузера",
     "browser_help": "Выберите браузер для извлечения cookie:",
+    "browser_cookie_note": "Если извлечение cookie из Chrome или Brave не удаётся, экспортируйте файл cookies.txt в формате Netscape с помощью надёжного расширения браузера и выберите «Использовать файл cookie». Прямое извлечение из Firefox часто работает надёжнее.",
     "browser_label": "Браузер:",
     "firefox_recommended": "Рекомендуется Firefox",
     "profile_label": "Профиль:",

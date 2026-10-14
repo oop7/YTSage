@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "cookies.txt dosya yolu...",
     "browser_selection": "Tarayıcı seçimi",
     "browser_help": "Çerezleri çıkaracak tarayıcıyı seçin:",
+    "browser_cookie_note": "Chrome veya Brave'den çerez çıkarma başarısız olursa, güvenilir bir tarayıcı uzantısı kullanarak Netscape biçiminde bir cookies.txt dosyası dışa aktarın ve «Çerez dosyası kullan» seçeneğini belirleyin. Firefox'tan doğrudan çıkarma genellikle daha güvenilirdir.",
     "browser_label": "Tarayıcı:",
     "firefox_recommended": "Firefox önerilir",
     "profile_label": "Profil:",

@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "Jalur ke file cookies.txt...",
     "browser_selection": "Pilihan browser",
     "browser_help": "Pilih browser untuk mengekstrak cookies:",
+    "browser_cookie_note": "Jika ekstraksi cookie dari Chrome atau Brave gagal, ekspor file cookies.txt berformat Netscape menggunakan ekstensi browser tepercaya, lalu pilih «Gunakan file cookie». Ekstraksi langsung dari Firefox biasanya lebih andal.",
     "browser_label": "Browser:",
     "firefox_recommended": "Firefox direkomendasikan",
     "profile_label": "Profil:",

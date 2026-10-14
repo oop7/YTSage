@@ -121,6 +121,7 @@
     "cookie_file_placeholder": "cookies.txt फ़ाइल का पथ...",
     "browser_selection": "ब्राउज़र चयन",
     "browser_help": "वह ब्राउज़र चुनें जिससे कुकीज़ निकालनी हैं:",
+    "browser_cookie_note": "यदि Chrome या Brave से कुकीज़ निकालना विफल हो, तो किसी विश्वसनीय ब्राउज़र एक्सटेंशन से Netscape-प्रारूप वाली cookies.txt फ़ाइल निर्यात करें और «कुकी फ़ाइल का उपयोग करें» चुनें। Firefox से सीधे कुकीज़ निकालना अक्सर अधिक विश्वसनीय होता है।",
     "browser_label": "ब्राउज़र:",
     "firefox_recommended": "फ़ायरफ़ॉक्स अनुशंसित",
     "profile_label": "प्रोफ़ाइल:",
