@@ -33,6 +33,7 @@ from PySide6.QtWidgets import (
     QGraphicsScene,
     QGraphicsPixmapItem,
     QGraphicsDropShadowEffect,
+    QGridLayout,
 )
 from PySide6.QtGui import QIcon, QPixmap, QPainter, QBrush, QColor
 
@@ -684,13 +685,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         progress_layout.addWidget(self.download_details_label)
 
         # Create a horizontal layout for status label and open folder button
-        status_layout = QHBoxLayout()
+        status_layout = QGridLayout()
         
         self.status_label = QLabel(_("app.ready"))
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setStyleSheet(StyleSheet.STATUS_LABEL)
-        status_layout.addWidget(self.playlist_progress_label)
-        status_layout.addWidget(self.status_label)
+        status_layout.addWidget(self.playlist_progress_label, 0, 0)
+        status_layout.addWidget(self.status_label, 0, 1)
 
         # Add "Open Folder" button (initially hidden)
         self.open_folder_btn = QPushButton("📁")
@@ -699,7 +700,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.open_folder_btn.setStyleSheet(StyleSheet.OPEN_FOLDER_BUTTON)
         self.open_folder_btn.clicked.connect(self.open_download_folder)
         self.open_folder_btn.setVisible(False)  # Hidden by default
-        status_layout.addWidget(self.open_folder_btn)
+        status_layout.addWidget(self.open_folder_btn, 0, 2, alignment=Qt.AlignmentFlag.AlignRight)
+        status_layout.setColumnStretch(0, 1)
+        status_layout.setColumnStretch(1, 1)
+        status_layout.setColumnStretch(2, 1)
         
         progress_layout.addLayout(status_layout)
 
@@ -1017,6 +1021,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(True)
         self.animate_widget_fade_out(self.pause_btn)
         self.animate_widget_fade_out(self.cancel_btn)
+        self.playlist_progress = None
+        self.playlist_progress_label.clear()
         self.progress_bar.setValue(10000)  # 100% in 0-10000 range
 
         # Set completion message based on the file type of last downloaded file
