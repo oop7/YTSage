@@ -196,7 +196,7 @@ class SubtitleSelectionDialog(QDialog):
 
 
 class PlaylistSelectionDialog(QDialog):
-    def __init__(self, playlist_entries, previously_selected_string, parent=None) -> None:
+    def __init__(self, playlist_entries, previously_selected_string, parent=None, previously_reversed=False) -> None:
         super().__init__(parent)
         self.setWindowTitle(_("playlist.select_videos_title"))
         self.setMinimumWidth(500)
@@ -204,6 +204,7 @@ class PlaylistSelectionDialog(QDialog):
 
         self.playlist_entries = playlist_entries
         self.checkboxes = []
+        self.previously_reversed = previously_reversed
 
         # Main layout
         main_layout = QVBoxLayout(self)
@@ -257,12 +258,18 @@ class PlaylistSelectionDialog(QDialog):
         deselect_all_btn.setStyleSheet(select_all_btn.styleSheet())
         button_layout.addWidget(select_all_btn)
         button_layout.addWidget(deselect_all_btn)
+        self.reverse_order_checkbox = QCheckBox(_("playlist.reverse_order"))
+        self.reverse_order_checkbox.setChecked(previously_reversed)
+        self.reverse_order_checkbox.setToolTip(_("playlist.reverse_order_tooltip"))
+        self.reverse_order_checkbox.stateChanged.connect(self._toggle_reverse_order)
+        button_layout.addWidget(self.reverse_order_checkbox)
         button_layout.addStretch()
         main_layout.addLayout(button_layout)
 
         # Scrollable area for checkboxes
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         scroll_area.setStyleSheet("QScrollArea { border: none; }")  # Remove border around scroll area
         scroll_widget = QWidget()
         self.list_layout = QVBoxLayout(scroll_widget)  # Layout for checkboxes
@@ -378,7 +385,11 @@ class PlaylistSelectionDialog(QDialog):
                 child.widget().deleteLater()
         self.checkboxes.clear()
 
-        for index, entry in enumerate(self.playlist_entries):
+        entries = enumerate(self.playlist_entries)
+        if self.reverse_order_checkbox.isChecked():
+            entries = reversed(list(entries))
+
+        for index, entry in entries:
             if not entry:
                 continue  # Skip None entries if yt-dlp returns them
 
@@ -432,6 +443,13 @@ class PlaylistSelectionDialog(QDialog):
             self.checkboxes.append(checkbox)
         self.list_layout.addStretch()  # Push checkboxes to the top
 
+    def _toggle_reverse_order(self) -> None:
+        """Rebuild the list immediately while preserving the current selection."""
+        selected_items = self._condense_indices(
+            [cb.property("video_index") for cb in self.checkboxes if cb.isChecked()]
+        )
+        self._populate_list(selected_items)
+
     def _select_all(self) -> None:
         for checkbox in self.checkboxes:
             checkbox.setChecked(True)
@@ -467,11 +485,18 @@ class PlaylistSelectionDialog(QDialog):
         """Returns the selection string based on checked boxes."""
         selected_indices = [cb.property("video_index") for cb in self.checkboxes if cb.isChecked()]
 
+        if self.reverse_order_checkbox.isChecked():
+            return ",".join(str(index) for index in sorted(selected_indices, reverse=True))
+
         # Check if all items are selected
         if len(selected_indices) == len(self.playlist_entries):
             return None  # yt-dlp default is all items, so return None or empty string
 
         return self._condense_indices(selected_indices)
+
+    def is_reverse_order(self) -> bool:
+        """Returns whether the playlist should be downloaded in reverse order."""
+        return self.reverse_order_checkbox.isChecked()
 
 
 class SponsorBlockCategoryDialog(QDialog):

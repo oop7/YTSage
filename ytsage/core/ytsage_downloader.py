@@ -243,6 +243,12 @@ class DownloadThread(QThread):
     def _build_yt_dlp_command(self) -> List[str]:
         """Build the yt-dlp command line with all options for direct execution."""
         yt_dlp_path: str = get_yt_dlp_path()
+        video_audio_conversion = (
+            not self.is_audio_only
+            and self.force_audio_format
+            and self.preferred_audio_format
+            and self.preferred_audio_format != "best"
+        )
         # Build the command line array
         cmd: List[str] = [yt_dlp_path]
         logger.debug(f"Using yt-dlp from: {yt_dlp_path}")
@@ -260,17 +266,33 @@ class DownloadThread(QThread):
                 logger.debug(f"Playlist mode: using dynamic best audio fallback instead of format_id")
             elif self.format_id:
                 clean_format_id: str = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
-                cmd.extend(["-f", clean_format_id])
-                logger.debug(f"Playlist mode: using preset format expression: {clean_format_id}")
+                if video_audio_conversion:
+                    merged_format = f"{clean_format_id}+bestaudio/best"
+                    cmd.extend(["-f", merged_format])
+                    logger.debug(
+                        "Playlist mode: using preset format with a separate audio "
+                        f"merge for conversion: {merged_format}"
+                    )
+                else:
+                    cmd.extend(["-f", clean_format_id])
+                    logger.debug(f"Playlist mode: using preset format expression: {clean_format_id}")
             else:
                 try:
                     if self.resolution and self.resolution != "default":
                         res_str = str(self.resolution)
                         h = min(map(int, res_str.split('x'))) if 'x' in res_str else int(res_str)
-                        cmd.extend(["-S", f"res:{h}"])
-                        logger.debug(f"Playlist mode: using resolution limiter -S res:{h}")
+                        if video_audio_conversion:
+                            cmd.extend(["-f", f"bestvideo[height<={h}]+bestaudio/best"])
+                            logger.debug(
+                                "Playlist mode: using resolution-limited video/audio "
+                                "merge for audio conversion"
+                            )
+                        else:
+                            cmd.extend(["-S", f"res:{h}"])
+                            logger.debug(f"Playlist mode: using resolution limiter -S res:{h}")
                     else:
-                        cmd.extend(["-f", "bestvideo+bestaudio/best"])
+                        format_expression = "bestvideo+bestaudio/best"
+                        cmd.extend(["-f", format_expression])
                         logger.debug("Playlist mode: using dynamic best quality overall")
                 except ValueError:
                     cmd.extend(["-f", "bestvideo+bestaudio/best"])
@@ -312,8 +334,16 @@ class DownloadThread(QThread):
                 logger.debug(f"Using video format merged with selected audio track(s): {merged_format}")
             # If the selected format already includes an audio track (progressive), no merge needed.
             elif self.format_has_audio:
-                cmd.extend(["-f", clean_format_id])
-                logger.debug(f"Using progressive format with bundled audio: {clean_format_id}")
+                if video_audio_conversion:
+                    merged_format = f"{clean_format_id}+bestaudio/best"
+                    cmd.extend(["-f", merged_format])
+                    logger.debug(
+                        "Using progressive video with a separate audio merge for "
+                        f"audio conversion: {merged_format}"
+                    )
+                else:
+                    cmd.extend(["-f", clean_format_id])
+                    logger.debug(f"Using progressive format with bundled audio: {clean_format_id}")
             else:
                 cmd.extend(["-f", f"{clean_format_id}+bestaudio/best"])
                 logger.debug(f"Using video-only format merged with best audio: {clean_format_id}+bestaudio/best")
@@ -324,7 +354,7 @@ class DownloadThread(QThread):
 
         # Force output format if enabled and merging is needed (for video)
         if self.force_output_format and not self.is_audio_only:
-            if self.format_has_audio and not self.audio_format_ids:
+            if self.format_has_audio and not self.audio_format_ids and not video_audio_conversion:
                 # Progressive format (video with audio) - use remux to convert container
                 cmd.extend(["--remux-video", self.preferred_output_format])
                 logger.debug(f"Using --remux-video to force progressive format to: {self.preferred_output_format}")
@@ -333,7 +363,7 @@ class DownloadThread(QThread):
                 cmd.extend(["--merge-output-format", self.preferred_output_format])
                 logger.debug(f"Using --merge-output-format to force merged format to: {self.preferred_output_format}")
 
-        # Force audio format conversion for audio-only downloads
+        # Force audio format conversion for audio-only and merged video downloads.
         if self.is_audio_only and self.force_audio_format:
             cmd.append("--extract-audio")
             if self.preferred_audio_format and self.preferred_audio_format != "best":
@@ -345,6 +375,32 @@ class DownloadThread(QThread):
                 logger.debug(f"Using --extract-audio with --audio-format {self.preferred_audio_format} for audio-only download")
             else:
                 logger.debug("Using --extract-audio with best quality (no conversion) for audio-only download")
+
+        if video_audio_conversion:
+            audio_codec = {
+                "aac": "aac",
+                "m4a": "aac",
+                "mp3": "libmp3lame",
+                "flac": "flac",
+                "wav": "pcm_s16le",
+                "opus": "libopus",
+                "vorbis": "libvorbis",
+            }.get(self.preferred_audio_format)
+            if audio_codec:
+                # Copy the selected video stream and re-encode only audio.
+                cmd.extend([
+                    "--postprocessor-args",
+                    f"Merger+ffmpeg_o:-c:v copy -c:a {audio_codec}",
+                ])
+                logger.debug(
+                    "Using Merger postprocessor to copy video and convert audio "
+                    f"to {self.preferred_audio_format}"
+                )
+            else:
+                logger.warning(
+                    "Unsupported preferred audio format for video conversion: "
+                    f"{self.preferred_audio_format}"
+                )
                 
         # Add Audio Normalization if enabled (only applies to audio-only downloads)
         if self.audio_normalization and self.is_audio_only:

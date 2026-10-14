@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="YTSage Arayüzü"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,20 +19,24 @@ Videoları herhangi bir kalitede indirin, sesleri çıkarın, altyazıları alı
 
 ### 🌍 README Dilleri
 
-İngilizce: [EN](../README.md)
-| Arapça: [AR](README.ar.md)
-| Almanca: [DE](README.de.md)
-| İspanyolca: [ES](README.es.md)
-| Fransızca: [FR](README.fr.md)
-| Hintçe: [HI](README.hi.md)
-| Endonezce: [ID](README.id.md)
-| İtalyanca: [IT](README.it.md)
-| Japonca: [JA](README.ja.md)
-| Lehçe: [PL](README.pl.md)
-| Portekizce: [PT](README.pt.md)
-| Rusça: [RU](README.ru.md)
-| Türkçe: [TR](README.tr.md)
-| Çince: [ZH](README.zh.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
+| Hindi: [HI](README.hi.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 <p align="center">
   <a href="#kurulum">Kurulum</a> •
@@ -38,6 +44,7 @@ Videoları herhangi bir kalitede indirin, sesleri çıkarın, altyazıları alı
   <a href="#kullanım">Kullanım</a> •
   <a href="#ekran-görüntüleri">Ekran Görüntüleri</a> •
   <a href="#sorun-giderme">Sorun Giderme</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#sponsor-olun">Sponsor Olun</a> •
   <a href="#katkıda-bulunma">Katkıda Bulunma</a>
 </p>
@@ -71,7 +78,7 @@ YTSage, **basit ama güçlü bir YouTube indiricisi** isteyen kullanıcılar iç
 | 📑 Bölüm Entegrasyonu | ✂️ Video Kırpma | 🍪 Çerez ile Giriş |
 | 📜 İndirme Geçmişi | 🔄 Yayın Kanalı Seçimi | 🌐 Proxy Desteği |
 | 🎚️ Ses Formatı Dönüştürme | 🎬 Video Format Ayarları | 🆙 Entegre Güncelleme Sekmesi |
-| 🌍 Genel Mod | 🔊 Ses Normalizasyonu (EBU R128) | 🌍 14 Dilde Yerelleştirme |
+| 🌍 Genel Mod | 🔊 Ses Normalizasyonu (EBU R128) | 🌍 16 Dilde Yerelleştirme |
 | 💾 Oynatma Listesi Dışa Aktarma | ⚙️ Varsayılan Kalite ve Altyazı | |
 </div>
 
@@ -104,6 +111,8 @@ YTSage, **basit ama güçlü bir YouTube indiricisi** isteyen kullanıcılar iç
 </details>
 
 #### 🍎 macOS
+
+> ⚠️ **Not:** Bu yükleyiciler **Apple Silicon (M1/M2/M3/M4)** için yerel olarak derlenmiştir. Intel işlemcili bir Mac kullanıyorsanız, lütfen aşağıdaki [Python kurulum yöntemini](#-python--pypi-üzerinden-kurulum) kullanın.
 
 | Biçim | Açıklama |
 |--------|-------------|
@@ -156,15 +165,17 @@ YTSage, **basit ama güçlü bir YouTube indiricisi** isteyen kullanıcılar iç
 ### 🐍 Python / PyPI Üzerinden Kurulum
 *YTSage'i Python üzerinden de kurabilirsiniz (Python 3.11+ gerektirir)*
 
+> 💡 **Harika Özellik:** **Windows** üzerinde pip ile kurulum yaparsanız, YTSage FFmpeg'i otomatik olarak algılar ve kurmanıza yardımcı olur *(macOS ve Linux kullanıcıları kolay **[FFmpeg Kurulum Kılavuzumuzu](https://github.com/oop7/ffmpeg-install-guide)** takip edebilir)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 Mevcut Kurulumu Güncelle</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -180,6 +191,46 @@ YTSage'i önceden doldurulmuş bir video veya oynatma listesi URL'si ile açıp 
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 Docker ile Çalıştırma
+*YTSage'i ana makineye Python, Qt veya FFmpeg yüklemeden bir tarayıcıda çalıştırın.*
+
+Windows ve macOS üzerinde Docker Desktop gereklidir. Linux üzerinde Docker Compose ile Docker Engine desteklenir.
+
+##### 1. Depoyu klonlayın
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. YTSage'i Başlatın
+
+```bash
+docker compose up -d
+```
+
+Tarayıcıda [http://localhost:3000](http://localhost:3000) adresini açın. YTSage konteyner içinde tarayıcı üzerinden aktarılan bir masaüstü olarak çalışır.
+
+İndirilen dosyalar ana makinedeki `downloads` klasörüne, ayarlar ve geçmiş ise `config` klasörüne kaydedilir.
+
+##### Docker Komutları
+
+```bash
+# YTSage'i durdur
+docker compose down
+
+# Tekrar başlat
+docker compose up -d
+
+# Değişikliklerden sonra yeniden derle
+docker compose build
+docker compose up -d --force-recreate
+```
+
+Daha fazla ayrıntı için [Docker kılavuzuna](../docker/README.md) bakın.
 
 ---
 
@@ -247,6 +298,8 @@ python -m ytsage.main
 </table>
 </div>
 
+<p align="right"><a href="#top">⬆️ Başa Dön</a></p>
+
 <a id="kullanım"></a>
 ## 📖 Kullanım
 
@@ -271,6 +324,23 @@ python -m ytsage.main
 6. **"İndir" Düğmesine Tıklayın**
 
 > 💡 Varsayılan indirme dizini kullanıcının "İndirilenler" klasörüdür.
+
+</details>
+
+<details>
+<summary>📋 İndirme Kuyruğu (Download Queue)</summary>
+
+Önce birden fazla indirmeyi yapılandırmak ve ardından birlikte başlatmak için indirme kuyruğunu kullanın:
+
+1. **Video veya oynatma listesi bağlantısını yapıştırın**
+2. **"Analiz Et" düğmesine tıklayın**
+3. **Formatı, kaliteyi, altyazıları ve seçenekleri belirleyin**
+4. `"İndir"` yerine **"Kuyruğa Ekle" (Add to queue)** düğmesine tıklayın
+5. Eklemek istediğiniz diğer indirmeler için adımları tekrarlayın
+6. Görevleri yönetmek için **"Kuyruk" (Queue)** düğmesine tıklayın
+7. İletişim kutusunda **"Kuyruğu Başlat" (Start queue)** düğmesine tıklayın
+
+Kuyruktaki indirmeler, her iş eklendiğinde seçilen ayarlarla sırayla yürütülür. Kuyruk, oturumlar arasında kaydedilir.
 
 </details>
 
@@ -315,6 +385,7 @@ Notlar:
 - **Altyazı Birleştirme:** Altyazıları video dosyasına kalıcı olarak (hardcode) birleştirir.
 - **Açıklamayı Kaydet:** Video açıklamasını bir metin dosyası olarak kaydeder.
 - **Küçük Resmi Kaydet:** Video küçük resmini bir resim dosyası olarak kaydeder.
+- **Göm (Embed):** İndirilen video dosyasına bölümleri, meta verileri ve küçük resmi gömmenizi sağlar.
 - **Bölümleri Göm:** Uyumlu video oynatıcılar için meta veri olarak bölüm işaretlerini ekler.
 - **Sponsor Bölümlerini Kaldır:** Videodaki sponsorlu bölümleri kaldırmak için SponsorBlock kullanır.
 - **Videoyu Kırp:** Zaman aralığını `SA:DA:SA` formatında belirterek videonun sadece belirli bölümlerini indirin.
@@ -429,7 +500,7 @@ Bazı antivirüs yazılımları `.exe` dosyalarını yanlış pozitif olarak iş
 - Antivirüs sezgiselleri paketlenmiş yürütülebilir dosyaları hatalı bir şekilde şüpheli olarak tanımlayabilir.
 
 **Güvenli Seçenekler:**
-- ✅ **pip kurulumunu kullanın:** `pip install ytsage` (önerilir)
+- ✅ **pip kurulumunu kullanın:** `pip install --pre ytsage` (önerilir)
 - ✅ **Kaynaktan derleyin**: Bu [kılavuzu](../.github/CI_CD_README.md) takip ederek
 - ✅ **Uygulamayı antivirüs yazılımınızın beyaz listesine ekleyin**.
 
@@ -565,13 +636,7 @@ YTSage/
 
 ## Star History
 
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 

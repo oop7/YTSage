@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_config xmlns="http://openbox.org/3.4/rc">
+  <theme>
+    <name>Clearlooks</name>
+    <titleLayout>NLIMC</titleLayout>
+  </theme>
+  <applications>
+    <application class="*">
+      <maximized>yes</maximized>
+      <decor>yes</decor>
+    </application>
+  </applications>
+</openbox_config>

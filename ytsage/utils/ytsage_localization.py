@@ -57,6 +57,8 @@ class LocalizationManager:
         },
         "buttons": {
             "download": "Download",
+            "add_to_queue": "Add to queue",
+            "queue": "Queue",
             "pause": "Pause", 
             "resume": "Resume",
             "cancel": "Cancel",
@@ -71,6 +73,10 @@ class LocalizationManager:
             "custom_options": "Custom Options",
             "settings": "Settings"
         },
+        "playlist": {
+            "reverse_order": "Reverse playlist order",
+            "reverse_order_tooltip": "Download selected videos from last to first"
+        },
         "settings": {
             "generic_mode": "Generic Mode",
             "enable_generic_mode": "Enable Generic Mode (support non-YouTube sites)",
@@ -83,13 +89,26 @@ class LocalizationManager:
             "preferred_subtitle_format": "Preferred Subtitle Format:",
             "reset_all_settings_title": "Reset All Settings",
             "reset_all_settings_message": "Reset all settings to their defaults? This cannot be undone.",
-            "reset_all_settings_done": "All settings have been reset to their defaults."
+            "reset_all_settings_done": "All settings have been reset to their defaults.",
+            "configuration": "Configuration",
+            "export_settings": "Export Settings",
+            "import_settings": "Import Settings",
+            "import_confirmation": "Importing settings will replace your current settings. Continue?",
+            "export_success_title": "Settings Exported",
+            "export_success_message": "Settings were exported successfully.",
+            "import_success_title": "Settings Imported",
+            "import_success_message": "Settings were imported successfully.",
+            "export_error_message": "Could not export settings: {error}",
+            "import_error_message": "Could not import settings: {error}"
         },
         "tabs": {
             "cookies": "Login with Cookies",
             "custom_command": "Custom Command", 
             "proxy": "Proxy",
             "language": "Language"
+        },
+        "cookies": {
+            "browser_cookie_note": "If Chrome or Brave cookie extraction fails, export a Netscape-format cookies.txt file with a trusted browser extension and select 'Use cookie file'. Firefox direct extraction is often more reliable."
         },
         "main_ui": {
             "url_placeholder": "Enter YouTube video or playlist URL",
@@ -130,7 +149,24 @@ class LocalizationManager:
             "please_set_path": "Please set a download path using 'Change Path'",
             "please_enter_url": "Please enter a URL",
             "please_enter_url_and_path": "Please enter URL and set download path",
-            "please_select_format": "Please select a format"
+            "please_select_format": "Please select a format",
+            "already_in_progress": "A download is already in progress."
+        },
+        "queue": {
+            "title": "Download queue",
+            "empty": "The download queue is empty.",
+            "untitled": "Untitled download",
+            "add_success": "Added to download queue.",
+            "start": "Start queue",
+            "remove": "Remove",
+            "clear_finished": "Clear finished",
+            "status_queued": "Queued",
+            "status_downloading": "Downloading",
+            "status_completed": "Completed",
+            "status_failed": "Failed",
+            "status_cancelled": "Cancelled",
+            "started": "Download queue started.",
+            "all_done": "All queued downloads completed.",
         },
         "formats": {
             "show_formats": "Show formats:",

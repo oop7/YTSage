@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,21 +19,24 @@
 
 ### 🌍 زبان‌های README
 
-انگلیسی: [EN](../README.md)
-| عربی: [AR](README.ar.md)
-| آلمانی: [DE](README.de.md)
-| اسپانیایی: [ES](README.es.md)
-| فرانسوی: [FR](README.fr.md)
-| هندی: [HI](README.hi.md)
-| اندونزیایی: [ID](README.id.md)
-| ایتالیایی: [IT](README.it.md)
-| ژاپنی: [JA](README.ja.md)
-| لهستانی: [PL](README.pl.md)
-| پرتغالی: [PT](README.pt.md)
-| روسی: [RU](README.ru.md)
-| ترکی: [TR](README.tr.md)
-| چینی: [ZH](README.zh.md)
-| فارسی: [FA](README.fa.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
+| Hindi: [HI](README.hi.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 
 <p align="center">
@@ -40,6 +45,7 @@
   <a href="#usage">استفاده</a> •
   <a href="#screenshots">تصاویر</a> •
   <a href="#troubleshooting">عیب‌یابی</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#sponsor">حمایت مالی</a> •
   <a href="#contributing">مشارکت</a>
 </p>
@@ -106,6 +112,8 @@ YTSage برای کاربرانی طراحی شده که به دنبال یک **�
 
 #### 🍎 macOS
 
+> ⚠️ **توجه:** این فایل‌های نصب برای پردازنده‌های **Apple Silicon (M1/M2/M3/M4)** ساخته شده‌اند. اگر از مک با پردازنده اینتل استفاده می‌کنید، از [روش نصب پایتون](#-نصب-از-طریق-پایتون--pypi) در زیر استفاده نمایید.
+
 | فرمت | توضیحات |
 |--------|-------------|
 | ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **نصب‌کننده ایمیج دیسک (پیشنهاد شده)** - باز کنید و به Applications بکشید. |
@@ -157,15 +165,17 @@ YTSage برای کاربرانی طراحی شده که به دنبال یک **�
 ### 🐍 نصب از طریق پایتون / PyPI
 *همچنین می‌توانید YTSage را از طریق پایتون نصب کنید (نیازمند پایتون 3.11+)*
 
+> 💡 **ویژگی عالی:** اگر از طریق pip در **ویندوز** برنامه را نصب کنید، YTSage به طور خودکار FFmpeg را شناسایی کرده و در راه‌اندازی آن به شما کمک می‌کند *(کاربران مک و لینوکس می‌توانند از **[راهنمای نصب FFmpeg](https://github.com/oop7/ffmpeg-install-guide)** استفاده کنند)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 بروزرسانی نصب موجود</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -181,6 +191,46 @@ ytsage
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 اجرا با داکر (Docker)
+*اجرای YTSage در مرورگر بدون نیاز به نصب پایتون، Qt یا FFmpeg روی سیستم میزبان.*
+
+برنامه Docker Desktop برای ویندوز و مک نیاز است. همچنین Docker Engine با Docker Compose در لینوکس پشتیبانی می‌شود.
+
+##### ۱. کلون کردن مخزن
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### ۲. اجرای YTSage
+
+```bash
+docker compose up -d
+```
+
+آدرس [http://localhost:3000](http://localhost:3000) را در مرورگر باز کنید. YTSage به صورت دسکتاپ استریم‌شده در مرورگر اجرا می‌شود.
+
+فایل‌های دانلود شده در پوشه `downloads` میزبان و تنظیمات در پوشه `config` ذخیره می‌شوند.
+
+##### دستورات کاربردی داکر
+
+```bash
+# توقف برنامه
+docker compose down
+
+# اجرای مجدد
+docker compose up -d
+
+# بیلد مجدد پس از تغییرات
+docker compose build
+docker compose up -d --force-recreate
+```
+
+برای اطلاعات بیشتر [راهنمای داکر](../docker/README.md) را ببینید.
 
 ---
 
@@ -248,6 +298,8 @@ python -m ytsage.main
   </tr>
 </table>
 </div>
+
+<p align="right"><a href="#top">⬆️ بازگشت به بالا</a></p>
 
 <a id="usage"></a>
 ## 📖 استفاده
@@ -317,6 +369,7 @@ python -m ytsage.main
 - **ادغام زیرنویس:** ادغام زیرنویس در فایل ویدیو برای زیرنویس‌های چسبیده (hardcoded).
 - **ذخیره توضیحات:** ذخیره توضیحات ویدیو به‌صورت فایل متنی.
 - **ذخیره تصویر بندانگشتی:** ذخیره تصویر بندانگشتی ویدیو به‌صورت فایل تصویری.
+- **جاسازی (Embed):** این گزینه امکان جاسازی فصل‌ها، متادیتا و تصویر بندانگشتی را در فایل دانلودشده فراهم می‌کند.
 - **یکپارچه‌سازی فصل‌ها:** یکپارچه‌سازی نشانگرهای فصل به‌عنوان فراداده برای پخش‌کننده‌های ویدیوی سازگار.
 - **حذف بخش‌های اسپانسری:** حذف بخش‌های اسپانسری از ویدیو با استفاده از SponsorBlock.
 - **برش ویدیو:** فقط بخش‌های خاصی از یک ویدیو را با مشخص کردن بازه‌های زمانی به فرمت `HH:MM:SS` دانلود کنید.
@@ -433,7 +486,7 @@ YTSage از **۱۴ زبان** برای دسترسی‌پذیری جهانی پش
 - الگوریتم‌های اکتشافی آنتی‌ویروس ممکن است به اشتباه فایل‌های اجرایی بسته‌بندی‌شده را مشکوک تشخیص دهند.
 
 **جایگزین‌های امن:**
-- ✅ **استفاده از نصب pip:** `pip install ytsage` (پیشنهادی)
+- ✅ **استفاده از نصب pip:** `pip install --pre ytsage` (پیشنهادی)
 - ✅ **کامپایل از کد منبع**: با دنبال کردن این [راهنما](../.github/CI_CD_README.md)
 - ✅ **افزودن برنامه به لیست سفید** در نرم‌افزار آنتی‌ویروس خود.
 
@@ -565,13 +618,7 @@ YTSage/
 
 ## Star History
 
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 
@@ -584,6 +631,7 @@ YTSage/
 <div align="center">
 
 <p>تشکر فراوان از همه کسانی که با باز کردن یک تیکت برای پیشنهاد بهبود یا گزارش باگ، در این پروژه مشارکت کرده‌اند.</p>
+<p>تشکر ویژه از حامیان اولیه و اصلی این پروژه <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> و <a href="https://github.com/dj23me"><strong>@dj23me</strong></a> ❤️</p>
 
 <table>
     <tr class="section"><th colspan="2">اجزای اصلی</th></tr>

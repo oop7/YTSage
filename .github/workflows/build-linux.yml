@@ -26,7 +26,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         fetch-depth: 0
 
@@ -35,16 +35,20 @@ jobs:
       shell: bash
       run: |
         version="${{ inputs.version || github.event.inputs.version }}"
+        if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([A-Za-z][0-9A-Za-z.-]*|[-.][0-9A-Za-z.-]+)?$ ]]; then
+          echo "Invalid version '$version'. Expected semantic version format such as 1.2.3 or 1.2.3b2." >&2
+          exit 1
+        fi
         echo "Extracted version: $version"
         echo "VERSION=$version" >> "$GITHUB_OUTPUT"
 
     - name: Setup Python
-      uses: actions/setup-python@v7
+      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v10.0.0
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       with:
         enable-cache: true
 
@@ -54,7 +58,7 @@ jobs:
         sudo apt-get update -y
         # Tools commonly required by cx_Freeze on Linux packaging
         sudo apt-get install -y --no-install-recommends \
-          rpm alien fakeroot patchelf desktop-file-utils file xz-utils zsync
+          rpm fakeroot patchelf desktop-file-utils file xz-utils zsync
 
     - name: Create virtual environment and install dependencies
       shell: bash
@@ -71,118 +75,6 @@ jobs:
         arch="$(uname -m)" # x86_64 or aarch64
         echo "ARCH=$arch" >> "$GITHUB_ENV"
         echo "Prepared build variables for version: $version on $(uname -a)"
-
-    - name: Create cx_Freeze setup script (Linux)
-      shell: bash
-      run: |
-        # Create entry point script
-        cat > ytsage_entry.py <<'ENTRY'
-        from ytsage.main import main
-        if __name__ == "__main__":
-            main()
-        ENTRY
-
-        cat > setup_cxfreeze.py <<'PY'
-        import os
-        import sys
-        from pathlib import Path
-        from cx_Freeze import setup, Executable
-
-        version = os.environ.get("VERSION", "0.0.0")
-
-        # Prepare include_files list
-        include_files_list = [
-            ("ytsage/assets/Icon", "lib/assets/Icon"),
-            ("ytsage/assets/sound", "lib/assets/sound"),
-            ("ytsage/languages", "lib/languages"),
-            ("branding/icons", "lib/assets/branding/icons"),
-            ("ytsage.desktop", "share/applications/ytsage.desktop"),
-            ("branding/icons/icon.png", "share/pixmaps/ytsage.png"),
-        ]
-
-        build_exe_options = dict(
-            optimize=2,
-            silent=True,
-            packages=[
-                "ytsage",
-                "PySide6.QtCore",
-                "PySide6.QtGui",
-                "PySide6.QtWidgets",
-                "PySide6.QtMultimedia",
-                "PySide6.QtNetwork",
-                "PySide6.QtDBus",
-                "PySide6.QtSvg",
-                "requests",
-                "PIL",
-                "packaging",
-                "markdown",
-                "loguru",
-                "setuptools",
-            ],
-            zip_include_packages=[
-                "PySide6",
-                "shiboken6",
-                "requests",
-                "PIL",
-                "packaging",
-            ],
-            excludes=[
-                "PySide6.QtBluetooth",
-                "PySide6.QtOpenGL",
-                "PySide6.QtPrintSupport",
-                "PySide6.QtTest",
-                "PySide6.QtXml",
-                "PySide6.QtSql",
-                "PySide6.QtHelp",
-                "PySide6.QtQml",
-                "PySide6.QtQuick",
-                "PySide6.QtWebEngineCore",
-                "PIL.ImageDraw",
-                "PIL.ImageFont",
-                "numpy",
-                "scipy",
-                "wx",
-                "pandas",
-                "tkinter",
-                "yt_dlp",
-                "unittest",
-                "test",
-                "tests",
-                "pydoc",
-                "doctest",
-                "email",
-            ],
-            include_files=include_files_list,
-            # Bundle all dependencies - avoid system library references
-            bin_includes=[],
-            bin_excludes=[],
-            # Important: include system libs to avoid external dependencies
-            replace_paths=[("*", "")],
-        )
-
-        executables = [
-            Executable(
-                script="ytsage_entry.py",
-                target_name="ytsage",
-                icon="branding/icons/icon.png",
-            )
-        ]
-
-        setup(
-            name="ytsage",
-            version=version,
-            description="YTSage",
-            options={
-                "build_exe": build_exe_options,
-                # AppImage packaging
-                "bdist_appimage": {
-                    # If ends with .AppImage, use verbatim file name
-                    "target_name": f"ytsage-v{version}.AppImage",
-                },
-            },
-            executables=executables,
-        )
-        PY
 
     - name: Create desktop entry
       shell: bash
@@ -206,7 +98,7 @@ jobs:
         source venv/bin/activate
 
         # Ensure a clean build and build_exe first with -OO
-        python -OO setup_cxfreeze.py build_exe
+        python -OO setup-scripts/setup_cxfreeze_linux.py build_exe
 
         # Clean unnecessary files from build directory before packaging
         build_dir=$(ls -d build/exe.* 2>/dev/null | head -n1 || true)
@@ -602,7 +494,7 @@ jobs:
         ls -lh artifacts || true
 
     - name: Create/Update draft release
-      uses: softprops/action-gh-release@v3
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
       with:
         tag_name: v${{ steps.get_version.outputs.VERSION }}
         name: YTSage v${{ steps.get_version.outputs.VERSION }}
@@ -613,7 +505,7 @@ jobs:
         body: |
           # YTSage v${{ steps.get_version.outputs.VERSION }}
 
-          **Release Date**: ${{ github.event.head_commit.timestamp }}
+          **Release Date**: ${{ github.run_started_at }}
         files: |
           artifacts/*
       env:

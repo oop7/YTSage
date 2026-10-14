@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,22 +19,24 @@
 
 ### 🌍 README 언어
 
-영어: [EN](../README.md)
-| 아랍어: [AR](README.ar.md)
-| 독일어: [DE](README.de.md)
-| 스페인어: [ES](README.es.md)
-| 프랑스어: [FR](README.fr.md)
-| 힌디어: [HI](README.hi.md)
-| 인도네시아어: [ID](README.id.md)
-| 이탈리아어: [IT](README.it.md)
-| 일본어: [JA](README.ja.md)
-| 한국어: [KO](README.ko.md)
-| 폴란드어: [PL](README.pl.md)
-| 포르투갈어: [PT](README.pt.md)
-| 러시아어: [RU](README.ru.md)
-| 터키어: [TR](README.tr.md)
-| 중국어: [ZH](README.zh.md)
-| 페르시아어: [FA](README.fa.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
+| Hindi: [HI](README.hi.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 <p align="center">
   <a href="#설치">설치</a> •
@@ -40,6 +44,7 @@
   <a href="#사용-방법">사용 방법</a> •
   <a href="#스크린샷">스크린샷</a> •
   <a href="#문제-해결">문제 해결</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#스폰서">스폰서</a> •
   <a href="#기여">기여</a>
 </p>
@@ -107,6 +112,8 @@ YTSage는 **간단하면서도 강력한 YouTube 다운로더**를 원하는 사
 
 #### 🍎 macOS
 
+> ⚠️ **참고:** 이 설치 프로그램은 **Apple Silicon (M1/M2/M3/M4)**용으로 기본 빌드되었습니다. 구형 Intel Mac을 사용하는 경우 아래의 [Python 설치 방법](#-python--pypi를-통한-설치)을 사용하세요.
+
 | 포맷 | 설명 |
 |--------|-------------|
 | ![macOS ARM64 DMG](https://img.shields.io/badge/macOS-ARM64%20DMG-000000?style=for-the-badge&logo=apple&logoColor=white) | **디스크 이미지 설치 프로그램 (권장)** - 열고 Applications로 드래그합니다. |
@@ -158,15 +165,17 @@ YTSage는 **간단하면서도 강력한 YouTube 다운로더**를 원하는 사
 ### 🐍 Python / PyPI를 통한 설치
 *Python을 통해서도 YTSage를 설치할 수 있습니다 (Python 3.11+ 필요)*
 
+> 💡 **멋진 기능:** **Windows**에서 pip를 통해 설치하면 YTSage가 FFmpeg를 자동으로 감지하고 설정을 지원합니다 *(macOS 및 Linux 사용자는 간편한 **[FFmpeg 설치 가이드](https://github.com/oop7/ffmpeg-install-guide)**를 참조하세요)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 기존 설치 업데이트</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -182,6 +191,46 @@ ytsage
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 Docker로 실행
+*호스트 시스템에 Python, Qt 또는 FFmpeg를 설치하지 않고 브라우저에서 YTSage를 실행합니다.*
+
+Windows 및 macOS에서는 Docker Desktop이 필요합니다. Linux에서는 Docker Compose가 포함된 Docker Engine이 지원됩니다.
+
+##### 1. 저장소 복제
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. YTSage 시작
+
+```bash
+docker compose up -d
+```
+
+브라우저에서 [http://localhost:3000](http://localhost:3000)을 엽니다. YTSage는 컨테이너 내부에서 브라우저 스트리밍 데스크톱으로 실행됩니다.
+
+다운로드한 파일은 호스트의 `downloads` 폴더에 저장되며 설정과 기록은 `config` 폴더에 저장됩니다.
+
+##### Docker 수명 주기 명령
+
+```bash
+# YTSage 중지
+docker compose down
+
+# 나중에 다시 시작
+docker compose up -d
+
+# 변경 후 다시 빌드
+docker compose build
+docker compose up -d --force-recreate
+```
+
+자세한 내용은 [Docker 가이드](../docker/README.md)를 참조하세요.
 
 ---
 
@@ -249,6 +298,8 @@ python -m ytsage.main
 </table>
 </div>
 
+<p align="right"><a href="#top">⬆️ 맨 위로 이동</a></p>
+
 <a id="사용-방법"></a>
 ## 📖 사용 방법
 
@@ -273,6 +324,23 @@ python -m ytsage.main
 6. **"다운로드" 클릭**
 
 > 💡 기본 다운로드 디렉토리는 사용자의 "다운로드" 폴더입니다.
+
+</details>
+
+<details>
+<summary>📋 다운로드 대기열 (Download Queue)</summary>
+
+다운로드 대기열을 사용하여 여러 다운로드를 미리 구성한 다음 한 번에 순차적으로 시작하세요:
+
+1. **동영상 또는 재생목록 URL 붙여넣기**
+2. **"분석" 클릭**
+3. **형식, 화질, 자막 및 기타 다운로드 옵션 선택**
+4. `"다운로드"` 대신 **"대기열에 추가" (Add to queue)** 클릭
+5. 예약하려는 각 다운로드에 대해 위 단계 반복
+6. **"대기열" (Queue)**을 클릭하여 작업 검토, 제거 또는 지우기
+7. 대기열 대화상자에서 **"대기열 시작" (Start queue)** 클릭
+
+대기열에 추가된 다운로드는 각 작업이 추가될 때 선택한 설정으로 순차적으로 실행됩니다. 대기열은 앱 재시작 시에도 유지됩니다.
 
 </details>
 
@@ -434,7 +502,7 @@ YTSage는 전 세계 사용자를 위해 **16개 언어**를 지원합니다. **
 - 백신 휴리스틱이 패키징된 실행 파일을 의심 대상으로 잘못 분류할 수 있습니다.
 
 **안전한 대안:**
-- ✅ **pip 설치 사용:** `pip install ytsage` (권장)
+- ✅ **pip 설치 사용:** `pip install --pre ytsage` (권장)
 - ✅ **소스에서 빌드:** 이 [가이드](../.github/CI_CD_README.md)를 따릅니다
 - ✅ 백신 소프트웨어에서 앱을 **허용 목록에 추가**
 

@@ -1,11 +1,13 @@
+<a id="top"></a>
 <div align="center">
 
 <img src="../branding/svg/ytsage-wordmark.svg" width="400" alt="ytsage-wordmark">
 <img src="../branding/screenshots/main.png" width="800" alt="YTSage Interface"/>
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-1f2937?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://img.shields.io/pepy/dt/ytsage?color=1f2937&style=for-the-badge&label=downloads&logo=python&logoColor=white)](https://pepy.tech/project/ytsage)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oop7/YTSage/total?color=1f2937&style=for-the-badge&label=downloads&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-YTSage--Official-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/YTsage_official)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1f2937?style=for-the-badge&logo=opensource&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Supported Platforms](https://img.shields.io/badge/platform-cross--platform-1f2937?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oop7/YTSage?color=c90000&style=for-the-badge&logo=github&logoColor=white)](https://github.com/oop7/YTSage/stargazers)
@@ -17,20 +19,24 @@ Downloaden Sie Videos in jeder Qualität, extrahieren Sie Audio, rufen Sie Unter
 
 ### 🌍 README-Sprachen
 
-Englisch: [EN](../README.md)
-| Arabisch: [AR](README.ar.md)
-| Deutsch: [DE](README.de.md)
-| Spanisch: [ES](README.es.md)
-| Französisch: [FR](README.fr.md)
+English: [EN](../README.md)
+| Arabic: [AR](README.ar.md)
+| German: [DE](README.de.md)
+| Spanish: [ES](README.es.md)
+| French: [FR](README.fr.md)
 | Hindi: [HI](README.hi.md)
-| Indonesisch: [ID](README.id.md)
-| Italienisch: [IT](README.it.md)
-| Japanisch: [JA](README.ja.md)
-| Polnisch: [PL](README.pl.md)
-| Portugiesisch: [PT](README.pt.md)
-| Russisch: [RU](README.ru.md)
-| Türkisch: [TR](README.tr.md)
-| Chinesisch: [ZH](README.zh.md)
+| Indonesian: [ID](README.id.md)
+| Italian: [IT](README.it.md)
+| Japanese: [JA](README.ja.md)
+| Korean: [KO](README.ko.md)
+| Polish: [PL](README.pl.md)
+| Portuguese: [PT](README.pt.md)
+| Russian: [RU](README.ru.md)
+| Turkish: [TR](README.tr.md)
+| Chinese: [ZH](README.zh.md)
+| Persian: [FA](README.fa.md)
+
+
 
 <p align="center">
   <a href="#installation">Installation</a> •
@@ -38,6 +44,7 @@ Englisch: [EN](../README.md)
   <a href="#usage">Bedienung</a> •
   <a href="#screenshots">Screenshots</a> •
   <a href="#troubleshooting">Fehlerbehebung</a> •
+  <a href="https://t.me/YTsage_official">Telegram</a> •
   <a href="#sponsor">Sponsoren</a> •
   <a href="#contributing">Mitwirken</a>
 </p>
@@ -71,7 +78,7 @@ YTSage wurde für Benutzer entwickelt, die einen **einfachen, aber leistungsstar
 | 📑 Kapitel-Integration | ✂️ Videoabschnitte zuschneiden | 🍪 Cookie-Login |
 | 📜 Download-Historie | 🔄 Release-Kanal Auswahl | 🌐 Proxy-Support |
 | 🎚️ Audioformat-Konvertierung | 🎬 Videoformat-Einstellungen | 🆙 Integrierter Update-Tab |
-| 🌍 Generischer Modus | 🔊 Audio-Normalisierung (EBU R128) | 🌍 In 14 Sprachen lokalisiert |
+| 🌍 Generischer Modus | 🔊 Audio-Normalisierung (EBU R128) | 🌍 In 16 Sprachen lokalisiert |
 | 💾 Playlist-Export | ⚙️ Standardqualität & Untertitel | |
 </div>
 
@@ -103,6 +110,8 @@ Laden Sie einfach das vorgefertigte Installationsprogramm für Ihr Betriebssyste
 </details>
 
 #### 🍎 macOS
+
+> ⚠️ **Hinweis:** Diese Installer sind nativ für **Apple Silicon (M1/M2/M3/M4)** kompiliert. Wenn Sie einen Intel-Mac verwenden, nutzen Sie bitte die [Python-Installationsmethode](#-installation-über-python--pypi) weiter unten.
 
 | Format | Beschreibung |
 |--------|-------------|
@@ -155,15 +164,17 @@ Laden Sie einfach das vorgefertigte Installationsprogramm für Ihr Betriebssyste
 ### 🐍 Installation über Python / PyPI
 *Sie können YTSage auch über Python installieren (Erfordert Python 3.11+)*
 
+> 💡 **Tolles Feature:** Bei der Installation via pip unter **Windows** erkennt YTSage FFmpeg automatisch und hilft bei der Einrichtung *(macOS- und Linux-Benutzer können unserer einfachen **[FFmpeg-Installationsanleitung](https://github.com/oop7/ffmpeg-install-guide)** folgen)*
+
 ```bash
-pip install ytsage
+pip install --pre ytsage
 ```
 
 <details>
 <summary>🔄 Bestehende Installation aktualisieren</summary>
 
 ```bash
-pip install --upgrade ytsage
+pip install --upgrade --pre ytsage
 ```
 
 </details>
@@ -179,6 +190,46 @@ Sie können YTSage auch mit einer vorausgefüllten Video- oder Playlisten-URL ö
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+---
+
+### 🐳 Mit Docker ausführen
+*Führen Sie YTSage im Browser aus, ohne Python, Qt oder FFmpeg auf dem Host-System zu installieren.*
+
+Docker Desktop ist unter Windows und macOS erforderlich. Docker Engine mit Docker Compose wird unter Linux unterstützt.
+
+##### 1. Repository klonen
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. YTSage starten
+
+```bash
+docker compose up -d
+```
+
+Öffnen Sie [http://localhost:3000](http://localhost:3000) im Browser. YTSage läuft als Desktop-Streaming im Container.
+
+Heruntergeladene Dateien werden im Host-Ordner `downloads` gespeichert. Einstellungen und Historie liegen im Ordner `config`.
+
+##### Docker Lifecycle-Befehle
+
+```bash
+# YTSage stoppen
+docker compose down
+
+# Später wieder starten
+docker compose up -d
+
+# Nach Änderungen neu bauen
+docker compose build
+docker compose up -d --force-recreate
+```
+
+Weitere Details finden Sie in der [Docker-Anleitung](../docker/README.md).
 
 ---
 
@@ -247,6 +298,8 @@ python -m ytsage.main
 </table>
 </div>
 
+<p align="right"><a href="#top">⬆️ Zurück nach oben</a></p>
+
 <a id="usage"></a>
 ## 📖 Bedienung
 
@@ -271,6 +324,23 @@ python -m ytsage.main
 6. **Auf "Herunterladen" klicken**
 
 > 💡 Standard-Download-Verzeichnis ist der Ordner "Downloads" des Benutzers.
+
+</details>
+
+<details>
+<summary>📋 Download-Warteschlange (Download Queue)</summary>
+
+Verwenden Sie die Download-Warteschlange, um mehrere Downloads zuerst zu konfigurieren und anschließend gemeinsam auszuführen:
+
+1. **Video- oder Playlist-URL einfügen**
+2. **Auf "Analysieren" klicken**
+3. **Format, Qualität, Untertitel und Optionen wählen**
+4. **Auf "Zur Warteschlange hinzufügen" (Add to queue)** statt `"Herunterladen"` klicken
+5. Wiederholen Sie dies für jeden gewünschten Download
+6. Klicken Sie auf **"Warteschlange" (Queue)**, um Aufträge einzusehen, zu entfernen oder zu leeren
+7. Klicken Sie im Dialog auf **"Warteschlange starten" (Start queue)**
+
+Downloads in der Warteschlange werden nacheinander mit den jeweils festgelegten Einstellungen ausgeführt und bleiben auch nach dem Neustart erhalten.
 
 </details>
 
@@ -315,6 +385,7 @@ Hinweise:
 - **Untertitel-Merging:** Mergt Untertitel in die Videodatei für fest eingebrannte (hardcoded) Untertitel.
 - **Beschreibung speichern:** Speichert die Videobeschreibung als Textdatei.
 - **Thumbnail speichern:** Speichert das Video-Thumbnail als Bilddatei.
+- **Einbetten (Embed):** Ermöglicht das Einbetten von Kapiteln, Metadaten und Vorschaubildern direkt in die heruntergeladene Datei.
 - **Kapitel integrieren:** Bettet Kapitelmarken als Metadaten für kompatible Videoplayer ein.
 - **Sponsoren-Segmente entfernen:** Entfernt gesponserte Abschnitte aus dem Video mithilfe von SponsorBlock.
 - **Video zuschneiden:** Laden Sie nur bestimmte Teile eines Videos herunter, indem Sie Zeitbereiche im Format `HH:MM:SS` angeben.
@@ -368,7 +439,7 @@ Hinweise:
 <details>
 <summary>🌍 Lokalisierung</summary>
 
-YTSage unterstützt **14 Sprachen** für globale Barrierefreiheit. Wählen Sie Ihre bevorzugte Sprache unter **Custom Options → Language**.
+YTSage unterstützt **16 Sprachen** für globale Barrierefreiheit. Wählen Sie Ihre bevorzugte Sprache unter **Custom Options → Language**.
 
 ### Unterstützte Sprachen
 
@@ -429,7 +500,7 @@ Einige Antivirenprogramme können `.exe`-Dateien als Fehlalarm (False Positive) 
 - Antiviren-Heuristiken können gepackte ausführbare Dateien fälschlicherweise als verdächtig identifizieren.
 
 **Sichere Alternativen:**
-- ✅ **Verwenden Sie die pip-Installation:** `pip install ytsage` (Empfohlen)
+- ✅ **Verwenden Sie die pip-Installation:** `pip install --pre ytsage` (Empfohlen)
 - ✅ **Aus dem Quellcode bauen**: Folgen Sie diesem [Leitfaden](../.github/CI_CD_README.md)
 - ✅ **App auf die Whitelist setzen** in Ihrer Antiviren-Software.
 
@@ -561,13 +632,7 @@ YTSage/
 
 ## Star History
 
-<a href="https://www.star-history.com/#oop7/YTSage&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oop7/YTSage&type=Date" />
- </picture>
-</a>
+[![Star History Chart](../branding/svg/star-history-dark.svg)](https://github.com/oop7/YTSage/stargazers)
 
 </div>
 
@@ -580,6 +645,7 @@ Dieses Projekt steht unter der MIT-Lizenz – weitere Details finden Sie in der 
 <div align="center">
 
 <p>Ein großes Dankeschön an alle, die zu diesem Projekt beigetragen haben, indem sie Tickets für Verbesserungsvorschläge oder Bug-Reports geöffnet haben.</p>
+<p>Besonderer Dank geht an <a href="https://github.com/bastik-1001"><strong>@bastik-1001</strong></a> und <a href="https://github.com/dj23me"><strong>@dj23me</strong></a> als erste und größte Unterstützer dieses Projekts ❤️</p>
 
 <table>
     <tr class="section"><th colspan="2">Kernkomponenten</th></tr>

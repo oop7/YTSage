@@ -50,6 +50,7 @@ Exceptions
 """
 
 import json
+import os
 from copy import deepcopy
 import threading
 from pathlib import Path
@@ -71,12 +72,14 @@ class ConfigManager:
     _config_file: Path = APP_CONFIG_FILE
     _settings: Dict[str, Any] = {}
     _default_config: Dict[str, Any] = {
-        "download_path": str(USER_HOME_DIR / "Downloads"),
+        "download_path": os.environ.get("YTSAGE_DOWNLOAD_PATH")
+        or os.environ.get("YTSAGE_DOWNLOAD_DIR")
+        or str(USER_HOME_DIR / "Downloads"),
         "generic_mode": True,
         "speed_limit_value": None,
         "speed_limit_unit_index": 0,
         "cookie_source": "browser",  # "browser" or "file"
-        "cookie_browser": "chrome",
+        "cookie_browser": "firefox",
         "cookie_browser_profile": "",
         "cookie_file_path": None,
         "cookie_active": False,  # True only if user explicitly applied cookies
@@ -158,6 +161,33 @@ class ConfigManager:
             cls._settings = deepcopy(cls._default_config)
             cls._save()
             logger.info("Config reset to defaults.")
+            return deepcopy(cls._settings)
+
+    @classmethod
+    def export_to_file(cls, file_path: str | Path) -> None:
+        """Export the current settings to a user-selected JSON file."""
+        with cls._lock:
+            if not cls._settings:
+                cls._load()
+            with open(file_path, "w", encoding="utf-8") as file:
+                json.dump(cls._settings, file, indent=4)
+            logger.info(f"Config exported to {file_path}.")
+
+    @classmethod
+    def import_from_file(cls, file_path: str | Path) -> Dict[str, Any]:
+        """Import settings from a JSON file and persist them atomically in memory."""
+        with open(file_path, "r", encoding="utf-8") as file:
+            imported_settings = json.load(file)
+
+        if not isinstance(imported_settings, dict):
+            raise ValueError("The selected file must contain a JSON object.")
+
+        with cls._lock:
+            settings = deepcopy(cls._default_config)
+            settings.update(imported_settings)
+            cls._settings = settings
+            cls._save()
+            logger.info(f"Config imported from {file_path}.")
             return deepcopy(cls._settings)
 
     @classmethod

@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bash
+
+chmod 755 /defaults
+exec s6-setuidgid abc \
+  /bin/bash /defaults/startwm.sh

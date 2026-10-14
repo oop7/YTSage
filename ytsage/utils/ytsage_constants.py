@@ -97,6 +97,7 @@ if OS_NAME == "Windows":
     APP_LOG_DIR: Path = APP_DIR / "logs"
     APP_CONFIG_FILE: Path = APP_DATA_DIR / "ytsage_config.json"
     APP_HISTORY_FILE: Path = APP_DATA_DIR / "ytsage_history.json"
+    APP_QUEUE_FILE: Path = APP_DATA_DIR / "ytsage_download_queue.json"
     APP_THUMBNAILS_DIR: Path = APP_DATA_DIR / "thumbnails"
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
@@ -116,6 +117,7 @@ elif OS_NAME == "Darwin":  # macOS
     APP_LOG_DIR: Path = APP_DIR / "logs"
     APP_CONFIG_FILE: Path = APP_DATA_DIR / "ytsage_config.json"
     APP_HISTORY_FILE: Path = APP_DATA_DIR / "ytsage_history.json"
+    APP_QUEUE_FILE: Path = APP_DATA_DIR / "ytsage_download_queue.json"
     APP_THUMBNAILS_DIR: Path = APP_DATA_DIR / "thumbnails"
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
@@ -129,12 +131,17 @@ else:  # Linux and other UNIX-like
 
     # Always use user data directory for app data, logs, config, and binaries
     # Even when frozen, we don't want to create these folders next to the executable
-    APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
+    _app_dir_env = os.environ.get("YTSAGE_DATA_DIR")
+    if _app_dir_env:
+        APP_DIR: Path = Path(_app_dir_env)
+    else:
+        APP_DIR: Path = USER_HOME_DIR / ".local" / "share" / "YTSage"
     APP_BIN_DIR: Path = APP_DIR / "bin"
     APP_DATA_DIR: Path = APP_DIR / "data"
     APP_LOG_DIR: Path = APP_DIR / "logs"
     APP_CONFIG_FILE: Path = APP_DATA_DIR / "ytsage_config.json"
     APP_HISTORY_FILE: Path = APP_DATA_DIR / "ytsage_history.json"
+    APP_QUEUE_FILE: Path = APP_DATA_DIR / "ytsage_download_queue.json"
     APP_THUMBNAILS_DIR: Path = APP_DATA_DIR / "thumbnails"
 
     YTDLP_DOWNLOAD_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
@@ -156,16 +163,13 @@ YTDLP_SHA256_URL: str = "https://github.com/yt-dlp/yt-dlp/releases/latest/downlo
 
 # Deno download URLs and paths
 if OS_NAME == "Windows":
-    DENO_DOWNLOAD_URL: str = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-pc-windows-msvc.zip"
-    DENO_SHA256_URL: str = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-pc-windows-msvc.zip.sha256sum"
+    _deno_target = "x86_64-pc-windows-msvc"
     DENO_APP_BIN_PATH: Path = APP_BIN_DIR / "deno.exe"
 elif OS_NAME == "Darwin":  # macOS
-    DENO_DOWNLOAD_URL: str = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-apple-darwin.zip"
-    DENO_SHA256_URL: str = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-apple-darwin.zip.sha256sum"
+    _deno_target = "x86_64-apple-darwin"
     DENO_APP_BIN_PATH: Path = APP_BIN_DIR / "deno"
 else:  # Linux
-    DENO_DOWNLOAD_URL: str = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip"
-    DENO_SHA256_URL: str = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip.sha256sum"
+    _deno_target = "x86_64-unknown-linux-gnu"
     
     # Check for environment variable override (critical for Flatpak support)
     _deno_env_path = os.environ.get("DENO_APP_BIN_PATH")
@@ -173,6 +177,9 @@ else:  # Linux
         DENO_APP_BIN_PATH: Path = Path(_deno_env_path)
     else:
         DENO_APP_BIN_PATH: Path = APP_BIN_DIR / "deno"
+
+DENO_DOWNLOAD_URL: str = f"https://dl.deno.land/release/v{{version}}/deno-{_deno_target}.zip"
+DENO_SHA256_URL: str = f"{DENO_DOWNLOAD_URL}.sha256sum"
 
 # FFmpeg download links (Essentials build - always latest version)
 FFMPEG_7Z_DOWNLOAD_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z"

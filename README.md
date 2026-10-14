@@ -157,8 +157,6 @@ Simply download the pre-built installer for your operating system:
   ```
 </details>
 
----
-
 ### 🐍 Install via Python / PyPI
 *You can also install YTSage via Python (Requires Python 3.11+)*
 
@@ -188,6 +186,44 @@ You can also open YTSage with a video or playlist URL prefilled and analyzed imm
 ```bash
 ytsage "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
+
+### 🐳 Run with Docker
+*Run YTSage in a browser without installing Python, Qt, or FFmpeg on the host.*
+
+Docker Desktop is required on Windows and macOS. Docker Engine with Docker Compose is supported on Linux.
+
+##### 1. Clone the repository
+
+```bash
+git clone https://github.com/oop7/YTSage.git
+cd YTSage
+```
+
+##### 2. Start YTSage
+
+```bash
+docker compose up -d
+```
+
+Open [http://localhost:3000](http://localhost:3000) in a browser. YTSage runs as a browser-streamed desktop inside the container.
+
+Downloaded files are saved to the host's `downloads` folder. Settings and history are saved in the `config` folder.
+
+##### Docker lifecycle commands
+
+```bash
+# Stop YTSage
+docker compose down
+
+# Start it again later
+docker compose up -d
+
+# Rebuild after changing the application or Docker files
+docker compose build
+docker compose up -d --force-recreate
+```
+
+For more Docker details, see the [Docker guide](docker/README.md).
 
 ---
 
@@ -288,6 +324,23 @@ python -m ytsage.main
 </details>
 
 <details>
+<summary>📋 Download Queue</summary>
+
+Use the download queue to configure several downloads first and start them together:
+
+1. **Paste a video or playlist URL**
+2. **Click "Analyze"**
+3. **Choose the format, quality, subtitles, and other download options**
+4. **Click "Add to queue"** instead of `"Download"`
+5. Repeat the steps above for each download you want to schedule
+6. Click **"Queue"** to review, remove, or clear queued jobs
+7. Click **"Start queue"** in the queue dialog
+
+Queued downloads run sequentially, using the exact settings selected when each job was added. The queue is saved between application launches. Failed or cancelled jobs remain in the queue and can be retried.
+
+</details>
+
+<details>
 <summary>📋 Playlist Download</summary>
 
 1. **Paste Playlist URL**
@@ -343,11 +396,12 @@ Notes:
 - **Download History Toggle:** Enable or disable saving download history. Available in **Download Settings → General → Download History**.
 - **Notification Sounds:** Enable or disable completion audio notification. Available in **Download Settings → General → Notification Sound**.
 - **Force Output Format:** Force video container format (`mp4`, `webm`, `mkv`). Available in **Download Settings → Format → Output Format Settings**.
-- **Audio Format Conversion:** Convert audio downloads to preferred formats (`AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, or `Best`). Available in **Download Settings → Format → Audio Format Settings**.
+- **Audio Format Conversion:** Convert audio-only or the audio attached to videos to preferred formats (`AAC`, `MP3`, `FLAC`, `WAV`, `Opus`, `M4A`, `Vorbis`, or `Best`). Video is copied without re-encoding when possible. Available in **Download Settings → Format → Audio Format Settings**.
 - **Audio Normalization:** Normalize volume using EBU R128 standard for audio downloads. Available in **Download Settings → Format → Audio Format Settings**.
 - **Default Video Resolution & Subtitles:** Auto-select default height (e.g. `1080`, `720`) and preferred subtitle languages (`en`, `es`, etc.) plus subtitle container format (`srt`, `vtt`, `ass`, `lrc`). Available in **Download Settings → Format → Default Selection Settings**.
 - **Output Filename Format:** Customize output naming template using yt-dlp variables (e.g. `%(title)s_%(resolution)s_[%(id)s].%(ext)s`). Reset button included. Available in **Download Settings → File → Filename Format**.
 - **Reset All Settings:** Restore every YTSage setting to its default value. Available in **Download Settings → Reset All Settings**.
+- **Configuration** Export/Import: Export or import your YTSage settings to a JSON file for backup or sharing. Available in **Download Settings → File → **Export/Import**.
 
 </details>
 
@@ -358,6 +412,7 @@ Notes:
 - **Browser Cookie Extraction (Recommended)**
   - Direct extraction from installed browsers: **Firefox** (preferred), **Chrome**, **Edge**, **Brave**, **Opera**, **Vivaldi**, etc.
     - Includes optional profile selection.
+    - If Chrome or Brave extraction fails on Windows, export a Netscape-format `cookies.txt` file with a trusted browser extension and select **Use cookie file** instead. Firefox direct extraction is often more reliable.
   - **Cookie File:** Load a Netscape format `cookies.txt` file.
 - **Proxy & Geo-Verification Proxy Support:** Configure main proxy server and optional geo-verification proxy (SOCKS4/5 or HTTP/HTTPS) to bypass location restrictions. Access via **Custom Options → Proxy**.
 - **Generic Mode:** Allow YTSage to process and download from non-YouTube URLs supported by yt-dlp. Toggle in **Download Settings → General → Generic Mode**.

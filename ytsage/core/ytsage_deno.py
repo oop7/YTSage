@@ -120,12 +120,19 @@ class DownloadDenoThread(QThread):
             # Create temporary file for zip download
             temp_zip_fd, temp_zip_path = tempfile.mkstemp(suffix=".zip")
             os.close(temp_zip_fd)  # Close the file descriptor
+
+            latest_version = get_latest_deno_version()
+            if not latest_version:
+                raise RuntimeError("Could not determine the latest Deno version")
+
+            download_url = DENO_DOWNLOAD_URL.format(version=latest_version)
+            sha256_url = DENO_SHA256_URL.format(version=latest_version)
             
             # Download with progress reporting
-            logger.info(f"Downloading Deno from: {DENO_DOWNLOAD_URL}")
+            logger.info(f"Downloading Deno from: {download_url}")
             self.status_signal.emit(_("deno.downloading"))
             
-            response = requests.get(DENO_DOWNLOAD_URL, stream=True)
+            response = requests.get(download_url, stream=True)
             response.raise_for_status()
             total_size = int(response.headers.get("content-length", 0))
             block_size = 8192  # 8KB blocks
@@ -146,7 +153,7 @@ class DownloadDenoThread(QThread):
             self.status_signal.emit(_("deno.verifying"))
             
             # Verify SHA256 hash
-            if not verify_deno_sha256(Path(temp_zip_path), DENO_SHA256_URL):
+            if not verify_deno_sha256(Path(temp_zip_path), sha256_url):
                 # Hash verification failed - delete the downloaded file
                 logger.error("SHA256 verification failed! Removing downloaded file.")
                 if Path(temp_zip_path).exists():
@@ -613,25 +620,24 @@ def setup_deno(parent_widget=None):
 
 def get_latest_deno_version() -> Optional[str]:
     """
-    Fetch the latest Deno version from GitHub API.
+    Fetch the latest Deno version from Deno's release endpoint.
     
     Returns:
         str: Version string (e.g., "2.5.6") or None if fetch failed
     """
     try:
         response = requests.get(
-            "https://api.github.com/repos/denoland/deno/releases/latest",
+            "https://dl.deno.land/release-latest.txt",
             timeout=10
         )
         response.raise_for_status()
-        data = response.json()
-        
-        # Get tag_name (e.g., "v2.5.6") and remove 'v' prefix
-        tag_name = data.get("tag_name", "")
-        if tag_name.startswith("v"):
-            version = tag_name[1:]
-        else:
-            version = tag_name
+
+        version = response.text.strip()
+        if version.startswith("v"):
+            version = version[1:]
+        if not version:
+            logger.error("Deno release endpoint returned an empty version")
+            return None
         
         logger.info(f"Latest Deno version: {version}")
         return version
