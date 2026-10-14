@@ -49,6 +49,7 @@ The workflow creates the following files based on the platform:
 
 #### Linux
 - `YTSage-v{version}-{arch}.AppImage` - AppImage portable (x86_64, aarch64)
+- `YTSage-v{version}-{arch}.AppImage.zsync` - AppImageUpdate incremental update metadata
 - `YTSage-v{version}-{arch}.rpm` - RPM package
 - `YTSage-v{version}-{arch}.deb` - Debian package
 - `YTSage-v{version}-{arch}.flatpak` - Flatpak bundle

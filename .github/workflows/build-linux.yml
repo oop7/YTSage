@@ -79,7 +79,8 @@ jobs:
     - name: Create desktop entry
       shell: bash
       run: |
-        cat > ytsage.desktop <<'DESKTOP'
+        version="${{ steps.get_version.outputs.VERSION }}"
+        cat > ytsage.desktop <<DESKTOP
         [Desktop Entry]
         Type=Application
         Name=YTSage
@@ -89,6 +90,11 @@ jobs:
         Terminal=false
         Categories=AudioVideo;Network;Utility;
         StartupWMClass=YTSage
+        X-AppImage-Homepage=https://github.com/oop7/YTSage
+        X-AppImage-Name=YTSage
+        X-AppImage-Version=${version}
+        X-AppImage-Arch=x86_64
+        X-AppImage-UpdateURL=https://github.com/oop7/YTSage
         DESKTOP
 
     - name: Build AppImage and RPM
@@ -178,6 +184,11 @@ jobs:
         cp branding/icons/icon.png AppDir/ytsage.png
         # .DirIcon for file managers
         cp branding/icons/icon.png AppDir/.DirIcon 
+
+        # AppImageUpdate reads this metadata to locate matching zsync releases.
+        cat > AppDir/AppImageUpdateInformation <<EOF
+        gh-releases-zsync|oop7|YTSage|latest|YTSage-*-x86_64.AppImage.zsync
+        EOF
         
         # Create AppRun as a script to correctly set environment
         cat > AppDir/AppRun <<'APPRUN'
@@ -469,10 +480,19 @@ jobs:
         # Copy AppImage
         appimage_src=$(ls dist/ytsage-v*.AppImage 2>/dev/null | head -n1 || true)
         if [ -n "$appimage_src" ]; then
-          cp "$appimage_src" "artifacts/YTSage-v${version}-${ARCH}.AppImage"
-          echo "Copied AppImage: $appimage_src -> artifacts/YTSage-v${version}-${ARCH}.AppImage"
+          appimage_dest="artifacts/YTSage-v${version}-${ARCH}.AppImage"
+          cp "$appimage_src" "$appimage_dest"
+          echo "Copied AppImage: $appimage_src -> $appimage_dest"
+
+          # Generate update metadata for the final release filename.
+          zsyncmake \
+            -u "https://github.com/oop7/YTSage/releases/download/v${version}/YTSage-v${version}-${ARCH}.AppImage" \
+            -o "${appimage_dest}.zsync" \
+            "$appimage_dest"
+          echo "Generated zsync metadata: ${appimage_dest}.zsync"
         else
-          echo "Warning: No .AppImage found in dist/"
+          echo "Error: No .AppImage found in dist/" >&2
+          exit 1
         fi
 
         # Copy RPM (normalize name)
