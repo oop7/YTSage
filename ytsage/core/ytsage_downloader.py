@@ -125,6 +125,8 @@ class DownloadThread(QThread):
         self.subtitle_files: List[str] = []  # Track subtitle files that are created
         self.initial_subtitle_files: Set[Path] = set()  # Track initial subtitle files before download
         self.playlist_progress: tuple[int, int] | None = None
+        self._download_format_types: dict[str, str] = {}
+        self._download_stream_count = 0
 
     def cleanup_partial_files(self) -> None:
         """Delete any partial files including .part and unmerged format-specific files"""
@@ -747,6 +749,30 @@ class DownloadThread(QThread):
             if progress != self.playlist_progress:
                 self.playlist_progress = progress
                 self.playlist_progress_signal.emit(current_item, total_items)
+            self._download_stream_count = 0
+
+        # yt-dlp reports the selected streams before their destinations. This
+        # is needed because WebM can contain either video or audio.
+        format_match = re.search(
+            r"Downloading\s+\d+\s+format\(s\):\s*(.+)$",
+            line,
+            re.IGNORECASE,
+        )
+        if format_match:
+            format_ids = [
+                format_id.split("-drc", 1)[0].strip()
+                for format_id in format_match.group(1).split("+")
+            ]
+            if self.is_audio_only:
+                self._download_format_types = {
+                    format_id: "audio" for format_id in format_ids if format_id
+                }
+            else:
+                self._download_format_types = {
+                    format_id: ("video" if index == 0 else "audio")
+                    for index, format_id in enumerate(format_ids)
+                    if format_id
+                }
 
         # Extract filename when the destination line appears
         # Use a slightly more robust regex looking for the start of the line
@@ -758,38 +784,44 @@ class DownloadThread(QThread):
                 self.last_file_path = filepath  # Store the full path for later cleanup
                 logger.debug(f"Extracted filename: {self.current_filename}")  # DEBUG
 
-                # Check if this is an audio-only download by looking in the previous lines
-                is_audio_download = False
-
-                # Look for audio format indicators in the current line or preceding output
-                # yt-dlp typically mentions format like "Downloading format 251 - audio only"
-                if " - audio only" in line:
-                    is_audio_download = True
-                # Check if the format ID is mentioned earlier in the line
-                format_match = re.search(r"Downloading format (\d+)", line)
-                if format_match:
-                    format_id = format_match.group(1)
-                    logger.debug(f"Detected format ID: {format_id}")
-                    # Format IDs for audio typically have different patterns
-                    # (like 140, 251 for audio vs 137, 248 for video)
-                    # This is just a heuristic since format IDs can vary
-
                 # Determine file type based on extension and context
                 ext = Path(self.current_filename).suffix.lower()
+                destination_format_match = re.search(
+                    r"\.f(\d+)\.", self.current_filename, re.IGNORECASE
+                )
+                destination_format_type = (
+                    self._download_format_types.get(destination_format_match.group(1))
+                    if destination_format_match
+                    else None
+                )
+                needs_separate_audio = (
+                    not self.is_audio_only
+                    and (
+                        bool(self.audio_format_ids)
+                        or not self.format_has_audio
+                        or (
+                            self.force_audio_format
+                            and self.preferred_audio_format
+                            and self.preferred_audio_format != "best"
+                        )
+                    )
+                )
+                if destination_format_type is None and needs_separate_audio:
+                    destination_format_type = (
+                        "video" if self._download_stream_count == 0 else "audio"
+                    )
+                self._download_stream_count += 1
 
-                # Check if this is explicitly an audio stream download
-                if is_audio_download or "Downloading audio" in line:
+                if destination_format_type == "audio":
                     self.status_signal.emit(_("download.downloading_audio"))
-                # Video file extensions with likely video content
+                elif destination_format_type == "video":
+                    self.status_signal.emit(_("download.downloading_video"))
                 elif ext in VIDEO_EXTENSIONS:
                     self.status_signal.emit(_("download.downloading_video"))
-                # Audio file extensions
                 elif ext in AUDIO_EXTENSIONS:
                     self.status_signal.emit(_("download.downloading_audio"))
-                # Subtitle file extensions
                 elif ext in SUBTITLE_EXTENSIONS:
                     self.status_signal.emit(_("download.downloading_subtitle"))
-                # Default case
                 else:
                     self.status_signal.emit(_("download.downloading"))
             except Exception as e:
