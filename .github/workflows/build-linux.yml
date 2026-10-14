@@ -185,11 +185,6 @@ jobs:
         # .DirIcon for file managers
         cp branding/icons/icon.png AppDir/.DirIcon 
 
-        # AppImageUpdate reads this metadata to locate matching zsync releases.
-        cat > AppDir/AppImageUpdateInformation <<EOF
-        gh-releases-zsync|oop7|YTSage|latest|YTSage-*-x86_64.AppImage.zsync
-        EOF
-        
         # Create AppRun as a script to correctly set environment
         cat > AppDir/AppRun <<'APPRUN'
         #!/bin/sh
@@ -200,9 +195,12 @@ jobs:
         APPRUN
         chmod +x AppDir/AppRun
         
-        # Build AppImage (using --appimage-extract-and-run to avoid FUSE issues in CI)
-        # We explicitly set ARCH for appimagetool
-        ARCH=x86_64 ./appimagetool --appimage-extract-and-run AppDir "dist/ytsage-v${version}.AppImage"
+        # Embed AppImageUpdate metadata using appimagetool's supported -u option.
+        # Build with --appimage-extract-and-run to avoid FUSE issues in CI.
+        UPINFO="gh-releases-zsync|oop7|YTSage|latest|YTSage-*-x86_64.AppImage.zsync"
+        ARCH=x86_64 ./appimagetool --appimage-extract-and-run \
+          -u "$UPINFO" \
+          AppDir "dist/ytsage-v${version}.AppImage"
 
         # Build RPM manually with proper spec file
         version="${{ steps.get_version.outputs.VERSION }}"
@@ -489,6 +487,7 @@ jobs:
             -u "https://github.com/oop7/YTSage/releases/download/v${version}/YTSage-v${version}-${ARCH}.AppImage" \
             -o "${appimage_dest}.zsync" \
             "$appimage_dest"
+          test -s "${appimage_dest}.zsync"
           echo "Generated zsync metadata: ${appimage_dest}.zsync"
         else
           echo "Error: No .AppImage found in dist/" >&2
