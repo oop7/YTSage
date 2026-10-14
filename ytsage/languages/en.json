@@ -193,6 +193,7 @@
   },
   "download": {
     "preparing": "Preparing download...",
+    "playlist_progress": "Playlist item {current} of {total}",
     "starting": "🚀 Starting download...",
     "fetching_info": "🔍 Fetching video information...",
     "preparing_streams": "🎯 Preparing video streams...",

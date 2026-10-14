@@ -243,6 +243,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.playlist_info = None
         self.video_info = None
         self.playlist_entries = []  # Initialize playlist entries
+        self.playlist_progress = None
         self.selected_playlist_items = None  # Initialize selection string
         self.selected_playlist_reversed = False  # Initialize playlist order
         self.save_description = False  # Initialize description state
@@ -666,6 +667,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.progress_bar.setFormat("%p%")  # Display as percentage
         self.progress_bar.setStyleSheet(StyleSheet.PROGRESS_BAR)
         progress_layout.addWidget(self.progress_bar)
+
+        self.playlist_progress_label = QLabel()
+        self.playlist_progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.playlist_progress_label.setStyleSheet(StyleSheet.STATUS_LABEL)
+        progress_layout.addWidget(self.playlist_progress_label)
         
         # Setup smooth animation for progress bar
         self._progress_animation = QPropertyAnimation(self.progress_bar, b"value")
@@ -863,7 +869,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         # Show preparation message
         self.status_label.setText(_('download.preparing'))
+        self.playlist_progress = None
         self.progress_bar.setValue(0)  # Reset progress (range is 0-10000)
+        self.playlist_progress_label.clear()
         self.open_folder_btn.setVisible(False)  # Hide the open folder button on new download
 
         # Get resolution for filename. Match the row against the format_id
@@ -971,6 +979,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             if key not in {"id", "title", "thumbnail_url", "save_thumbnail", "queued_at", "status", "error"}
         })
         self.download_thread.progress_signal.connect(self.update_progress_bar)
+        self.download_thread.playlist_progress_signal.connect(self.update_playlist_progress)
         self.download_thread.status_signal.connect(self.set_status_message_animated)
         self.download_thread.update_details.connect(self.download_details_label.setText)
         self.download_thread.finished_signal.connect(self.download_finished)
@@ -992,6 +1001,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             self.animate_widget_fade_out(self.cancel_btn)
             self.open_folder_btn.setVisible(False)
             self.set_status_message_animated(_("download.cancelled"))
+            self.playlist_progress = None
+            self.playlist_progress_label.clear()
             self.download_details_label.setText("")
             self.current_download = None
             if self.queue_running:
@@ -1192,7 +1203,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
     def update_progress_bar(self, value) -> None:
         try:
             # Scale float percentage (0-100) to progress bar range (0-10000) for precision
-            scaled_value = int(float(value) * 100)
+            percentage = float(value)
+            if self.playlist_progress:
+                current_item, total_items = self.playlist_progress
+                percentage = ((current_item - 1) + (percentage / 100)) / total_items * 100
+            scaled_value = int(percentage * 100)
             
             # Use smooth animation for progress updates
             if self._progress_animation.state() == QPropertyAnimation.State.Running:
@@ -1208,6 +1223,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                 self.progress_bar.setValue(scaled_value)
         except Exception as e:
             logger.exception(f"Progress bar update error: {e}")
+
+    @Slot(int, int)
+    def update_playlist_progress(self, current_item: int, total_items: int) -> None:
+        """Show the current entry while yt-dlp downloads a playlist."""
+        if total_items > 0:
+            self.playlist_progress = (current_item, total_items)
+            self.playlist_progress_label.setText(
+                _("download.playlist_progress", current=current_item, total=total_items)
+            )
 
     def toggle_pause(self) -> None:
         if self.current_download:
@@ -1500,7 +1524,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(True)
         self.pause_btn.setVisible(False)
         self.cancel_btn.setVisible(False)
+        self.playlist_progress = None
         self.progress_bar.setValue(10000)  # 100% in 0-10000 range
+        self.playlist_progress_label.clear()
 
         # Determine file type based on extension
         ext = Path(filename).suffix.lower()

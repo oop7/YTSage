@@ -39,6 +39,7 @@ class SignalManager(QObject):
 
 class DownloadThread(QThread):
     progress_signal = Signal(float)
+    playlist_progress_signal = Signal(int, int)
     status_signal = Signal(str)
     finished_signal = Signal()
     error_signal = Signal(str)
@@ -123,6 +124,7 @@ class DownloadThread(QThread):
         self.last_file_path: Optional[str] = None  # Initialize full file path storage
         self.subtitle_files: List[str] = []  # Track subtitle files that are created
         self.initial_subtitle_files: Set[Path] = set()  # Track initial subtitle files before download
+        self.playlist_progress: tuple[int, int] | None = None
 
     def cleanup_partial_files(self) -> None:
         """Delete any partial files including .part and unmerged format-specific files"""
@@ -735,6 +737,16 @@ class DownloadThread(QThread):
         if "ERROR:" in line:
             if hasattr(self, 'error_lines'):
                 self.error_lines.append(line)
+
+        # yt-dlp emits this before starting each entry in a playlist. Keep
+        # this separate from the per-file percentage progress signal.
+        item_match = re.search(r"Downloading item\s+(\d+)\s+of\s+(\d+)", line, re.IGNORECASE)
+        if item_match:
+            current_item, total_items = (int(value) for value in item_match.groups())
+            progress = (current_item, total_items)
+            if progress != self.playlist_progress:
+                self.playlist_progress = progress
+                self.playlist_progress_signal.emit(current_item, total_items)
 
         # Extract filename when the destination line appears
         # Use a slightly more robust regex looking for the start of the line

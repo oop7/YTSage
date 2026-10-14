@@ -142,6 +142,7 @@ class LocalizationManager:
         },
         "download": {
             "preparing": "🚀 Preparing your download...",
+            "playlist_progress": "Playlist item {current} of {total}",
             "completed": "✅ Download completed!",
             "video_completed": "✅ Video download completed!",
             "audio_completed": "✅ Audio download completed!", 

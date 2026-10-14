@@ -193,6 +193,7 @@
   },
   "download": {
     "preparing": "正在准备下载...",
+    "playlist_progress": "播放列表项目 {current}/{total}",
     "starting": "🚀 正在开始下载...",
     "fetching_info": "🔍 正在获取视频信息...",
     "preparing_streams": "🎯 正在准备视频流...",
