@@ -671,7 +671,6 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.playlist_progress_label = QLabel()
         self.playlist_progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.playlist_progress_label.setStyleSheet(StyleSheet.STATUS_LABEL)
-        progress_layout.addWidget(self.playlist_progress_label)
         
         # Setup smooth animation for progress bar
         self._progress_animation = QPropertyAnimation(self.progress_bar, b"value")
@@ -690,6 +689,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.status_label = QLabel(_("app.ready"))
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setStyleSheet(StyleSheet.STATUS_LABEL)
+        status_layout.addWidget(self.playlist_progress_label)
         status_layout.addWidget(self.status_label)
 
         # Add "Open Folder" button (initially hidden)
