@@ -926,6 +926,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         job = {
             "title": (self.video_info or {}).get("title", url),
+            "channel": (self.video_info or {}).get("channel") or (self.video_info or {}).get("uploader"),
+            "duration": (self.video_info or {}).get("duration_string"),
             "thumbnail_url": self.thumbnail_url,
             "save_thumbnail": self.save_thumbnail,
             "url": url,
@@ -971,7 +973,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         """Start one immutable queue job or an immediate download."""
         self.video_url = job["url"]
         self.thumbnail_url = job.get("thumbnail_url")
-        self.video_info = {"title": job.get("title", job["url"])}
+        channel = job.get("channel") or job.get("uploader")
+        self.video_info = {
+            "title": job.get("title", job["url"]),
+            "channel": channel,
+            "uploader": channel,
+            "duration_string": job.get("duration"),
+        }
         if job.get("save_thumbnail") and job.get("thumbnail_url"):
             try:
                 self.download_thumbnail_file(job["url"], job["path"])
@@ -980,7 +988,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         self.download_thread = DownloadThread(**{
             key: value for key, value in job.items()
-            if key not in {"id", "title", "thumbnail_url", "save_thumbnail", "queued_at", "status", "error"}
+            if key not in {
+                "id", "title", "channel", "duration", "thumbnail_url", "save_thumbnail",
+                "queued_at", "status", "error"
+            }
         })
         self.download_thread.progress_signal.connect(self.update_progress_bar)
         self.download_thread.playlist_progress_signal.connect(self.update_playlist_progress)
