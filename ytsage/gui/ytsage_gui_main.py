@@ -232,6 +232,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.current_download = None
         self.current_queue_job = None
         self.queue_running = False
+        self.queue_position = 0
+        self.queue_total = 0
         self.download_cancelled = False
         self.is_updating_ytdlp = False  # Initialize update flag
         self.is_analyzing = False  # Initialize analysis flag
@@ -1191,13 +1193,19 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             self.set_status_message_animated(_("download.already_in_progress"))
             return
         jobs = DownloadQueue.get_all()
-        if not any(job.get("status") in {"queued", "failed", "cancelled"} for job in jobs):
+        pending_jobs = [
+            job for job in jobs
+            if job.get("status") in {"queued", "failed", "cancelled"}
+        ]
+        if not pending_jobs:
             self.set_status_message_animated(_("queue.empty"))
             return
-        for job in jobs:
+        for job in pending_jobs:
             if job.get("status") in {"failed", "cancelled"}:
                 DownloadQueue.update(job["id"], status="queued", error=None)
         self.queue_running = True
+        self.queue_position = 0
+        self.queue_total = len(pending_jobs)
         self.set_status_message_animated(_("queue.started"))
         self._start_next_queued_job()
 
@@ -1215,6 +1223,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             return
         DownloadQueue.update(next_job["id"], status="downloading", error=None)
         self.current_queue_job = next_job
+        self.queue_position += 1
+        self._update_progress_indicator()
         self._start_download_job(next_job)
 
     def update_progress_bar(self, value) -> None:
@@ -1246,9 +1256,26 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         """Show the current entry while yt-dlp downloads a playlist."""
         if total_items > 0:
             self.playlist_progress = (current_item, total_items)
+            self._update_progress_indicator()
+
+    def _update_progress_indicator(self) -> None:
+        """Show queue and playlist progress in the shared progress label."""
+        if self.queue_running and self.queue_position and self.queue_total:
+            queue_text = f"{self.queue_position}/{self.queue_total}"
+            if self.playlist_progress:
+                playlist_current, playlist_total = self.playlist_progress
+                self.playlist_progress_label.setText(
+                    f"{queue_text} - {playlist_current}/{playlist_total}"
+                )
+            else:
+                self.playlist_progress_label.setText(queue_text)
+        elif self.playlist_progress:
+            current_item, total_items = self.playlist_progress
             self.playlist_progress_label.setText(
                 _("download.playlist_progress", current=current_item, total=total_items)
             )
+        else:
+            self.playlist_progress_label.clear()
 
     def toggle_pause(self) -> None:
         if self.current_download:
