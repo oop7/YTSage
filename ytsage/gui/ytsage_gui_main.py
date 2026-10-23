@@ -676,7 +676,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         self.playlist_progress_label = QLabel()
         self.playlist_progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.playlist_progress_label.setStyleSheet(StyleSheet.STATUS_LABEL)
+        self.playlist_progress_label.setStyleSheet(StyleSheet.QUEUE_PROGRESS_LABEL)
         
         # Setup smooth animation for progress bar
         self._progress_animation = QPropertyAnimation(self.progress_bar, b"value")
@@ -1264,11 +1264,11 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
     def _update_progress_indicator(self) -> None:
         """Show queue and playlist progress in the shared progress label."""
         if self.queue_running and self.queue_position and self.queue_total:
-            queue_text = f"{self.queue_position}/{self.queue_total}"
+            queue_text = f"{_('buttons.queue')} {self.queue_position}/{self.queue_total}"
             if self.playlist_progress:
                 playlist_current, playlist_total = self.playlist_progress
                 self.playlist_progress_label.setText(
-                    f"{queue_text} - {playlist_current}/{playlist_total}"
+                    f"{queue_text} · {playlist_current}/{playlist_total}"
                 )
             else:
                 self.playlist_progress_label.setText(queue_text)
