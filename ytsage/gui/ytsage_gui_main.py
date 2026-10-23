@@ -228,6 +228,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             logger.warning(f"Icon file not found at {ICON_PATH}. Using default icon.")
             self.setWindowIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowDown))  # Fallback
         self.signals = SignalManager()
+        # A forced close can prevent the worker's completion signal from
+        # persisting the final queue state.
+        DownloadQueue.reset_in_progress()
         self.download_paused = False
         self.current_download = None
         self.current_queue_job = None
@@ -1281,9 +1284,17 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         if self.current_download:
             self.current_download.paused = not self.current_download.paused
             if self.current_download.paused:
+                if self.queue_running and self.current_queue_job:
+                    DownloadQueue.update(self.current_queue_job["id"], status="queued")
                 self.pause_btn.setText(_("buttons.resume"))
                 self.signals.update_status.emit(_("download.paused"))
             else:
+                if self.queue_running and self.current_queue_job:
+                    DownloadQueue.update(
+                        self.current_queue_job["id"],
+                        status="downloading",
+                        error=None,
+                    )
                 self.pause_btn.setText(_("buttons.pause"))
                 self.signals.update_status.emit(_("download.resumed"))
 
@@ -1465,6 +1476,16 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                     logger.warning("Force terminating auto-update thread...")
                     self.auto_update_thread.terminate()
                     self.auto_update_thread.wait(1000)  # Wait for termination
+
+            # Persist an interrupted queue job before waiting for the worker.
+            # The completion signal may not be delivered during shutdown.
+            if self.queue_running and self.current_queue_job:
+                DownloadQueue.update(
+                    self.current_queue_job["id"],
+                    status="queued",
+                    error=None,
+                )
+                self.queue_running = False
 
             # Cancel any running downloads
             if self.current_download and self.current_download.isRunning():

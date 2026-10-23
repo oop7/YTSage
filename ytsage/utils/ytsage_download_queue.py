@@ -83,3 +83,17 @@ class DownloadQueue:
         with cls._lock:
             jobs = [job for job in cls._read() if job.get("status") not in {"completed", "failed"}]
             cls._write(jobs)
+
+    @classmethod
+    def reset_in_progress(cls) -> None:
+        """Return interrupted downloads to the queue for the next run."""
+        with cls._lock:
+            jobs = cls._read()
+            changed = False
+            for job in jobs:
+                if job.get("status") == "downloading":
+                    job["status"] = "queued"
+                    job.pop("error", None)
+                    changed = True
+            if changed:
+                cls._write(jobs)
