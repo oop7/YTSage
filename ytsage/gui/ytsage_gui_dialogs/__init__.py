@@ -14,6 +14,7 @@ This package contains all dialog classes organized by functionality:
 # Re-export all dialog classes for backward compatibility
 from .ytsage_dialogs_base import AboutDialog, LogWindow
 from .ytsage_dialogs_custom import CustomOptionsDialog, TimeRangeDialog
+from .ytsage_dialogs_diagnostics import NetworkDiagnosticsDialog
 from .ytsage_dialogs_ffmpeg import FFmpegCheckDialog, FFmpegInstallThread
 from .ytsage_dialogs_history import HistoryDialog
 from .ytsage_dialogs_queue import QueueDialog
@@ -30,6 +31,7 @@ __all__ = [
     # Base dialogs
     "LogWindow",
     "AboutDialog",
+    "NetworkDiagnosticsDialog",
     
     # Settings dialogs
     "DownloadSettingsDialog",

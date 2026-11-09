@@ -416,6 +416,7 @@ Notes:
     - If Chrome or Brave extraction fails on Windows, export a Netscape-format `cookies.txt` file with a trusted browser extension and select **Use cookie file** instead. Firefox direct extraction is often more reliable.
   - **Cookie File:** Load a Netscape format `cookies.txt` file.
 - **Proxy & Geo-Verification Proxy Support:** Configure main proxy server and optional geo-verification proxy (SOCKS4/5 or HTTP/HTTPS) to bypass location restrictions. Access via **Custom Options → Proxy**.
+- **Network Diagnostics:** Run local YouTube, proxy, public IP/country, and no-download yt-dlp extraction checks from **Custom Options → Proxy → Network Diagnostics**. The report does not upload cookies or URLs to YTSage; the network checks contact YouTube and the public IP lookup service.
 - **Generic Mode:** Allow YTSage to process and download from non-YouTube URLs supported by yt-dlp. Toggle in **Download Settings → General → Generic Mode**.
 
 </details>
@@ -479,6 +480,7 @@ YTSage supports **16 languages** for global accessibility. Select your preferred
 
 - **Format table not appearing:** Update yt-dlp to the latest version and switch to nightly yt-dlp.
 - **Download failed:** Check your internet connection and ensure the video is available.
+- **Regional/network failures:** Run **Network Diagnostics** first. If direct access fails but the configured proxy succeeds, the local network or ISP is likely blocking YouTube. If both fail, try a different proxy exit or check cookies in **Custom Options → Cookies**.
 - **Specific Download Errors:**
   - **Private Videos:** Use cookie authentication to access private content.
   - **Age-Restricted Content:** Log in to your YouTube account to view age-restricted videos.

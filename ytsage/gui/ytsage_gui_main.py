@@ -1552,7 +1552,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
     def show_about_dialog(self) -> None:  # ADDED METHOD HERE
         dialog = AboutDialog(self)
         self.run_dialog_with_blur(dialog)
-    
+
     def show_history_dialog(self) -> None:
         """Show the download history dialog."""
         dialog = HistoryDialog(self)

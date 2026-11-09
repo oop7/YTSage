@@ -37,6 +37,7 @@ from ...utils.ytsage_config_manager import ConfigManager
 from ...utils.ytsage_localization import LocalizationManager, _
 from ...utils.ytsage_logger import logger
 from .ytsage_dialogs_updater import UpdaterTabWidget
+from .ytsage_dialogs_diagnostics import NetworkDiagnosticsDialog
 
 if TYPE_CHECKING:
     from ..ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
@@ -452,6 +453,10 @@ class CustomOptionsDialog(QDialog):
         self.proxy_status.setStyleSheet("color: #999999; font-style: italic;")
         proxy_layout.addWidget(self.proxy_status)
 
+        diagnostics_button = QPushButton(_("buttons.diagnostics"))
+        diagnostics_button.clicked.connect(self.show_network_diagnostics)
+        proxy_layout.addWidget(diagnostics_button)
+
         # Clear buttons
         clear_layout = QHBoxLayout()
         clear_main_proxy_btn = QPushButton(_('proxy.clear_main_proxy'))
@@ -680,6 +685,13 @@ class CustomOptionsDialog(QDialog):
         # Initialize dialog with current settings (after all widgets and styles are set)
         self._initialize_cookie_settings()
         self._initialize_proxy_settings()
+
+    def show_network_diagnostics(self) -> None:
+        """Open diagnostics using the current main-window URL and proxy settings."""
+        current_url = getattr(self._parent, "url_input", None)
+        url = current_url.text().strip() if current_url is not None else ""
+        dialog = NetworkDiagnosticsDialog(url, self._parent)
+        self._parent.run_dialog_with_blur(dialog)
 
     def _initialize_cookie_settings(self) -> None:
         """Initialize the dialog with current cookie settings from config"""
