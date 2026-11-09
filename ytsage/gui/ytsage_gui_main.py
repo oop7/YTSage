@@ -33,6 +33,7 @@ from PySide6.QtWidgets import (
     QGraphicsScene,
     QGraphicsPixmapItem,
     QGraphicsDropShadowEffect,
+    QGridLayout,
 )
 from PySide6.QtGui import QIcon, QPixmap, QPainter, QBrush, QColor
 
@@ -227,10 +228,15 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             logger.warning(f"Icon file not found at {ICON_PATH}. Using default icon.")
             self.setWindowIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowDown))  # Fallback
         self.signals = SignalManager()
+        # A forced close can prevent the worker's completion signal from
+        # persisting the final queue state.
+        DownloadQueue.reset_in_progress()
         self.download_paused = False
         self.current_download = None
         self.current_queue_job = None
         self.queue_running = False
+        self.queue_position = 0
+        self.queue_total = 0
         self.download_cancelled = False
         self.is_updating_ytdlp = False  # Initialize update flag
         self.is_analyzing = False  # Initialize analysis flag
@@ -243,6 +249,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.playlist_info = None
         self.video_info = None
         self.playlist_entries = []  # Initialize playlist entries
+        self.playlist_progress = None
         self.selected_playlist_items = None  # Initialize selection string
         self.selected_playlist_reversed = False  # Initialize playlist order
         self.save_description = False  # Initialize description state
@@ -666,6 +673,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.progress_bar.setFormat("%p%")  # Display as percentage
         self.progress_bar.setStyleSheet(StyleSheet.PROGRESS_BAR)
         progress_layout.addWidget(self.progress_bar)
+
+        self.playlist_progress_label = QLabel()
+        self.playlist_progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.playlist_progress_label.setStyleSheet(StyleSheet.QUEUE_PROGRESS_LABEL)
         
         # Setup smooth animation for progress bar
         self._progress_animation = QPropertyAnimation(self.progress_bar, b"value")
@@ -679,12 +690,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         progress_layout.addWidget(self.download_details_label)
 
         # Create a horizontal layout for status label and open folder button
-        status_layout = QHBoxLayout()
+        status_layout = QGridLayout()
         
         self.status_label = QLabel(_("app.ready"))
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setStyleSheet(StyleSheet.STATUS_LABEL)
-        status_layout.addWidget(self.status_label)
+        status_layout.addWidget(self.playlist_progress_label, 0, 0)
+        status_layout.addWidget(self.status_label, 0, 1)
 
         # Add "Open Folder" button (initially hidden)
         self.open_folder_btn = QPushButton("📁")
@@ -693,7 +705,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.open_folder_btn.setStyleSheet(StyleSheet.OPEN_FOLDER_BUTTON)
         self.open_folder_btn.clicked.connect(self.open_download_folder)
         self.open_folder_btn.setVisible(False)  # Hidden by default
-        status_layout.addWidget(self.open_folder_btn)
+        status_layout.addWidget(self.open_folder_btn, 0, 2, alignment=Qt.AlignmentFlag.AlignRight)
+        status_layout.setColumnStretch(0, 1)
+        status_layout.setColumnStretch(1, 1)
+        status_layout.setColumnStretch(2, 1)
         
         progress_layout.addLayout(status_layout)
 
@@ -863,7 +878,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         # Show preparation message
         self.status_label.setText(_('download.preparing'))
+        self.playlist_progress = None
         self.progress_bar.setValue(0)  # Reset progress (range is 0-10000)
+        self.playlist_progress_label.clear()
         self.open_folder_btn.setVisible(False)  # Hide the open folder button on new download
 
         # Get resolution for filename. Match the row against the format_id
@@ -914,6 +931,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         job = {
             "title": (self.video_info or {}).get("title", url),
+            "channel": (self.video_info or {}).get("channel") or (self.video_info or {}).get("uploader"),
+            "duration": (self.video_info or {}).get("duration_string"),
             "thumbnail_url": self.thumbnail_url,
             "save_thumbnail": self.save_thumbnail,
             "url": url,
@@ -959,7 +978,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         """Start one immutable queue job or an immediate download."""
         self.video_url = job["url"]
         self.thumbnail_url = job.get("thumbnail_url")
-        self.video_info = {"title": job.get("title", job["url"])}
+        channel = job.get("channel") or job.get("uploader")
+        self.video_info = {
+            "title": job.get("title", job["url"]),
+            "channel": channel,
+            "uploader": channel,
+            "duration_string": job.get("duration"),
+        }
         if job.get("save_thumbnail") and job.get("thumbnail_url"):
             try:
                 self.download_thumbnail_file(job["url"], job["path"])
@@ -968,9 +993,13 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
         self.download_thread = DownloadThread(**{
             key: value for key, value in job.items()
-            if key not in {"id", "title", "thumbnail_url", "save_thumbnail", "queued_at", "status", "error"}
+            if key not in {
+                "id", "title", "channel", "duration", "thumbnail_url", "save_thumbnail",
+                "queued_at", "status", "error"
+            }
         })
         self.download_thread.progress_signal.connect(self.update_progress_bar)
+        self.download_thread.playlist_progress_signal.connect(self.update_playlist_progress)
         self.download_thread.status_signal.connect(self.set_status_message_animated)
         self.download_thread.update_details.connect(self.download_details_label.setText)
         self.download_thread.finished_signal.connect(self.download_finished)
@@ -992,6 +1021,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             self.animate_widget_fade_out(self.cancel_btn)
             self.open_folder_btn.setVisible(False)
             self.set_status_message_animated(_("download.cancelled"))
+            self.playlist_progress = None
+            self.playlist_progress_label.clear()
             self.download_details_label.setText("")
             self.current_download = None
             if self.queue_running:
@@ -1006,6 +1037,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(True)
         self.animate_widget_fade_out(self.pause_btn)
         self.animate_widget_fade_out(self.cancel_btn)
+        self.playlist_progress = None
+        self.playlist_progress_label.clear()
         self.progress_bar.setValue(10000)  # 100% in 0-10000 range
 
         # Set completion message based on the file type of last downloaded file
@@ -1163,13 +1196,19 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             self.set_status_message_animated(_("download.already_in_progress"))
             return
         jobs = DownloadQueue.get_all()
-        if not any(job.get("status") in {"queued", "failed", "cancelled"} for job in jobs):
+        pending_jobs = [
+            job for job in jobs
+            if job.get("status") in {"queued", "failed", "cancelled"}
+        ]
+        if not pending_jobs:
             self.set_status_message_animated(_("queue.empty"))
             return
-        for job in jobs:
+        for job in pending_jobs:
             if job.get("status") in {"failed", "cancelled"}:
                 DownloadQueue.update(job["id"], status="queued", error=None)
         self.queue_running = True
+        self.queue_position = 0
+        self.queue_total = len(pending_jobs)
         self.set_status_message_animated(_("queue.started"))
         self._start_next_queued_job()
 
@@ -1187,12 +1226,18 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             return
         DownloadQueue.update(next_job["id"], status="downloading", error=None)
         self.current_queue_job = next_job
+        self.queue_position += 1
+        self._update_progress_indicator()
         self._start_download_job(next_job)
 
     def update_progress_bar(self, value) -> None:
         try:
             # Scale float percentage (0-100) to progress bar range (0-10000) for precision
-            scaled_value = int(float(value) * 100)
+            percentage = float(value)
+            if self.playlist_progress:
+                current_item, total_items = self.playlist_progress
+                percentage = ((current_item - 1) + (percentage / 100)) / total_items * 100
+            scaled_value = int(percentage * 100)
             
             # Use smooth animation for progress updates
             if self._progress_animation.state() == QPropertyAnimation.State.Running:
@@ -1209,13 +1254,47 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         except Exception as e:
             logger.exception(f"Progress bar update error: {e}")
 
+    @Slot(int, int)
+    def update_playlist_progress(self, current_item: int, total_items: int) -> None:
+        """Show the current entry while yt-dlp downloads a playlist."""
+        if total_items > 0:
+            self.playlist_progress = (current_item, total_items)
+            self._update_progress_indicator()
+
+    def _update_progress_indicator(self) -> None:
+        """Show queue and playlist progress in the shared progress label."""
+        if self.queue_running and self.queue_position and self.queue_total:
+            queue_text = f"{_('buttons.queue')} {self.queue_position}/{self.queue_total}"
+            if self.playlist_progress:
+                playlist_current, playlist_total = self.playlist_progress
+                self.playlist_progress_label.setText(
+                    f"{queue_text} · {playlist_current}/{playlist_total}"
+                )
+            else:
+                self.playlist_progress_label.setText(queue_text)
+        elif self.playlist_progress:
+            current_item, total_items = self.playlist_progress
+            self.playlist_progress_label.setText(
+                _("download.playlist_progress", current=current_item, total=total_items)
+            )
+        else:
+            self.playlist_progress_label.clear()
+
     def toggle_pause(self) -> None:
         if self.current_download:
             self.current_download.paused = not self.current_download.paused
             if self.current_download.paused:
+                if self.queue_running and self.current_queue_job:
+                    DownloadQueue.update(self.current_queue_job["id"], status="queued")
                 self.pause_btn.setText(_("buttons.resume"))
                 self.signals.update_status.emit(_("download.paused"))
             else:
+                if self.queue_running and self.current_queue_job:
+                    DownloadQueue.update(
+                        self.current_queue_job["id"],
+                        status="downloading",
+                        error=None,
+                    )
                 self.pause_btn.setText(_("buttons.pause"))
                 self.signals.update_status.emit(_("download.resumed"))
 
@@ -1398,6 +1477,16 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
                     self.auto_update_thread.terminate()
                     self.auto_update_thread.wait(1000)  # Wait for termination
 
+            # Persist an interrupted queue job before waiting for the worker.
+            # The completion signal may not be delivered during shutdown.
+            if self.queue_running and self.current_queue_job:
+                DownloadQueue.update(
+                    self.current_queue_job["id"],
+                    status="queued",
+                    error=None,
+                )
+                self.queue_running = False
+
             # Cancel any running downloads
             if self.current_download and self.current_download.isRunning():
                 logger.info("Canceling running download...")
@@ -1500,7 +1589,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(True)
         self.pause_btn.setVisible(False)
         self.cancel_btn.setVisible(False)
+        self.playlist_progress = None
         self.progress_bar.setValue(10000)  # 100% in 0-10000 range
+        self.playlist_progress_label.clear()
 
         # Determine file type based on extension
         ext = Path(filename).suffix.lower()

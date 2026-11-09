@@ -220,8 +220,10 @@ class FormatTableMixin:
         # Set table size policies
         self.format_table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
-        # Set minimum and maximum heights
-        self.format_table.setMinimumHeight(200)
+        # Keep enough room for the header while allowing the surrounding
+        # controls to remain visible on compact windows. The table scrolls
+        # when its contents need more space.
+        self.format_table.setMinimumHeight(120)
 
         # Connect the signal
         self.format_signals.format_update.connect(self._update_format_table)
@@ -789,5 +791,4 @@ class FormatTableMixin:
                 return _("formats.medium_480p")
             else:
                 return _("formats.low_quality")
-
 

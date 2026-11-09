@@ -142,6 +142,7 @@ Simply download the pre-built installer for your operating system:
   chmod +x YTSage-*.AppImage
   ./YTSage-*.AppImage
   ```
+  Releases also include a matching `.AppImage.zsync` file and update metadata for AppImage managers that support automatic updates.
 - **DEB (`.deb`)**:
   ```bash
   sudo dpkg -i ytsage_*.deb

@@ -291,6 +291,15 @@ class StyleSheet:
             }
     """
 
+    QUEUE_PROGRESS_LABEL = """
+            QLabel {
+                color: #ff8a8a;
+                font-size: 11px;
+                font-weight: 600;
+                padding: 2px 4px;
+            }
+    """
+
     OPEN_FOLDER_BUTTON = """
             QPushButton {
                 background-color: #2a2d2e;
