@@ -282,6 +282,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         
         # Track if video analysis is completed
         self.analysis_completed = False
+        self._is_closing = False
 
         # Initialize audio player
         self.player = QMediaPlayer()
@@ -1496,6 +1497,10 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
 
     def closeEvent(self, event) -> None:
         """Handle application close event to ensure proper cleanup of background threads."""
+        self._is_closing = True
+        app = QApplication.instance()
+        if app is not None:
+            app.removeEventFilter(self)
         try:
             # Stop the analysis thread if it's running
             if hasattr(self, "_analysis_thread") and self._analysis_thread is not None and self._analysis_thread.isRunning():
@@ -1809,17 +1814,24 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         """Close the floating embed-options panel when the user clicks
         anywhere outside of it (and outside the toggle button), like a
         standard dropdown/popover."""
-        panel = getattr(self, "embed_options_panel", None)
-        if panel is not None and panel.isVisible() and event.type() == QEvent.Type.MouseButtonPress:
-            global_pos = event.globalPosition().toPoint()
-            clicked = QApplication.widgetAt(global_pos)
-            toggle = self.embed_options_toggle
-            inside_panel = clicked is not None and (clicked is panel or panel.isAncestorOf(clicked))
-            inside_toggle = clicked is not None and (clicked is toggle or toggle.isAncestorOf(clicked))
-            if not inside_panel and not inside_toggle:
-                self.embed_options_toggle.setChecked(False)
-                self.toggle_embed_options(False)
-        return super().eventFilter(obj, event)
+        if self._is_closing:
+            return False
+
+        try:
+            panel = getattr(self, "embed_options_panel", None)
+            if panel is not None and panel.isVisible() and event.type() == QEvent.Type.MouseButtonPress:
+                global_pos = event.globalPosition().toPoint()
+                clicked = QApplication.widgetAt(global_pos)
+                toggle = self.embed_options_toggle
+                inside_panel = clicked is not None and (clicked is panel or panel.isAncestorOf(clicked))
+                inside_toggle = clicked is not None and (clicked is toggle or toggle.isAncestorOf(clicked))
+                if not inside_panel and not inside_toggle:
+                    toggle.setChecked(False)
+                    self.toggle_embed_options(False)
+        except RuntimeError:
+            # Qt may destroy child widgets before the application removes the filter.
+            return False
+        return False
 
     def resizeEvent(self, event) -> None:
         """Keep the floating embed-options panel anchored to the toggle
