@@ -8,7 +8,7 @@ from pathlib import Path
 import markdown
 import requests
 from packaging import version
-from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal, QUrl, QPropertyAnimation, QEasingCurve, QPoint, QRect, QEvent
+from PySide6.QtCore import Q_ARG, QMetaObject, Qt, QTimer, Slot, QThread, Signal, QUrl, QPropertyAnimation, QSequentialAnimationGroup, QEasingCurve, QPoint, QRect, QEvent
 from PySide6.QtGui import QIcon
 from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PySide6.QtWidgets import (
@@ -1037,6 +1037,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.toggle_download_controls(True)
         self.animate_widget_fade_out(self.pause_btn)
         self.animate_widget_fade_out(self.cancel_btn)
+        self._animate_download_success()
         self.playlist_progress = None
         self.playlist_progress_label.clear()
         self.progress_bar.setValue(10000)  # 100% in 0-10000 range
@@ -1211,6 +1212,43 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         self.queue_total = len(pending_jobs)
         self.set_status_message_animated(_("queue.started"))
         self._start_next_queued_job()
+
+    def _animate_download_success(self) -> None:
+        """Pulse the primary action button when a download completes."""
+        effect = self.download_btn.graphicsEffect()
+        if not isinstance(effect, QGraphicsDropShadowEffect):
+            return
+
+        existing_animation = getattr(self.download_btn, "_success_animation", None)
+        if existing_animation is not None:
+            try:
+                existing_animation.stop()
+            except RuntimeError:
+                pass
+
+        effect.setColor(QColor("#4caf50"))
+        pulse_up = QPropertyAnimation(effect, b"blurRadius", self.download_btn)
+        pulse_up.setDuration(180)
+        pulse_up.setStartValue(effect.blurRadius())
+        pulse_up.setEndValue(30.0)
+        pulse_up.setEasingCurve(QEasingCurve.Type.OutCubic)
+
+        pulse_down = QPropertyAnimation(effect, b"blurRadius", self.download_btn)
+        pulse_down.setDuration(320)
+        pulse_down.setStartValue(30.0)
+        pulse_down.setEndValue(18.0)
+        pulse_down.setEasingCurve(QEasingCurve.Type.InOutCubic)
+
+        animation = QSequentialAnimationGroup(self.download_btn)
+        animation.addAnimation(pulse_up)
+        animation.addAnimation(pulse_down)
+
+        def restore_button_glow() -> None:
+            effect.setColor(QColor("#ff1f1f"))
+
+        animation.finished.connect(restore_button_glow)
+        self.download_btn._success_animation = animation
+        animation.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
 
     def _start_next_queued_job(self) -> None:
         if not self.queue_running:

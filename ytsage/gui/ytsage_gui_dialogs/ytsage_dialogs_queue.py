@@ -1,10 +1,11 @@
 """Download queue dialog."""
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import QEasingCurve, QPropertyAnimation, Signal
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QDialog,
     QGraphicsDropShadowEffect,
+    QGraphicsOpacityEffect,
     QHBoxLayout,
     QLabel,
     QListWidget,
@@ -62,6 +63,7 @@ class QueueDialog(QDialog):
         if not jobs:
             self.list_widget.addItem(QListWidgetItem(_("queue.empty")))
             self.remove_button.setEnabled(False)
+            self._animate_refresh()
             return
         for job in jobs:
             title = job.get("title") or job.get("url", _("queue.untitled"))
@@ -70,6 +72,23 @@ class QueueDialog(QDialog):
             item.setData(32, job.get("id"))
             self.list_widget.addItem(item)
         self.remove_button.setEnabled(True)
+        self._animate_refresh()
+
+    def _animate_refresh(self) -> None:
+        """Fade the refreshed queue contents in without changing its layout."""
+        effect = self.list_widget.graphicsEffect()
+        if not isinstance(effect, QGraphicsOpacityEffect):
+            effect = QGraphicsOpacityEffect(self.list_widget)
+            self.list_widget.setGraphicsEffect(effect)
+
+        animation = QPropertyAnimation(effect, b"opacity", self.list_widget)
+        animation.setDuration(180)
+        animation.setStartValue(0.35)
+        animation.setEndValue(1.0)
+        animation.setEasingCurve(QEasingCurve.Type.OutQuad)
+        animation.finished.connect(lambda: self.list_widget.setGraphicsEffect(None))
+        self._refresh_animation = animation
+        animation.start(QPropertyAnimation.DeletionPolicy.DeleteWhenStopped)
 
     def remove_selected(self) -> None:
         item = self.list_widget.currentItem()
