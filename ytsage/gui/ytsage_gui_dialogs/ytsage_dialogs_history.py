@@ -218,8 +218,8 @@ class HistoryDelegate(QStyledItemDelegate):
         else:
             painter.fillRect(thumb_rect, QColor("#15181b"))
             painter.setPen(QPen(QColor("#666666")))
-            icon_char = "🎵" if entry.get("is_audio_only") else "📹"
-            painter.setFont(QFont("Segoe UI Emoji", 24))
+            icon_char = "A" if entry.get("is_audio_only") else "V"
+            painter.setFont(QFont("sans-serif", 24, QFont.Weight.Bold))
             painter.drawText(thumb_rect, Qt.AlignmentFlag.AlignCenter, icon_char)
 
         # Draw Border around thumb
@@ -509,10 +509,10 @@ class HistoryDialog(QDialog):
             }
         """)
         
-        act_open = menu.addAction("📁 " + _("history.open_location"))
-        act_redownload = menu.addAction("⬇️ " + _("history.redownload"))
+        act_open = menu.addAction(_("history.open_location"))
+        act_redownload = menu.addAction(_("history.redownload"))
         menu.addSeparator()
-        act_remove = menu.addAction("🗑️ " + _("history.remove"))
+        act_remove = menu.addAction(_("history.remove"))
         
         action = menu.exec(global_pos)
         

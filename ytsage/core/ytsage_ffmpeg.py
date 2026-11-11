@@ -260,7 +260,7 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
     if check_ffmpeg_installed():
         logger.info("FFmpeg is already installed!")
         if progress_callback:
-            progress_callback("✅ FFmpeg is already installed!")
+            progress_callback("FFmpeg is already installed!")
         return True
 
     try:
@@ -290,7 +290,7 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
             ):
                 # Verify SHA-256 hash for 7z file
                 if progress_callback:
-                    progress_callback("🔐 Verifying download integrity...")
+                    progress_callback("Verifying download integrity...")
                 if verify_sha256(temp_file, FFMPEG_7Z_SHA256_URL):
                     logger.info("Extracting FFmpeg components from 7z archive...")
                     if progress_callback:
@@ -306,11 +306,11 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
                     except Exception as e:
                         logger.exception(f"7z extraction failed: {e}, trying zip fallback...")
                         if progress_callback:
-                            progress_callback("❌ 7z extraction failed, trying zip fallback...")
+                            progress_callback("7z extraction failed, trying zip fallback...")
                 else:
                     logger.error("SHA-256 verification failed for 7z file, trying zip fallback...")
                     if progress_callback:
-                        progress_callback("❌ SHA-256 verification failed, trying zip fallback...")
+                        progress_callback("SHA-256 verification failed, trying zip fallback...")
             
             # Clean up temp file
             try:
@@ -322,7 +322,7 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
         if not success:
             logger.info("Using ZIP method as fallback...")
             if progress_callback:
-                progress_callback("📦 Using ZIP method...")
+                progress_callback("Using ZIP method...")
             temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".zip").name
 
             # Download zip file
@@ -335,16 +335,16 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
             ):
                 logger.error("Failed to download FFmpeg (both 7z and zip methods failed)")
                 if progress_callback:
-                    progress_callback("❌ Failed to download FFmpeg")
+                    progress_callback("Failed to download FFmpeg")
                 return False
 
             # Verify SHA-256 hash for zip
             if progress_callback:
-                progress_callback("🔐 Verifying download integrity...")
+                progress_callback("Verifying download integrity...")
             if not verify_sha256(temp_file, FFMPEG_ZIP_SHA256_URL):
                 logger.warning("SHA-256 verification failed for zip file, proceeding anyway...")
                 if progress_callback:
-                    progress_callback("⚠️ SHA-256 verification failed, proceeding anyway...")
+                    progress_callback("SHA-256 verification failed, proceeding anyway...")
 
             logger.info("Extracting FFmpeg components from zip archive...")
             if progress_callback:
@@ -357,7 +357,7 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
             except Exception as e:
                 logger.exception(f"Extraction failed: {e}")
                 if progress_callback:
-                    progress_callback(f"❌ Extraction failed: {e}")
+                    progress_callback(f"Extraction failed: {e}")
                 return False
             finally:
                 # Clean up temp file
@@ -369,13 +369,13 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
         if not success:
             logger.error("Both 7z and zip methods failed")
             if progress_callback:
-                progress_callback("❌ Installation failed")
+                progress_callback("Installation failed")
             return False
 
         # Find the bin directory in the extracted essentials build
         logger.info("Locating FFmpeg binaries...")
         if progress_callback:
-            progress_callback("🔍 Locating FFmpeg binaries...")
+            progress_callback("Locating FFmpeg binaries...")
         
         bin_dir = None
         # Look for any directory matching ffmpeg-*-essentials_build pattern
@@ -390,12 +390,12 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
         if not bin_dir:
             logger.error("Could not locate FFmpeg bin directory")
             if progress_callback:
-                progress_callback("❌ Could not locate FFmpeg bin directory")
+                progress_callback("Could not locate FFmpeg bin directory")
             return False
 
         logger.info("Configuring system paths...")
         if progress_callback:
-            progress_callback("🔧 Configuring system paths...")
+            progress_callback("Configuring system paths...")
         
         # Add to System Path
         user_path = os.environ.get("PATH", "")
@@ -423,22 +423,22 @@ def install_ffmpeg_windows(progress_callback=None) -> bool:
 
         # Verify installation
         if progress_callback:
-            progress_callback("✅ Verifying installation...")
+            progress_callback("Verifying installation...")
         if not check_ffmpeg_installed():
             logger.error("FFmpeg installation verification failed")
             if progress_callback:
-                progress_callback("⚠️ Installation completed but verification failed")
+                progress_callback("Installation completed but verification failed")
             return True  # Still return True as files were extracted
 
         logger.info("FFmpeg installation completed successfully!")
         if progress_callback:
-            progress_callback("✅ FFmpeg installation completed successfully!")
+            progress_callback("FFmpeg installation completed successfully!")
         return True
 
     except Exception as e:
         logger.exception(f"Error installing FFmpeg: {e}")
         if progress_callback:
-            progress_callback(f"❌ Error installing FFmpeg: {e}")
+            progress_callback(f"Error installing FFmpeg: {e}")
         return False
 
 
@@ -523,5 +523,5 @@ def auto_install_ffmpeg(progress_callback=None) -> bool:
     else:
         logger.info(f"Unsupported operating system: {OS_NAME}")
         if progress_callback:
-            progress_callback(f"❌ Unsupported operating system: {OS_NAME}")
+            progress_callback(f"Unsupported operating system: {OS_NAME}")
         return False

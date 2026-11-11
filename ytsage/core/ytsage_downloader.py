@@ -960,13 +960,13 @@ class DownloadThread(QThread):
                 ext = Path(filename).suffix.lower()
 
                 if ext in VIDEO_EXTENSIONS:
-                    self.status_signal.emit(f"⚠️ Video file already exists")
+                    self.status_signal.emit("Video file already exists")
                 elif ext in AUDIO_EXTENSIONS:
-                    self.status_signal.emit(f"⚠️ Audio file already exists")
+                    self.status_signal.emit("Audio file already exists")
                 elif ext in SUBTITLE_EXTENSIONS:
-                    self.status_signal.emit(f"⚠️ Subtitle file already exists")
+                    self.status_signal.emit("Subtitle file already exists")
                 else:
-                    self.status_signal.emit(f"⚠️ File already exists")
+                    self.status_signal.emit("File already exists")
 
                 self.file_exists_signal.emit(filename)
             else:

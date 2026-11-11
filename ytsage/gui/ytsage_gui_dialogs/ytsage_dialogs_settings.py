@@ -1136,14 +1136,14 @@ class AutoUpdateSettingsDialog(QDialog):
             msg_box = self._create_styled_message_box(
                 QMessageBox.Icon.Information,
                 "Update Check",
-                "✅ Update check completed successfully!\nCheck the console for details.",
+                "Update check completed successfully!\nCheck the console for details.",
             )
             msg_box.exec()
         else:
             msg_box = self._create_styled_message_box(
                 QMessageBox.Icon.Warning,
                 "Update Check",
-                "❌ Update check failed.\nCheck the console for error details.",
+                "Update check failed.\nCheck the console for error details.",
             )
             msg_box.exec()
 

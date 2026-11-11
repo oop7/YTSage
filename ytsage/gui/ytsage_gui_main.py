@@ -700,7 +700,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         status_layout.addWidget(self.status_label, 0, 1)
 
         # Add "Open Folder" button (initially hidden)
-        self.open_folder_btn = QPushButton("📁")
+        self.open_folder_btn = QPushButton()
+        self.open_folder_btn.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DirOpenIcon))
         self.open_folder_btn.setToolTip(_("buttons.open_folder"))
         self.open_folder_btn.setFixedSize(30, 30)
         self.open_folder_btn.setStyleSheet(StyleSheet.OPEN_FOLDER_BUTTON)

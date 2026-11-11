@@ -385,7 +385,7 @@ class AboutDialog(QDialog):
     def _show_loading_message(self) -> None:
         """Show a compact loading message while system information is being gathered."""
         # Strip the emoji from the localized string to avoid rendering issues
-        loading_text = _("about.loading").replace("🔄", "").strip()
+        loading_text = _("about.loading")
         loading_label = QLabel(loading_text)
         loading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         loading_label.setStyleSheet(
@@ -446,13 +446,13 @@ class AboutDialog(QDialog):
 
         # Second row: Path (if provided)
         if path_text:
-            path_label = QLabel(f"📁 {path_text}")
+            path_label = QLabel(str(path_text))
             path_label.setStyleSheet("font-size: 10px; color: #aaaaaa; margin-left: 12px;")  # Increased from 9px, better color
             path_label.setWordWrap(False)
             # Truncate very long paths
             if len(str(path_text)) > 60:
                 truncated_path = "..." + str(path_text)[-57:]
-                path_label.setText(f"📁 {truncated_path}")
+                path_label.setText(truncated_path)
             item_layout.addWidget(path_label)
 
         # Subtle background with minimal border
@@ -508,7 +508,7 @@ class AboutDialog(QDialog):
             cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
 
         ytdlp_item = self._create_status_item(
-            "🎥",
+            "",
             "yt-dlp",
             ytdlp_status_text,
             ytdlp_version + cache_status,
@@ -536,7 +536,7 @@ class AboutDialog(QDialog):
             cache_status = f" <span style='color: #888; font-size: 10px;'>({cache_time})</span>"  # Increased from 9px
 
         ffmpeg_item = self._create_status_item(
-            "🎬",
+            "",
             "FFmpeg",
             ffmpeg_status_text,
             ffmpeg_version + cache_status,
@@ -576,7 +576,7 @@ class AboutDialog(QDialog):
              integration_status = f" <span style='color: #4CAF50; font-size: 10px; font-weight: bold;'> + yt-dlp</span>"
 
         deno_item = self._create_status_item(
-            "🦕",
+            "",
             "Deno",
             deno_status_text,
             deno_version + cache_status + integration_status,

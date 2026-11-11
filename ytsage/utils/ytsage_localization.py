@@ -29,9 +29,15 @@ languages = LocalizationManager.get_available_languages()
 """
 
 import json
+import re
 import threading
 from pathlib import Path
 from typing import Any, Dict
+
+
+_UI_EMOJI_PREFIX = re.compile(
+    r"^\s*(?:🚀|✅|⚠️|❌|📂|📁|🔄|📦|🔐|🔍|🔧)\s*"
+)
 
 from .ytsage_logger import logger
 
@@ -308,7 +314,7 @@ class LocalizationManager:
                 except (KeyError, ValueError) as e:
                     logger.warning(f"Failed to format localized text '{key}': {e}")
             
-            return str(text)
+            return _UI_EMOJI_PREFIX.sub("", str(text))
     
     @classmethod
     def set_language(cls, language_code: str) -> None:
