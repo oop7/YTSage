@@ -217,9 +217,9 @@ class LocalizationManager:
             "unexpected_error": "Diagnostics failed unexpectedly: {error}"
         },
         "about": {
-            "open_logs": "📂 Logs",
+            "open_logs": "Open Logs",
             "logs_tooltip": "Open application logs folder",
-            "refresh": "🔄",
+            "refresh": "Refresh",
             "telegram": "Telegram: {channel}",
             "sponsor": "Support: {sponsor}"
         }
@@ -314,7 +314,14 @@ class LocalizationManager:
                 except (KeyError, ValueError) as e:
                     logger.warning(f"Failed to format localized text '{key}': {e}")
             
-            return _UI_EMOJI_PREFIX.sub("", str(text))
+            normalized_text = _UI_EMOJI_PREFIX.sub("", str(text))
+            if normalized_text:
+                return normalized_text
+
+            fallback_text = cls._get_nested_value(cls._fallback_strings, key)
+            if fallback_text is not None:
+                return _UI_EMOJI_PREFIX.sub("", str(fallback_text))
+            return normalized_text
     
     @classmethod
     def set_language(cls, language_code: str) -> None:

@@ -309,60 +309,44 @@ class AboutDialog(QDialog):
         # Add stretch to push refresh button to the right
         header_layout.addStretch()
 
-        # Create logs button (minimal)
-        self.logs_btn = QPushButton(_("about.open_logs")) # Expected to be small text or icon
+        # Keep the action text visible so its purpose is clear without relying on icons.
+        self.logs_btn = QPushButton(_("about.open_logs"))
         self.logs_btn.setToolTip(_("about.logs_tooltip"))
         self.logs_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.logs_btn.setStyleSheet(
-            """
-            QPushButton {
-                padding: 1px 6px;
-                background-color: transparent;
-                border: 1px solid #333;
-                border-radius: 4px;
-                color: #888888;
-                font-size: 10px;
-                margin-right: 8px;
-            }
-            QPushButton:hover {
-                color: #ffffff;
-                border-color: #555;
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-            QPushButton:pressed {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-        """
-        )
         self.logs_btn.clicked.connect(self.open_logs_folder)
-        header_layout.addWidget(self.logs_btn)
 
         # Create refresh button
         self.refresh_btn = QPushButton(_("about.refresh"))
-        self.refresh_btn.setFixedSize(16, 16)
-        self.refresh_btn.setStyleSheet(
-            """
-            QPushButton {
-                padding: 0px;
-                background-color: transparent;
-                border: none;
-                color: #cccccc;
-                font-size: 10px;
-                font-weight: normal;
-                margin: 0px;
-            }
-            QPushButton:hover {
-                color: #ffffff;
-                background-color: rgba(255, 255, 255, 0.1);
-                border-radius: 8px;
-            }
-            QPushButton:pressed {
-                color: #c90000;
-                background-color: rgba(201, 0, 0, 0.1);
-            }
-        """
-        )
         self.refresh_btn.clicked.connect(self.refresh_version_info)
+
+        for action_button in (self.logs_btn, self.refresh_btn):
+            action_button.setFixedSize(102, 28)
+            action_button.setCursor(Qt.CursorShape.PointingHandCursor)
+            action_button.setStyleSheet(
+                """
+                QPushButton {
+                    padding: 4px 8px;
+                    background-color: #24272b;
+                    border: 1px solid #333333;
+                    border-radius: 4px;
+                    color: #cccccc;
+                    font-size: 11px;
+                    font-weight: bold;
+                }
+                QPushButton:hover {
+                    color: #ffffff;
+                    border-color: #555555;
+                    background-color: rgba(255, 255, 255, 0.1);
+                }
+                QPushButton:pressed {
+                    color: #c90000;
+                    background-color: rgba(201, 0, 0, 0.1);
+                }
+            """
+            )
+
+        header_layout.addWidget(self.logs_btn)
+        header_layout.addSpacing(8)
         header_layout.addWidget(self.refresh_btn)
 
         main_layout.addLayout(header_layout)
