@@ -11,7 +11,7 @@ from typing import Optional, List, Set
 
 from PySide6.QtCore import QObject, QThread, Signal
 
-from .ytsage_yt_dlp import get_yt_dlp_path
+from .ytsage_yt_dlp import get_yt_dlp_path, get_ytdlp_deno_args
 from ..utils.ytsage_constants import (
     SUBPROCESS_CREATIONFLAGS,
     VIDEO_EXTENSIONS,
@@ -256,6 +256,11 @@ class DownloadThread(QThread):
         # Build the command line array
         cmd: List[str] = [yt_dlp_path]
         logger.debug(f"Using yt-dlp from: {yt_dlp_path}")
+
+        deno_args = get_ytdlp_deno_args()
+        if deno_args:
+            cmd.extend(deno_args)
+            logger.debug(f"Using Deno JavaScript runtime: {deno_args[-1]}")
 
         # Add concurrent fragments setting
         if self.concurrent_fragments:

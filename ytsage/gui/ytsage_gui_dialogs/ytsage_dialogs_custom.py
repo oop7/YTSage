@@ -30,7 +30,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..ytsage_smooth_tab_widget import SmoothTabWidget
-from ...core.ytsage_yt_dlp import get_yt_dlp_path
+from ...core.ytsage_yt_dlp import get_yt_dlp_path, get_ytdlp_deno_args
 from ...core.ytsage_utils import update_auto_update_settings
 from ...utils.ytsage_constants import YTDLP_DOCS_URL
 from ...utils.ytsage_config_manager import ConfigManager
@@ -65,7 +65,7 @@ class CommandWorker(QObject):
 
             # Build the full command
             yt_dlp_path = get_yt_dlp_path()
-            base_cmd = [yt_dlp_path] + args
+            base_cmd = [yt_dlp_path, *get_ytdlp_deno_args()] + args
 
             # Add download path if specified
             if self.path:

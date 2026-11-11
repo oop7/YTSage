@@ -6,7 +6,7 @@ from PySide6.QtCore import QMetaObject, Qt, Q_ARG, QThread, Signal, QTimer
 from PySide6.QtWidgets import QMessageBox
 
 from ..core.ytsage_utils import validate_video_url, parse_yt_dlp_error
-from ..core.ytsage_yt_dlp import get_yt_dlp_path
+from ..core.ytsage_yt_dlp import get_yt_dlp_path, get_ytdlp_deno_args
 from ..utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
 from ..utils.ytsage_localization import _
 from ..utils.ytsage_logger import logger
@@ -119,7 +119,14 @@ class AnalysisThread(QThread):
         self.progress_update.emit(30)  # This will trigger fake progress in UI
 
         # Build command for basic info extraction
-        cmd = [yt_dlp_path, "--dump-single-json", "--flat-playlist", "--no-warnings", url]
+        cmd = [
+            yt_dlp_path,
+            *get_ytdlp_deno_args(),
+            "--dump-single-json",
+            "--flat-playlist",
+            "--no-warnings",
+            url,
+        ]
         self._add_auth_options(cmd)
 
         logger.debug(f"Executing yt-dlp command: {cmd}")
@@ -216,7 +223,13 @@ class AnalysisThread(QThread):
                 if not first_video_url:
                     continue
 
-                cmd_single = [yt_dlp_path, "--dump-single-json", "--no-warnings", first_video_url]
+                cmd_single = [
+                    yt_dlp_path,
+                    *get_ytdlp_deno_args(),
+                    "--dump-single-json",
+                    "--no-warnings",
+                    first_video_url,
+                ]
                 self._add_auth_options(cmd_single)
 
                 try:

@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from ...core.ytsage_yt_dlp import get_yt_dlp_path
+from ...core.ytsage_yt_dlp import get_yt_dlp_path, get_ytdlp_deno_args
 from ...utils.ytsage_config_manager import ConfigManager
 from ...utils.ytsage_localization import _
 from ...utils.ytsage_logger import logger
@@ -96,6 +96,7 @@ class DiagnosticsThread(QThread):
     def _ytdlp_test(self, proxy_url: str | None) -> tuple[bool, str]:
         command = [
             get_yt_dlp_path(),
+            *get_ytdlp_deno_args(),
             "--dump-single-json",
             "--skip-download",
             "--no-playlist",

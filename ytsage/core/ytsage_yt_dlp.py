@@ -33,6 +33,7 @@ from ..utils.ytsage_constants import (
     YTDLP_SHA256_URL,
 )
 from .ytsage_ffmpeg import get_file_sha256
+from .ytsage_deno import check_deno_installed, get_deno_path
 from ..utils.ytsage_localization import _
 
 # YTDLP_URLS moved to src\utils\ytsage_constants.py
@@ -749,33 +750,44 @@ def check_ytdlp_deno_integration() -> bool:
     """
     try:
         ytdlp_path = get_yt_dlp_path()
-        if not ytdlp_path or ytdlp_path == "yt-dlp":
+        if (
+            not ytdlp_path
+            or ytdlp_path == "yt-dlp"
+        ):
             return False
 
-        # Run yt-dlp --verbose to check JS runtimes
-        # We use a dummy URL or just --verbose with no URL (which might error but should print debug info)
-        # However, yt-dlp might not print debug info if no URL is provided and it errors out immediately with "usage".
-        # But per user example: "yt-dlp.exe: error: You must provide at least one URL." comes AFTER debug info.
-        
+        deno_args = get_ytdlp_deno_args()
+        if not deno_args:
+            return False
+
         result = subprocess.run(
-            [str(ytdlp_path), "--verbose"],
+            [
+                str(ytdlp_path),
+                "--verbose",
+                *deno_args,
+            ],
             capture_output=True,
             text=True,
             timeout=10,
             creationflags=SUBPROCESS_CREATIONFLAGS
         )
         
-        # Check stderr for "[debug] JS runtimes: deno"
-        output = result.stderr
-        if "[debug] JS runtimes:" in output and "deno" in output:
-             # Find the line
-            for line in output.splitlines():
-                if "[debug] JS runtimes:" in line and "deno" in line:
-                    logger.info(f"Deno integration detected: {line.strip()}")
-                    return True
-        
+        # Check stderr for the configured runtime.
+        for line in result.stderr.splitlines():
+            if "[debug] JS runtimes:" in line and "deno" in line.lower():
+                logger.info(f"Deno integration detected: {line.strip()}")
+                return True
+
         return False
             
     except Exception as e:
         logger.warning(f"Failed to check yt-dlp Deno integration: {e}")
         return False
+
+
+def get_ytdlp_deno_args() -> list[str]:
+    """Return yt-dlp arguments for the managed Deno JavaScript runtime."""
+    deno_path = get_deno_path()
+    if not check_deno_installed() or deno_path == "deno":
+        return []
+    return ["--js-runtimes", f"deno:{deno_path}"]
