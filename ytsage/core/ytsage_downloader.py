@@ -274,7 +274,7 @@ class DownloadThread(QThread):
                 cmd.extend(["-f", "bestaudio/best"])
                 logger.debug(f"Playlist mode: using dynamic best audio fallback instead of format_id")
             elif self.format_id:
-                clean_format_id: str = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
+                clean_format_id: str = self.format_id
                 if video_audio_conversion:
                     merged_format = f"{clean_format_id}+bestaudio/best"
                     cmd.extend(["-f", merged_format])
@@ -307,7 +307,7 @@ class DownloadThread(QThread):
                     cmd.extend(["-f", "bestvideo+bestaudio/best"])
                     logger.debug("Playlist mode: invalid resolution string, using dynamic best quality overall")
         elif self.format_id:
-            clean_format_id: str = self.format_id.split("-drc")[0] if "-drc" in self.format_id else self.format_id
+            clean_format_id: str = self.format_id
 
             # If the selected format is audio-only, pass it directly - unless
             # the user also picked extra audio tracks alongside it (no video
@@ -316,7 +316,7 @@ class DownloadThread(QThread):
             if self.is_audio_only:
                 if self.audio_format_ids:
                     clean_audio_ids = [
-                        a.split("-drc")[0] if "-drc" in a else a for a in self.audio_format_ids
+                        a for a in self.audio_format_ids
                     ]
                     merged_format = "+".join([clean_format_id] + clean_audio_ids)
                     cmd.extend(["-f", merged_format])
@@ -332,7 +332,7 @@ class DownloadThread(QThread):
             # progressive format, since it's an explicit user choice.
             elif self.audio_format_ids:
                 clean_audio_ids = [
-                    a.split("-drc")[0] if "-drc" in a else a for a in self.audio_format_ids
+                    a for a in self.audio_format_ids
                 ]
                 merged_format = "+".join([clean_format_id] + clean_audio_ids)
                 cmd.extend(["-f", merged_format])
