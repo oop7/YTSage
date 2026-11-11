@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
     QProgressBar,
     QPushButton,
     QRadioButton,
+    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
@@ -169,9 +170,9 @@ class YtdlpSetupDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle(_("ytdlp_setup.required_title"))
-        self.setMinimumWidth(520)
-        self.setMinimumHeight(350)
-        self.resize(520, 380)
+        self.setMinimumWidth(560)
+        self.setMinimumHeight(455)
+        self.resize(560, 475)
 
         # Set the window icon to match the main app
         if parent and parent.windowIcon():
@@ -193,7 +194,6 @@ class YtdlpSetupDialog(QDialog):
             }
             QLabel {
                 color: #cccccc;
-                line-height: 1.4;
             }
             QPushButton {
                 padding: 10px 20px;
@@ -271,8 +271,11 @@ class YtdlpSetupDialog(QDialog):
             _("ytdlp_setup.description", os_name=OS_FULL_NAME)
         )
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        info_label.setTextFormat(Qt.TextFormat.RichText)
         info_label.setWordWrap(True)
-        info_label.setStyleSheet("font-size: 13px; color: #cccccc; padding: 5px; line-height: 1.4;")
+        info_label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        info_label.setMinimumHeight(145)
+        info_label.setStyleSheet("font-size: 13px; color: #cccccc; padding: 5px;")
         layout.addWidget(info_label)
 
         # Radio buttons with minimal spacing
