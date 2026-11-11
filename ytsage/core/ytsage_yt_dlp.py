@@ -6,7 +6,7 @@ from typing import Optional
 
 import requests
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QCloseEvent, QIcon
 from PySide6.QtWidgets import (
     QDialog,
     QFileDialog,
@@ -107,6 +107,7 @@ class DownloadYtdlpThread(QThread):
 
     def __init__(self):
         super().__init__()
+        self.result: Optional[tuple[bool, str]] = None
 
     def run(self) -> None:
         try:
@@ -140,10 +141,12 @@ class DownloadYtdlpThread(QThread):
                 logger.error("SHA256 verification failed! Removing downloaded file.")
                 if Path(exe_path).exists():
                     Path(exe_path).unlink()
-                self.finished_signal.emit(
-                    False, 
-                    "SHA256 verification failed. The downloaded file may be corrupted or tampered with."
+                result = (
+                    False,
+                    "SHA256 verification failed. The downloaded file may be corrupted or tampered with.",
                 )
+                self.result = result
+                self.finished_signal.emit(*result)
                 return
 
             # Make executable on macOS and Linux
@@ -151,11 +154,13 @@ class DownloadYtdlpThread(QThread):
                 os.chmod(exe_path, 0o755)
 
             logger.info("yt-dlp downloaded and verified successfully!")
-            self.finished_signal.emit(True, str(exe_path))
+            self.result = (True, str(exe_path))
+            self.finished_signal.emit(*self.result)
 
         except Exception as e:
             logger.exception(f"Error downloading yt-dlp: {e}")
-            self.finished_signal.emit(False, str(e))
+            self.result = (False, str(e))
+            self.finished_signal.emit(*self.result)
 
 
 class YtdlpSetupDialog(QDialog):
@@ -335,6 +340,7 @@ class YtdlpSetupDialog(QDialog):
         layout.addLayout(button_layout)
 
         self.setLayout(layout)
+        self.download_thread: Optional[DownloadYtdlpThread] = None
 
     def setup_ytdlp(self) -> None:
         if self.auto_radio.isChecked():
@@ -351,13 +357,25 @@ class YtdlpSetupDialog(QDialog):
 
         self.download_thread = DownloadYtdlpThread()
         self.download_thread.progress_signal.connect(self.update_progress)
-        self.download_thread.finished_signal.connect(self.download_finished)
+        self.download_thread.finished.connect(self._download_thread_finished)
         self.download_thread.start()
 
     def update_progress(self, value) -> None:
         self.progress_bar.setValue(value)
 
-    def download_finished(self, success, result) -> None:
+    def _download_thread_finished(self) -> None:
+        if self.download_thread is None:
+            return
+
+        result = self.download_thread.result
+        if result is None:
+            logger.error("yt-dlp download thread finished without a result")
+            self.download_finished(False, "yt-dlp download thread finished without a result")
+            return
+
+        self.download_finished(*result)
+
+    def download_finished(self, success: bool, result: str) -> None:
         self.setup_button.setEnabled(True)
         self.cancel_button.setEnabled(True)
 
@@ -396,6 +414,12 @@ class YtdlpSetupDialog(QDialog):
             """
             )
             error_dialog.exec()
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        if self.download_thread is not None and self.download_thread.isRunning():
+            event.ignore()
+            return
+        super().closeEvent(event)
 
     def select_ytdlp_path(self) -> None:
         if OS_NAME == "Windows":
