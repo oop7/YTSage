@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QPushButton,
     QRadioButton,
+    QScrollArea,
     QTabWidget,
     QTextEdit,
     QVBoxLayout,
@@ -38,6 +39,7 @@ from ...utils.ytsage_localization import LocalizationManager, _
 from ...utils.ytsage_logger import logger
 from .ytsage_dialogs_updater import UpdaterTabWidget
 from .ytsage_dialogs_diagnostics import NetworkDiagnosticsDialog
+from .ytsage_dialog_geometry import restore_dialog_geometry, save_dialog_geometry
 
 if TYPE_CHECKING:
     from ..ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
@@ -115,6 +117,8 @@ class CustomOptionsDialog(QDialog):
         self.setWindowTitle(_("dialogs.custom_options"))
         self.setMinimumSize(550, 400)  # Made even shorter
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
 
         # Create tab widget to organize content
         self.tab_widget = SmoothTabWidget()
@@ -394,14 +398,14 @@ class CustomOptionsDialog(QDialog):
         command_layout.addWidget(self.log_output)
 
         # === Proxy Tab ===
-        proxy_tab = QWidget()
-        proxy_layout = QVBoxLayout(proxy_tab)
+        network_tab = QWidget()
+        network_layout = QVBoxLayout(network_tab)
 
         # Help text
         proxy_help_text = QLabel(_('proxy.help_text'))
         proxy_help_text.setWordWrap(True)
         proxy_help_text.setStyleSheet("color: #999999; padding: 10px;")
-        proxy_layout.addWidget(proxy_help_text)
+        network_layout.addWidget(proxy_help_text)
 
         # Main Proxy section
         main_proxy_group = QGroupBox(_('proxy.main_proxy'))
@@ -421,12 +425,41 @@ class CustomOptionsDialog(QDialog):
         main_proxy_input_layout.addWidget(self.proxy_url_input)
         main_proxy_layout.addLayout(main_proxy_input_layout)
 
+        self.force_ipv4_checkbox = QCheckBox(
+            _("proxy.force_ipv4", default="Force IPv4 connections")
+        )
+        self.force_ipv4_checkbox.setToolTip(
+            _("proxy.force_ipv4_help", default="Prefer IPv4 when connecting to YouTube.")
+        )
+        self.force_ipv4_checkbox.setStyleSheet(
+            """
+            QCheckBox {
+                spacing: 5px;
+                color: #ffffff;
+            }
+            QCheckBox::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 9px;
+            }
+            QCheckBox::indicator:unchecked {
+                border: 2px solid #666666;
+                background: #1d1e22;
+            }
+            QCheckBox::indicator:checked {
+                border: 2px solid #c90000;
+                background: #c90000;
+            }
+            """
+        )
+        main_proxy_layout.addWidget(self.force_ipv4_checkbox)
+
         # Example text
         example_label = QLabel(_('proxy.proxy_examples'))
         example_label.setStyleSheet("color: #888888; font-size: 10px; font-style: italic;")
         main_proxy_layout.addWidget(example_label)
 
-        proxy_layout.addWidget(main_proxy_group)
+        network_layout.addWidget(main_proxy_group)
 
         # Geo-verification Proxy section
         geo_proxy_group = QGroupBox(_('proxy.geo_proxy'))
@@ -446,16 +479,16 @@ class CustomOptionsDialog(QDialog):
         geo_proxy_input_layout.addWidget(self.geo_proxy_url_input)
         geo_proxy_layout.addLayout(geo_proxy_input_layout)
 
-        proxy_layout.addWidget(geo_proxy_group)
+        network_layout.addWidget(geo_proxy_group)
 
         # Proxy status indicator
         self.proxy_status = QLabel("")
         self.proxy_status.setStyleSheet("color: #999999; font-style: italic;")
-        proxy_layout.addWidget(self.proxy_status)
+        network_layout.addWidget(self.proxy_status)
 
         diagnostics_button = QPushButton(_("buttons.diagnostics"))
         diagnostics_button.clicked.connect(self.show_network_diagnostics)
-        proxy_layout.addWidget(diagnostics_button)
+        network_layout.addWidget(diagnostics_button)
 
         # Clear buttons
         clear_layout = QHBoxLayout()
@@ -498,9 +531,9 @@ class CustomOptionsDialog(QDialog):
         clear_layout.addWidget(clear_geo_proxy_btn)
 
         clear_layout.addStretch()
-        proxy_layout.addLayout(clear_layout)
+        network_layout.addLayout(clear_layout)
 
-        proxy_layout.addStretch()
+        network_layout.addStretch()
 
         # === Language Tab ===
         language_tab = QWidget()
@@ -564,12 +597,31 @@ class CustomOptionsDialog(QDialog):
         # === Updater Tab ===
         self.updater_tab = UpdaterTabWidget(self)
 
-        # Add tabs to the tab widget
-        self.tab_widget.addTab(cookies_tab, _("tabs.cookies"))
-        self.tab_widget.addTab(command_tab, _("tabs.custom_command"))
-        self.tab_widget.addTab(proxy_tab, _("tabs.proxy"))
+        # Add scrollable pages so the action row remains visible on short screens.
+        for tab, label in (
+            (cookies_tab, _("tabs.cookies")),
+            (command_tab, _("tabs.custom_command")),
+            (network_tab, _("tabs.network", default="Network")),
+        ):
+            scroll_area = QScrollArea()
+            scroll_area.setWidgetResizable(True)
+            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            scroll_area.setFrameShape(QScrollArea.Shape.NoFrame)
+            scroll_area.setStyleSheet(
+                "QScrollArea { border: none; background-color: #15181b; }"
+            )
+            scroll_area.setWidget(tab)
+            self.tab_widget.addTab(scroll_area, label)
         self.tab_widget.addTab(self.updater_tab, _("tabs.updater"))
-        self.tab_widget.addTab(language_tab, _("tabs.language"))
+        language_scroll_area = QScrollArea()
+        language_scroll_area.setWidgetResizable(True)
+        language_scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        language_scroll_area.setFrameShape(QScrollArea.Shape.NoFrame)
+        language_scroll_area.setStyleSheet(
+            "QScrollArea { border: none; background-color: #15181b; }"
+        )
+        language_scroll_area.setWidget(language_tab)
+        self.tab_widget.addTab(language_scroll_area, _("tabs.language"))
 
         # Dialog buttons
         button_box = QDialogButtonBox()
@@ -685,6 +737,15 @@ class CustomOptionsDialog(QDialog):
         # Initialize dialog with current settings (after all widgets and styles are set)
         self._initialize_cookie_settings()
         self._initialize_proxy_settings()
+        self.finished.connect(
+            lambda _result: save_dialog_geometry(self, "custom_options_geometry")
+        )
+        restore_dialog_geometry(self, "custom_options_geometry")
+
+    def closeEvent(self, event) -> None:
+        """Persist the dialog geometry when closed from the title bar."""
+        save_dialog_geometry(self, "custom_options_geometry")
+        super().closeEvent(event)
 
     def show_network_diagnostics(self) -> None:
         """Open diagnostics using the current main-window URL and proxy settings."""
@@ -743,6 +804,7 @@ class CustomOptionsDialog(QDialog):
         # Load proxy settings from config
         proxy_url = ConfigManager.get("proxy_url")
         geo_proxy_url = ConfigManager.get("geo_proxy_url")
+        self.force_ipv4_checkbox.setChecked(bool(ConfigManager.get("force_ipv4")))
         
         # Set proxy field values if they exist
         if proxy_url:
@@ -863,6 +925,10 @@ class CustomOptionsDialog(QDialog):
         """Returns the geo-verification proxy URL if specified"""
         geo_proxy_url = self.geo_proxy_url_input.text().strip()
         return geo_proxy_url if geo_proxy_url else None
+
+    def get_force_ipv4(self) -> bool:
+        """Return whether yt-dlp should prefer IPv4 connections."""
+        return self.force_ipv4_checkbox.isChecked()
 
     def validate_proxy_url(self, url: str) -> bool:
         """Basic validation for proxy URL format"""

@@ -109,6 +109,7 @@
     "cookies": "Login with Cookies",
     "custom_command": "Custom Command",
     "proxy": "Proxy",
+    "network": "Network",
     "language": "Language",
     "updater": "Updater"
   },
@@ -166,6 +167,8 @@
     "help_text": "Configure proxy settings for downloading. Leave empty to use direct connection.",
     "main_proxy": "Main Proxy",
     "main_proxy_help": "Primary proxy server for all downloads. Supports HTTP/HTTPS and SOCKS5 protocols.",
+    "force_ipv4": "Force IPv4 connections",
+    "force_ipv4_help": "Prefer IPv4 when connecting to YouTube.",
     "proxy_url_label": "Proxy URL:",
     "proxy_url_placeholder": "http://proxy:port or socks5://proxy:port",
     "proxy_examples": "Examples:\n• HTTP: http://proxy.example.com:8080\n• SOCKS5: socks5://proxy.example.com:1080",

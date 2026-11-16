@@ -41,6 +41,7 @@ from ...utils.ytsage_history_manager import HistoryManager
 from ...utils.ytsage_constants import APP_THUMBNAILS_DIR, SUBPROCESS_CREATIONFLAGS
 from ...utils.ytsage_localization import _
 from ...utils.ytsage_logger import logger
+from .ytsage_dialog_geometry import restore_dialog_geometry, save_dialog_geometry
 
 if TYPE_CHECKING:
     from ..ytsage_gui_main import YTSageApp
@@ -351,12 +352,15 @@ class HistoryDialog(QDialog):
         
         self.setup_ui()
         self.show_loading_state()
+        self.finished.connect(
+            lambda _result: save_dialog_geometry(self, "history_dialog_geometry")
+        )
+        restore_dialog_geometry(self, "history_dialog_geometry", (850, 600))
         
         QTimer.singleShot(100, self.start_loading_history)
         
     def setup_ui(self):
         self.setWindowTitle(_("history.title"))
-        self.resize(850, 600)
         self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.WindowCloseButtonHint)
         self.setStyleSheet("""
             QDialog { background-color: #15181b; }
@@ -364,6 +368,8 @@ class HistoryDialog(QDialog):
         """)
         
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
         
         # --- Header ---
         header = QHBoxLayout()
@@ -589,5 +595,6 @@ class HistoryDialog(QDialog):
         self.load_cached_thumbnails(results)
 
     def closeEvent(self, event):
+        save_dialog_geometry(self, "history_dialog_geometry")
         self._stop_loader_thread()
         super().closeEvent(event)

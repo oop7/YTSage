@@ -87,6 +87,7 @@ class ConfigManager:
         "last_used_cookie_file": None,
         "proxy_url": None,
         "geo_proxy_url": None,
+        "force_ipv4": False,
         "auto_update_ytdlp": True,
         "auto_update_frequency": "daily",
         "check_app_updates": True,
@@ -106,6 +107,9 @@ class ConfigManager:
         "default_subtitle_language": None,
         "preferred_subtitle_format": "default",
         "filename_format": "%(title)s_%(resolution)s_[%(id)s].%(ext)s",
+        "download_settings_geometry": None,
+        "custom_options_geometry": None,
+        "history_dialog_geometry": None,
         "window_geometry": None,
         "window_state": None,
         "cached_versions": {

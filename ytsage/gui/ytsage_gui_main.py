@@ -265,6 +265,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         # Initialize proxy settings from config
         self.proxy_url = ConfigManager.get("proxy_url")
         self.geo_proxy_url = ConfigManager.get("geo_proxy_url")
+        self.force_ipv4 = bool(ConfigManager.get("force_ipv4"))
         # Initialize speed limit settings from config
         self.speed_limit_value = ConfigManager.get("speed_limit_value")  # Store speed limit value
         self.speed_limit_unit_index = ConfigManager.get("speed_limit_unit_index") or 0  # Store speed limit unit index (0: KB/s, 1: MB/s)
@@ -961,6 +962,7 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             "force_keyframes": self.force_keyframes,
             "proxy_url": self.proxy_url,
             "geo_proxy_url": self.geo_proxy_url,
+            "force_ipv4": self.force_ipv4,
             "force_output_format": self.force_output_format,
             "preferred_output_format": self.preferred_output_format,
             "force_audio_format": self.force_audio_format,
@@ -1559,14 +1561,17 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             # Handle proxy options
             proxy_url = dialog.get_proxy_url()
             geo_proxy_url = dialog.get_geo_proxy_url()
+            force_ipv4 = dialog.get_force_ipv4()
 
             # Update instance variables
             self.proxy_url = proxy_url
             self.geo_proxy_url = geo_proxy_url
+            self.force_ipv4 = force_ipv4
 
             # Save proxy settings to config
             ConfigManager.set("proxy_url", proxy_url)
             ConfigManager.set("geo_proxy_url", geo_proxy_url)
+            ConfigManager.set("force_ipv4", force_ipv4)
 
             # Show confirmation messages
             if proxy_url:

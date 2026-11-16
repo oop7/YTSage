@@ -26,6 +26,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QRadioButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -35,6 +36,7 @@ from ...utils.ytsage_logger import logger
 from ...utils.ytsage_localization import _
 from ...utils.ytsage_config_manager import ConfigManager
 from ...utils.ytsage_constants import APP_LOG_DIR
+from .ytsage_dialog_geometry import restore_dialog_geometry, save_dialog_geometry
 
 
 class DownloadSettingsDialog(QDialog):
@@ -42,7 +44,7 @@ class DownloadSettingsDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle(_("settings.title"))
         self.setMinimumWidth(550)
-        self.setMinimumHeight(400)
+        self.setMinimumHeight(300)
         self.current_path = current_path
         self.current_limit = current_limit if current_limit is not None else ""
         self.current_unit_index = current_unit_index
@@ -60,7 +62,7 @@ class DownloadSettingsDialog(QDialog):
             QTabBar::tab {
                 background-color: #1d1e22;
                 color: #ffffff;
-                padding: 8px 12px;
+                padding: 7px 14px;
                 border: 1px solid #3d3d3d;
                 border-bottom: none;
                 border-top-left-radius: 4px;
@@ -84,7 +86,7 @@ class DownloadSettingsDialog(QDialog):
                 border-radius: 4px;
                 margin-top: 1.5ex;
                 color: #ffffff;
-                padding: 10px;
+                padding: 8px;
                 font-weight: bold;
             }
             QGroupBox::title {
@@ -94,7 +96,7 @@ class DownloadSettingsDialog(QDialog):
                 color: #ffffff;
             }
             QLineEdit {
-                padding: 8px;
+                padding: 6px;
                 border: 2px solid #1b2021;
                 border-radius: 4px;
                 background-color: #1b2021;
@@ -103,7 +105,7 @@ class DownloadSettingsDialog(QDialog):
                 selection-color: #ffffff;
             }
             QPushButton {
-                padding: 8px 15px;
+                padding: 6px 12px;
                 background-color: #c90000;
                 border: none;
                 border-radius: 4px;
@@ -160,7 +162,7 @@ class DownloadSettingsDialog(QDialog):
                 border-radius: 9px;
             }
             QComboBox {
-                padding: 8px;
+                padding: 6px;
                 border: 2px solid #1b2021;
                 border-radius: 4px;
                 background-color: #1b2021;
@@ -186,6 +188,8 @@ class DownloadSettingsDialog(QDialog):
         )
 
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
 
         # Create tab widget
         self.tab_widget = SmoothTabWidget()
@@ -194,6 +198,8 @@ class DownloadSettingsDialog(QDialog):
         # === General Tab ===
         general_tab = QWidget()
         general_layout = QVBoxLayout(general_tab)
+        general_layout.setContentsMargins(10, 10, 10, 10)
+        general_layout.setSpacing(8)
 
         # --- Download Path Section ---
         path_group_box = QGroupBox(_("settings.download_path"))
@@ -308,6 +314,8 @@ class DownloadSettingsDialog(QDialog):
         # === Format Tab ===
         format_tab = QWidget()
         format_layout = QVBoxLayout(format_tab)
+        format_layout.setContentsMargins(10, 10, 10, 10)
+        format_layout.setSpacing(8)
 
         # --- Output Format Settings Section ---
         output_format_group_box = QGroupBox(_("settings.output_format_settings"))
@@ -463,6 +471,8 @@ class DownloadSettingsDialog(QDialog):
         # === File Tab ===
         file_tab = QWidget()
         file_layout = QVBoxLayout(file_tab)
+        file_layout.setContentsMargins(10, 10, 10, 10)
+        file_layout.setSpacing(8)
 
         # --- Filename Format Section ---
         filename_format_group_box = QGroupBox(_("settings.filename_format"))
@@ -505,10 +515,22 @@ class DownloadSettingsDialog(QDialog):
         file_layout.addWidget(config_group_box)
         file_layout.addStretch()
 
-        # Add tabs to tab widget
-        self.tab_widget.addTab(general_tab, _("settings.tab_general", default="General"))
-        self.tab_widget.addTab(format_tab, _("settings.tab_format", default="Format"))
-        self.tab_widget.addTab(file_tab, _("settings.tab_file", default="File"))
+        # Keep each tab's content scrollable so the action buttons remain visible
+        # on screens where the full settings page cannot fit vertically.
+        for tab, label in (
+            (general_tab, _("settings.tab_general", default="General")),
+            (format_tab, _("settings.tab_format", default="Format")),
+            (file_tab, _("settings.tab_file", default="File")),
+        ):
+            scroll_area = QScrollArea()
+            scroll_area.setWidgetResizable(True)
+            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            scroll_area.setFrameShape(QScrollArea.Shape.NoFrame)
+            scroll_area.setStyleSheet(
+                "QScrollArea { border: none; background-color: #15181b; }"
+            )
+            scroll_area.setWidget(tab)
+            self.tab_widget.addTab(scroll_area, label)
 
         # Dialog buttons (OK/Cancel)
         button_box = QDialogButtonBox()
@@ -521,6 +543,9 @@ class DownloadSettingsDialog(QDialog):
         reset_button.clicked.connect(self.reset_all_settings)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
+        self.finished.connect(
+            lambda _result: save_dialog_geometry(self, "download_settings_geometry")
+        )
         
         # Style the buttons to look identical to Custom Options dialog
         for btn in [reset_button, ok_button, cancel_button]:
@@ -529,7 +554,7 @@ class DownloadSettingsDialog(QDialog):
             btn.setStyleSheet(
                 """
                 QPushButton {
-                    padding: 8px 20px;
+                    padding: 7px 16px;
                     background-color: #c90000;
                     border: none;
                     border-radius: 4px;
@@ -543,6 +568,16 @@ class DownloadSettingsDialog(QDialog):
             )
 
         layout.addWidget(button_box)
+
+        # Leave room for the title bar and taskbar while allowing the tab
+        # contents to use the scroll bars when the available height is small.
+        restore_dialog_geometry(self, "download_settings_geometry")
+
+    def closeEvent(self, event) -> None:
+        """Persist the dialog size and position for the next opening."""
+        save_dialog_geometry(self, "download_settings_geometry")
+        super().closeEvent(event)
+
 
     def reset_all_settings(self) -> None:
         """Reset persisted settings and refresh every control in this dialog."""

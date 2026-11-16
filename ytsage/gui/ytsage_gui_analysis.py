@@ -46,6 +46,7 @@ class AnalysisThread(QThread):
         browser_cookies_option: Optional[str] = None,
         proxy_url: Optional[str] = None,
         geo_proxy_url: Optional[str] = None,
+        force_ipv4: bool = False,
         parent=None
     ) -> None:
         super().__init__(parent)
@@ -54,6 +55,7 @@ class AnalysisThread(QThread):
         self.browser_cookies_option = browser_cookies_option
         self.proxy_url = proxy_url
         self.geo_proxy_url = geo_proxy_url
+        self.force_ipv4 = force_ipv4
         self._cancelled = False
 
     def cancel(self) -> None:
@@ -101,6 +103,9 @@ class AnalysisThread(QThread):
         
         if self.geo_proxy_url:
             cmd.extend(["--geo-verification-proxy", self.geo_proxy_url])
+
+        if self.force_ipv4:
+            cmd.append("--force-ipv4")
 
     def _analyze_url_with_subprocess(self, url: str) -> None:
         """Analyze URL using yt-dlp executable."""
@@ -363,6 +368,7 @@ class AnalysisMixin:
             browser_cookies_option=self.browser_cookies_option,
             proxy_url=self.proxy_url,
             geo_proxy_url=self.geo_proxy_url,
+            force_ipv4=self.force_ipv4,
             parent=self
         )
 

@@ -72,6 +72,7 @@ class DownloadThread(QThread):
         force_keyframes=False,
         proxy_url=None,
         geo_proxy_url=None,
+        force_ipv4=False,
         force_output_format=False,
         preferred_output_format="mp4",
         force_audio_format=False,
@@ -110,6 +111,7 @@ class DownloadThread(QThread):
         self.force_keyframes = force_keyframes
         self.proxy_url = proxy_url
         self.geo_proxy_url = geo_proxy_url
+        self.force_ipv4 = force_ipv4
         self.force_output_format = force_output_format
         self.preferred_output_format = preferred_output_format
         self.force_audio_format = force_audio_format
@@ -531,6 +533,9 @@ class DownloadThread(QThread):
         
         if self.geo_proxy_url:
             cmd.extend(["--geo-verification-proxy", self.geo_proxy_url])
+
+        if self.force_ipv4:
+            cmd.append("--force-ipv4")
 
         # Add rate limit if specified
         if self.rate_limit:
