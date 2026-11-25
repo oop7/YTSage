@@ -45,6 +45,16 @@ if TYPE_CHECKING:
     from ..ytsage_gui_main import YTSageApp  # only for type hints (no runtime import)
 
 
+class ScrollSafeComboBox(QComboBox):
+    """Prevent page scrolling over a closed combo box from changing its value."""
+
+    def wheelEvent(self, event) -> None:
+        if self.view().isVisible():
+            super().wheelEvent(event)
+        else:
+            event.ignore()
+
+
 class CommandWorker(QObject):
     """Worker class for running yt-dlp commands in a separate thread"""
 
@@ -191,7 +201,7 @@ class CustomOptionsDialog(QDialog):
         browser_select_layout = QHBoxLayout()
         browser_select_layout.addWidget(QLabel(_('cookies.browser_label')))
 
-        self.browser_combo = QComboBox()
+        self.browser_combo = ScrollSafeComboBox()
         self.browser_combo.addItems(["firefox", "chrome", "safari", "edge", "opera", "brave", "chromium", "vivaldi"])
         browser_select_layout.addWidget(self.browser_combo)
         browser_select_layout.addWidget(QLabel(_('cookies.firefox_recommended')))
@@ -563,7 +573,7 @@ class CustomOptionsDialog(QDialog):
         language_select_layout = QHBoxLayout()
         language_select_layout.addWidget(QLabel(_("language.select_language") + ":"))
 
-        self.language_combo = QComboBox()
+        self.language_combo = ScrollSafeComboBox()
         
         # Populate language combo with available languages
         for lang_code, display_name in available_languages.items():
@@ -602,6 +612,8 @@ class CustomOptionsDialog(QDialog):
             (cookies_tab, _("tabs.cookies")),
             (command_tab, _("tabs.custom_command")),
             (network_tab, _("tabs.network", default="Network")),
+            (self.updater_tab, _("tabs.updater")),
+            (language_tab, _("tabs.language")),
         ):
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
@@ -612,16 +624,6 @@ class CustomOptionsDialog(QDialog):
             )
             scroll_area.setWidget(tab)
             self.tab_widget.addTab(scroll_area, label)
-        self.tab_widget.addTab(self.updater_tab, _("tabs.updater"))
-        language_scroll_area = QScrollArea()
-        language_scroll_area.setWidgetResizable(True)
-        language_scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        language_scroll_area.setFrameShape(QScrollArea.Shape.NoFrame)
-        language_scroll_area.setStyleSheet(
-            "QScrollArea { border: none; background-color: #15181b; }"
-        )
-        language_scroll_area.setWidget(language_tab)
-        self.tab_widget.addTab(language_scroll_area, _("tabs.language"))
 
         # Dialog buttons
         button_box = QDialogButtonBox()

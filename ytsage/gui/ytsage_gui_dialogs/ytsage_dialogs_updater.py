@@ -17,7 +17,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QRadioButton,
-    QScrollArea,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -209,25 +208,16 @@ class UpdaterTabWidget(QWidget):
         self.current_version = "Unknown"
         self.latest_version = "Unknown"
         self.update_available = False
+        self._ffmpeg_check_in_progress = False
+        self._deno_check_in_progress = False
         
         self._init_ui()
         self._load_auto_update_settings()
     
     def _init_ui(self) -> None:
         """Initialize the UI components."""
-        # Main layout for the tab
-        main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        
-        # Create scroll area
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setFrameShape(QScrollArea.Shape.NoFrame)
-        scroll_area.setStyleSheet("QScrollArea { background: transparent; }")
-        
-        # Create a widget to hold all content
-        content_widget = QWidget()
-        layout = QVBoxLayout(content_widget)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
         
         # Help text
         help_text = QLabel(_('ffmpeg_updater.description'))
@@ -665,11 +655,6 @@ class UpdaterTabWidget(QWidget):
         
         layout.addStretch()
         
-        # Set the content widget to the scroll area
-        scroll_area.setWidget(content_widget)
-        
-        # Add scroll area to main layout
-        main_layout.addWidget(scroll_area)
     
     def _load_auto_update_settings(self) -> None:
         """Load current auto-update settings for yt-dlp."""
@@ -896,7 +881,10 @@ class UpdaterTabWidget(QWidget):
     
     def check_for_updates(self) -> None:
         """Check FFmpeg version and compare with latest."""
-        self.check_button.setEnabled(False)
+        if self._ffmpeg_check_in_progress:
+            return
+
+        self._ffmpeg_check_in_progress = True
         self.status_label.setText(_('ffmpeg_updater.status_checking'))
         self.status_label.setStyleSheet(
             "color: #ffaa00; font-size: 12px; padding: 8px; "
@@ -910,12 +898,12 @@ class UpdaterTabWidget(QWidget):
 
     @Slot(bool, str, str)
     def _on_ffmpeg_check_finished(self, update_available, current_version, latest_version):
-        self.check_button.setEnabled(True)
+        self._ffmpeg_check_in_progress = False
         self._update_check_results(update_available, current_version, latest_version)
 
     @Slot(str)
     def _on_ffmpeg_check_error(self, error):
-        self.check_button.setEnabled(True)
+        self._ffmpeg_check_in_progress = False
         self._show_check_error(error)
     
     def _update_check_results(self, update_available: bool, current_version: str, latest_version: str) -> None:
@@ -958,7 +946,10 @@ class UpdaterTabWidget(QWidget):
     
     def check_deno_updates(self) -> None:
         """Check for Deno updates."""
-        self.deno_check_button.setEnabled(False)
+        if self._deno_check_in_progress:
+            return
+
+        self._deno_check_in_progress = True
         self.deno_update_button.setVisible(False)
         self.deno_status_label.setText(_('deno_updater.status_checking'))
         self.deno_status_label.setStyleSheet(
@@ -973,12 +964,12 @@ class UpdaterTabWidget(QWidget):
 
     @Slot(bool, str, str)
     def _on_deno_check_finished(self, update_available, current_version, latest_version):
-        self.deno_check_button.setEnabled(True)
+        self._deno_check_in_progress = False
         self._update_deno_check_results(update_available, current_version, latest_version)
 
     @Slot(str)
     def _on_deno_check_error(self, error):
-        self.deno_check_button.setEnabled(True)
+        self._deno_check_in_progress = False
         self._show_deno_check_error(error)
     
     def _update_deno_check_results(self, update_available: bool, current_version: str, latest_version: str) -> None:
