@@ -415,8 +415,9 @@ Notes:
     - Includes optional profile selection.
     - If Chrome or Brave extraction fails on Windows, export a Netscape-format `cookies.txt` file with a trusted browser extension and select **Use cookie file** instead. Firefox direct extraction is often more reliable.
   - **Cookie File:** Load a Netscape format `cookies.txt` file.
-- **Proxy & Geo-Verification Proxy Support:** Configure main proxy server and optional geo-verification proxy (SOCKS4/5 or HTTP/HTTPS) to bypass location restrictions. Access via **Custom Options → Proxy**.
-- **Network Diagnostics:** Run local YouTube, proxy, public IP/country, and no-download yt-dlp extraction checks from **Custom Options → Proxy → Network Diagnostics**. The report does not upload cookies or URLs to YTSage; the network checks contact YouTube and the public IP lookup service.
+- **Proxy & Geo-Verification Proxy Support:** Configure main proxy server and optional geo-verification proxy (SOCKS4/5 or HTTP/HTTPS) to bypass location restrictions. Access via **Custom Options → Network**.
+- **YouTube Player Client:** Choose the YouTube client yt-dlp uses from **Custom Options → Network → YouTube player client**. Start with **Auto** (the default): when cookies are configured, yt-dlp chooses the client; without cookies, YTSage uses `web_embedded,default`. If formats are missing or limited, try **Web embedded**, **iOS Producer**, **visionOS**, **TV (Samsung)**, or **Web (Safari)**. Safari requires cookies. This setting applies to both format analysis and downloads; results can vary by video, yt-dlp version, cookies, and network.
+- **Network Diagnostics:** Run local YouTube, proxy, public IP/country, and no-download yt-dlp extraction checks from **Custom Options → Network → Network Diagnostics**. The report does not upload cookies or URLs to YTSage; the network checks contact YouTube and the public IP lookup service.
 - **Generic Mode:** Allow YTSage to process and download from non-YouTube URLs supported by yt-dlp. Toggle in **Download Settings → General → Generic Mode**.
 
 </details>
