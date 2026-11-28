@@ -65,6 +65,8 @@ The workflow creates the following files based on the platform:
 ## Workflow Features
 
 - **PyPI**: Standard Python build system (Wheel & Source)
+- **Release checksums**: **Create All Releases** generates and attaches `SHA256SUMS.txt` for all uploaded release assets.
+
 ### Multi-Platform Support
 - **Windows**: Uses PowerShell scripts with cx_Freeze
 - **Linux**: Uses Bash scripts with cx_Freeze, creates AppImage, RPM, and DEB
@@ -90,8 +92,9 @@ The workflow creates the following files based on the platform:
 ### After Workflow Completion
 1. **Review the draft release** in GitHub.
 2. **Test the artifacts** if needed.
-3. **Edit release notes** to add changelogs or descriptions.
-4. **Publish the release** when ready (change from Draft to Published).
+3. **Verify downloads** with `sha256sum -c SHA256SUMS.txt` in the folder containing the downloaded assets.
+4. **Edit release notes** to add changelogs or descriptions.
+5. **Publish the release** when ready (change from Draft to Published).
 
 ## Configuration
 

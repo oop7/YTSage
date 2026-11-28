@@ -146,12 +146,7 @@ jobs:
         name: YTSage v${{ steps.get_version.outputs.VERSION }}
         draft: true
         prerelease: false
-        append_body: true
         fail_on_unmatched_files: true
-        body: |
-          # YTSage v${{ steps.get_version.outputs.VERSION }}
-
-          **Release Date**: ${{ github.run_started_at }}
         files: |
           artifacts/*
       env:

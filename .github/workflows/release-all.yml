@@ -35,3 +35,34 @@ jobs:
     with:
       version: ${{ inputs.version }}
     secrets: inherit
+
+  release-checksums:
+    needs:
+      - release-windows
+      - release-linux
+      - release-macos
+      - release-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: v${{ inputs.version }}
+    steps:
+      - name: Generate and upload release checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          gh release download "$RELEASE_TAG" --dir release-assets --clobber
+          (
+            cd release-assets
+            find . -type f ! -name 'SHA256SUMS.txt' -print0 \
+              | sort -z \
+              | xargs -0 -r sha256sum
+          ) > SHA256SUMS.txt
+          test -s SHA256SUMS.txt
+          gh release upload "$RELEASE_TAG" SHA256SUMS.txt --clobber
+          gh release edit "$RELEASE_TAG" \
+            --notes "Verify downloaded release assets with SHA256SUMS.txt."
