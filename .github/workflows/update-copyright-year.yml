@@ -1,0 +1,57 @@
+name: Update Copyright Year
+
+on:
+  schedule:
+    - cron: '0 8 1 1 *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-copyright-year:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout default branch
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: ${{ github.event.repository.default_branch }}
+
+    - name: Update copyright year
+      shell: bash
+      run: |
+        year="$(date -u +%Y)"
+        python - "$year" <<'PY'
+        from pathlib import Path
+        import re
+        import sys
+
+        year = int(sys.argv[1])
+        first_year = 2024
+        years = f"{first_year}-{year}" if year > first_year else str(first_year)
+        pattern = re.compile(r"Copyright \(c\) 2024(?:-\d{4})? oop7")
+
+        for filename in ("LICENSE", "setup-scripts/LICENSE.rtf"):
+            path = Path(filename)
+            content = path.read_text()
+            updated, count = pattern.subn(f"Copyright (c) {years} oop7", content, count=1)
+            if count != 1:
+                raise SystemExit(f"Could not find copyright line in {filename}")
+            path.write_text(updated)
+        PY
+
+    - name: Commit and push update
+      shell: bash
+      env:
+        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add LICENSE setup-scripts/LICENSE.rtf
+        if git diff --cached --quiet; then
+          echo "Copyright year is already up to date."
+          exit 0
+        fi
+        git commit -m "Update copyright year to $(date -u +%Y)"
+        git push origin "HEAD:$DEFAULT_BRANCH"
