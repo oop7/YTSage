@@ -4,11 +4,34 @@ from PySide6.QtWidgets import (
     QFrame,
     QGraphicsOpacityEffect,
     QLabel,
+    QScrollArea,
     QStackedWidget,
     QTabBar,
     QVBoxLayout,
     QWidget,
 )
+
+
+class WheelScrollableTabBar(QTabBar):
+    """Scroll the tab strip horizontally with the mouse wheel."""
+
+    def __init__(self, scroll_area: QScrollArea, parent=None):
+        super().__init__(parent)
+        self._scroll_area = scroll_area
+
+    def wheelEvent(self, event) -> None:
+        delta = event.pixelDelta().x() or event.pixelDelta().y()
+        if not delta:
+            delta = event.angleDelta().x() or event.angleDelta().y()
+
+        if not delta:
+            event.ignore()
+            return
+
+        scroll_bar = self._scroll_area.horizontalScrollBar()
+        scroll_bar.setValue(scroll_bar.value() - delta)
+        event.accept()
+
 
 class FadingStackedWidget(QStackedWidget):
     """
@@ -86,10 +109,26 @@ class SmoothTabWidget(QWidget):
         self.layout.setSpacing(0)
         
         # Tab Bar
-        self.tab_bar = QTabBar(self)
+        self.tab_bar_scroll_area = QScrollArea(self)
+        self.tab_bar_scroll_area.setWidgetResizable(False)
+        self.tab_bar_scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
+        self.tab_bar_scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
+        self.tab_bar_scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+        self.tab_bar_scroll_area.setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+        )
+        self.tab_bar = WheelScrollableTabBar(self.tab_bar_scroll_area)
         self.tab_bar.setDrawBase(False) # We draw border on content instead
+        self.tab_bar.setElideMode(Qt.TextElideMode.ElideNone)
+        self.tab_bar.setExpanding(False)
+        self.tab_bar.setUsesScrollButtons(False)
+        self.tab_bar_scroll_area.setWidget(self.tab_bar)
+        self.layout.addWidget(self.tab_bar_scroll_area)
         self.tab_bar.currentChanged.connect(self.set_current_index)
-        self.layout.addWidget(self.tab_bar)
         
         # Content Area (Frame) - Mimics QTabWidget::pane
         self.content_frame = QFrame(self)
@@ -110,6 +149,22 @@ class SmoothTabWidget(QWidget):
         """Add a tab with the given widget and label."""
         self.stack.addWidget(widget)
         self.tab_bar.addTab(label)
+        self.refresh_tab_bar_size()
+
+    def refresh_tab_bar_size(self) -> None:
+        """Resize the tab strip after tab text or styling changes."""
+        self.tab_bar.ensurePolished()
+        tab_bar_size = self.tab_bar.sizeHint()
+        tabs_width = sum(
+            self.tab_bar.tabRect(index).width()
+            for index in range(self.tab_bar.count())
+        )
+        tab_width = max(
+            tab_bar_size.width(),
+            tabs_width,
+        )
+        self.tab_bar.setFixedSize(tab_width, tab_bar_size.height())
+        self.tab_bar_scroll_area.setFixedHeight(tab_bar_size.height())
 
     def set_current_index(self, index):
         """Slot to handle tab bar clicks."""

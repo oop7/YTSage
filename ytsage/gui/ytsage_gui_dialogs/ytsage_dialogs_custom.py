@@ -763,6 +763,8 @@ class CustomOptionsDialog(QDialog):
         """
         )
 
+        self.tab_widget.refresh_tab_bar_size()
+
         # Initialize dialog with current settings (after all widgets and styles are set)
         self._initialize_cookie_settings()
         self._initialize_proxy_settings()
