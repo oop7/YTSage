@@ -301,6 +301,8 @@ class LocalizationManager:
         Returns:
             Localized text, with fallback to English if not found
         """
+        default_text = kwargs.pop("default", None)
+
         with cls._lock:
             # Load current language if not cached
             if cls._current_language not in cls._languages:
@@ -314,6 +316,9 @@ class LocalizationManager:
             if text is None:
                 text = cls._get_nested_value(cls._fallback_strings, key)
             
+            if text is None:
+                text = default_text
+
             # Final fallback to key itself
             if text is None:
                 logger.warning(f"Localization key not found: {key}")

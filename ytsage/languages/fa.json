@@ -108,6 +108,7 @@
     "cookies": "ورود با کوکی",
     "custom_command": "دستور سفارشی",
     "proxy": "پروکسی",
+    "network": "شبکه",
     "language": "زبان",
     "updater": "به‌روزرسان"
   },
@@ -165,6 +166,8 @@
     "help_text": "تنظیمات پروکسی برای دانلود را پیکربندی کنید. برای استفاده از اتصال مستقیم خالی بگذارید.",
     "main_proxy": "پروکسی اصلی",
     "main_proxy_help": "سرور پروکسی اصلی برای همه دانلودها. از پروتکل‌های HTTP/HTTPS و SOCKS5 پشتیبانی می‌کند.",
+    "force_ipv4": "اجبار استفاده از IPv4",
+    "force_ipv4_help": "هنگام اتصال به YouTube، IPv4 را ترجیح دهید.",
     "proxy_url_label": "آدرس پروکسی:",
     "proxy_url_placeholder": "http://proxy:port یا socks5://proxy:port",
     "proxy_examples": "مثال‌ها:\n• HTTP: http://proxy.example.com:8080\n• SOCKS5: socks5://proxy.example.com:1080",
