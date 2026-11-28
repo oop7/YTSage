@@ -43,24 +43,26 @@ SolidCompression=yes
 WizardStyle=modern
 OutputDir=..\artifacts
 
+#include "Languages\YTSageCustomMessages.iss"
+
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl,Languages\YTSageCustomMessages.isl"
-Name: "arabic"; MessagesFile: "compiler:Languages\Arabic.isl,Languages\YTSageCustomMessages.isl"
-Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,Languages\YTSageCustomMessages.isl"
-Name: "french"; MessagesFile: "compiler:Languages\French.isl,Languages\YTSageCustomMessages.isl"
-Name: "german"; MessagesFile: "compiler:Languages\German.isl,Languages\YTSageCustomMessages.isl"
-Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl,Languages\YTSageCustomMessages.isl"
-Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl,Languages\YTSageCustomMessages.isl"
-Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl,Languages\YTSageCustomMessages.isl"
-Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl,Languages\YTSageCustomMessages.isl"
-Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl,Languages\YTSageCustomMessages.isl"
-Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl,Languages\YTSageCustomMessages.isl"
-Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl,Languages\YTSageCustomMessages.isl"
-Name: "chinesesimplified"; MessagesFile: "Languages\ChineseSimplified.isl,Languages\YTSageCustomMessages.isl"
-Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl,Languages\YTSageCustomMessages.isl"
-Name: "hindi"; MessagesFile: "Languages\Unofficial\Hindi.islu,Languages\YTSageCustomMessages.isl"
-Name: "indonesian"; MessagesFile: "Languages\Unofficial\Indonesian.isl,Languages\YTSageCustomMessages.isl"
-Name: "farsi"; MessagesFile: "Languages\Unofficial\Farsi.isl,Languages\YTSageCustomMessages.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "arabic"; MessagesFile: "compiler:Languages\Arabic.isl"
+Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "french"; MessagesFile: "compiler:Languages\French.isl"
+Name: "german"; MessagesFile: "compiler:Languages\German.isl"
+Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl"
+Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
+Name: "chinesesimplified"; MessagesFile: "Languages\ChineseSimplified.isl"
+Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
+Name: "hindi"; MessagesFile: "Languages\Unofficial\Hindi.islu"
+Name: "indonesian"; MessagesFile: "Languages\Unofficial\Indonesian.isl"
+Name: "farsi"; MessagesFile: "Languages\Unofficial\Farsi.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
