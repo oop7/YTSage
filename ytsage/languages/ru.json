@@ -412,6 +412,7 @@
     "save_description": "Сохранить описание",
     "embed_chapters": "Встроить главы",
     "embed_chapters_compact": "Главы",
+    "embed": "Встроить",
     "embed_metadata": "Встроить метаданные",
     "embed_metadata_compact": "Метаданные",
     "embed_thumbnail": "Встроить миниатюру",

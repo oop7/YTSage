@@ -401,6 +401,7 @@
     "save_description": "Guardar Descripción",
     "embed_chapters": "Incrustar Capítulos",
     "embed_chapters_compact": "Capítulos",
+    "embed": "Incrustar",
     "embed_metadata": "Incrustar metadatos",
     "embed_metadata_compact": "Metadatos",
     "embed_thumbnail": "Incrustar miniatura",

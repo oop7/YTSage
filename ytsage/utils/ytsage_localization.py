@@ -131,6 +131,7 @@ class LocalizationManager:
         "main_ui": {
             "url_placeholder": "Enter YouTube video or playlist URL",
             "url_placeholder_generic": "Enter video or playlist URL from any supported site",
+            "embed": "Embed",
             "embed_chapters_compact": "Chapters",
             "embed_metadata": "Embed Metadata",
             "embed_metadata_compact": "Metadata",

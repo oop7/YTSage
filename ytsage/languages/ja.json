@@ -401,6 +401,7 @@
     "save_description": "説明を保存",
     "embed_chapters": "チャプターを埋め込む",
     "embed_chapters_compact": "チャプター",
+    "embed": "埋め込む",
     "embed_metadata": "メタデータを埋め込む",
     "embed_metadata_compact": "メタデータ",
     "embed_thumbnail": "サムネイルを埋め込む",

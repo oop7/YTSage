@@ -401,6 +401,7 @@
     "save_description": "설명 저장",
     "embed_chapters": "챕터 포함",
     "embed_chapters_compact": "챕터",
+    "embed": "삽입",
     "embed_metadata": "메타데이터 포함",
     "embed_metadata_compact": "메타데이터",
     "embed_thumbnail": "썸네일 포함",

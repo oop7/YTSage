@@ -406,6 +406,7 @@
     "save_description": "Save Description",
     "embed_chapters": "Embed Chapters",
     "embed_chapters_compact": "Chapters",
+    "embed": "Embed",
     "embed_metadata": "Embed Metadata",
     "embed_metadata_compact": "Metadata",
     "embed_thumbnail": "Embed Thumbnail",

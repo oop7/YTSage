@@ -401,6 +401,7 @@
     "save_description": "Beschreibung speichern",
     "embed_chapters": "Kapitel einbetten",
     "embed_chapters_compact": "Kapitel",
+    "embed": "Einbetten",
     "embed_metadata": "Metadaten einbetten",
     "embed_metadata_compact": "Metadaten",
     "embed_thumbnail": "Thumbnail einbetten",

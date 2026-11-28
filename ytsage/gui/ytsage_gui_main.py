@@ -532,7 +532,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         # placed in any layout) that is shown/hidden and animated by hand, so
         # expanding/collapsing it can never push the button or any other widget
         # around - it simply grows upward on top of everything else.
-        self.embed_options_toggle = QPushButton("▸ Embed")
+        self.embed_options_toggle = QPushButton(
+            "▸ " + _("main_ui.embed")
+        )
         self.embed_options_toggle.setCheckable(True)
         self.embed_options_toggle.setChecked(False)
         self.embed_options_toggle.setStyleSheet(
@@ -1708,7 +1710,8 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
         """Toggle the floating embed options panel. The toggle button itself
         is a normal, fully in-layout widget and never moves or resizes -
         only the floating panel above it animates open/closed."""
-        self.embed_options_toggle.setText("▾ Embed" if checked else "▸ Embed")
+        arrow = "▾ " if checked else "▸ "
+        self.embed_options_toggle.setText(arrow + _("main_ui.embed"))
         self._animate_embed_panel(checked)
 
     def _embed_panel_target_geometry(self) -> QRect:

@@ -402,6 +402,7 @@
     "save_description": "保存描述",
     "embed_chapters": "嵌入章节",
     "embed_chapters_compact": "章节",
+    "embed": "嵌入",
     "embed_metadata": "嵌入元数据",
     "embed_metadata_compact": "元数据",
     "embed_thumbnail": "嵌入缩略图",

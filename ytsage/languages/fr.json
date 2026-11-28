@@ -401,6 +401,7 @@
     "save_description": "Sauvegarder la description",
     "embed_chapters": "Intégrer les chapitres",
     "embed_chapters_compact": "Chapitres",
+    "embed": "Intégrer",
     "embed_metadata": "Intégrer les métadonnées",
     "embed_metadata_compact": "Métadonnées",
     "embed_thumbnail": "Intégrer la miniature",
