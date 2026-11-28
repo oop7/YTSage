@@ -4,6 +4,9 @@
 #ifndef MyAppVersion
   #define MyAppVersion "0.0.0"
 #endif
+#ifndef MyAppFileVersion
+  #define MyAppFileVersion "0.0.0.0"
+#endif
 #define MyAppPublisher "oop7"
 #define MyAppURL "https://github.com/oop7/YTSage/"
 #ifndef MyAppExeName
@@ -20,6 +23,8 @@
 AppId={{56997322-2A3A-4338-AEF1-C3C8BB28AC4F}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+VersionInfoVersion={#MyAppFileVersion}
+VersionInfoTextVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}

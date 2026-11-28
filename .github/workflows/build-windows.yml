@@ -248,6 +248,7 @@ jobs:
       shell: powershell
       run: |
         $version = "${{ steps.get_version.outputs.VERSION }}"
+        $fileVersion = [regex]::Match($version, '^\d+\.\d+\.\d+').Value + ".0"
 
         # Install Inno Setup
         choco install innosetup --no-progress
@@ -264,7 +265,7 @@ jobs:
         # OutputDir is ..\artifacts (relative to script) -> repo/artifacts
         # SourceDir is ..\dist\YTSage (relative to script) -> repo/dist/YTSage
 
-        iscc /DMyAppVersion="$version" /DMyAppExeName="$installedExeName" /DMyAppSourceExeName="$exeName" /DSourceDir="..\dist\YTSage" "setup-scripts\Setup-windows.iss"
+        iscc /DMyAppVersion="$version" /DMyAppFileVersion="$fileVersion" /DMyAppExeName="$installedExeName" /DMyAppSourceExeName="$exeName" /DSourceDir="..\dist\YTSage" "setup-scripts\Setup-windows.iss"
         if ($LASTEXITCODE -ne 0) {
           throw "Standard installer compilation failed."
         }
@@ -273,7 +274,7 @@ jobs:
         $exeNameFFmpeg = "YTSage-v$version-ffmpeg.exe"
         $installedExeNameFFmpeg = "YTSage-ffmpeg.exe"
         Write-Host "Compiling FFmpeg installer for $exeNameFFmpeg as $installedExeNameFFmpeg..."
-        iscc /DMyAppVersion="$version" /DMyAppExeName="$installedExeNameFFmpeg" /DMyAppSourceExeName="$exeNameFFmpeg" /DSourceDir="..\dist\YTSage-FFmpeg" "setup-scripts\Setup-windows-ffmpeg.iss"
+        iscc /DMyAppVersion="$version" /DMyAppFileVersion="$fileVersion" /DMyAppExeName="$installedExeNameFFmpeg" /DMyAppSourceExeName="$exeNameFFmpeg" /DSourceDir="..\dist\YTSage-FFmpeg" "setup-scripts\Setup-windows-ffmpeg.iss"
         if ($LASTEXITCODE -ne 0) {
           throw "FFmpeg installer compilation failed."
         }
