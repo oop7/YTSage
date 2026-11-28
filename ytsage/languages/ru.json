@@ -191,6 +191,17 @@
     "saved_main": "Сохранён основной прокси: {proxy}",
     "saved_geo": "Сохранён гео‑прокси: {proxy}"
   },
+  "youtube_player_client": {
+    "group_title": "Клиент проигрывателя YouTube",
+    "help_text": "Автоматический режим сохраняет текущее поведение YTSage. Другие варианты принудительно выбирают клиент и могут изменить доступные форматы или потребовать авторизацию либо PO-токен. Используйте их для диагностики.",
+    "label": "Клиент:",
+    "auto": "Автоматически (текущее поведение)",
+    "web_safari": "Web (Safari, требуются cookies)",
+    "web_embedded": "Web embedded",
+    "ios_producer": "iOS Producer",
+    "visionos": "visionOS",
+    "tv_samsung": "TV (Samsung)"
+  },
   "download": {
     "preparing": "Подготовка загрузки...",
     "starting": "🚀 Начинается загрузка...",

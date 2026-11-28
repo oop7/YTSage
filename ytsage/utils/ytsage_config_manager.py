@@ -88,6 +88,7 @@ class ConfigManager:
         "proxy_url": None,
         "geo_proxy_url": None,
         "force_ipv4": False,
+        "youtube_player_client": "auto",
         "auto_update_ytdlp": True,
         "auto_update_frequency": "daily",
         "check_app_updates": True,

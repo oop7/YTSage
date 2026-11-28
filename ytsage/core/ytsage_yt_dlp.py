@@ -36,6 +36,35 @@ from .ytsage_ffmpeg import get_file_sha256
 from .ytsage_deno import check_deno_installed, get_deno_path
 from ..utils.ytsage_localization import _
 
+YOUTUBE_PLAYER_CLIENTS = (
+    "auto",
+    "web_safari",
+    "web_embedded",
+    "ios_producer",
+    "visionos",
+    "tv_samsung",
+)
+
+
+def get_youtube_player_client_args(
+    player_client: str | None,
+    has_cookies: bool,
+) -> list[str]:
+    """Return yt-dlp arguments for the selected YouTube player client."""
+    if player_client not in YOUTUBE_PLAYER_CLIENTS:
+        logger.warning(
+            f"Unsupported YouTube player client {player_client!r}; using Auto instead."
+        )
+        player_client = "auto"
+
+    if player_client == "auto":
+        if has_cookies:
+            return []
+        player_client = "web_embedded,default"
+
+    return ["--extractor-args", f"youtube:player_client={player_client}"]
+
+
 # YTDLP_URLS moved to src\utils\ytsage_constants.py
 # get_ytdlp_install_dir() moved to src\utils\ytsage_constants.py
 # get_ytdlp_executable_path() moved to src\utils\ytsage_constants.py

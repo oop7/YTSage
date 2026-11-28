@@ -6,8 +6,13 @@ from PySide6.QtCore import QMetaObject, Qt, Q_ARG, QThread, Signal, QTimer
 from PySide6.QtWidgets import QMessageBox
 
 from ..core.ytsage_utils import validate_video_url, parse_yt_dlp_error
-from ..core.ytsage_yt_dlp import get_yt_dlp_path, get_ytdlp_deno_args
+from ..core.ytsage_yt_dlp import (
+    get_yt_dlp_path,
+    get_ytdlp_deno_args,
+    get_youtube_player_client_args,
+)
 from ..utils.ytsage_constants import SUBPROCESS_CREATIONFLAGS
+from ..utils.ytsage_config_manager import ConfigManager
 from ..utils.ytsage_localization import _
 from ..utils.ytsage_logger import logger
 
@@ -47,7 +52,7 @@ class AnalysisThread(QThread):
         proxy_url: Optional[str] = None,
         geo_proxy_url: Optional[str] = None,
         force_ipv4: bool = False,
-        parent=None
+        parent=None,
     ) -> None:
         super().__init__(parent)
         self.url = url
@@ -56,6 +61,9 @@ class AnalysisThread(QThread):
         self.proxy_url = proxy_url
         self.geo_proxy_url = geo_proxy_url
         self.force_ipv4 = force_ipv4
+        self.youtube_player_client = (
+            ConfigManager.get("youtube_player_client") or "auto"
+        )
         self._cancelled = False
 
     def cancel(self) -> None:
@@ -94,9 +102,9 @@ class AnalysisThread(QThread):
             cmd.extend(["--cookies-from-browser", self.browser_cookies_option])
             has_cookies = True
         
-        if not has_cookies:
-            # Fallback extractor-args for multi-language audio extraction when no cookies are provided
-            cmd.extend(["--extractor-args", "youtube:player_client=web_embedded,default"])
+        cmd.extend(
+            get_youtube_player_client_args(self.youtube_player_client, has_cookies)
+        )
 
         if self.proxy_url:
             cmd.extend(["--proxy", self.proxy_url])

@@ -11,7 +11,11 @@ from typing import Optional, List, Set
 
 from PySide6.QtCore import QObject, QThread, Signal
 
-from .ytsage_yt_dlp import get_yt_dlp_path, get_ytdlp_deno_args
+from .ytsage_yt_dlp import (
+    get_yt_dlp_path,
+    get_ytdlp_deno_args,
+    get_youtube_player_client_args,
+)
 from ..utils.ytsage_constants import (
     SUBPROCESS_CREATIONFLAGS,
     VIDEO_EXTENSIONS,
@@ -81,6 +85,7 @@ class DownloadThread(QThread):
         filename_format=None,
         concurrent_fragments=1,
         preferred_subtitle_format="default",
+        youtube_player_client: str = "auto",
     ) -> None:
         super().__init__()
         self.url = url
@@ -106,6 +111,7 @@ class DownloadThread(QThread):
         self.embed_thumbnail = embed_thumbnail
         self.cookie_file = cookie_file
         self.browser_cookies = browser_cookies
+        self.youtube_player_client = youtube_player_client
         self.rate_limit = rate_limit
         self.download_section = download_section
         self.force_keyframes = force_keyframes
@@ -523,9 +529,9 @@ class DownloadThread(QThread):
             cmd.extend(["--cookies-from-browser", self.browser_cookies])
             has_cookies = True
 
-        if not has_cookies:
-            # Fallback extractor-args for multi-language audio when no cookies are provided
-            cmd.extend(["--extractor-args", "youtube:player_client=web_embedded,default"])
+        cmd.extend(
+            get_youtube_player_client_args(self.youtube_player_client, has_cookies)
+        )
 
         # Add proxy settings if specified
         if self.proxy_url:

@@ -117,6 +117,17 @@ class LocalizationManager:
         "cookies": {
             "browser_cookie_note": "If Chrome or Brave cookie extraction fails, export a Netscape-format cookies.txt file with a trusted browser extension and select 'Use cookie file'. Firefox direct extraction is often more reliable."
         },
+        "youtube_player_client": {
+            "group_title": "YouTube player client",
+            "help_text": "Auto keeps YTSage's current behavior. Other options force a specific client and may change available formats or require authentication or PO tokens. Use them to troubleshoot.",
+            "label": "Player client:",
+            "auto": "Auto (current behavior)",
+            "web_safari": "Web (Safari, requires cookies)",
+            "web_embedded": "Web embedded",
+            "ios_producer": "iOS Producer",
+            "visionos": "visionOS",
+            "tv_samsung": "TV (Samsung)",
+        },
         "main_ui": {
             "url_placeholder": "Enter YouTube video or playlist URL",
             "url_placeholder_generic": "Enter video or playlist URL from any supported site",

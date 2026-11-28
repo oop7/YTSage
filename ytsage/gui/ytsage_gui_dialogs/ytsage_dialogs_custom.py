@@ -31,7 +31,11 @@ from PySide6.QtWidgets import (
 )
 
 from ..ytsage_smooth_tab_widget import SmoothTabWidget
-from ...core.ytsage_yt_dlp import get_yt_dlp_path, get_ytdlp_deno_args
+from ...core.ytsage_yt_dlp import (
+    YOUTUBE_PLAYER_CLIENTS,
+    get_yt_dlp_path,
+    get_ytdlp_deno_args,
+)
 from ...core.ytsage_utils import update_auto_update_settings
 from ...utils.ytsage_constants import YTDLP_DOCS_URL
 from ...utils.ytsage_config_manager import ConfigManager
@@ -471,6 +475,29 @@ class CustomOptionsDialog(QDialog):
 
         network_layout.addWidget(main_proxy_group)
 
+        # YouTube player client selection
+        youtube_client_group = QGroupBox(_("youtube_player_client.group_title"))
+        youtube_client_layout = QVBoxLayout(youtube_client_group)
+
+        youtube_client_help = QLabel(_("youtube_player_client.help_text"))
+        youtube_client_help.setWordWrap(True)
+        youtube_client_help.setStyleSheet("color: #999999; font-size: 11px;")
+        youtube_client_layout.addWidget(youtube_client_help)
+
+        youtube_client_select_layout = QHBoxLayout()
+        youtube_client_select_layout.addWidget(
+            QLabel(_("youtube_player_client.label"))
+        )
+        self.youtube_player_client_combo = ScrollSafeComboBox()
+        for player_client in YOUTUBE_PLAYER_CLIENTS:
+            self.youtube_player_client_combo.addItem(
+                _(f"youtube_player_client.{player_client}"),
+                player_client,
+            )
+        youtube_client_select_layout.addWidget(self.youtube_player_client_combo)
+        youtube_client_layout.addLayout(youtube_client_select_layout)
+        network_layout.addWidget(youtube_client_group)
+
         # Geo-verification Proxy section
         geo_proxy_group = QGroupBox(_('proxy.geo_proxy'))
         geo_proxy_layout = QVBoxLayout(geo_proxy_group)
@@ -739,6 +766,7 @@ class CustomOptionsDialog(QDialog):
         # Initialize dialog with current settings (after all widgets and styles are set)
         self._initialize_cookie_settings()
         self._initialize_proxy_settings()
+        self._initialize_youtube_player_client()
         self.finished.connect(
             lambda _result: save_dialog_geometry(self, "custom_options_geometry")
         )
@@ -817,6 +845,18 @@ class CustomOptionsDialog(QDialog):
             
         # Update validation status
         self.validate_proxy_inputs()
+
+    def _initialize_youtube_player_client(self) -> None:
+        """Load the selected YouTube player client from saved settings."""
+        player_client = ConfigManager.get("youtube_player_client") or "auto"
+        index = self.youtube_player_client_combo.findData(player_client)
+        if index < 0:
+            logger.warning(
+                f"Unsupported saved YouTube player client {player_client!r}; "
+                "using Auto instead."
+            )
+            index = self.youtube_player_client_combo.findData("auto")
+        self.youtube_player_client_combo.setCurrentIndex(index)
 
     def on_cookie_source_changed(self) -> None:
         """Handle cookie source radio button changes"""
@@ -1094,6 +1134,11 @@ class CustomOptionsDialog(QDialog):
             app_updates_enabled = self.updater_tab.get_app_update_checker_setting()
             ConfigManager.set("check_app_updates", app_updates_enabled)
             logger.info(f"Saved app updates checker setting: {app_updates_enabled}")
+
+            player_client = self.youtube_player_client_combo.currentData()
+            if isinstance(player_client, str):
+                ConfigManager.set("youtube_player_client", player_client)
+                logger.info(f"Saved YouTube player client: {player_client}")
 
         except Exception as e:
             logger.exception(f"Error saving auto-update settings: {e}")

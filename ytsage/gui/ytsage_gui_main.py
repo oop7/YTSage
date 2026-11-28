@@ -963,6 +963,9 @@ class YTSageApp(QMainWindow, FormatTableMixin, VideoInfoMixin, AnalysisMixin):  
             "proxy_url": self.proxy_url,
             "geo_proxy_url": self.geo_proxy_url,
             "force_ipv4": self.force_ipv4,
+            "youtube_player_client": (
+                ConfigManager.get("youtube_player_client") or "auto"
+            ),
             "force_output_format": self.force_output_format,
             "preferred_output_format": self.preferred_output_format,
             "force_audio_format": self.force_audio_format,
